@@ -47,7 +47,7 @@ html.boxed .body {
 	display: block;
 	width: 70%;
 	padding: 5px;
-	padding-top: -10px;
+	/*padding-top: -5px;*/
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -75,6 +75,13 @@ html.boxed .body {
 	overflow-x: hidden;
 }
 
+.colourband {
+	background-color: #a17667;
+	color: #f1f2e9;
+	margin: 0 -500%;
+	padding: 0.5rem 500%;
+}
+
 header {
 	background-color: #a17667;/*#637457;*/ /*#D52A2A;*/
 	color: #f1f2e9;
@@ -87,6 +94,7 @@ h1 {
 	font-size: 36pt;
 	text-align: center;
 	letter-spacing: 2px;
+	padding: 5px;
 }
 
 h2 {
@@ -94,6 +102,7 @@ h2 {
 	font-size: 24pt;
 	text-align: center;
 	letter-spacing: 2px;
+	padding: 5px;
 }
 
 h3 {
@@ -101,6 +110,7 @@ h3 {
 	font-size: 20pt;
 	text-align: center;
 	letter-spacing: 2px;
+	padding: 3px;
 }
 
 p {
