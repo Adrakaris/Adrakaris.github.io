@@ -45,7 +45,8 @@ html.boxed .body {
 
 .cbox, #cfixed {
 	display: block;
-	width: 70%;
+	width: 90%;
+	max-width: 1280px;
 	padding: 5px;
 	/*padding-top: -5px;*/
 	margin-left: auto;
@@ -82,8 +83,56 @@ html.boxed .body {
 	padding: 0.5rem 500%;
 }
 
+.columncontainer3 {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;  /* 3 columns */
+	grid-column-gap: 40px;
+}
+
+.columncontainer2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr; 
+	grid-column-gap: 40px;
+}
+
+.column {
+	max-width: 400px;
+}
+
+.buttonwrapper {
+	padding: 5px;
+	background-color: #a17667;
+	color: #f1f2e9;
+	font-family: Manrope;
+	text-align: center;
+	margin: 5px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+	transition: box-shadow 0.3s ease-in-out;
+}
+
+.buttonwrapper:hover {
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.buttonwrapper a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: auto;
+}
+
 header {
 	background-color: #a17667;/*#637457;*/ /*#D52A2A;*/
+	color: #f1f2e9;
+	margin: 0 -500%;
+	padding: 0.5rem 500%;
+}
+
+footer {
+	background-color: #a17667;
 	color: #f1f2e9;
 	margin: 0 -500%;
 	padding: 0.5rem 500%;
@@ -124,4 +173,8 @@ p.subheading {
 	text-align: center;
 	letter-spacing: 2px;
 	margin-top: -30px;
+}
+
+p.small {
+	font-size: 8pt;
 }
