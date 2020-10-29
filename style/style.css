@@ -83,20 +83,31 @@ html.boxed .body {
 	padding: 0.5rem 500%;
 }
 
-.columncontainer3 {
+.columncontainer {
 	display: grid;
 	grid-template-columns: 1fr 1fr 1fr;  /* 3 columns */
 	grid-column-gap: 40px;
 }
 
-.columncontainer2 {
+.ctwo {
 	display: grid;
 	grid-template-columns: 1fr 1fr; 
 	grid-column-gap: 40px;
 }
 
+.cthreesmall {
+	max-width: 420px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
 .column {
 	max-width: 400px;
+}
+
+.tinycolumn {
+	max-width: 100px;
 }
 
 .buttonwrapper {
@@ -141,6 +152,16 @@ footer {
 	padding: 0.5rem 500%;
 }
 
+a.nav {
+	font-family: Urbanist;
+	text-align: center;
+	letter-spacing: 1px;
+	margin-top: -30px;
+	color: white;
+	font-size: 10;
+	text-decoration: none;
+}
+
 h1 {
 	font-family: Urbanist;
 	font-size: 36pt;
@@ -167,7 +188,7 @@ h3 {
 
 p {
 	font-family: Manrope;
-	text-align: justify;
+	/*text-align: justify;*/
 	z-index: 2;
 }
 
@@ -180,4 +201,11 @@ p.subheading {
 
 p.small {
 	font-size: 8pt;
+}
+
+@media (max-width: 768px) {
+		.columncontainer {
+		display: grid;
+		grid-template-columns: 1fr;  /* 3 columns */
+	}
 }
