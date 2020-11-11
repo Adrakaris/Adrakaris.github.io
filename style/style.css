@@ -46,7 +46,7 @@ html.boxed .body {
 .cbox, #cfixed {
 	display: block;
 	width: 90%;
-	max-width: 1280px;
+	max-width: 1200px;
 	padding: 5px;
 	/*padding-top: -5px;*/
 	margin-left: auto;
@@ -58,22 +58,32 @@ html.boxed .body {
 	z-index: 0;
 }
 
-.parallax, #home {
-	min-height: 720px;
+.parallax {
+	min-height: 480px;
 
 	background-attachment: fixed;
 	background-position: bottom;
 	background-repeat: no-repeat;
 	background-size: cover;
+	align-content: center;
 	z-index: 0;
 }
 
-#home {
+.home {
+	min-height: 720px;
 	background-image: url("images/taichuan_smaller_size.jpg");
+}
+
+.parsmaller {
+	background-image: url("images/taichuan_smaller_size_squish.jpg");
+	background-position: top;
+	background-size: 100%;
 }
 
 .hidden {
 	overflow-x: hidden;
+	position: relative;
+	/*min-height: 100vh;*/
 }
 
 .colourband {
@@ -95,15 +105,20 @@ html.boxed .body {
 	grid-column-gap: 40px;
 }
 
-.cthreesmall {
-	max-width: 420px;
-	margin-left: auto;
-	margin-right: auto;
+.cthreeside {
+	max-width: 280px;
+	/*margin-left: auto;
+	margin-right: auto;*/
 	text-align: center;
+	padding: 5px;
+	padding-left: 10px;
+	grid-column-gap: 20px;
 }
 
 .column {
 	max-width: 400px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .tinycolumn {
@@ -157,9 +172,11 @@ a.nav {
 	text-align: center;
 	letter-spacing: 1px;
 	margin-top: -30px;
-	color: white;
-	font-size: 10;
+	color: #f1f2e9; /*#c9baad;*/
+	font-size: 8;
 	text-decoration: none;
+	letter-spacing: 2px;
+	/*font-style: italic;*/
 }
 
 h1 {
@@ -201,6 +218,10 @@ p.subheading {
 
 p.small {
 	font-size: 8pt;
+}
+
+p.rj {
+	text-align: right;
 }
 
 @media (max-width: 768px) {
