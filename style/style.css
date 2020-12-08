@@ -179,6 +179,31 @@ a.nav {
 	/*font-style: italic;*/
 }
 
+a {
+	color: #a17667;
+	text-decoration: none;
+}
+
+a.text {
+	text-decoration: underline;
+}
+
+button.nav {
+	font-family: Urbanist;
+	font-size: 8;
+	text-align: center;
+	letter-spacing: 1px;
+	margin-top: -30px;
+	color: #f1f2e9; /*#c9baad;*/
+	font-size: 16px;
+	text-decoration: none;
+	letter-spacing: 2px;
+	border: none;
+	background: none;
+	margin: 0;
+	padding: 0;
+}
+
 h1 {
 	font-family: Urbanist;
 	font-size: 36pt;
@@ -225,8 +250,31 @@ p.rj {
 }
 
 @media (max-width: 768px) {
-		.columncontainer {
+	.columncontainer {
 		display: grid;
 		grid-template-columns: 1fr;  /* 3 columns */
+	}
+
+	.cthreeside {
+		max-width: 100%;
+		grid-template-columns: 1fr 1fr 1fr;
+		text-align: center;
+		padding: 5px;
+		grid-column-gap: 0px;
+	}
+
+	a.nav {
+		font-size: 12;
+	}
+
+	.parsmaller{
+		min-height: 480px;
+
+		background-attachment: fixed;
+		background-position: bottom;
+		background-repeat: no-repeat;
+		background-size: cover;
+		align-content: center;
+		z-index: 0;
 	}
 }
