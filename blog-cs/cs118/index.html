@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CS118</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+    <meta name="viewport" content="width=device-width" initial-scale=1.0>
+    <link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+    <script type="text/javascript" src="../../js/goback.js"></script>
+</head>
+<body>
+
+    <div class="hidden">
+        <header>
+            <div class="parallax parsmaller">
+                <div class="columncontainer cthreeside">
+                    <div class="column tinycolumn">
+                        <button onclick="goBack()" class="nav">Back</button>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="./index.html" class="nav"><!--Link--></a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="./index.html" class="nav"><!--Link--></a>
+                    </div>
+                </div>
+                <div class="cbox">      
+                    <h1>CS 118</h1>
+                    <p class="subheading">Programming for Computer Scientists</p>
+                </div>
+            </div>
+        </header>
+
+        <header>
+            <div class="cbox">
+                <h1>Contents</h1>
+            </div>
+        </header>
+
+        <div class="cbox">
+            <ol>
+                <li><a href="#casting">Casting</a></li>
+                <li><a href="#oopkey">OOP Keywords</a></li>
+                <li><a href="#generics">Generics</a></li>
+            </ol>
+        </div>
+
+        
+        <div id="casting" class="colourband">
+            <h2>Casting</h2>
+        </div>
+
+        <div class="cbox">
+            <p>Casting is the conversion of one data type into another.</p>
+
+            <p>Generally, casting to a smaller type that would <i>lose data</i> is considered an <b>unsafe cast</b>. This would have to be done explicitly by the programmer. If you can't ensure that the data type you're casting to can accept the value, that's not ideal.</p> 
+
+            <p>Casting to a larger type (e.g. <code>int -> long</code>) is done implicitly.</p>
+        </div>
+
+        <div id="oopkey" class="colourband">
+            <h2>OOP Keywords</h2>
+        </div>
+
+        <div class="cbox">
+            <p>
+                A <b>private</b> field is accessible only to its own class, whilst a <b>protected</b> fied is accessible also to classes in the same package, and subclasses of its class in different packages.
+            </p>
+
+            <p>
+                A <b>static</b> method in a class can be called without an instantiated object using just the class name, whilst a <b>non-static</b> method must be called with/on an object of that class. A static method can only access static members of the class, whilst a non-static method can access both.
+            </p>
+
+            <p>
+                An <b>Interface</b> is the most abstracted, it can only have abstract methods, can only have final and static variables, and do not provide implementation of methods. An <b>Abstract Class</b> can have method implementations, non-final, non-static variables, and all other stuff a class can do.
+            </p>
+
+            <p>
+                <b>Overriding</b> means having two methods with the same name and parameters, one in the parent class, one in the child class. The child class method implementation overrides the parent class.
+            </p>
+
+            <div class="codediv">
+                class Dog { <br>
+                &emsp;public void bark() { <br>
+                &emsp;&emsp;System.out.println("woof") <br>
+                &emsp;} <br>
+                } <br><br>
+                class BigDog extends Dog { <br>
+                &emsp;public void bark() { <br>
+                &emsp;&emsp;System.out.println("woof but louder") <br>
+                &emsp;} <br>
+                }
+
+            </div>
+
+            <p>
+                <b>Overloading</b> means having two methods in the same class with the same name, but different parameters. Either can be used depending on the method signature called.
+            </p>
+
+            <div class="codediv">
+                public int max(int a, int b) {...}<br><br>
+                public double max(double a, double b) {...}
+            </div>
+        </div>
+
+        <div id="generics" class="colourband">
+            <h2>Generics</h2>
+        </div>
+
+        <div class="cbox">
+            <p>
+                <i>"Generics have been added to Java quite recently;"</i> says the paper from only one or two years ago, forgetting that generics was added in 2004.
+            </p>
+
+            <p>
+                Generics are a way of typing data structures that could store any type. You'd see this as something like <code>ArrayList&lt;T&gt;</code>, or something similar. ArrayList here could store any type of object, but the "generic type" is replaced upon instantiation with a specified data type.
+            </p>
+
+            <p>
+                This ensures type safety, so you don't accidentally store a string inside of an integer list and then crash when you try to cast back (because that list is storing <code>Object</code> types).
+            </p>
+        </div>
+
+
+        <footer>
+            <div class="cbox">
+                <div class="columncontainer ctwo">
+                    <div>
+                        <p class="small">
+                            © 2020 Yijun Hu, all rights reserved.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="small rj">
+                            Designed by Yijun Hu
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>
