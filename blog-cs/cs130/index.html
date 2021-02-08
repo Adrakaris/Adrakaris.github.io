@@ -136,7 +136,7 @@
             <h2>Logical Propositions</h2>
 
             <p>
-                Since \(\lnot p \implies q \equiv p \implies q\) (the proof of this is trivial), the propositions \(\lnot p \implies q\) and \(p \implies q\) are <i>logically equivalent</i> if the proposition \( \lnot p \Longleftrightarrow q \equiv p \implies q\ \) (also written using \longleftrightarrow) is a <i>tautology</i>.
+                Since \(\lnot p \implies q \equiv p \implies q\) (the proof of this is trivial), the propositions \(\lnot p \implies q\) and \(p \implies q\) are <i>logically equivalent</i> if the proposition \( \lnot p \Longleftrightarrow q \equiv p \implies q\ \) (also written using \(\longleftrightarrow\)) is a <i>tautology</i>.
             </p>
 
             <p>
@@ -148,6 +148,91 @@
             <p>
                 A <i>tautology</i> is a proposition that is true regardless of the values of its atomic propositions.
             </p>
+
+            <h2>Laws of Propositional Logic</h2>
+
+            <ul>
+                <li>
+                    The associative and commutative laws<br>
+                    &emsp;\((x \lor y) \lor z \equiv x \lor (y \lor z) \)<br>
+                    &emsp;\(x \lor y \equiv y \lor x\)<br>
+                    Which also work with logical and.
+                </li>
+                <li>
+                    The identities, <br>
+                    &emsp;\(x \lor F = x; x \land T = x\)
+                </li>
+                <li>
+                    The idempotent laws, <br>
+                    &emsp;\( x \lor x = x, x \land x = x \)
+                </li>
+                <li>
+                    De Morgan's laws, which can be described as (1) negate the parts, (2) negate the whole expression, (3) switch the sign from or to and or vice versa. <br>
+                    &emsp;\( a \land b \) to \( \lnot a \land \lnot b \) to \( \lnot (\lnot a \land \lnot b) \) to \( \lnot (\lnot a \lor \lnot b) \)
+                </li>
+                <li>
+                    The not not, \(\lnot \lnot x = x\).
+                </li>
+                <li>
+                    The excluded middle, <br>
+                    &emsp;\(x \lor \lnot x = T; x \land \lnot x = F\)
+                </li>
+                <li>
+                    The absorption law, <br>
+                    &emsp; \(x \lor (x \land y) = x\) <br>
+                    &emsp; \(x \land (x \lor y) = x\)
+                </li>
+                <li>
+                    The distributive law (and is omitted) <br>
+                    &emsp; \(x(y \lor z) = xy \lor xz\) <br>
+                    &emsp; \( x \lor (yz) = (x \lor y)(x \lor z)\)
+                </li>
+                <li>
+                    Annihalation law, <br>
+                    &emsp; \(x \lor T = T; x \land F = F\)
+                </li>
+            </ul>
+
+            <p>
+                <b><i>Proof 1.</i></b> We can prove the absorption law (1) by using the distributive (2), annihalation (3), and identity (4) laws.
+
+                \[x \lor (x \land y) \]
+                \[\textrm{by (4) } \implies (x \land T) \lor (x \land y)\]
+                \[ \textrm{by (2) } \implies x \land (T \lor y) \]
+                \[ \textrm{by (3) } \implies x \land T \]
+                \[ \textrm{by (3) } \implies x\]
+                $$\tag*{$\Box$}$$ 
+
+            </p>
+
+            <h2>Some Notation</h2>
+
+            <p>Logical AND can be \(\land, \&, \cdot\) or omitted entirely (like multiplication in algebra).</p>
+
+            <p>
+                Negation can be done with \(\lnot\) or an overbar \(\bar{x}\).
+            </p>
+
+            <p>
+                The order of operation goes Not, And, Or.
+            </p>
+
+            <p>
+                True and false can also be represented as \(1, 0\).
+            </p>
+
+            <h2>A Little bit of Dimitry's Abstract Algebra</h2>
+
+            <p>(skippable?)</p>
+
+            <p>
+                We can define a structure \(\langle F, T, \land, \lor, \lnot \rangle\), the latter three being defined as your standard truth tables using F and T.
+            </p>
+
+            <p>
+                We can rewrite this structure as \( \langle 0, 1, min, max, \overline{\phantom{A}} \rangle \), where the overline is defined as "flip", and flips the bits. Min acts like or, and max acts like and, therefore this structure acts exactly the same as the previous, meanining they are <i>isomorphic</i>.
+            </p>
+
         </div>
 
 
