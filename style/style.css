@@ -51,7 +51,7 @@ html.boxed .body {
 .cbox, #cfixed {
 	display: block;
 	width: 90%;
-	max-width: 1200px;
+	max-width: 840px;/*1200px;*/
 	padding: 5px;
 	/*padding-top: -5px;*/
 	margin-left: auto;
@@ -96,6 +96,7 @@ html.boxed .body {
 	color: #f1f2e9;
 	margin: 0 -500%;
 	padding: 0.5rem 500%;
+	text-align: center;
 }
 
 .columncontainer {
@@ -155,6 +156,14 @@ html.boxed .body {
 
 .codediv {
 	font-family: JBMono;
+	border-width: thin;
+	border-style: solid;
+	border-color: #1f7282;
+	border-spacing: 10px 10px;
+	padding: 10px;
+}
+
+.boxdiv {
 	border-width: thin;
 	border-style: solid;
 	border-color: #1f7282;
@@ -229,17 +238,15 @@ h1 {
 h2 {
 	font-family: Urbanist;
 	font-size: 24pt;
-	text-align: center;
 	letter-spacing: 2px;
-	padding: 5px;
+	/*padding: 5px;*/
 }
 
 h3 {
 	font-family: Urbanist;
 	font-size: 20pt;
-	text-align: center;
 	letter-spacing: 2px;
-	padding: 3px;
+	/*padding: 3px;*/
 }
 
 p {

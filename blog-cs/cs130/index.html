@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Scaffold</title>
+    <title>CS130</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="./style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
     <meta name="viewport" content="width=device-width" initial-scale=1.0>
-    <link rel="icon" type="image/png" href="./style/images/DragonIcon.png">
+    <link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
     <script type="text/javascript" src="js/goback.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
@@ -26,26 +28,152 @@
                     </div>
                 </div>
                 <div class="cbox">      
-                    <h1>Title</h1>
+                    <h1>CS130</h1>
+                    <p class="subheading">Mathematics for Computer Scientists I</p>
                 </div>
             </div>
         </header>
 
         <header>
             <div class="cbox">
-                <h1>Heading</h1>
+                <h1>Contents</h1>
             </div>
         </header>
 
         <div class="cbox">
-            
+            <ol>
+                <li><a href="#sets">Sets</a></li>
+                <li><a href="#functions">Functions</a></li>
+                <li><a href="#proplogic">Propositional Logic</a></li>
+            </ol>
         </div>
 
-        <!---
-        <div class="colourband">
-            <h2>Heading 2</h2>
+
+        <div id="sets" class="colourband">
+            <h2>Sets</h2>
         </div>
-        --->
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <p>
+                Sets, denoted like \( S = \{a, b, c, ...\} \), contain unique elements. 
+                \[ \mathbb{N} \subseteq \mathbb{Z} \subseteq \mathbb{Q} \subseteq \mathbb{R} \]
+            </p>
+
+            <p>
+                The number of elements (<i>cardinality</i>) of a set \(A\) denoted \(|A| = n , n \in \mathbb{N}\).
+            </p>
+
+            <p>
+                Recall the such that notation (: or |). Recall the empty set \(\{\}, \varnothing\). If \(|D| = 1\), D is a <i>singleton</i> set.
+            </p>
+
+            <h2>Finite Sequences</h2>
+
+            <p>
+                Suppose \(A = \{a, b, c\}\). Then we denote \( A^2 = \{aa, ab, ac, ba, bb, bc, ca, cb, cc\} \), and \(A^n\) is the set of all ordered sequences of length \(n\) of elements in A. Ex. \(\mathbb{Z}^2\) is the set of ordered integer pairs (i.e. integer coordinates). Tuple brackets are usually kept on unless no ambiguity can be had without them on.
+            </p>
+        </div>
+
+
+        <div id="proplogic" class="colourband">
+            <h2>Propositional Logic</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <p>
+                Propositions allow us to express statements which can be true or false. "Washington DC is the capital of the US" is a true proposition, whilst "2+2=5" is a false one.
+            </p>
+
+            <p>
+                Sentences like "What time is it?", "Read this carefully", are not propositions. "\(x+2=5\)" is not a proposition, but could be <b>iff</b> x was fixed beforehand.
+            </p>
+
+            <p>
+                Atomic propositions are propositions that cannot be broken down further, they are usually represented by a letter, \(p, q\).
+            </p>
+
+            <p>
+                Propositions can be compounded with logical operators \(\lnot, \land, \lor\). These are Negation, Conjunction, Disjunction respectively. Conjunction, \(P \land Q\) can also be written \(PQ\).
+            </p>
+
+            <p>
+                An implication, "<i>if P then Q</i> " or "<i>P implies Q</i> " is denoted \(P \implies Q\), and equals \(\lnot P \lor Q\).
+            </p>
+
+
+            <h2>Boolean Functions</h2>
+
+            <p>
+                For a set of boolean values \(B - \{T, F\}\), a boolean function is a function such that \(f : B^n \longrightarrow B\)
+            </p>.
+
+            <p>
+                <b><i>Example 1.</i></b> Simple example for \(n=2\), let a function \(h_2 (x, y)\) be over this boolean set. We can construct a truth table for this function.
+            </p>
+
+            <p>
+                \begin{array} {|r|r|}\hline x & y & h_2 (x,y) \\ \hline F & F & F \\ \hline F & T & T \\ \hline T & F & T \\ \hline T & T & F \\ \hline  \end{array}
+            </p>
+
+            <p>
+                In this case, the function is exclusive or, \(x \oplus y\).
+            </p>
+
+            <p>
+                <b><i>Example 2.</i></b> Construct the truth table for \((p \implies q) \land (\lnot p \implies r)\)
+            </p>
+
+            <p>
+                <b><i>Answer 2.</i></b> Note that \(p \implies q\) is \(\lnot p \land q\), we can do this incrementally. Let big Q be the output.
+
+                \begin{array} {|r|r|}\hline p & q & r & p \implies q & \lnot p & \lnot p \implies r & Q \\ \hline F & F & F & T & T & F & F \\ \hline F & F & T & T & T & T & T \\ \hline F & T & F & T & T & F & F \\ \hline F & T & T & T & T & T & T \\ \hline T & F & F & F & F & T & F \\ \hline T & F & T & F & F & T & F \\ \hline T & T & F & T & F & T & F \\ \hline T & T & T & T & F & T & F \\ \hline  \end{array}
+            </p>
+
+            <h2>Logical Propositions</h2>
+
+            <p>
+                Since \(\lnot p \implies q \equiv p \implies q\) (the proof of this is trivial), the propositions \(\lnot p \implies q\) and \(p \implies q\) are <i>logically equivalent</i> if the proposition \( \lnot p \Longleftrightarrow q \equiv p \implies q\ \) (also written using \longleftrightarrow) is a <i>tautology</i>.
+            </p>
+
+            <p>
+                \(\Longleftrightarrow\) is the logical equivalence connector, which can be described with the following truth table:
+
+                \begin{array} {|r|r|}\hline x & y & x \Longleftrightarrow y \\ \hline F & F & T \\ \hline F & T & F \\ \hline T & F & F \\ \hline T & T & T \\ \hline  \end{array}
+            </p>
+
+            <p>
+                A <i>tautology</i> is a proposition that is true regardless of the values of its atomic propositions.
+            </p>
+        </div>
+
+
+        <div id="functions" class="colourband">
+            <h2>Functions</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <p>
+                A function \(f: X \longrightarrow Y\) is (generally) a rule that assigns each element of \(x \in X\) to an unambiguous element \(y \in Y\).
+            </p>
+
+            <p>
+                Note the \(f: X \longrightarrow Y\) (set) notation and \(x \longmapsto f(x)\) (mapping to an image).
+            </p>
+
+            <p>
+                <b><i>Example 1.</i></b> Suppose we have the functions \( f_{1}(x) = \frac{1}{x}, f_{2}(x) = \sqrt{x}, f_{3}(x) = \pm \sqrt{x^{2} + 1} \). Which one of these is \(f: \mathbb{R} \longrightarrow \mathbb{R}\)?
+            </p>
+
+            <p>
+                <i><b>Answer 1.</b></i> None of them. \(f_1\) can be represented \(f_1 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \), similarly \(f_2 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \) or \(f_2 :\mathbb{R}_{\geq 0} \longrightarrow \mathbb{R}_{\geq 0} \). \(f_3\) has a bigger problem, as it returns two values. That makes it not a function, but we can solve this by putting the values in an ordered tuple, such that \( f_{3} (x) = (\sqrt{x^2 + 1}, -\sqrt{x^2 + 1}) \). Then it would be \(f_3 :\mathbb{R} \longrightarrow \mathbb{R}^2 \).
+            </p>
+        </div>
 
         <footer>
             <div class="cbox">
