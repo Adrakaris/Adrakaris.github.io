@@ -249,6 +249,13 @@ h3 {
 	/*padding: 3px;*/
 }
 
+h3.c {
+	font-family: Urbanist;
+	font-size: 20pt;
+	letter-spacing: 2px;
+	text-align: center;
+}
+
 p {
 	font-family: Manrope;
 	/*text-align: justify;*/

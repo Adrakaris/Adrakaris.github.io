@@ -56,7 +56,17 @@
         </div>
 
         <div class="cbox">
+            
+
             <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#set-2">Finite Sequences</a></li>
+                <li><a href="#set-3">More on Sets</a></li>
+                <li><a href="#set-4">Set Operation Laws</a></li>
+                <li><a href="#set-5">Power Sets</a></li>
+                <li><a href="#set-6">Cartesian Products</a></li>
+            </ol>
 
             <p>
                 Sets, denoted like \( S = \{a, b, c, ...\} \), contain unique elements. 
@@ -71,11 +81,197 @@
                 Recall the such that notation (: or |). Recall the empty set \(\{\}, \varnothing\). If \(|D| = 1\), D is a <i>singleton</i> set.
             </p>
 
-            <h2>Finite Sequences</h2>
+            <h2 id="set-2">Finite Sequences</h2>
 
             <p>
                 Suppose \(A = \{a, b, c\}\). Then we denote \( A^2 = \{aa, ab, ac, ba, bb, bc, ca, cb, cc\} \), and \(A^n\) is the set of all ordered sequences of length \(n\) of elements in A. Ex. \(\mathbb{Z}^2\) is the set of ordered integer pairs (i.e. integer coordinates). Tuple brackets are usually kept on unless no ambiguity can be had without them on.
             </p>
+
+            <h2 id="set-3">More on Sets</h2>
+
+            <p>
+                Let \( A = \{2, \{3, 4, 5\}, 6, \varnothing \} \). \( |A| = 4 \). We can say that \( A \not \subseteq B \equiv \exists x \in A : x \not \in B \). We also have \( A \varsubsetneq B \) which is an alternate syntax of \( A \subset B \), and means \( A \subseteq B \land A \neq B \). The empty set \( \varnothing \subseteq B, \forall B \).
+            </p>
+
+            <p>
+                Set ranges, let \( C = \{x \in \mathbb{R} : x \leq 5\} \) can also be denoted as \( C = (-\infty, 5] \) or the same using a semicolon vs a comma.
+            </p>
+
+            <p>
+                We can define the set operations as follows:
+
+                <ol>
+                    <li>
+                        \( A \cup B = \{x : x \in A \lor x \in B\} \)
+                    </li>
+                    <li>
+                        \( A \cap B = \{x : x \in A \land x \in B\} \)
+                    </li>
+                    <li>
+                        \( A \setminus B = \{x : x \in A \land x \not \in B\} \)
+                    </li>
+                </ol>
+            </p>
+
+            <p>
+                We can define <i>symmetric difference</i> as \( A \vartriangle B = (A \setminus B) \cup (B \setminus A) \).
+            </p>
+
+            <p class="side">
+                <b><i>Statement.</i></b> \( (A \setminus B) \cup (B \setminus A) \) is the same as \( (A \cup B) \setminus (A \cap B) \).
+                <br><br>
+                <b><i>Proof.</i></b> We want to show that \( (A \setminus B) \cup (B \setminus A) \Longleftrightarrow (A \cup B) \setminus (A \cap B) \)
+                <br><br>
+                For the forward proof, let us take an arbitrary \( x \in (A \setminus B) \cup (B \setminus A) \). We have two cases:
+
+                \begin{align}
+                \textrm{(1) } x \in A \setminus B &\implies x \in A  \\
+                &\implies x \in A \cup B.  \\
+                x \in A \setminus B &\implies x \not \in B  \\
+                &\implies x \not \in A \cap B  \\
+                &\implies x \in (A \cup B) \setminus (A \cap B). \triangleright  \\
+
+                \textrm{(2) } x \in B \setminus A &\implies x \in B  \\
+                &\implies x \in A \cup B.  \\
+                x \in B \setminus A &\implies x \not \in A  \\
+                &\implies x \not \in A \cap B  \\
+                &\implies x \in (A \cup B) \setminus (A \cap B). \triangleright   \\
+                \end{align}
+
+                We have now proved the forward condition. For the backward proof, let us take an arbitrary element \( x \in (A \cup B) \setminus (A \cap B) \).
+
+                \begin{align}
+                &x \in A \cup B \\
+                &x \in A \cup B \implies x \in A \lor x \in B \\
+                &\textrm{if } x \in A \implies x \not \in B \textrm{ else contradiction as } x \in A \cap B \implies x \not \in (A \cup B) \setminus (A \cap B)\\
+                &\therefore x \in A \setminus B \\
+                &\textrm{if } x \in B \implies x \not \in A \textrm{ else similar contradiction} \\
+                &\therefore x \in B \setminus A\\
+                &\therefore x \in (A \setminus B) \cup (B \setminus A).
+                \end{align}
+                $$\tag*{$\Box$}$$
+            </p>
+
+            <h2 id="set-4">Set Operation Laws</h2>
+
+            <p>
+                We can trivially define the following:
+
+                <ul>
+                    <li>
+                        Idempotence<br>
+                        &emsp;\( A \cap A = A; A \cup A = A \)</li>
+                    <li>
+                        Commutativity<br>
+                        &emsp;\( A \cap B = B \cap A; A \cup B = B \cup A \)
+                    </li>
+                    <li>
+                        Associativity<br>
+                        &emsp;\( (A \cap B) \cap C = A \cap (B \cap C) \), same works with \( \cup \).
+                    </li>
+                    <li>
+                        Distributivity (works both ways)<br>
+                        &emsp;\( A \cap (B \cup C) = (A \cap B) \cup (B \cap C) \)<br>
+                        &emsp;\( A \cup (B \cap C) = (A \cup B) \cap (B \cup C) \)
+                    </li>
+                </ul>
+            </p>
+
+            <p>
+                For negation, we need to do some defining. Set minus is not negation, since we need 2 sets for set minus. So suppose then we have a universal set \( S \). For any set \( A \subseteq S \), the complement of A relative to S is the difference, \( \bar{A} = S \setminus A \). Thus, \( \bar{\bar{A}} = A \).
+            </p>
+
+            <p>
+                We also can define De Morgan's law, as <br>
+                \( \overline{A \cap B} = \bar{A} \cup \bar{B} \) and \( \overline{A \cup B} = \bar{A} \cap \bar{B} \).
+            </p>
+
+            <p>
+                We can then define the following,
+
+                \begin{align*}
+                &A \cap S = A \ &A \cup \varnothing = A \\  
+                &A \cap \varnothing \ &A \cup S = S \\
+                &A \cap \bar{A} = \varnothing \ &A \cup \bar{A} = S \\            
+                \end{align*}
+                \[A \cap (A \cup B) = A = A \cup (A \cap B)\]
+
+                The last of which is a <b>theorem</b> and deducible. 
+            </p>
+
+            <p>
+                We have notation for when we want to perform an operation over many sets. This is similar to summation notation.
+
+                \[ \bigcup^{n}_{i=1} A_i \]
+
+                indicates that we want to perform set union on all sets A of index i to n. Similarly, for set intersection, we have
+
+                \[ \bigcap^{n}_{i=1} A_i \]
+            </p>
+
+            <p class="side">
+                <b><i>Example 1.</i></b> Let a set \( A_i = \{x \in \mathbb{Z} : x \geq i, i \in \mathbb{N}\}\) for some index i. Then, we can play around with some operations using these large operators.
+
+                \begin{align*}
+                &\bigcup_{i=1}^{\infty} A_i = A_1;\
+                &\bigcap_{i=1}^{\infty} A_i = \varnothing; \
+                &\bigcap_{i=1}^{n} A_i = A_n;
+                \end{align*}
+
+                More generally, for a set of indices \( I \), we can write
+
+                \begin{align}
+                \bigcup_{i \in I} A_i &= \{x : x \in A_i \textrm{ for some } i \in I\} \\
+                \bigcap_{i \in I} A_i &= \{x : x \in A_i \textrm{ for all } i \in I\} \\
+                \end{align}
+
+                Note that the first is how \( \exists \) works, whilst the second is how \( \forall \) works.
+            </p>
+
+            <h2 id="set-5">Power Sets</h2>
+
+            <p>
+                Given a set S the <i>power set</i> is the set of all subsets of S.
+            </p>
+
+            <p>
+                Let \( S_1 = \varnothing \), then \( 2^{S_1} = \{\varnothing\} \)<br>
+                Let \( S_2 = \{a, b\} \), then \( 2^{S_2} = \{\varnothing, \{a\}, \{b\}, \{a, b\}\} \) <br>
+                And so on. All subsets of a set are elements of its power set.
+            </p>
+
+            <p>
+                A finite set gives a finite power set. If the cardinality of a set \( |S| = n \), the caridnality of its power set \( |2^{S}| = 2^{|S|} = 2^n \). This also shows why the power set notation is as thus.
+            </p>
+
+            <h2 id="set-6">Cartesian Products</h2>
+
+            <p>
+                Recall: for a set \( A, A^2 = \{(a_1, a_2) : a_i \in A, a_2 \in A\} \). Etc. for \( A^n \). The cartesian product for two sets, \( A \times B \), is defined similarly, as \( \{(a, b) : a \in A, b \in B\} \).
+            </p>
+
+            <p>
+                What happens when we take a cartesian product \( A \times \varnothing \)? Well, since \( \varnothing \) has 0 elements, if we look at the defnition the resulting set must have 0 elements, as we cannot have any ordered pairs, thus \( A \times \varnothing = \varnothing = \varnothing \times A \).
+            </p>
+
+            <p>
+                On associativity and commutativity, cartesian product is not commutative, as by switching around the sets we switch around the <i>ordered</i> pairs. On associativity, suppose \( (A \times B) \times C \).
+
+                \begin{align}
+                (A \times B) \times C &= \{(x, y) : x \in A \times B, y \in C\} \\
+                &= \{(x, y) : [x = (a, b):a \in A, b \in B], y \in C\} \\
+                &= \{((a,b),c): a \in A, b \in B, c \in C\} \\
+                \textrm{However } A \times (B \times C) &= \{(a,(b,c)): a \in A, b \in B, c \in C\} \textrm{ which is different. }
+                \end{align}
+
+                So cartesian product is not associative, either.
+            </p>
+
+            <p>
+                We can define \( A \times B \times C = \{(a,b,c) : a \in A, b \in B, c \in C\} \), and extrapolate for further product chains.
+            </p>
+
+            <p><i>Note: Dimitry's philosophical ramblings for this topic are not included.</i></p>
         </div>
 
 
@@ -85,6 +281,14 @@
 
         <div class="cbox">
             <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#pl-1">Boolean Functions</a></li>
+                <li><a href="#pl-2">Logical Propositions</a></li>
+                <li><a href="#pl-3">Laws of Propositional Logic</a></li>
+                <li><a href="#pl-4">Some Notation</a></li>
+                <li><a href="#pl-5">A Little Bit of Abstract Algebra</a></li>
+            </ol>
 
             <p>
                 Propositions allow us to express statements which can be true or false. "Washington DC is the capital of the US" is a true proposition, whilst "2+2=5" is a false one.
@@ -107,7 +311,7 @@
             </p>
 
 
-            <h2>Boolean Functions</h2>
+            <h2 id="pl-1">Boolean Functions</h2>
 
             <p>
                 For a set of boolean values \(B - \{T, F\}\), a boolean function is a function such that \(f : B^n \longrightarrow B\)
@@ -129,7 +333,7 @@
                 \begin{array} {|r|r|}\hline p & q & r & p \implies q & \lnot p & \lnot p \implies r & Q \\ \hline F & F & F & T & T & F & F \\ \hline F & F & T & T & T & T & T \\ \hline F & T & F & T & T & F & F \\ \hline F & T & T & T & T & T & T \\ \hline T & F & F & F & F & T & F \\ \hline T & F & T & F & F & T & F \\ \hline T & T & F & T & F & T & F \\ \hline T & T & T & T & F & T & F \\ \hline  \end{array}
             </p>
 
-            <h2>Logical Propositions</h2>
+            <h2 id="pl-2">Logical Propositions</h2>
 
             <p>
                 Since \(\lnot p \implies q \equiv p \implies q\) (the proof of this is trivial), the propositions \(\lnot p \implies q\) and \(p \implies q\) are <i>logically equivalent</i> if the proposition \( \lnot p \Longleftrightarrow q \equiv p \implies q\ \) (also written using \(\longleftrightarrow\)) is a <i>tautology</i>.
@@ -145,7 +349,7 @@
                 A <i>tautology</i> is a proposition that is true regardless of the values of its atomic propositions.
             </p>
 
-            <h2>Laws of Propositional Logic</h2>
+            <h2 id="pl-3">Laws of Propositional Logic</h2>
 
             <ul>
                 <li>
@@ -193,15 +397,17 @@
                 <b><i>Proof 1.</i></b> We can prove the absorption law (1) by using the distributive (2), annihalation (3), and identity (4) laws.
 
                 \[x \lor (x \land y) \]
-                \[\textrm{by (4) } \implies (x \land T) \lor (x \land y)\]
-                \[ \textrm{by (2) } \implies x \land (T \lor y) \]
-                \[ \textrm{by (3) } \implies x \land T \]
-                \[ \textrm{by (3) } \implies x\]
+                \begin{align}
+                \textrm{by (4) } &\implies (x \land T) \lor (x \land y)  \\
+                \textrm{by (2) } &\implies x \land (T \lor y)   \\
+                \textrm{by (3) } &\implies x \land T   \\
+                \textrm{by (3) } &\implies x  \\
+                \end{align}
                 $$\tag*{$\Box$}$$ 
 
             </p>
 
-            <h2>Some Notation</h2>
+            <h2 id="pl-4">Some Notation</h2>
 
             <p>Logical AND can be \(\land, \&, \cdot\) or omitted entirely (like multiplication in algebra).</p>
 
@@ -217,7 +423,7 @@
                 True and false can also be represented as \(1, 0\).
             </p>
 
-            <h2>A Little bit of Dimitry's Abstract Algebra</h2>
+            <h2 id="pl-5">A Little bit of Dimitry's Abstract Algebra</h2>
 
             <p>(skippable?)</p>
 
@@ -237,7 +443,14 @@
         </div>
 
         <div class="cbox">
-            <h2>Predicates and Quantifiers</h2>
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#pnq-1">Predicates and Quantifiers</a></li>
+                <li><a href="#pnq-2">Predicate Laws of Logic</a></li>
+            </ol>
+
+            <h2 id="pnq-1">Predicates and Quantifiers</h2>
 
             <p>
                 A predicate is a statement that can contain a variable, and is either true or false. For example, \(P_{1}(u)\) where u is the variable, which is in a domain, such as \(u \in \mathbb{Z}\).
@@ -303,7 +516,7 @@
                 For (D), we need to be slightly more careful. Using u and v here may get confusing, since it clashes with the u and v used in the definition, so first let us write it in terms of other variables: \(\exists x \forall y, p(y,x)\). What this is saying is that "there exists a column, such that for all rows that column is true." Since column 4 is true, this sentence is true.
             </p>
 
-            <h2>Predicate Laws of Logic</h2>
+            <h2 id="pnq-2">Predicate Laws of Logic</h2>
 
             <p>
                 Let us have a set \(A = \{1, 2, 3, ..., n\}\). \(\forall x \in A, p(x)\) can be rewritten as a conjunction \(p(1) \land p(2) \land ... \land p(n)\) Likewise, \(\exists x \in A : p(x)\) can be rewritten as a disjunction \(p(1) \lor p(2) \lor ... \lor p(n)\).
@@ -366,6 +579,11 @@
 
         <div class="cbox">
             <h2>Introduction</h2>
+
+            <!--
+            <ol>
+                <li><a href="#func-"></a></li>
+            </ol>-->
 
             <p>
                 A function \(f: X \longrightarrow Y\) is (generally) a rule that assigns each element of \(x \in X\) to an unambiguous element \(y \in Y\).
