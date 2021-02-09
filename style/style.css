@@ -279,7 +279,7 @@ p.rj {
 
 p.side {
 	border-left: 1px solid #a17667;
-	border-spacing: 10px 10px;
+	border-spacing: 10px 0px;
 	padding-left: 10px;
 	margin-left: -10px;
 }

@@ -161,14 +161,14 @@
                     <li>
                         Idempotence<br>
                         &emsp;\( A \cap A = A; A \cup A = A \)</li>
-                    <li>
+                    <li><br>
                         Commutativity<br>
                         &emsp;\( A \cap B = B \cap A; A \cup B = B \cup A \)
-                    </li>
+                    </li><br>
                     <li>
                         Associativity<br>
                         &emsp;\( (A \cap B) \cap C = A \cap (B \cap C) \), same works with \( \cup \).
-                    </li>
+                    </li><br>
                     <li>
                         Distributivity (works both ways)<br>
                         &emsp;\( A \cap (B \cup C) = (A \cap B) \cup (B \cap C) \)<br>
@@ -357,36 +357,36 @@
                     &emsp;\((x \lor y) \lor z \equiv x \lor (y \lor z) \)<br>
                     &emsp;\(x \lor y \equiv y \lor x\)<br>
                     Which also work with logical and.
-                </li>
+                </li><br>
                 <li>
                     The identities, <br>
                     &emsp;\(x \lor F = x; x \land T = x\)
-                </li>
+                </li><br>
                 <li>
                     The idempotent laws, <br>
                     &emsp;\( x \lor x = x, x \land x = x \)
-                </li>
+                </li><br>
                 <li>
                     De Morgan's laws, which can be described as (1) negate the parts, (2) negate the whole expression, (3) switch the sign from or to and or vice versa. <br>
                     &emsp;\( a \land b \) to \( \lnot a \land \lnot b \) to \( \lnot (\lnot a \land \lnot b) \) to \( \lnot (\lnot a \lor \lnot b) \)
-                </li>
+                </li><br>
                 <li>
                     The not not, \(\lnot \lnot x = x\).
-                </li>
+                </li><br>
                 <li>
                     The excluded middle, <br>
                     &emsp;\(x \lor \lnot x = T; x \land \lnot x = F\)
-                </li>
+                </li><br>
                 <li>
                     The absorption law, <br>
                     &emsp; \(x \lor (x \land y) = x\) <br>
                     &emsp; \(x \land (x \lor y) = x\)
-                </li>
+                </li><br>
                 <li>
                     The distributive law (and is omitted) <br>
                     &emsp; \(x(y \lor z) = xy \lor xz\) <br>
                     &emsp; \( x \lor (yz) = (x \lor y)(x \lor z)\)
-                </li>
+                </li><br>
                 <li>
                     Annihalation law, <br>
                     &emsp; \(x \lor T = T; x \land F = F\)
@@ -481,14 +481,14 @@
             </p>
             
             <p class="side">
-                <b><i>Example 1.</i></b> Let \(P_5 (x,y) : (x-1)^2 + (y-3)^2 = 0\). <br>
+                <b><i>Example 1.</i></b> Let \(P_5 (x,y) : (x-1)^2 + (y-3)^2 = 0\). <br><br>
                 We can say that \(\exists x \exists y : P_5 (x,y)\) is true (\(x=1, y=3\)), whilst \(\forall x \forall y : P_5 (x,y)\) is false, since we can find a trivial example in \(x=0, y=0\).
             </p>
             
 
             <p class="side">
-                <b><i>Example 2.</i></b> Let \(q(u, v) : | u-v| = 1\). <br>
-                For the sentence \(\forall u \exists v : q(u,v)\), we can say that this is true, since we can pick \(v=u+1\). <br>
+                <b><i>Example 2.</i></b> Let \(q(u, v) : | u-v| = 1\). <br><br>
+                For the sentence \(\forall u \exists v : q(u,v)\), we can say that this is true, since we can pick \(v=u+1\). <br><br>
                 However the sentence \(\exists v : \forall u, q(u,v)\) is problematic, since there is an exception for the value of u for all values of v. So this is false.
             </p>
 
@@ -538,24 +538,24 @@
                         Basic laws, <br>
                         &emsp;\(\forall x, T \equiv T; \forall x, F \equiv F\)<br>
                         which are true also for \(\exists\).
-                    </li>
+                    </li><br>
 
                     <li>
                         Law of distribution <br>
                         &emsp;\(\forall x, (P(x) \land Q) \equiv (\forall x, P(x)) \land Q\) <br>
                         Note that Q is a <i>statement</i>, which does not rely on a variable. Also true for \(\exists\) and \(\lor\).
-                    </li>
+                    </li><br>
 
                     <li>
                         De Morgan's law applied to quantifiers, <br>
                         &emsp;\(\lnot (\forall x, P(x)) \equiv \exists x : \lnot P(x)\)<br>
                         &emsp;\(\lnot (\exists x : P(x)) \equiv \forall x, \lnot P(x)\)
-                    </li>
+                    </li><br>
 
                     <li>
                         We can distribute quantifiers over predicates in certain cases. <br>
                         &emsp;\(\forall x, (P(x) \land Q(x)) \equiv \forall x, P(x) \land \forall x, Q(x)\) works, <br>
-                        &emsp;However \(\exists x: (P(x) \land Q(x))\) <i>cannot</i> be expanded.<br>
+                        &emsp;However \(\exists x: (P(x) \land Q(x))\) <i>cannot</i> be expanded.<br><br>
                         &emsp;\( \exists x : (P(x) \lor Q(x)) \equiv \exists x : P(x) \lor \exists x : Q(x) \) works, <br>
                         &emsp;However \(\forall x: (P(x) \lor Q(x))\) <i>cannot</i> be expanded.
                      </li>
@@ -596,7 +596,11 @@
             <p class="side">
                 <b><i>Example 1.</i></b> Suppose we have the functions \( f_{1}(x) = 1/x, f_{2}(x) = \sqrt{x}, f_{3}(x) = \pm \sqrt{x^{2} + 1} \). Which one of these is \(f: \mathbb{R} \longrightarrow \mathbb{R}\)? <br><br>
 
-                <i><b>Answer 1.</b></i> None of them. \(f_1\) can be represented \(f_1 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \), similarly \(f_2 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \) or \(f_2 :\mathbb{R}_{\geq 0} \longrightarrow \mathbb{R}_{\geq 0} \). \(f_3\) has a bigger problem, as it returns two values. That makes it not a function, but we can solve this by putting the values in an ordered tuple, such that \( f_{3} (x) = (\sqrt{x^2 + 1}, -\sqrt{x^2 + 1}) \). Then it would be \(f_3 :\mathbb{R} \longrightarrow \mathbb{R}^2 \).
+                <i><b>Answer 1.</b></i> None of them. \(f_1\) can be represented \(f_1 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \), similarly \(f_2 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \) or \(f_2 :\mathbb{R}_{\geq 0} \longrightarrow \mathbb{R}_{\geq 0} \). <br><br>
+
+                \(f_3\) has a bigger problem, as it returns two values. <br><br>
+
+                That makes it not a function, but we can solve this by putting the values in an ordered tuple, such that \( f_{3} (x) = (\sqrt{x^2 + 1}, -\sqrt{x^2 + 1}) \). Then it would be \(f_3 :\mathbb{R} \longrightarrow \mathbb{R}^2 \).
             </p>
         </div>
 
