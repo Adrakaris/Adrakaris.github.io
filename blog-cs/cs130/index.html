@@ -43,8 +43,10 @@
         <div class="cbox">
             <ol>
                 <li><a href="#sets">Sets</a></li>
-                <li><a href="#functions">Functions</a></li>
                 <li><a href="#proplogic">Propositional Logic</a></li>
+                <li><a href="#predicates">Logic of Predicates</a></li>
+                <li><a href="#functions">Functions</a></li>
+                
             </ol>
         </div>
 
@@ -109,25 +111,19 @@
 
             <p>
                 For a set of boolean values \(B - \{T, F\}\), a boolean function is a function such that \(f : B^n \longrightarrow B\)
-            </p>.
-
-            <p>
-                <b><i>Example 1.</i></b> Simple example for \(n=2\), let a function \(h_2 (x, y)\) be over this boolean set. We can construct a truth table for this function.
             </p>
 
-            <p>
-                \begin{array} {|r|r|}\hline x & y & h_2 (x,y) \\ \hline F & F & F \\ \hline F & T & T \\ \hline T & F & T \\ \hline T & T & F \\ \hline  \end{array}
-            </p>
+            <p class="side">
+                <b><i>Example 1.</i></b> Simple example for \(n=2\), let a function \(h_2 (x, y)\) be over this boolean set. We can construct a truth table for this function. <br> <br>
 
-            <p>
+                \begin{array} {|r|r|}\hline x & y & h_2 (x,y) \\ \hline F & F & F \\ \hline F & T & T \\ \hline T & F & T \\ \hline T & T & F \\ \hline  \end{array} <br><br>
+
                 In this case, the function is exclusive or, \(x \oplus y\).
             </p>
 
-            <p>
-                <b><i>Example 2.</i></b> Construct the truth table for \((p \implies q) \land (\lnot p \implies r)\)
-            </p>
+            <p class="side">
+                <b><i>Example 2.</i></b> Construct the truth table for \((p \implies q) \land (\lnot p \implies r)\) <br><br>
 
-            <p>
                 <b><i>Answer 2.</i></b> Note that \(p \implies q\) is \(\lnot p \land q\), we can do this incrementally. Let big Q be the output.
 
                 \begin{array} {|r|r|}\hline p & q & r & p \implies q & \lnot p & \lnot p \implies r & Q \\ \hline F & F & F & T & T & F & F \\ \hline F & F & T & T & T & T & T \\ \hline F & T & F & T & T & F & F \\ \hline F & T & T & T & T & T & T \\ \hline T & F & F & F & F & T & F \\ \hline T & F & T & F & F & T & F \\ \hline T & T & F & T & F & T & F \\ \hline T & T & T & T & F & T & F \\ \hline  \end{array}
@@ -236,6 +232,134 @@
         </div>
 
 
+        <div id="predicates" class="colourband">
+            <h2>Logic of Predicates</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Predicates and Quantifiers</h2>
+
+            <p>
+                A predicate is a statement that can contain a variable, and is either true or false. For example, \(P_{1}(u)\) where u is the variable, which is in a domain, such as \(u \in \mathbb{Z}\).
+            </p>
+
+            <p>
+                Variables can be bound by quantifiers, \(\forall u\) and \(\exists u\). 
+            </p>
+
+            <p>
+                Let the predicate \(P_{2}(u): u^2 - 1 = (u-1)(u+1)\), we can then construct sentences using quantifiers and predicates, \(\forall u \in \mathbb{Z}, P_{2}(u)\). For all integers u such that the predicate holds. This can be done without the domain if domain is implied, but this is usually <i>not well defined</i>.
+            </p>
+
+            <p>
+                Let \(P_{3}(u): u^2 = 9\). Then \(\forall u \in \mathbb{Z}, P_{3}(u)\) is false, since we can provide a counterexample.
+            </p>
+
+            <p>
+                A variable bound by a quantifier is called, well, a <i>bound variable</i>, whilst otherwise it is a <i>free variable</i>.
+            </p>
+
+            <p>
+                Note: \(\exists\) is usually used with a colon ("such that"), whilst \(\forall\) is not.
+            </p>
+
+            <p>
+                Predicates can be over multiple variables. Let \(P_{4}(x, y):(x^2 - y^2 = (x-y)(x+y)\). Then we can say \(\exists x \exists y : P_{1}(x,y)\) or \(\forall x \forall y , P_1 (x,y)\), which are both true.
+            </p>
+            
+            <p class="side">
+                <b><i>Example 1.</i></b> Let \(P_5 (x,y) : (x-1)^2 + (y-3)^2 = 0\). <br>
+                We can say that \(\exists x \exists y : P_5 (x,y)\) is true (\(x=1, y=3\)), whilst \(\forall x \forall y : P_5 (x,y)\) is false, since we can find a trivial example in \(x=0, y=0\).
+            </p>
+            
+
+            <p class="side">
+                <b><i>Example 2.</i></b> Let \(q(u, v) : | u-v| = 1\). <br>
+                For the sentence \(\forall u \exists v : q(u,v)\), we can say that this is true, since we can pick \(v=u+1\). <br>
+                However the sentence \(\exists v : \forall u, q(u,v)\) is problematic, since there is an exception for the value of u for all values of v. So this is false.
+            </p>
+
+            <p>
+                (Dimitry's analogy) Sentences with quantifiers act like a game between 2 players. \(\exists\) wants to pick values of its variable for a true value, whilst \(\forall\) wants to pick values which are false.
+            </p>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> Let \(s(x,y): x&lt;y\). Consider (1) \(\forall x \exists y : s(x,y)\) and (2) \(\exists y : \forall x, s(x, y)\). Which one is true and which one is false? <br><br>
+
+                <b><i>Answer 3.</i></b> We can always pick a true value for every x, so (1) is true. However, for every value of x we can pick a false y, so (2) is false.
+            </p>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> Consider the predicate \(p(u, v)\) in the figure, which one of the following is true? (A) \(\exists v \exists u : p (u,v)\), (B) \(\forall u \forall v, p (u,v)\), (C) \(\forall v \exists u: p(v,u)\), (D) \(\exists u \forall v, p(v,u)\).
+
+                \begin{array} {|r|r|}\hline u \backslash v & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline A & F & F & F & T & T & F \\ \hline B & F & F & T & T & F & T \\ \hline C & T & T & F & T & F & F \\ \hline D & F & F & F & T & F & F \\ \hline  \end{array}
+
+                <b><i>Answer 4.</i></b> For (A), \(p(A, 4)\) is true, so the sentence is true. <br><br>
+
+                For (B), \(p(A, 1)\) is false, so the sentence is false. <br><br>
+
+                For (C), note that u and v are switched round. However, variable names are really arbitrary, and \(\forall v \exists u: p(v,u) \equiv \forall u \exists v: p(u,v)\), since they are just labels at the end of the day. This is then saying tat for all rows there is a column that is true, which is true. So the sentence is true. <br><br>
+
+                For (D), we need to be slightly more careful. Using u and v here may get confusing, since it clashes with the u and v used in the definition, so first let us write it in terms of other variables: \(\exists x \forall y, p(y,x)\). What this is saying is that "there exists a column, such that for all rows that column is true." Since column 4 is true, this sentence is true.
+            </p>
+
+            <h2>Predicate Laws of Logic</h2>
+
+            <p>
+                Let us have a set \(A = \{1, 2, 3, ..., n\}\). \(\forall x \in A, p(x)\) can be rewritten as a conjunction \(p(1) \land p(2) \land ... \land p(n)\) Likewise, \(\exists x \in A : p(x)\) can be rewritten as a disjunction \(p(1) \lor p(2) \lor ... \lor p(n)\).
+            </p>
+
+            <p class="side">
+                <b><i>Example 5.</i></b> \(\forall x \exists y \in \{a, b, c\} : f(x, y)\) can be rewritten:
+
+                \[\implies (\exists y : f(a,y)) \land (\exists y : f(b,y)) \land (\exists y : f(c,y)) \]
+
+                \[ \implies (f(a,a) \lor f(a,b) \lor f(a,c)) \land ... \] and so on for all 9 values.
+            </p>
+
+            <p>
+                On the laws of quantifiers:
+
+                <ul>
+                    <li>
+                        Basic laws, <br>
+                        &emsp;\(\forall x, T \equiv T; \forall x, F \equiv F\)<br>
+                        which are true also for \(\exists\).
+                    </li>
+
+                    <li>
+                        Law of distribution <br>
+                        &emsp;\(\forall x, (P(x) \land Q) \equiv (\forall x, P(x)) \land Q\) <br>
+                        Note that Q is a <i>statement</i>, which does not rely on a variable. Also true for \(\exists\) and \(\lor\).
+                    </li>
+
+                    <li>
+                        De Morgan's law applied to quantifiers, <br>
+                        &emsp;\(\lnot (\forall x, P(x)) \equiv \exists x : \lnot P(x)\)<br>
+                        &emsp;\(\lnot (\exists x : P(x)) \equiv \forall x, \lnot P(x)\)
+                    </li>
+
+                    <li>
+                        We can distribute quantifiers over predicates in certain cases. <br>
+                        &emsp;\(\forall x, (P(x) \land Q(x)) \equiv \forall x, P(x) \land \forall x, Q(x)\) works, <br>
+                        &emsp;However \(\exists x: (P(x) \land Q(x))\) <i>cannot</i> be expanded.<br>
+                        &emsp;\( \exists x : (P(x) \lor Q(x)) \equiv \exists x : P(x) \lor \exists x : Q(x) \) works, <br>
+                        &emsp;However \(\forall x: (P(x) \lor Q(x))\) <i>cannot</i> be expanded.
+                     </li>
+                </ul>
+            </p>
+
+            <p>
+                Sometimes, we want for a <i>unique</i> item to exist. Currently, \(\exists\) means "one or more", however a shorthand to say "exactly one" is \(\exists!\). This is formally defined as:
+
+                \[ \exists! x \in S : P(x) = ( \exists x : P(x) ) \land \forall y \in S \forall x \in S, ( (P(y) \land P(z) ) \implies y = z \]
+            </p>
+
+
+
+        </div>
+
+
         <div id="functions" class="colourband">
             <h2>Functions</h2>
         </div>
@@ -251,11 +375,9 @@
                 Note the \(f: X \longrightarrow Y\) (set) notation and \(x \longmapsto f(x)\) (mapping to an image).
             </p>
 
-            <p>
-                <b><i>Example 1.</i></b> Suppose we have the functions \( f_{1}(x) = \frac{1}{x}, f_{2}(x) = \sqrt{x}, f_{3}(x) = \pm \sqrt{x^{2} + 1} \). Which one of these is \(f: \mathbb{R} \longrightarrow \mathbb{R}\)?
-            </p>
+            <p class="side">
+                <b><i>Example 1.</i></b> Suppose we have the functions \( f_{1}(x) = 1/x, f_{2}(x) = \sqrt{x}, f_{3}(x) = \pm \sqrt{x^{2} + 1} \). Which one of these is \(f: \mathbb{R} \longrightarrow \mathbb{R}\)? <br><br>
 
-            <p>
                 <i><b>Answer 1.</b></i> None of them. \(f_1\) can be represented \(f_1 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \), similarly \(f_2 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \) or \(f_2 :\mathbb{R}_{\geq 0} \longrightarrow \mathbb{R}_{\geq 0} \). \(f_3\) has a bigger problem, as it returns two values. That makes it not a function, but we can solve this by putting the values in an ordered tuple, such that \( f_{3} (x) = (\sqrt{x^2 + 1}, -\sqrt{x^2 + 1}) \). Then it would be \(f_3 :\mathbb{R} \longrightarrow \mathbb{R}^2 \).
             </p>
         </div>
