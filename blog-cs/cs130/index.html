@@ -753,9 +753,9 @@
 
                 Note that de Morgan's law was applied to \( \lnot (\lnot f \lor p) \). Once we have everything in this mode we can use <b><i>modus ponens</i></b> to resolve this down.
 
-                \[ (\lnot a \lor \lnot q \lor m) \land (\lnot \not f \lor q) \land (\not p \lor a) \land \lnot m \land f \land \lnot p \]
+                \[ (\lnot a \lor \lnot q \lor m) \land (\cancel {\lnot f} \lor q) \land (\cancel {p} \lor a) \land \lnot m \land f \land \lnot p \]
 
-                \[ (\lnot \not a \lor \lnot \not q \lor m) \land q \land a \land \lnot m \land \lnot p \]
+                \[ (\lnot \cancel{a} \lor  \cancel{\lnot q} \lor m) \land q \land a \land \lnot m \land \lnot p \]
 
                 \[ m \land q \land a \land \lnot m \land \lnot p \]
 
@@ -766,6 +766,32 @@
 
             <p>
                 <b><i>Modus Ponens.</i></b> Simply, given that \( x \) holds, and \( x \implies y \), then \( y \) holds. This can also be expressed as in the case \( x \land (y \lor \lnot x) \equiv x \land y \). This also works the other way around, \( \lnot x \land (x \land y) \equiv \lnot x \land y \). <br> (<i>The proof is trivial and left as an excersise to the reader.</i>)
+            </p>
+
+            <p class="side">
+                <b><i>Example 7.</i></b> Given the following predicates, based on the variables \( r,c,l,n,t \), prove or disprove \( X \land Y \land Z \implies W \).
+
+                \begin{align}
+                &(X) &r \implies (c \lor l) \\
+                &(Y) &\lnot c \implies \lnot n \\
+                &(Z) &\lnot t \implies \lnot l \\
+                &(W) &r \implies (n \lor t)
+                \end{align}
+
+                <b><i>Proof 7.</i></b> Let us assert a contradictory statement, \( X \land Y \land Z \land \lnot W \).
+
+                \[ (r \implies (c \lor l)) \land (\lnot c \implies \lnot n) \land (\lnot t \implies \lnot l) \land \lnot (r \implies (n \lor t)) \]
+
+                Converting implications to more elemnentary boolean operations, and using modus ponens, as well as using de Morgan's law on \( W \)...
+
+                \[ ( \cancel{\lnot r} \lor c \lor l) \land (c \lor \lnot n) \land (\cancel{t} \lor \lnot l) \land r \land \lnot n \land \lnot t \]
+
+                \[ (c \lor \cancel{l}) \land (c \lor \lnot n) \land \lnot l \land r \land \lnot n \land \lnot t \]
+
+                \[ c \land (c \lor \lnot n) \land \lnot l \land r \land \lnot n \land \lnot t \]
+
+                Note that if \( c = r = T \) and \( l = n = t = F \), this whole expression will resolve to true. Since this is the case, the counter statement has been resolved, therefore the original statement is false.
+                $$\tag*{$\Box$}$$
             </p>
 
         </div>
