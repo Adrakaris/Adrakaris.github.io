@@ -46,6 +46,7 @@
                 <li><a href="#proplogic">Propositional Logic</a></li>
                 <li><a href="#predicates">Logic of Predicates</a></li>
                 <li><a href="#proofs">Proofs</a></li>
+                <li><a href="#relations">Relations</a></li>
                 <li><a href="#functions">Functions</a></li>
                 
             </ol>
@@ -568,9 +569,6 @@
 
                 \[ \exists! x \in S : P(x) = ( \exists x : P(x) ) \land \forall y \in S \forall x \in S, ( (P(y) \land P(z) ) \implies y = z \]
             </p>
-
-
-
         </div>
 
 
@@ -793,6 +791,141 @@
                 Note that if \( c = r = T \) and \( l = n = t = F \), this whole expression will resolve to true. Since this is the case, the counter statement has been resolved, therefore the original statement is false.
                 $$\tag*{$\Box$}$$
             </p>
+
+        </div>
+
+
+        <div id="relations" class="colourband">
+            <h2>Relations</h2>
+        </div>
+
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#rel-1">Properties of Relations</a></li>
+                <li><a href="#rel-1">Equivalence Relations</a></li>
+            </ol>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Given sets \( A, B\) a <b>relation</b> \( R \) between \( A,B \) is denoted \( R \subseteq A \times B \).
+            </p>
+
+            <p>
+                If \( A=B \), a relation is said to be <i>on</i> \( A \).
+            </p>
+
+            <p>
+                There are a lot of freedoms with relations, and how large they are. An <i>empty relation</i> is \( R = \varnothing \), whilst a <i>total relation</i> is \( R = A \times B \).
+            </p>
+
+            <p class="side">
+                <b><i>Example 1.</i></b> Let \( \mathbb{Z} = A = B \). The <i>equality relation</i> is a relation described as \( R = \{(x,y) \in \mathbb{Z} \times \mathbb{Z} : x = y\} \).
+            </p>
+
+            <p class="side">
+                <b><i>Example 2.</i></b> An <i>inequality relation</i> on the integers is denoted \( R = \{(x,y) \in \mathbb{Z} \times \mathbb{Z} : x \leq y\} \).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> The <b>inverse</b> of a relation \( R \subseteq A \times B \) is denoted \( R^{-1} \), where \( R^{-1} = \{(b,a) \in B \times A : (a,b) \in R \} \) This is a relation from B to A. 
+            </p>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> Let us define \( R = \{(x,y) \in \mathbb{Z} \times \{0, 1\}: x \textrm{ has remainder } y \textrm{ mod } 2\} \). In this case, all tuples \( (x,0) \) are even \( x \)s, whilst all tuples \( (x, 1) \) are odd \( x \)s.
+            </p>
+
+            <p>
+                Since relations are sets themselves, therefore we can also perform set operations on relations, such as \( R_1 \cup R_2 \), \( R_1 \cap R_2 \), \( R_1 \setminus R_2 \). 
+            </p>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> Relations can be abstract or concrete. Take a set \( P \) of people, we can define a relation over the set of people as \( R = \{(x,y) \in P^2 : x \textrm{ is a child of } y\} \).
+            </p>
+
+            <p>
+                Since relations can either hold or not for elements from a sets, relations can also be thought of as predicates. For example, for relation \( R, \; R(x,y) \) is the predicate. If \( R(a,b) : a \in A , b \in B \) then the pair \( (a,b) \in R \).
+            </p>
+
+            <p>
+                Instead of writing \( (a,b) \in R \), which may be tedious, one can simply write \( aRb \) where R is the relation, or can be replaced with the denotation of the relation. For example, for a relation \( R_{\leq} \), we can write \( (a,b) \in R_{\leq} \), \( (a,b) \in \leq \), or more commonly \( a \leq b \).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Suppose \( R, Q \) are relations, \( R \in A \times B \) and \( Q \in B \times C \), the <b>composition</b> of \( R, Q \) is the relation \( R \circ Q = \{ (a,c) \in A \times C : \exists b \in B : (a,b) \in R, (b,c) \in Q \} \).
+            </p>
+
+            <p class="side">
+                <b><i>Example 5.</i></b> Take the relation from example 4. What if we compose \( R \) with \( R \)? 
+                <br><br>
+                \( R \circ R \) describes all persons \( a, c \) where there is a person \( b \) sich that \( a\) is a child of \( b \) and \( b \) is a child of \( c \). Or, more succinctly, \( a \) is a grandchild of \( c \).
+            </p>
+
+
+            <h2 id="rel-1">Properties of Relations</h2>
+
+            <p>
+                Considering a relation R on set S:
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation is <b>REFLEXIVE</b> if \( aRa \; \forall a \in S\).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation is <b>SYMMETRIC</b> if \( aRb \implies bRa \l \forall a,b\in S \).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation is <b>ANTISYMMETRIC</b> if \( aRb \land bRa \implies a = b\).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation is <b>TRANSITIVE</b> if \( \forall (a, b, c), \; aRb \land bRc \implies aRc \).
+            </p>
+
+            <p>
+                Let us take the following relations, \( (1), (2), (3), (4)\) (<i>of which the first two, and the last come from prior examples</i>). 
+                \begin{align}
+                (1) \; &R = \{(x,y) \in \mathbb{Z}^2 : x=y\} \\
+                (2) \; &R = \{(x,y) \in \mathbb{Z}^2 : x \leq y\} \\
+                (3) \; &R = \{(x,y) \in \mathbb{Z}^2 : x-y \textrm{ is even}\} \\
+                (4) \; &R = \{(x,y) \in P^2 : x \textrm{ is a child of } y\}
+                \end{align}
+            </p>
+
+            <p>
+                Relation (1) is reflexive, symmetric, antisymmetric and transitive.
+            </p>
+
+            <p>
+                Relation (2) is reflexive, antisymmetric, and transitive, but <i>not</i> symmetric. Try find a counterexample in the not case.
+            </p>
+
+            <p>
+                Relation (3) is reflexive, symmetric, and transitive, but <i>not</i> symmetric. Try to find a counterexample.
+            </p>
+
+            <p>
+                Relation (4) is not reflexive. No one can be a child of themself.<br>
+                Relation (4) is also not symmetric. A parent cannot be a child of their own child. <br>
+                Relation (4) is not transitive. If \( a \) is the child of \( b \), and \( b \) is the child of \( c \), then \( a \) is the <i>grandchild</i>, and not child, of \( c \)
+            </p>
+
+            <p>
+                How about for antisymmetry of (4)? Does \( a \) being a child of \( b \), and \( b \) being a child of \( a \), imply that \( a \) is \( b \)? The problem here is, there is no pair \( a,b \) possible for this, so \( aRb \land bRa \) is <i>always</i> false. Since false always implies true, (4) <i>is</i> antisymmetric.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation is an <b>equivalence</b> relation if it is <i>reflexive, symmetric, and transitive</i>.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation is a <b>partial order</b> relation if it is <i>reflexive, <b>anti</b>symmetric, and transitive</i>.
+            </p>
+
+            <h2 id="rel-2">Equivalence Relations</h2>
 
         </div>
 

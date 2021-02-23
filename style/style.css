@@ -284,6 +284,16 @@ p.side {
 	margin-left: -10px;
 }
 
+p.blue {
+	border-width: thin;
+	border-style: solid;
+	border-color: #1f7282;
+	border-spacing: 10px 10px;
+	padding: 10px;
+	margin-left: -10px;
+}
+
+
 code {
 	font-family: JBMono;
 	color: #1f7282;
