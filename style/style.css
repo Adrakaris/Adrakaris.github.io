@@ -289,6 +289,10 @@ code {
 	color: #1f7282;
 }
 
+blockquote {
+	font-style: italic;
+}
+
 
 
 @media (max-width: 768px) {

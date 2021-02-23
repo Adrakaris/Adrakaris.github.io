@@ -45,6 +45,7 @@
                 <li><a href="#sets">Sets</a></li>
                 <li><a href="#proplogic">Propositional Logic</a></li>
                 <li><a href="#predicates">Logic of Predicates</a></li>
+                <li><a href="#proofs">Proofs</a></li>
                 <li><a href="#functions">Functions</a></li>
                 
             </ol>
@@ -573,6 +574,203 @@
         </div>
 
 
+        <div id="proofs" class="colourband">
+            <h2>Proofs</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#prf-1">Direct Proof</a></li>
+                <li><a href="#prf-2">Contrapositives and Contradictions</a></li>
+                <li><a href="#prf-3">Nonconstructive Proof</a></li>
+                <li><a href="#prf-4">Logic in Proof</a></li>
+            </ol>
+
+            <h2 id="prf-1">Direct Proof and Case Analysis</h2>
+
+            <p>
+                Direct proof is showing that for predicates P and Q, \( P \implies Q \).
+            </p>            
+
+            <p>
+                Case by case analysis is by looking at all possible cases that could occur and proving a sentence true based on those.
+            </p>
+
+            <p class="side">
+                <b><i>Example 1.</i></b> Suppose sets \( A, B \), prove that \( 2^A \subseteq 2^B \implies A \subseteq B \).
+                <br><br>
+                <b><i>Proof 1.</i></b> Take an arbitrary \( x \in A \). Then, \( \{x\} \in 2^A \).<br><br>
+                
+                Since \( 2^A \subseteq 2^B \), \( \{x\} \in B \), therefore \( x \in B \).
+                $$\tag*{$\Box$}$$
+            </p> 
+
+            <p class="side">
+                <b><i>Example 2.</i></b> <i>Case by case analysis</i>. Prove that \( 2^A \lor 2^B \subseteq 2^{A \cup B} \).
+                <br><br>
+                Consider an element \( x \in A \). Then \( \{x\} \in 2^A \). 
+                <br><br>
+                Consider an element \( x \in A \cup B \). Then \( \implies \{x\} \in 2^{A \cup B} \). Additionally,
+
+                \begin{align}
+                    &\implies x \in A \cup x \in B \\
+                    &\implies \{x\} \in 2^A \cup \{x\} \in 2^B \\
+                    &\implies \{x\} \in (2^A \cup 2^B) \textrm{ } \forall x. \\
+                    &\implies (2^A \cup 2^B ) \subseteq 2^{A \cup B}.
+                \end{align}$$\tag*{$\Box$}$$
+            </p>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> Prove that \( f(n) = 1 + (-1)^n (2n-1) \) is a multiple of 4 \( \forall x \in \mathbb{Z} \)
+                <br><br>
+                We can of course take a few cases of n and see what we get. This is left to the reader.
+                <br><br>
+                <b><i>Proof 3.</i></b> We want to look at the cases where n is odd, and n is even.
+                <br><br>
+                If n is even, \( f(n) = 1 + 1 (2n-1) = 2n \). Suppose \( n = 2k, k \in \mathbb{Z} \), then \( f(n) = 2 \cdot 2k = 4k. \)
+                <br><br>
+                If n is odd, \( f(n) = 1 - (2n - 1) = 2-2n \). Suppose \( n = 2k-1, k \in \mathbb{Z} \), then \( f(n) = 2-2(2k-1) = 4k-4 = 4(k-1). \)
+                $$\tag*{$\Box$}$$
+            </p>
+
+            <h2 id="prf-2">Contrapositives and Contradictions</h2>
+
+            <p>
+                To prove a claim \( P \implies Q \) by <i>contrapositive</i>, we want to prove the reverse \( \lnot Q \implies \lnot P \).
+            </p>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> Prove (<i>or disprove</i>) that \( 7x + 9 \textrm{ even } \implies x \textrm{ odd } \).
+                <br><br>
+                <b><i>Proof 4.</i></b> Assume that \( x \) is even. (<i>This is \( \lnot Q \)</i>) Then, \( x = 2m, \; m \in \mathbb{Z} \). Then,
+
+                \begin{align}
+                    7x + 9 &= 7 \cdot 2m + 9 \\
+                    &= 2(7m + 4) + 1
+                \end{align}
+
+                The result is odd, therefore \( 7x+9 \) is odd (<i>This is \( \lnot P \)</i>). This is a contrapositive, therefore the statement holds.
+                $$\tag*{$\Box$}$$
+            </p>
+
+            <p class="side">
+                <b><i>Example 5.</i></b> Prove that \( x^2 -6x +5 \textrm{ even } \implies x \textrm{ odd } \).
+                <br><br>
+                Assume the contrapositive, \( x \) being even. Then \( x = 2m, \; m \in \mathbb{Z} \). Then,
+
+                \begin{align}
+                    x^2 -6x+5 &= 4m^2 -12m +4 \\
+                    &= 2(2m^2 -6m +2) + 1 \textrm{ which is odd.}
+                \end{align}
+
+                This is a contrapositive, so we can conclude that the initial statement is true.
+                $$\tag*{$\Box$}$$
+            </p>
+
+            <p>
+                Contradiction works similarly, but rather than trying to prove \( \lnot P \) from \( \lnot Q \), we set a statement to false, such as by assuming \( P \implies \lnot Q \) or \( \lnot X \) (for a standalone statement X), and then proving that this causes a contradiction.
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 1.</i></b> \( \sqrt{2} \not \in \mathbb{Q} \).
+                <br><br>
+                <b><i>Proof.</i></b> Assume the opposite, \( \sqrt{2} \in \mathbb{Q} \).
+                <br><br>
+                Therefore, \( \sqrt{2} = \frac{m}{n} \), where \( m, n \in \mathbb{Z} \) and \( m, n \) do not share common factors. Then,
+                \begin{align}
+                \sqrt{2}^2 &= 2 = \frac{m^2}{n^2} \\
+                &\implies 2n^2 = m^2 \\
+                &\implies 2n^2 \textrm{ is even, so } m^2 \textrm{ is even} \\
+                &\implies m \textrm{ is even.}
+                \end{align}
+
+                \( m = 2k, \; k \in \mathbb{Z} \).
+
+                \begin{align}
+                \therefore 2n^2 &= (2k)^2 = 4k^2 \\
+                \implies n^2 &= 2k^2 \\
+                \implies n^2  &\textrm{is even, so } n \textrm{ is even.}
+                \end{align}
+
+                This means that both \( m,n \) divisible by 2, which contradicts our original conditon that \( m,n \) share no common factors. Since this is a contradiction, \( 2 \not \in \mathbb{Q} \).
+                $$\tag*{$\Box$}$$
+            </p>
+
+            <h2 id="prf-3">Nonconstructive Proof</h2>
+
+            <p>
+                A non-constructive proof is a proof which indirectly shows existence, without providing a specific example or algorithm for producing an example. <a href="https://mathworld.wolfram.com/NonconstructiveProof.html"><i>[citation]</i></a>
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 2.</i></b> \( \exists x, y \in \mathbb{R} \setminus \mathbb {Q} : x^y \in \mathbb{Q} \)
+                <br><br>
+                <b><i>Proof.</i></b> Consider \( a = \sqrt{2}^{\sqrt{2}} \), and \( b = \sqrt{2} \). Therefore, \( a^b = (\sqrt{2}^{\sqrt{2}}) ^ {\sqrt{2}} = \sqrt{2}^2 = 2\).
+                <br><br>
+                However, we do not know whether \( a \in \mathbb{R} \setminus \mathbb{Q} \). If this is true, then we have an example with \( a,b \). If, however, \( a \in \mathbb{Q} \), then we can set \( x=y=\sqrt{2} \), which will make \( a \), therefore we still have a true example.
+                $$\tag*{$\Box$}$$
+            </p>
+
+            <h2 id="prf-4">Logic in Proof</h2>
+
+            <p>
+                Logic is used a lot in proof, and many examples can be reduced to simply propositional logic. For example, we can prove a paragraph of prose with propositional logic.
+            </p>
+
+            <p class="side">
+                <b><i>Example 6.</i></b> Prove or disprove:
+            </p>
+
+                <blockquote>
+                    The <b>meeting can take place</b> if all <b>members have been informed</b> in advance, and it <b>is quorate</b>. It is quorate provided that there are <b>at least 15 members present</b>, and members will have been informed in advance if there is <b>not a postal strike</b>. Therefore, if the <b>meeting was cancelled</b>, there were <b>fewer than 15 members present</b>, or there was a <b>postal strike</b>.
+                </blockquote>
+
+            <p class="side">
+                <b><i>Proof 6.</i></b> Given this piece of prose, we can introduce the following propositional variables corresponding to sections in the prose (which are marked in <b>bold</b>.
+                
+                \begin{align}
+                m &: \textrm{the meeting takes place.} \\
+                a &: \textrm{all members have been informed in advance.} \\
+                f &: \textrm{15 or more members present.} \\
+                q &: \textrm{meeting is quorate.} \\
+                p &: \textrm{there is a postal strike.} \\
+                \end{align}
+
+                Therefore the first sentence describes (X) \((a \land q) \implies m \).
+                <br><br>
+                The second sentence describes (Y) \(f \implies q \) and (Z) \(\lnot p \implies a \).
+                <br><br>
+                The third sentence describes (W) \( \lnot m \implies \lnot f \lor p \), which is what we want to verify is a logical consequence of the first three predicates. This is saying, \( X \land Y \land Z \implies W \)? (<i>recall for the following that \( p \implies q \equiv \lnot p \lor q \)</i>).
+                <br><br>
+                We can do this by trying to verify if \( X \land Y \land Z \land \lnot W \) is false.
+
+                \begin{align}
+                X \land Y \land Z \land \lnot W &\equiv ((a \land q) \implies m) \land (f \implies q) \land (\lnot p \implies a) \land \lnot m \land \lnot (\lnot f \lor p) \\
+                &\equiv (\lnot a \lor \lnot q \lor m) \land (\lnot f \lor q) \land (p \lor a) \land \lnot m \land f \land \lnot p
+                \end{align} 
+
+                Note that de Morgan's law was applied to \( \lnot (\lnot f \lor p) \). Once we have everything in this mode we can use <b><i>modus ponens</i></b> to resolve this down.
+
+                \[ (\lnot a \lor \lnot q \lor m) \land (\lnot \not f \lor q) \land (\not p \lor a) \land \lnot m \land f \land \lnot p \]
+
+                \[ (\lnot \not a \lor \lnot \not q \lor m) \land q \land a \land \lnot m \land \lnot p \]
+
+                \[ m \land q \land a \land \lnot m \land \lnot p \]
+
+                Note that here we have \( m \land \lnot m \), which will evaluate to false, making the whole expression false. Since this is the opposite expression, we can say that the original reasoning is correct.
+                $$\tag*{$\Box$}$$
+
+            </p>
+
+            <p>
+                <b><i>Modus Ponens.</i></b> Simply, given that \( x \) holds, and \( x \implies y \), then \( y \) holds. This can also be expressed as in the case \( x \land (y \lor \lnot x) \equiv x \land y \). This also works the other way around, \( \lnot x \land (x \land y) \equiv \lnot x \land y \). <br> (<i>The proof is trivial and left as an excersise to the reader.</i>)
+            </p>
+
+        </div>
+
+
         <div id="functions" class="colourband">
             <h2>Functions</h2>
         </div>
@@ -603,6 +801,10 @@
                 That makes it not a function, but we can solve this by putting the values in an ordered tuple, such that \( f_{3} (x) = (\sqrt{x^2 + 1}, -\sqrt{x^2 + 1}) \). Then it would be \(f_3 :\mathbb{R} \longrightarrow \mathbb{R}^2 \).
             </p>
         </div>
+
+
+        
+
 
         <footer>
             <div class="cbox">
