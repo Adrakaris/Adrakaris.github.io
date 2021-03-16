@@ -3,10 +3,10 @@
 <head>
     <title>CS130</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all"> 
     <meta name="viewport" content="width=device-width" initial-scale=1.0>
     <link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
-    <script type="text/javascript" src="js/goback.js"></script>
+    <script type="text/javascript" src="../../js/goback.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -121,38 +121,44 @@
 
             <p class="side">
                 <b><i>Statement.</i></b> \( (A \setminus B) \cup (B \setminus A) \) is the same as \( (A \cup B) \setminus (A \cap B) \).
-                <br><br>
-                <b><i>Proof.</i></b> We want to show that \( (A \setminus B) \cup (B \setminus A) \Longleftrightarrow (A \cup B) \setminus (A \cap B) \)
-                <br><br>
-                For the forward proof, let us take an arbitrary \( x \in (A \setminus B) \cup (B \setminus A) \). We have two cases:
-
-                \begin{align}
-                \textrm{(1) } x \in A \setminus B &\implies x \in A  \\
-                &\implies x \in A \cup B.  \\
-                x \in A \setminus B &\implies x \not \in B  \\
-                &\implies x \not \in A \cap B  \\
-                &\implies x \in (A \cup B) \setminus (A \cap B). \triangleright  \\
-
-                \textrm{(2) } x \in B \setminus A &\implies x \in B  \\
-                &\implies x \in A \cup B.  \\
-                x \in B \setminus A &\implies x \not \in A  \\
-                &\implies x \not \in A \cap B  \\
-                &\implies x \in (A \cup B) \setminus (A \cap B). \triangleright   \\
-                \end{align}
-
-                We have now proved the forward condition. For the backward proof, let us take an arbitrary element \( x \in (A \cup B) \setminus (A \cap B) \).
-
-                \begin{align}
-                &x \in A \cup B \\
-                &x \in A \cup B \implies x \in A \lor x \in B \\
-                &\textrm{if } x \in A \implies x \not \in B \textrm{ else contradiction as } x \in A \cap B \implies x \not \in (A \cup B) \setminus (A \cap B)\\
-                &\therefore x \in A \setminus B \\
-                &\textrm{if } x \in B \implies x \not \in A \textrm{ else similar contradiction} \\
-                &\therefore x \in B \setminus A\\
-                &\therefore x \in (A \setminus B) \cup (B \setminus A).
-                \end{align}
-                $$\tag*{$\Box$}$$
             </p>
+
+            <button type="button", class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> We want to show that \( (A \setminus B) \cup (B \setminus A) \Longleftrightarrow (A \cup B) \setminus (A \cap B) \)
+                    <br><br>
+                    For the forward proof, let us take an arbitrary \( x \in (A \setminus B) \cup (B \setminus A) \). We have two cases:
+
+                    \begin{align}
+                    \textrm{(1) } x \in A \setminus B &\implies x \in A  \\
+                    &\implies x \in A \cup B.  \\
+                    x \in A \setminus B &\implies x \not \in B  \\
+                    &\implies x \not \in A \cap B  \\
+                    &\implies x \in (A \cup B) \setminus (A \cap B). \triangleright  \\
+
+                    \textrm{(2) } x \in B \setminus A &\implies x \in B  \\
+                    &\implies x \in A \cup B.  \\
+                    x \in B \setminus A &\implies x \not \in A  \\
+                    &\implies x \not \in A \cap B  \\
+                    &\implies x \in (A \cup B) \setminus (A \cap B). \triangleright   \\
+                    \end{align}
+
+                    We have now proved the forward condition. For the backward proof, let us take an arbitrary element \( x \in (A \cup B) \setminus (A \cap B) \).
+
+                    \begin{align}
+                    &x \in A \cup B \\
+                    &x \in A \cup B \implies x \in A \lor x \in B \\
+                    &\textrm{if } x \in A \implies x \not \in B \textrm{ else contradiction as } x \in A \cap B \implies x \not \in (A \cup B) \setminus (A \cap B)\\
+                    &\therefore x \in A \setminus B \\
+                    &\textrm{if } x \in B \implies x \not \in A \textrm{ else similar contradiction} \\
+                    &\therefore x \in B \setminus A\\
+                    &\therefore x \in (A \setminus B) \cup (B \setminus A).
+                    \end{align}
+                    $$\tag*{$\Box$}$$
+                </p>
+                
+            </div>
 
             <h2 id="set-4">Set Operation Laws</h2>
 
@@ -328,12 +334,17 @@
             </p>
 
             <p class="side">
-                <b><i>Example 2.</i></b> Construct the truth table for \((p \implies q) \land (\lnot p \implies r)\) <br><br>
-
-                <b><i>Answer 2.</i></b> Note that \(p \implies q\) is \(\lnot p \land q\), we can do this incrementally. Let big Q be the output.
-
-                \begin{array} {|r|r|}\hline p & q & r & p \implies q & \lnot p & \lnot p \implies r & Q \\ \hline F & F & F & T & T & F & F \\ \hline F & F & T & T & T & T & T \\ \hline F & T & F & T & T & F & F \\ \hline F & T & T & T & T & T & T \\ \hline T & F & F & F & F & T & F \\ \hline T & F & T & F & F & T & F \\ \hline T & T & F & T & F & T & F \\ \hline T & T & T & T & F & T & F \\ \hline  \end{array}
+                <b><i>Example 2.</i></b> Construct the truth table for \((p \implies q) \land (\lnot p \implies r)\)
             </p>
+
+            <button class="collapsible">Answer 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 2.</i></b> Note that \(p \implies q\) is \(\lnot p \land q\), we can do this incrementally. Let big Q be the output.
+
+                    \begin{array} {|r|r|}\hline p & q & r & p \implies q & \lnot p & \lnot p \implies r & Q \\ \hline F & F & F & T & T & F & F \\ \hline F & F & T & T & T & T & T \\ \hline F & T & F & T & T & F & F \\ \hline F & T & T & T & T & T & T \\ \hline T & F & F & F & F & T & F \\ \hline T & F & T & F & F & T & F \\ \hline T & T & F & T & F & T & F \\ \hline T & T & T & T & F & T & F \\ \hline  \end{array}
+                </p>
+            </div>
 
             <h2 id="pl-2">Logical Propositions</h2>
 
@@ -499,24 +510,35 @@
             </p>
 
             <p class="side">
-                <b><i>Example 3.</i></b> Let \(s(x,y): x&lt;y\). Consider (1) \(\forall x \exists y : s(x,y)\) and (2) \(\exists y : \forall x, s(x, y)\). Which one is true and which one is false? <br><br>
-
-                <b><i>Answer 3.</i></b> We can always pick a true value for every x, so (1) is true. However, for every value of x we can pick a false y, so (2) is false.
+                <b><i>Example 3.</i></b> Let \(s(x,y): x&lt;y\). Consider (1) \(\forall x \exists y : s(x,y)\) and (2) \(\exists y : \forall x, s(x, y)\). Which one is true and which one is false?
             </p>
+
+            <button class="collapsible">Answer 3...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 3.</i></b> We can always pick a true value for every x, so (1) is true. However, for every value of x we can pick a false y, so (2) is false.
+                </p>
+            </div>
 
             <p class="side">
                 <b><i>Example 4.</i></b> Consider the predicate \(p(u, v)\) in the figure, which one of the following is true? (A) \(\exists v \exists u : p (u,v)\), (B) \(\forall u \forall v, p (u,v)\), (C) \(\forall v \exists u: p(v,u)\), (D) \(\exists u \forall v, p(v,u)\).
 
                 \begin{array} {|r|r|}\hline u \backslash v & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline A & F & F & F & T & T & F \\ \hline B & F & F & T & T & F & T \\ \hline C & T & T & F & T & F & F \\ \hline D & F & F & F & T & F & F \\ \hline  \end{array}
-
-                <b><i>Answer 4.</i></b> For (A), \(p(A, 4)\) is true, so the sentence is true. <br><br>
-
-                For (B), \(p(A, 1)\) is false, so the sentence is false. <br><br>
-
-                For (C), note that u and v are switched round. However, variable names are really arbitrary, and \(\forall v \exists u: p(v,u) \equiv \forall u \exists v: p(u,v)\), since they are just labels at the end of the day. This is then saying tat for all rows there is a column that is true, which is true. So the sentence is true. <br><br>
-
-                For (D), we need to be slightly more careful. Using u and v here may get confusing, since it clashes with the u and v used in the definition, so first let us write it in terms of other variables: \(\exists x \forall y, p(y,x)\). What this is saying is that "there exists a column, such that for all rows that column is true." Since column 4 is true, this sentence is true.
+                
             </p>
+
+            <button class="collapsible">Answer 4...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 4.</i></b> For (A), \(p(A, 4)\) is true, so the sentence is true. <br><br>
+
+                    For (B), \(p(A, 1)\) is false, so the sentence is false. <br><br>
+    
+                    For (C), note that u and v are switched round. However, variable names are really arbitrary, and \(\forall v \exists u: p(v,u) \equiv \forall u \exists v: p(u,v)\), since they     are just labels at the end of the day. This is then saying tat for all rows there is a column that is true, which is true. So the sentence is true. <br><br>
+    
+                    For (D), we need to be slightly more careful. Using u and v here may get confusing, since it clashes with the u and v used in the definition, so first let us write it in terms of  other variables: \(\exists x \forall y, p(y,x)\). What this is saying is that "there exists a column, such that for all rows that column is true." Since column 4 is true, this  sentence is true.
+                </p>
+            </div>
 
             <h2 id="pnq-2">Predicate Laws of Logic</h2>
 
@@ -598,17 +620,26 @@
 
             <p class="side">
                 <b><i>Example 1.</i></b> Suppose sets \( A, B \), prove that \( 2^A \subseteq 2^B \implies A \subseteq B \).
-                <br><br>
-                <b><i>Proof 1.</i></b> Take an arbitrary \( x \in A \). Then, \( \{x\} \in 2^A \).<br><br>
-                
-                Since \( 2^A \subseteq 2^B \), \( \{x\} \in B \), therefore \( x \in B \).
-                $$\tag*{$\Box$}$$
             </p> 
+
+            <button class="collapsible">Proof 1...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 1.</i></b> Take an arbitrary \( x \in A \). Then, \( \{x\} \in 2^A \).<br><br>
+                
+                    Since \( 2^A \subseteq 2^B \), \( \{x\} \in B \), therefore \( x \in B \).
+                    $$\tag*{$\Box$}$$
+                </p>                
+            </div>
 
             <p class="side">
                 <b><i>Example 2.</i></b> <i>Case by case analysis</i>. Prove that \( 2^A \lor 2^B \subseteq 2^{A \cup B} \).
-                <br><br>
-                Consider an element \( x \in A \). Then \( \{x\} \in 2^A \). 
+            </p>
+
+            <button class="collapsible">Proof 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 2. </i></b>Consider an element \( x \in A \). Then \( \{x\} \in 2^A \). 
                 <br><br>
                 Consider an element \( x \in A \cup B \). Then \( \implies \{x\} \in 2^{A \cup B} \). Additionally,
 
@@ -618,20 +649,27 @@
                     &\implies \{x\} \in (2^A \cup 2^B) \textrm{ } \forall x. \\
                     &\implies (2^A \cup 2^B ) \subseteq 2^{A \cup B}.
                 \end{align}$$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
             <p class="side">
                 <b><i>Example 3.</i></b> Prove that \( f(n) = 1 + (-1)^n (2n-1) \) is a multiple of 4 \( \forall x \in \mathbb{Z} \)
                 <br><br>
                 We can of course take a few cases of n and see what we get. This is left to the reader.
-                <br><br>
-                <b><i>Proof 3.</i></b> We want to look at the cases where n is odd, and n is even.
+                
+            </p>
+
+            <button class="collapsible">Proof 3...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 3.</i></b> We want to look at the cases where n is odd, and n is even.
                 <br><br>
                 If n is even, \( f(n) = 1 + 1 (2n-1) = 2n \). Suppose \( n = 2k, k \in \mathbb{Z} \), then \( f(n) = 2 \cdot 2k = 4k. \)
                 <br><br>
                 If n is odd, \( f(n) = 1 - (2n - 1) = 2-2n \). Suppose \( n = 2k-1, k \in \mathbb{Z} \), then \( f(n) = 2-2(2k-1) = 4k-4 = 4(k-1). \)
                 $$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
             <h2 id="prf-2">Contrapositives and Contradictions</h2>
 
@@ -640,9 +678,13 @@
             </p>
 
             <p class="side">
-                <b><i>Example 4.</i></b> Prove (<i>or disprove</i>) that \( 7x + 9 \textrm{ even } \implies x \textrm{ odd } \).
-                <br><br>
-                <b><i>Proof 4.</i></b> Assume that \( x \) is even. (<i>This is \( \lnot Q \)</i>) Then, \( x = 2m, \; m \in \mathbb{Z} \). Then,
+                <b><i>Example 4.</i></b> Prove (<i>or disprove</i>) that \( 7x + 9 \textrm{ even } \implies x \textrm{ odd } \).                
+            </p>
+
+            <button class="collapsible">Proof 4...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 4.</i></b> Assume that \( x \) is even. (<i>This is \( \lnot Q \)</i>) Then, \( x = 2m, \; m \in \mathbb{Z} \). Then,
 
                 \begin{align}
                     7x + 9 &= 7 \cdot 2m + 9 \\
@@ -651,12 +693,18 @@
 
                 The result is odd, therefore \( 7x+9 \) is odd (<i>This is \( \lnot P \)</i>). This is a contrapositive, therefore the statement holds.
                 $$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
             <p class="side">
                 <b><i>Example 5.</i></b> Prove that \( x^2 -6x +5 \textrm{ even } \implies x \textrm{ odd } \).
-                <br><br>
-                Assume the contrapositive, \( x \) being even. Then \( x = 2m, \; m \in \mathbb{Z} \). Then,
+                
+            </p>
+
+            <button class="collapsible">Proof 5...</button>
+            <div class="ccontent">
+                <p>
+                    Assume the contrapositive, \( x \) being even. Then \( x = 2m, \; m \in \mathbb{Z} \). Then,
 
                 \begin{align}
                     x^2 -6x+5 &= 4m^2 -12m +4 \\
@@ -665,7 +713,8 @@
 
                 This is a contrapositive, so we can conclude that the initial statement is true.
                 $$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
             <p>
                 Contradiction works similarly, but rather than trying to prove \( \lnot P \) from \( \lnot Q \), we set a statement to false, such as by assuming \( P \implies \lnot Q \) or \( \lnot X \) (for a standalone statement X), and then proving that this causes a contradiction.
@@ -673,8 +722,13 @@
 
             <p class="side">
                 <b><i>Theorem 1.</i></b> \( \sqrt{2} \not \in \mathbb{Q} \).
-                <br><br>
-                <b><i>Proof.</i></b> Assume the opposite, \( \sqrt{2} \in \mathbb{Q} \).
+                
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Assume the opposite, \( \sqrt{2} \in \mathbb{Q} \).
                 <br><br>
                 Therefore, \( \sqrt{2} = \frac{m}{n} \), where \( m, n \in \mathbb{Z} \) and \( m, n \) do not share common factors. Then,
                 \begin{align}
@@ -694,7 +748,8 @@
 
                 This means that both \( m,n \) divisible by 2, which contradicts our original conditon that \( m,n \) share no common factors. Since this is a contradiction, \( 2 \not \in \mathbb{Q} \).
                 $$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
             <h2 id="prf-3">Nonconstructive Proof</h2>
 
@@ -704,12 +759,17 @@
 
             <p class="side">
                 <b><i>Theorem 2.</i></b> \( \exists x, y \in \mathbb{R} \setminus \mathbb {Q} : x^y \in \mathbb{Q} \)
-                <br><br>
-                <b><i>Proof.</i></b> Consider \( a = \sqrt{2}^{\sqrt{2}} \), and \( b = \sqrt{2} \). Therefore, \( a^b = (\sqrt{2}^{\sqrt{2}}) ^ {\sqrt{2}} = \sqrt{2}^2 = 2\).
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Consider \( a = \sqrt{2}^{\sqrt{2}} \), and \( b = \sqrt{2} \). Therefore, \( a^b = (\sqrt{2}^{\sqrt{2}}) ^ {\sqrt{2}} = \sqrt{2}^2 = 2\).
                 <br><br>
                 However, we do not know whether \( a \in \mathbb{R} \setminus \mathbb{Q} \). If this is true, then we have an example with \( a,b \). If, however, \( a \in \mathbb{Q} \), then we can set \( x=y=\sqrt{2} \), which will make \( a \), therefore we still have a true example.
                 $$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
             <h2 id="prf-4">Logic in Proof</h2>
 
@@ -725,8 +785,10 @@
                     The <b>meeting can take place</b> if all <b>members have been informed</b> in advance, and it <b>is quorate</b>. It is quorate provided that there are <b>at least 15 members present</b>, and members will have been informed in advance if there is <b>not a postal strike</b>. Therefore, if the <b>meeting was cancelled</b>, there were <b>fewer than 15 members present</b>, or there was a <b>postal strike</b>.
                 </blockquote>
 
-            <p class="side">
-                <b><i>Proof 6.</i></b> Given this piece of prose, we can introduce the following propositional variables corresponding to sections in the prose (which are marked in <b>bold</b>.
+            <button class="collapsible">Proof 6...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 6.</i></b> Given this piece of prose, we can introduce the following propositional variables corresponding to sections in the prose (which are marked in <b>bold</b>.
                 
                 \begin{align}
                 m &: \textrm{the meeting takes place.} \\
@@ -759,12 +821,13 @@
 
                 Note that here we have \( m \land \lnot m \), which will evaluate to false, making the whole expression false. Since this is the opposite expression, we can say that the original reasoning is correct.
                 $$\tag*{$\Box$}$$
+                </p>
 
-            </p>
-
-            <p>
+                <p>
                 <b><i>Modus Ponens.</i></b> Simply, given that \( x \) holds, and \( x \implies y \), then \( y \) holds. This can also be expressed as in the case \( x \land (y \lor \lnot x) \equiv x \land y \). This also works the other way around, \( \lnot x \land (x \land y) \equiv \lnot x \land y \). <br> (<i>The proof is trivial and left as an excersise to the reader.</i>)
             </p>
+            </div>
+            
 
             <p class="side">
                 <b><i>Example 7.</i></b> Given the following predicates, based on the variables \( r,c,l,n,t \), prove or disprove \( X \land Y \land Z \implies W \).
@@ -775,8 +838,12 @@
                 &(Z) &\lnot t \implies \lnot l \\
                 &(W) &r \implies (n \lor t)
                 \end{align}
+            </p>
 
-                <b><i>Proof 7.</i></b> Let us assert a contradictory statement, \( X \land Y \land Z \land \lnot W \).
+            <button class="collapsible">Proof 7...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 7.</i></b> Let us assert a contradictory statement, \( X \land Y \land Z \land \lnot W \).
 
                 \[ (r \implies (c \lor l)) \land (\lnot c \implies \lnot n) \land (\lnot t \implies \lnot l) \land \lnot (r \implies (n \lor t)) \]
 
@@ -790,7 +857,8 @@
 
                 Note that if \( c = r = T \) and \( l = n = t = F \), this whole expression will resolve to true. Since this is the case, the counter statement has been resolved, therefore the original statement is false.
                 $$\tag*{$\Box$}$$
-            </p>
+                </p>
+            </div>
 
         </div>
 
@@ -951,13 +1019,79 @@
             </p>
 
             <p class="side">
-                <b><i>Example 1.</i></b> Suppose we have the functions \( f_{1}(x) = 1/x, f_{2}(x) = \sqrt{x}, f_{3}(x) = \pm \sqrt{x^{2} + 1} \). Which one of these is \(f: \mathbb{R} \longrightarrow \mathbb{R}\)? <br><br>
+                <b><i>Example 1.</i></b> Suppose we have the functions \( f_{1}(x) = 1/x, f_{2}(x) = \sqrt{x}, f_{3}(x) = \pm \sqrt{x^{2} + 1} \). Which one of these is \(f: \mathbb{R} \longrightarrow \mathbb{R}\)?
 
-                <i><b>Answer 1.</b></i> None of them. \(f_1\) can be represented \(f_1 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \), similarly \(f_2 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \) or \(f_2 :\mathbb{R}_{\geq 0} \longrightarrow \mathbb{R}_{\geq 0} \). <br><br>
+                
+            </p>
+
+            <button class="collapsible">Answer 1...</button>
+            <div class="ccontent">
+                <p>
+                    <i><b>Answer 1.</b></i> None of them. \(f_1\) can be represented \(f_1 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \), similarly \(f_2 :\mathbb{R}_{>0} \longrightarrow \mathbb{R}_{>0} \) or \(f_2 :\mathbb{R}_{\geq 0} \longrightarrow \mathbb{R}_{\geq 0} \). <br><br>
 
                 \(f_3\) has a bigger problem, as it returns two values. <br><br>
 
                 That makes it not a function, but we can solve this by putting the values in an ordered tuple, such that \( f_{3} (x) = (\sqrt{x^2 + 1}, -\sqrt{x^2 + 1}) \). Then it would be \(f_3 :\mathbb{R} \longrightarrow \mathbb{R}^2 \).
+                </p>
+            </div>
+
+            <p>
+                We can define functions more explicitly by use of set theory.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A relation \( R \subseteq X \times Y \) is a <b>function</b> \( f : X \longrightarrow Y \) if \( \forall x \in X \; \exists ! y \in Y : xRy \). <br><br> In english, this says that a function is a relation where each element in X is mapped onto an element in Y.
+            </p>
+
+            <p>
+                \( f(x) \) is the value of \( f \) at \( x \), or is the <b>image</b> of \( x \).
+            </p>
+
+            <p>
+                If \( y = f(x) \), \( x \) is <i>a</i> pre-image of \( y \).
+            </p>
+
+            <p>
+                The complete pre-image of\( y \in Y \) (by f) is denoted \( f^{-1}(y) = \{x \in X : f(x) = y\} \).
+            </p>
+
+            <p>
+                The range of f is the set \( f(X) = \{f(x) : x \in X\} \). <br><i>Note:</i> this notation, f(set), can be used to refer to any \( A \subseteq X \) where \( f(A) = {f(a) : a \in A} \).
+            </p>
+
+            <p>
+                Functions can have inverses. However, only certain functions can be inverted. The inverse of a function \( f : X \longrightarrow Y\) is denoted \( f^{-1} : Y \longrightarrow X\). However, a function can only have an inverse <i>function</i> if every element in the co-domain maps onto one element of the domain only. We can make a function invertible by restricting the domain, but that comes later.
+            </p>
+
+            <p>
+                The identity function \( \textrm{id}_A : A \longrightarrow A \) where \( \textrm{id}_{A} (a) = a \), is naturally invertible. The function \( f(x) = x^2 \), however, is not invertible over \( \mathbb{R} \), is invertible over \( \mathbb{R}^+ \), and is not invertible over \( \mathbb{Z}^+ \).
+            </p>
+
+            <p>
+                Below are some examples of functions (and not functions) as relations.
+            </p>
+
+            <p class="side">
+                <b><i>Example 2.</i></b> Let a relation \( T \subseteq \mathbb{R} \times \mathbb{R} \). Therefore, \( T = \{(u, u^2) : u \in \mathbb{R}\} \). T here is a function, since there is a unique mapping of \( u \).
+            </p>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> Let a relation \( T' \subseteq \mathbb{R} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}\} \). This new T is <i>not</i> a function, since there is no \( (u^2, u) \in T : u^2 = -1 \) for a real \( u \). This is a counterexample.
+            </p>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0\} \). Is ths now a function?
+            </p>
+
+            <button class="collapsible">Answer 4...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 4.</i></b> No. Whereas it is true that \( \forall x \in \mathbb{R}_{\geq 0} \; \exists y \in R : (x, y) \in T'' \), this is not a <i>unique</i> mapping. If \( x = 4 \), both \( (4,2) \) and \( (4, -2) \) are part of \( T'' \).
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Example 5.</i></b> Fine, let a relation \( T''' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R}_{\geq 0} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0\} \). This, finally, is a function, the "arithmetic square root". \( f(x) = \sqrt{x} \)
             </p>
         </div>
 
@@ -983,5 +1117,7 @@
         </footer>
 
     </div>
+
+    <script type="text/javascript" src="../../js/collapsible.js"></script>
 </body>
 </html>

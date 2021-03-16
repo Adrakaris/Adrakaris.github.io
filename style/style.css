@@ -215,7 +215,6 @@ button.nav {
 	font-family: Urbanist;
 	font-size: 8;
 	text-align: center;
-	letter-spacing: 1px;
 	margin-top: -30px;
 	color: #f1f2e9; /*#c9baad;*/
 	font-size: 16px;
@@ -225,6 +224,50 @@ button.nav {
 	background: none;
 	margin: 0;
 	padding: 0;
+}
+
+.active, .collapsible:hover {
+	background-color: #f1f2e9;
+}
+
+.collapsible:after {
+	content: '+';
+	font-style: normal;
+	font-size: 16px;
+	font-family: Manrope;
+	float: right;
+	margin-left: 5px;
+}
+
+.active:after {
+	content: '-'
+	font-style: normal;
+}
+
+button.collapsible {
+	font-family: Manrope;
+	color: #a17667;
+	background: none;
+	border: none;
+	border-left: 1px solid #a17667;
+	border-spacing: 10px 0px;
+	padding-left: 10px;
+	margin-left: -10px;
+	font-size: 16px;
+	width: 100%;
+	text-align: left;
+	font-weight: bold;
+	font-style: italic;
+}
+
+.ccontent {
+	border-left: 1px solid #a17667;
+	border-spacing: 10px 0px;
+	padding-left: 10px;
+	margin-left: -10px;
+	overflow: hidden;
+	display: none;
+	transition: max-height 0.2s ease-out;
 }
 
 h1 {
