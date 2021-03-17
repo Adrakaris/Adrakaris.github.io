@@ -873,7 +873,7 @@
 
             <ol>
                 <li><a href="#rel-1">Properties of Relations</a></li>
-                <li><a href="#rel-1">Equivalence Relations</a></li>
+                <li><a href="#rel-2">Equivalence Relations</a></li>
             </ol>
 
             <p class="blue">
@@ -1145,10 +1145,10 @@
         <div class="cbox">
             <h2>Introduction</h2>
 
-            <!--
             <ol>
-                <li><a href="#func-"></a></li>
-            </ol>-->
+                <li><a href="#func-1">Restriction and Composition</a></li>
+                <li><a href="#func-2">Properties of Functions</a></li>
+            </ol>
 
             <p>
                 A function \(f: X \longrightarrow Y\) is (generally) a rule that assigns each element of \(x \in X\) to an unambiguous element \(y \in Y\).
@@ -1220,7 +1220,7 @@
             </p>
 
             <p class="side">
-                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0\} \). Is ths now a function?
+                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0} \). Is ths now a function?
             </p>
 
             <button class="collapsible">Answer 4...</button>
@@ -1231,8 +1231,106 @@
             </div>
 
             <p class="side">
-                <b><i>Example 5.</i></b> Fine, let a relation \( T''' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R}_{\geq 0} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0\} \). This, finally, is a function, the "arithmetic square root". \( f(x) = \sqrt{x} \)
+                <b><i>Example 5.</i></b> Fine, let a relation \( T''' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R}_{\geq 0} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0} \). This, finally, is a function, the "arithmetic square root". \( f(x) = \sqrt{x} \)
             </p>
+
+            <h2 id="func-1">Restriction and Composition</h2>
+
+            <p>
+                Restrictions are useful to be considered, either to make a relation into a function, or to discard unnecessary information. 
+            </p>
+
+            <p>
+                Let's define some sequences for functions. First, let an \( n \in \mathbb{Z}^+ \), and \( A \) be a set.
+            </p>
+
+            <p>
+                Let us say that \( A^n \) is the set of all functions from an "n-set", \( \{1, 2, 3, ..., n\} \).
+            </p>
+
+            <p>
+                Consider any function \( f : \{1, 2, ..., n\} \longrightarrow A \). The values \( f(1), f(2), ..., f(n) \) are all elements of \( A \). Now, the ordered tuple \( (f(1), f(2), ..., f(n)) \in A \). More generally, let us denote the set of all \( f: B \longrightarrow A \) as \( A^B \).
+            </p>
+
+            <button class="collapsible">Example 6 (a bit weird)... </button>
+            <div class="ccontent">
+                <p>
+                <b><i>Example 6.</i></b> Let a set \( X = \{CS118, CS126, CS130, CS131\} \), and \( Y = \{1, 2, 3\} \)
+                <br><br>
+                Consider an \( R \subseteq X \times Y : (x, y) \in R \textrm{ iff module x taught in term y}\). Therefore, we get that:
+                </p>
+                    <ul>
+                        <li>\( (CS118, 1) \in R \)</li>
+                        <li>\( (CS126,2) \in R \)</li>
+                        <li>\( (CS130, 1) \in R \)</li>
+                        <li>\( (CS131, 2) \in R \)</li>
+                    </ul>
+                <p>
+                    However, this function will fail if \( CS133 \in X \), since CS133 is taught in terms 1 and 2. 
+                </p>
+            </div>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> If \( f : X \longrightarrow Y \) and \( X' \subseteq X \), then \( \left.{f}\right\vert_{X'} = \{(x, f(x)) : x \in X'\}\), which is called the <b>restriction</b> of \( f \) to \( X' \).
+            </p>
+                
+            <p>
+                As mentioned prior, it is simple to restrict the domain. However, when restricting the co-domain, one must be really careful not to accidentally remove mappings which exist and matter.
+            </p>
+
+            <p>
+                Take relations\( R \subseteq A \times B, \; Q \subseteq B \times C \), the <b>composition</b> \( R \circ Q \) is \( a \mapsto c \) such that \( a \mapsto b \mapsto c \). If \( R, Q \) are functions, then:
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 1.</i></b> If \( f : X \longrightarrow Y \) and \( g : Y \longrightarrow Z \) are functions, then we have a relation \( f \circ g \subseteq X \times Z \) which is also a function. Also, \( (f \circ g)(x) \equiv f(g(x)) \).
+            </p>
+
+
+            <h2 id="func-2">Properties of Functions</h2>
+
+            <p>
+                There are some very important definitions coming up. Note that these all are for a function \( f : X \longrightarrow Y \).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A function is <b>INJECTIVE</b> (one-to-one) if \( \forall x_1 , x_2 \in X, \; x_1 \neq x_2 \implies f(x_1) \neq f(x_2) \). "No two+ \( x \) matches to the same \( y \)"
+            </p>
+
+            <p class="blue">
+                <b><i>Defintion.</i></b> A function is <b>SURJECTIVE</b> (onto) if \( \forall y \in Y \exists x \in X : f(x) = y \). "No \( y \) is left unmatched"
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A function is <b>BIJECTIVE</b> (one-to-one correspondence) if it is <b>injective</b> and <b>surjective</b>.
+            </p>
+
+            <p>
+                Functions of these types are called injections, surjections, and bijections respectively.
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 2.</i></b> A function \( f : X \longrightarrow Y \) is bijective if and only if the inverse relation \( f^{-1} \subseteq Y \times X \) is a function. \( f^{-1} = \{(y,x) : y \in Y, x \in X, y = f(x)\} \).
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    We need to prove 2 things, <b>sufficiency</b> \( \Longleftarrow \) and <b>necessity</b> \( \Longrightarrow \). 
+                </p>
+
+                <p>
+                    (\( \Longleftarrow \)): <i>"Assuming inverse is a function, then the function bijective"</i>:
+                </p>
+
+                <p>
+                    \( f \) is surjective, since we assume the inverse is a function, all Y mapped. 
+                </p>
+
+                <p>
+                    \( f \) is also injective, since if we assume the opposite, that some \( (x_1, y), (x_2, y) \in f \), then the inverse \( f^-1 \) is not a function, which breaks our condition for sufficiency.
+                </p>
+            </div>
         </div>
 
 
