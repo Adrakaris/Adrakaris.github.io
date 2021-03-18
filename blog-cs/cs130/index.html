@@ -406,8 +406,10 @@
                 </li>
             </ul>
 
-            <p>
-                <b><i>Proof 1.</i></b> We can prove the absorption law (1) by using the distributive (2), annihalation (3), and identity (4) laws.
+            <button class="collapsible">Proof of Annihalation...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> We can prove the absorption law (1) by using the distributive (2), annihalation (3), and identity (4) laws.
 
                 \[x \lor (x \land y) \]
                 \begin{align}
@@ -416,9 +418,9 @@
                 \textrm{by (3) } &\implies x \land T   \\
                 \textrm{by (3) } &\implies x  \\
                 \end{align}
-                $$\tag*{$\Box$}$$ 
-
-            </p>
+                $$\tag*{$\Box$}$$
+                </p>
+            </div>
 
             <h2 id="pl-4">Some Notation</h2>
 
@@ -1310,7 +1312,7 @@
             </p>
 
             <p class="side">
-                <b><i>Theorem 2.</i></b> A function \( f : X \longrightarrow Y \) is bijective if and only if the inverse relation \( f^{-1} \subseteq Y \times X \) is a function. \( f^{-1} = \{(y,x) : y \in Y, x \in X, y = f(x)\} \).
+                <b><i>Theorem 2.</i></b> A function \( f : X \longrightarrow Y \) is bijective <b>if and only if</b> the inverse relation \( f^{-1} \subseteq Y \times X \) is a function. \( f^{-1} = \{(y,x) : y \in Y, x \in X, y = f(x)\} \).
             </p>
 
             <button class="collapsible">Proof...</button>
@@ -1320,7 +1322,7 @@
                 </p>
 
                 <p>
-                    (\( \Longleftarrow \)): <i>"Assuming inverse is a function, then the function bijective"</i>:
+                    (\( \Longleftarrow \)): <i>"If the inverse is a function, then the function is bijective"</i>:
                 </p>
 
                 <p>
@@ -1328,7 +1330,52 @@
                 </p>
 
                 <p>
-                    \( f \) is also injective, since if we assume the opposite, that some \( (x_1, y), (x_2, y) \in f \), then the inverse \( f^-1 \) is not a function, which breaks our condition for sufficiency.
+                    \( f \) is also injective, since if we assume the opposite, that some \( (x_1, y), (x_2, y) \in f \), then the inverse \( f^-1 \) is not a function, which breaks our condition for sufficiency. Therefore, \( f \) is bijective. \( \triangleright \)
+                </p>
+
+                <p>
+                    \( (\Longrightarrow) \): <i>"If the function is bijective, the inverse is a function"</i>:
+                </p>
+
+                <p>
+                    When \( f \) is bijective,
+                    \begin{align}
+                        &\forall y \in Y \exists ! x \in X : (x, y) \in f \\
+                        = &\forall y \in Y \exists ! x \in X : (y, x) \in f^{-1} 
+                    \end{align}
+                    Which is just writing that the inverse \( f^{-1} \) is a function.
+                </p>
+
+                <p>
+                    Thus completes the proof.$$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Example 7.</i></b> Show that if a function \( f : X \longrightarrow Y \) is bijective, then \( f^{-1} \) is also bijective.
+            </p>
+
+            <button class="collapsible">Proof 7...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 7.</i></b> \( f^{-1} \subseteq Y \times X \), with \( f^{-1} = \{(y,x) : y \in Y, x \in X, y = f(x)\} \) which by theorem 2 is a function. 
+                </p>
+
+                <p>
+                    If \( \forall x \in X \exists ! y \in Y : (x, y) \in f \) <i>(Definition of a function)</i>, then we can write this equivalently as \( \forall y \in Y \exists x \in X : f(x) = y \).
+                </p>
+
+                <p>
+                    Then, \( \forall y \in Y \exists ! x \in X : f(x) = y \) since \( f \) is bijective, which means that \( (y, x) \in f^{-1} \), which means \( f^{-1} \) is injective. 
+                </p>
+
+                <p>
+                    Because \( f \) is bijective, also \( \forall x \in X \exists ! y \in Y : f(x) = y \), which can be written as \( \forall x \in X \exists ! y \in Y : (y, x) \in f^{-1} \). Therefore, \( f^-1 \) is surjective.
+                </p>
+
+                <p>
+                    Because \( f^-1 \) is both injective and surjective, it is thus bijective.
+                    $$\tag*{$\Box$}$$
                 </p>
             </div>
         </div>
