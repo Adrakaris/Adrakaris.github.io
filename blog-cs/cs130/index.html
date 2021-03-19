@@ -48,7 +48,7 @@
                 <li><a href="#proofs">Proofs</a></li>
                 <li><a href="#relations">Relations</a></li>
                 <li><a href="#functions">Functions</a></li>
-                
+                <li><a href="#cardinality">Set Cardinality</a></li>
             </ol>
         </div>
 
@@ -1317,8 +1317,8 @@
 
             <button class="collapsible">Proof...</button>
             <div class="ccontent">
-                <p>
-                    We need to prove 2 things, <b>sufficiency</b> \( \Longleftarrow \) and <b>necessity</b> \( \Longrightarrow \). 
+                <p> 
+                    <b><i>Proof.</i></b> We need to prove 2 things, <b>sufficiency</b> \( \Longleftarrow \) and <b>necessity</b> \( \Longrightarrow \). 
                 </p>
 
                 <p>
@@ -1381,7 +1381,286 @@
         </div>
 
 
-        
+        <div id="cardinality" class="colourband">
+            <h2>Set Cardinality</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#card-1">Uncountable Sets</a></li>
+            </ol>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Sets \( A, B \) are <b>equinumerous</b> if there is a bijection \( f : A \longrightarrow B \). The notation for this is \( A \cong B \).
+            </p>
+
+            <p>
+                Let's take a set \( F_n = \{x \in \mathbb{N} : x < n\} \), such that \( F_0 = \varnothing, \; F_1 = \{0\}, \; F_2 = \{0, 1\}, \) etc. We can say that the cardinality of F, \( |F_i| = i \). Basically it's how many items are in the set.
+            </p>
+
+            <p>
+                \( F_i \not \cong F_j \) if \( i \neq j \).
+            </p>
+
+            <p>
+                Let us now take an arbitrary set \( S \). Take \( A \in 2^S, \; B \in 2^S \). Therefore, \( A \subseteq S, \; B \subseteq S \). Does \( A \cong B \)?
+            </p>
+
+            <p>
+                This can be formed into a relation, \( E(S) = \{(A, B) : A \in 2^S, B \in 2^S, A \cong B\} \). Now, is this an equivalence relation?
+            </p>
+
+            <button class="collapsible">Answer...</button>
+            <div class="ccontent">
+                <p>
+                    Yes! It is reflexive, \( A \cong A \), because we can map \( \forall a \in A \) onto itself.
+                </p>
+                <p>
+                    If \( A \cong B \) then \( B \cong A \), because by definition there exists a bijective \( f : A \longrightarrow B \), which means there exists a bijective inverse \( f^{-1} : B \longrightarrow A \)
+                </p>
+                <p>
+                    It is transitive, as if \( A \cong B \) and \( B \cong C \) then we can compose bijective functions such as to make \( A \cong C \). Therefore \( E(s) \) is an equivalence relation on \( 2^S \)
+                </p>
+            </div>
+
+            <p>
+                Consider the set \( 2^S / E(s) \) of equivalence classes. However, since \( F_i \not \cong F_j \), \( 2^S / E(S) \) denote cardinalities, and can represent the set of natural numbers, \( \mathbb{N} \).
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 1.</i></b> The set \( \mathbb{N} \setminus \{0\} \) is countably infinite. This means that \( \mathbb{N} \setminus \{0\} \cong \mathbb{N} \).
+            </p>
+
+            <button class="collapsible">Proof 1...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 1.</i></b> To prove, we want to find a bijective function \( f : \mathbb{N} \setminus \{0\} \longrightarrow \mathbb{N} \). 
+                </p>
+
+                <p>
+                    Simply, we can let this function be \( f(x) = x - 1 \). 
+                </p>
+
+                <p>
+                    This is both injective, as \( x-1 = x' - 1 \implies x = x' \), and surjective, as \( \forall Y \in \mathbb{N}, x-1 = y \implies y = x + 1 \). Therefore, since we have found a bijective mapping, \( \mathbb{N} \setminus \{0\} \cong \mathbb{N} \).
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Theorem 2.</i></b> The set \( E = \{x \in \mathbb{N}  : x \textrm{ even}\} \) is countably infinite.
+            </p>
+
+            <button class="collapsible">Proof 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 2.</i></b> We need to find a bijection \( f : E \longrightarrow \mathbb{N} \). Thus,
+                    \begin{align}
+                    x \in E &0, 2, 4, 6, 8, ... \\
+                    y \in \mathbb{N} &0, 1, 2, 3, 4, ... \\
+                    \end{align}
+                    We can let \( f(x) = \frac{x}{2} \), which is a bijective function. (The graph of this function is strictly increasing.)
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <button class="collapsible">Proof 2 (alternative)...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 2.</i></b> <i>alternative</i>. We can write a small algorithm to enumerate this bijection. 
+                </p>
+
+                <div class="codediv">
+                    for \( i \in \mathbb{N} \): <br>
+                    &emsp;print(\( i, 2i \))
+                </div>
+
+                <p>
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Theorem 3.</i></b> \( \mathbb{Z} \) is countably infinite. 
+            </p>
+
+            <button class="collapsible">Proof 3...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 3.</i></b> Let us first check some values. We can map positive integers to odd numbers, and negative numbers to even numbers.
+                    
+                    \begin{array} {|r|r|}\hline \mathbb{Z} & -3 & -2 & -1 & 0 & 1 & 2 & 3 \\ \hline \mathbb{N} & 6 & 4 & 2 & 0 & 1 & 3 & 5 \\ \hline  \end{array}
+
+                    We can write this then as a function:
+
+                    \[
+                    f(x) = \begin{cases} 2x-1 &x > 0 \\
+                    -2x & x \leq 0
+                    \end{cases}
+                    \]
+
+                    Or, we can do this programmatically, as the following:
+
+                </p>
+
+                <div class="codediv">
+                    \( i = 0 \); print(\( 0, 0 \))<br>
+                    for \( j \in \mathbb{N} \setminus \{0\} \):<br>
+                    &emsp;\( i = i + 1 \)<br>
+                    &emsp;print(\( i, j \))<br>
+                    &emsp;\( i = i + 1 \)<br>
+                    &emsp;print(\( i, -j \))<br>
+                </div>
+
+                <p>
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Theorem 4.</i></b> \( \mathbb{Z}^2 \) is countably infinite. 
+            </p>
+
+            <button class="collapsible">Proof 4...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 4.</i></b> You can think about enumerating this set as going round in a spiral following the integer coordinates, starting from \( (0,0) \). We can write an algorithm for this. 
+                </p>
+
+                <div class="codediv">
+                    \( x = 0; y = 0; t = 0; i = 1 \)<br>
+                    print(\( t, (x, y) \))<br>
+                    \( t \)++<br>
+                    while True:<br>
+                    &emsp;for \( j \) in range \( [1, i] \): <br>
+                    &emsp;&emsp;\( x\)++ <br>
+                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
+                    &emsp;for \( j \) in range \( [1, i] \): <br>
+                    &emsp;&emsp;\( y \)++ <br>
+                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
+                    &emsp;\( i \)++ <br>
+                    &emsp;for \( j \) in range \( [1, i] \): <br>
+                    &emsp;&emsp;\( x  \)-- <br>
+                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
+                    &emsp;for \( j \) in range \( [1, i] \): <br>
+                    &emsp;&emsp;\( y \)-- <br>
+                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
+                    &emsp;\( i \)++ <br>
+                </div>
+            </div>
+
+            <p class="side">
+                <b><i>Corrolary.</i></b> \( \mathbb{Q} \) is countable.
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> We know that \( \mathbb{Q} = \mathbb{Z}^2 / R \), where \( R \) is the equivalence relation. (This was seen earlier in the relations section.) Since we know from theorem 4 that there are countably many pairs in \( \mathbb{Z}^2 \), there has to be countably many equivalence classes, thus countably many rational numbers in \( \mathbb{Q} \).
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <h2 id="card-1">Uncountable Sets</h2>
+
+            <p>
+                We know that \( \mathbb{N} \subseteq \mathbb{Z} \subseteq \mathbb{Q} \subseteq \mathbb{R} \). The first three are countable, and have the same cardinalty. But \( \mathbb{R} \)? Not quite. This section is a proof of the statement that <b>\( \mathbb{R} \) is uncountably infinite</b>.
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 5. </i></b>For some set \( S \), sets \( S, 2^S \) are <b>not</b> equinumerous. Thus, there is <b>no</b> bijective function \( f : S \longrightarrow 2^S \).
+            </p>
+
+            <button class="collapsible">Proof 5...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Consider a set \( A = \{x \in S : x \not \in f(x)\} \). Thus \( A \subseteq S \), which means \( A \in 2^S \).
+                </p>
+
+                <p>
+                    Let us try a proof by contradiction, so we assume that said bijection \( f \) does exist.
+                </p>
+
+                <p>
+                    If \( f \) is surjective, for \(A \in 2^S \exists y \in S : f(y) = A\). Now we ask: is \( y \in A \)?
+                    \begin{align}
+                    (1) \; y \in A &\implies y \in f(y) \implies y \not \in A &\textrm{contradiction.}\\
+                    (2) \; y \not \in A &\implies y \not \in f(y) \implies y \in A &\textrm{contradiction.}
+                    \end{align}
+                </p>
+
+                <p>
+                    This means that \( f \) can't be a bijection, and thus \( S, 2^S \) are not equinumerous.
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p>
+                Proof aside, with finite sets it's elementary to see \( |2^{S}| > |S| \). But what about infinite sets?
+            </p>
+
+            <p>
+                Recall that for sets \( A, B \), the notation \( B^A = \{f : A \longrightarrow B\} \). If \( B = \{0, 1\} \), then \( \{0, 1\}^A = \{f : A \longrightarrow \{0, 1\}\} \).
+            </p>
+
+            <p>
+                Let us suppose that \( A = \mathbb{N} \)
+            </p>
+
+            <p class="side">
+                <b><i>Lemma 1.</i></b> There is a bijection \( g : \{0, 1\}^{\mathbb{N}} \longrightarrow 2^{\mathbb{N}} \).
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Consider a function \( t \in \{0, 1\}^{\mathbb{N}} \). \( t : \mathbb{N} \longrightarrow \{0, 1\} \). 
+                </p>
+
+                <p>
+                    Define \( g(t) = \{n \in \mathbb{N} : t(n) = 1\} \in 2^{\mathbb{N}} \).
+                </p>
+
+                <p>
+                    \( g \) is injective: if we have a different \( t_1, t_2 : \exists n \in \mathbb{N} : t_1(n) \neq t_2(n) \), we have that \( g(t_1) \neq g(t_2) \). This is because \( t(n) \) can either be 0 or 1, but not both. Therefore exactly one of them can contain \( n \).
+                </p>
+
+                <p>
+                    \( g \) is surjective: for some \( a \subseteq \mathbb{N} (A \in 2^{\mathbb{N}}) \), we define:
+                    \[
+                    t_A (n) = \begin{cases} 1 &n \in A \\
+                    0 &\textrm{otherwise}
+                    \end{cases}
+                    \]
+                    Then we ask: what is \( g(t_A) \)? In fact, \( g(t_A) = A \). So, for all elements in the codomain, there exists a domain that is mapped onto. Therefore, \( g \) is bijective.
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p>
+                We know that \( 2^{\mathbb{N}} \not \cong \mathbb{N} \), by theorem 5. Therefore, \( 2^{\mathbb{N}} \) is not countably infinite, but it is still inifite, so it is <i>uncountably infinite</i>. There are also uncountably many elements in \( \{0, 1\}^{\mathbb{N}} \).
+            </p>
+
+            <p>
+                Take \( [0, 1) \) which is defined as \( \{x \in \mathbb{R} : 0 \geq x <1\} \). We can take an infinite string of zeros and ones, and represent it as a fixed point binary digit, with the point after the first digit:
+                \[a = 0.0111010110...\]
+            </p>
+
+            <p>
+                Let \( \{0, 1\}^{\mathbb{N}} / R \) where \( R \) is the equivalence relation, and this gets us a representation of \( \mathbb{R} \), therefore,
+            </p>
+
+            <p>
+                \( \mathbb{R} \) is uncountable. $$\tag*{$\Box$}$$
+            </p>
+
+            <p>
+                <i>Note: if there is any confusion ask Dimitry.</i>
+            </p>
+
+        </div>
 
 
         <footer>
