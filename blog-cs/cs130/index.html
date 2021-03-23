@@ -49,6 +49,7 @@
                 <li><a href="#relations">Relations</a></li>
                 <li><a href="#functions">Functions</a></li>
                 <li><a href="#cardinality">Set Cardinality</a></li>
+                <li><a href="#graphs">Graphs</a></li>
             </ol>
         </div>
 
@@ -1660,6 +1661,215 @@
                 <i>Note: if there is any confusion ask Dimitry.</i>
             </p>
 
+        </div>
+
+        <div id="graphs" class="colourband">
+            <h2>Graphs</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#gra-1">Graphs as Relations</a></li>
+                <li><a href="#gra-2">Walks, Paths, Tours and Cycles</a></li>
+            </ol>
+
+            <h2>Graphs as Relations</h2>
+
+            <p>
+                First, let us say that a relation which is <b>irreflexive</b> is the opposite of reflexive, that is for a relation \( R \), \( \forall a \in A, \; \lnot (aRa) \)
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A graph is an ordered pair \( G = (V, E) \), where:
+                <br><br>
+                \( V \) is a set of vertices, with \( |V| < \infty \), and \( E \) is a <i>collection</i> of edges (vertex pairs).                  
+            </p>
+
+            <p>
+                Note that a <i>collection</i> allows duplicates of the same object, since it is useful to have that sometimes. 
+            </p>
+
+            <p>
+                Graphs are either <b>Directed or Undirected</b>
+            </p>
+
+            <p>
+                In a directed graph (digraph), E must <b>strictly</b> contain ordered pairs. In an undirected graph, \( (u, v) = (v, u) \) and so one can think rather of a <i>collection</i> \( \{u, v\} \in E \).
+            </p>
+
+            <p class="blue">
+                <b><i>Vocabulary. </i></b>For an edge \( (u, v) \), \( u \) is the <b>source</b>, or initial vertex, and \( v \) is the <b>destination</b>, or terminal vertex. 
+                <br><br>
+                A <b>Loop</b> is represented \( (u, u) \), i.e. a vertex connecting to itself. 
+                <br><br>
+                Edges \( \{u, v\} \) and \( \{v, u\} \) are parallel, but directed edges \( (u,v) \) and \( (v,u) \) are <b>not</b> parallel.
+            </p>
+
+            <img src="graphvocab.svg" alt="Diagrams of graphs" style="max-width:420px;width:100%;">
+
+            <p>
+                Let us have no parallel edges, for ease. 
+                <br><br>
+                The Edges, \( E \subseteq V \times V \) is a relation, and if it is symmetric, then the graph is undirected*, else the graph is directed.
+                <br><br>
+                If \( E \) is irreflexive, there are no loops in the graph.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A graph is <b>SIMPLE</b> if it is undirected, and there are <i>no loops or parallel edges</i>.
+                <br><br>
+                A <b>simple digraph</b> is similar to the above, but the graph is directed.
+            </p>
+
+            <p>
+                If a graph does have parallel edges, the relation \( E \subseteq V \times V \) breaks down. However, we can instead make \( E \) a function \( e : V \times V \longrightarrow \mathbb{N} \), so then \( e((u,v)) = 2 \) means there are two edges connecting \( u \) to \( v \).
+            </p>
+
+            <p>
+                Vertices and edges can be labelled, and we can define a function for each going to the set of labels \( L \) to retrieve the lables (for some reason). \( f : V \longrightarrow L \) and \( g : E \longrightarrow L \).
+            </p>
+
+            <p>
+                A graph is <b>weighted</b> if we have numbers as labels.
+            </p>
+
+            <p class="blue">
+                <b><i>Vocabulary.</i></b> Vertices are <b>adjacent</b> if an edge connects them.
+                <br><br>
+                An edge \( e= (u, v) \) is <b>incident</b> with \( u \) or \( v \). Alternatively, \( u, v \) are the <b>endpoints</b> of \( e \).
+                <br><br>
+                The <b>degree</b> of a vertex \( \textrm{Degree}(v) \) is the number of edges incident with \( v \).
+                <br><br>
+                For directed graphs, the <b>indegree</b> is the number of edges where \( v \) is a destination, and the <b>outdegree</b> is the number of edges where \( v \) is a source.
+            </p>
+
+            <img src="inoutdegree.svg" alt="Indegrees and Outdegrees of B" style="max-width: 420px;width: 100%">
+
+            <p class="side">
+                <b><i>Theorem 1.</i></b> <i>The Handshaking Theorem.</i> Suppose we have an undirected graph \( G = (V, E) \) that may have multiple loops / parallel edges. The handshaking theorem states that:
+
+                \[\sum_{v \in V} \textrm{deg}(v) = 2|E|\]
+            </p>
+
+            <button class="collapsible">Proof 1...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 1.</i></b> The LHS is describing the number of endpoints of edges. The RHS is describing the number of edges.
+                    <br><br>
+                    Every edge has 2 endpoints, so it's trivial to see that LHS = \(2\)RHS.
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Corollary.</i></b> In an undirected graph, the total number of vertices with odd degrees is even. 
+            </p>
+
+            <p>
+                
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Suppose 2 graphs, \(G_1 = (V_1, E_1)\), \(G_2 = (V_2, E_2)\).
+                <br><br>
+                \(G_1, G_2\) is <b>ISOMORPHIC</b> if \(\exists\) bijections \(f : V_1 \longrightarrow V_2\) and \(g : E_1 \longrightarrow E_2\), such that \(g((u, v)) = (f(u), f(v) \; \forall u, v \in E_1\).
+                <br><br>
+                The notation is \(G_1 \cong G_2\).
+            </p>
+
+            <p>
+                Some important/elementary graphs are shown below:
+            </p>
+
+            <img src="typesofgraph.svg" alt="Some important types of graphs" style="width:100%;max-width: 560px;">
+
+            <p>
+                Suppose a new graph \(G(V, E)\). Split \(V = V_1 \cup V_2\) such that <b>no edge</b> \((u, v) \in E\) has either of
+                \begin{align}
+                &u \in V_1, v \in V_1 & u \in V_2, v \in V_2.
+                \end{align}
+                Therefore we get our edge collection as \(E \subseteq (V_1 \times V_2) \cup (V_2 \times V_1)\).
+            </p>
+
+            <p class="blue">
+                The above is the defintion of a <b>BIPARTITE</b> graph. Below is a digram of the complete bipartite graph \(K_3\).
+            </p>
+
+            <img src="k3.svg" alt="Complete Bipartite graph K3" style="max-width: 240px;width: 100%;">
+
+            <h2 id="gra-2">Walks, Paths, Tours and Cycles</h2>
+
+            <p>
+                A walk is a sequence of nodes in a traversal. Formally,
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A <b>WALK</b> in a graph \(G = (V, E)\) is a finite sequence
+                \[v_0, (v_0, v_1), v_1, (v_1, v_2), v_2, ... , v_{n-1}, (v_{n-1}, v_n), v_n \; (n \geq 0)\]
+                where all \(v_i \in V, \; (v_{i-1}, v_i) \in E, \; i \geq 1\).
+            </p>
+
+            <p>
+                If a graph has no parallel edges, it is then unnecessary to include the edge taken. 
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A walk is a <b>PATH</b> if no edge is repeated.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A walk is a <b>SIMPLE PATH</b> if no vertex is repeated.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A walk is a <b>TOUR</b> if \(v_0 = v_n\) ~ starts and ends at the same spot.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A tour is a <b>CYCLE</b> if no vertex is repeated <i>except</i> \(v_i, v_n\).
+            </p>
+
+            <p>
+                A notation for a walk from \(v_0 \rightarrow ... \rightarrow v_n\) can be denoted \(v_0 \longrightarrow^* v_n\), where \(v_i \rightarrow v_j\) means \((v_i, v_j) \in E\).
+            </p>
+
+            <p>
+                If there exists \(v_0 \longrightarrow^* v_n\), then \(v_n\) is <b>reachable</b> or accessible from \(v_0\).
+            </p>
+
+            <p>
+                We can have another relation! (woo) for reachability, which is a relation \(R_{\longrightarrow^*} \subseteq V \times V\) where \(V\) is the vertex set of graph \(G = (V, E)\).
+            </p>
+
+            <p>
+                On an undirected graph, \(R_{\longrightarrow^*}\) is symmetrical as if \(u \longrightarrow^* v\) then \(v \longrightarrow^* u\).
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 2.</i></b> If a graph \(G = (V, E\) is undirected, reachability on \(V\) is an <b>equivalence</b> relation.
+            </p>
+
+            <button class="collapsible">Proof 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 2.</i></b> For the reachability relation \(R_{\longrightarrow^*}\) to be an equivalence, it must be reflexive, transative, and symmetrical. 
+                    <br><br>
+                    \(R_{\longrightarrow^*}\) is reflexive trivially as any vertex is reachable from itself; \(\forall v \in V, \; v \longrightarrow^* v\).
+                    <br><br>
+                    \(R_{\longrightarrow^*}\) is symmetrical, see above paragraph. 
+                    <br><br>
+                    To prove transitivity, if \(u \longrightarrow^* v \land v \longrightarrow^* w\), then \(u \longrightarrow^* v \longrightarrow^* w\) and trivially we can see that this means \(u \longrightarrow^* w\). Thus \(R_{\longrightarrow^*}\) is an equivalence relation.
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p>
+                Thus the equivalence classes \([v]_{\longrightarrow^*}\) denote <b>connected components</b>.
+            </p>
+
+            <img src="connectedcomponents.svg" alt="A graph showing connected components" style="width: 100%;max-width: 480px;">
         </div>
 
 
