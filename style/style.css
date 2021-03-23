@@ -79,6 +79,11 @@ html.boxed .body {
 	background-image: url("images/taichuan_smaller_size.jpg");
 }
 
+.homefan {
+	min-height: 720px;
+	background-image: url("images/dragon-flute.png");
+}
+
 .parsmaller {
 	background-image: url("images/taichuan_smaller_size_squish.jpg");
 	background-position: top;
@@ -88,7 +93,7 @@ html.boxed .body {
 .hidden {
 	overflow-x: hidden;
 	position: relative;
-	/*min-height: 100vh;*/
+	min-height: 100vh;
 }
 
 .colourband {
@@ -183,11 +188,23 @@ header {
 	padding: 0.5rem 500%;
 }
 
+header.green {
+	background-color: #3a6342;
+	color: #f1f2e9;
+}
+
 footer {
 	background-color: #a17667;
 	color: #f1f2e9;
 	margin: 0 -500%;
 	padding: 0.5rem 500%;
+	box-shadow: 0 50vh 0 50vh #a17667;
+}
+
+footer.green {
+	background-color: #3a6342;
+	color: #f1f2e9;
+	box-shadow: 0 50vh 0 50vh #3a6342;
 }
 
 a.nav {
@@ -209,6 +226,14 @@ a {
 
 a.text {
 	text-decoration: underline;
+}
+
+a.white {
+	color: #f1f2e9;
+}
+
+a.black {
+	color: #000;
 }
 
 button.nav {
@@ -345,6 +370,15 @@ code {
 blockquote {
 	font-style: italic;
 }
+
+.green {
+	background-color: #3a6342;
+	color: #f1f2e9;
+}
+
+.overlay {
+	background-color: #00000030;
+	box-shadow: 0 0 5px 5px #00000030;
 
 
 
