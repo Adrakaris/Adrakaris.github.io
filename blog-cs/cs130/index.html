@@ -1673,6 +1673,7 @@
             <ol>
                 <li><a href="#gra-1">Graphs as Relations</a></li>
                 <li><a href="#gra-2">Walks, Paths, Tours and Cycles</a></li>
+                <li><a href="#gra-3">Graphs as Models</a></li>
             </ol>
 
             <h2>Graphs as Relations</h2>
@@ -1869,7 +1870,119 @@
                 Thus the equivalence classes \([v]_{\longrightarrow^*}\) denote <b>connected components</b>.
             </p>
 
-            <img src="connectedcomponents.svg" alt="A graph showing connected components" style="width: 100%;max-width: 480px;">
+            <img src="connectedcomponents.svg" alt="A graph showing connected components" style="width: 100%;max-width: 400px;">
+
+            <p>
+                If a graph is directed, we need to consider the direction. Consider a graph with an edge between A and B; \(A \longrightarrow B\). Then \(A \longrightarrow^* B\) but not \(B \longrightarrow^* A\). 
+            </p>
+
+            <p>
+                In this case we talk about <b>mutual reachability</b>, which is represented  \(A {}_{*}\rightleftharpoons^* B \equiv A \rightarrow^* B \land B \rightarrow^* A\). The equivalence classes here are called <b>strongly connected components</b>.
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 3.</i></b> If \(G = (V, E)\) has a <i>walk</i> \(u \longrightarrow^* v\) then it also has a <i>simple path</i> \(u \longrightarrow^* v\).
+            </p>
+
+            <button class="collapsible">Proof 3...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 3.</i></b> A walk which is not a simple path will pass a vertex twice.
+                </p>
+
+                <div class="columncontainer ctwo">
+                    <div class="column">
+                        <p>
+                            Here is an abstract representation of a nonsimple walk. Because it is non-simple, it must have at least one cycle, at some point \(w\). We can then simply omit this cycle from the walk, and repeat ad infinitum to get a simple walk. 
+                        </p>
+                    </div>
+                    <div class="column">
+                        <img src="nonsimplewalk.svg" style="max-width:100%">
+                    </div>
+                </div>
+
+                <p>
+                    More formally, suppose a path \(\Pi : v_0, (v_0, v_1), v_1, ... , v_n\). Let \(v_0 = u, \; v_n = v\). We can perform induction on \(n\). (\(n\) is the length of the path)
+                </p>
+
+                <p>
+                    When \(n = 0: v_0 = v_n\), trivially a simple path.
+                </p>
+
+                <p>
+                    Assume the inductive step. Then suppose we have a path \(\Pi : v_0, (v_0, v_1), v_1, ..., v_{n-1}, (v_{n-1}, v_n), v_n, (v_n, v_{n+1}), v_{n+1}\). There are two cases, where the path is simple (which is trivial) and where the path is not.
+                </p>
+
+                <p>
+                    If the path is not simple, \(\exists w \in V\) where \(w = v_i = v_j\), where \(i \neq j\). We can simply replace the whole segment of the path by linking \(v_i\) to \((v_j, v_j+1\), because \(v_i = v_j\). So we would get \(\Pi' : v_0, (v_0, v_1), ..., v_i, (v_j, v_{j+1}), v_{j+1}, ..., v_n\).
+                </p>
+
+                <p>
+                    Apply to \(\Pi'\) until no cycles remain. Thus we get a simple path.
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <h2 id="gra-3">Graphs as Models</h2>
+
+            <p>
+                Graphs are very useful for representing models.
+            </p>
+
+            <p class="side">
+                <b><i>Example 1.</i></b> Think of the problem of the farmer, wolf, goat, cabbage, and the river they need to cross. The wolf eats the goat if left alone, the goat eats the cabbage. 
+            </p>
+
+            <button class="collapsible">Answer 1...</button>
+            <div class="ccontent">
+                <p>
+                    This problem can be represented as a graph, where each vertex represents a valid state. The labels will represent \(\frac{\textrm{This side of river}}{\textrm{Far side of river}}\), and farmer, wolf, goat, cabbage are represented by \(F, W, G, C\).
+                </p>
+
+                <img src="farmerwolfgoat.svg", style="max-width: 100%">
+            </div>
+
+            <p class="side">
+                <b><i>Example 2.</i></b> Noughts and crosses. We can represent transitions of a noughts and crosses board from one state to another as a bipartite graph, with X on one side and O on the other, or vice versa.
+            </p>
+
+            <button class="collapsible">Expand...</button>
+            <div class="ccontent">
+                <img src="noughtsandcrosses.svg", style="max-width: 100%">
+            </div>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> Boolean circuits can be represented as directed graphs, with nodes containing operations.
+            </p>
+
+            <button class="collapsible">Expand...</button>
+            <div class="ccontent">
+                <img src="booleanflow.svg", style="max-width: 100%">
+            </div>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> <i>The four colour map theorem</i>, which in laymans' terms stats that a map of "countries" (contiguous blocks of land) need only 4 different colours such that no colour is directly adjacent (corners don't count). Countries can be represented by vertices and bordering countries can be joined by edges, to form a graph. 
+                <br><br>
+                A <i>colouring</i> of \(G\) with colours \(C\) is a function \(f : V \longrightarrow C\). <br>
+                A colouring is <i>proper</i> if \(\forall (u, v) \in E, \; f(u) \neq f(v)\).
+                <br><br>
+                <b><i>Definition.</i></b> A graph is <b>k-colourable</b> if there exists a proper colouring of \(G\) with \(k\) amount of colours, \(\{1, 2, ..., k\}\) 
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 4.</i></b> A continuation of <i>k-colouring</i>, a graph is bipartite <i>if and only if</i> it is 2-colourable.
+            </p>
+
+            <button class="collapsible">Proof 4...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 4.</i></b> In a bipartite graph \(G = (V, E)\), \(V = V_1 \cup V_2, V_1 \cap V_2 = \varnothing\). \(E \subseteq (V_1 \times V_2) \cup (V_2 \times V_1)\).
+                    <br><br>
+                    If we colour \(V_1\) with colour 1, and \(V_2\) with colour 2, by the nature of bipartite graphs, we know that no two nodes of the same colour are adjacent.
+                    $$\tag*{$\Box$}$$
+                    However, we do not know an efficient algorithm for deciding if a graph is 3-colourable or not.
+                </p>
+            </div>
         </div>
 
 
