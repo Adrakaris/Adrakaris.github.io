@@ -1674,6 +1674,8 @@
                 <li><a href="#gra-1">Graphs as Relations</a></li>
                 <li><a href="#gra-2">Walks, Paths, Tours and Cycles</a></li>
                 <li><a href="#gra-3">Graphs as Models</a></li>
+                <li><a href="#gra-4">Eulerian Cycles</a></li>
+                <li><a href="#gra-5">Hamiltonian Cycles and Planar Graphs</a></li>
             </ol>
 
             <h2>Graphs as Relations</h2>
@@ -1983,6 +1985,207 @@
                     However, we do not know an efficient algorithm for deciding if a graph is 3-colourable or not.
                 </p>
             </div>
+
+            <h2 id="gra-4">Eulerian Cycles</h2>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A path \(\pi\) in an undirected graph \(G = (V, E)\) is a <b>EULERIAN PATH</b> if it traverses every edge <i>once</i>.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A cycle \(C\) in \(G\) is a <b>EULERIAN CYCLE</b> if it is also a <i>eulerian path</i>.
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 5.</i></b> <i>(Euler and Hierholzer)</i> A <i>connected</i> graph contains a eulerian cycle if and only if the degrees \(v \; \forall v \in V\) is <B>even</B>.
+            </p>
+
+            <p class="side">
+                <b><i>Corollary.</i></b> An undirected graph has a eulerian cycle iff every vertex has even degree, and removal of isolated (deg 0) vertices makes the graph connected.
+            </p>
+
+            <button class="collapsible">Proof of Corollary...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> We need to prove \(\rightarrow\) and \(\leftarrow\).
+                </p>
+
+                <p>
+                    <i>Proving necessity.</i> Consider \(V' = \{v \in V : v \textrm{occurs on the eulerian cycle} \}\). All vertices in \(V \setminus V'\) are thus isolate. 
+                </p>
+
+                <p>
+                    If we remove \(V \setminus V'\) from \(G\), then we have only \(V'\). This leads to the graph where every vertex \(u \in V'\) lies on the eulerian cycle. Every vertex is reachable on this new graph, thus the new graph is connected.
+                </p>
+
+                <p>
+                    By Theorem 5, every vertex in this new graph \(G\) has an even degree. All removed vertices have a degree of 0. Thus we have proved necessity.
+                </p>
+
+                <p>
+                    <i>Proving sufficiency.</i> Take a graph \(G = (V, E)\), and first remove all isolate vertices in \(V\), if there are any. The remaining connected graph has an even degree \(\forall v \in V\). By Theorem 5, \(G\) must then contain a eulerian cycle. Thus we have proved sufficiency.
+                </p>
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <p>
+                Let us now attempt to prove Euler's theorem. First, though, we must define subgraphs, and prove some lemmas.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Define graphs \(G_1 = (V_1, E_1)\) and \(G_2 = (V_2, E_2\). \(G_1\) is a <b>SUBGRAPH</b> of \(G_2\) if \(V_1 \subseteq V_2\) and \(E_1 \subseteq E_2\). 
+            </p>
+
+            <p class="side">
+                <b><i>Lemma 1.</i></b> Suppose we have an undirected graph \(G = (V, E)\). Let \(C\) be a cycle in \(G\). Then, every vertex of \(G\) is <i>incident</i> with an <i>even</i> number of edges on \(C\). (Each loop is counted twice)
+            </p>
+
+            <button class="collapsible">Proof of Lemma 1...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Let \(C : v_0, v_1, ..., v_{k-1}, v_k\) where \(v_k = v_0\). Consider any \(u \in V\). If \(u\) is not on cycle \(C\), then it has an incidence of 0, which is even. Discard all \(u \not \in C\).
+                </p>
+
+                <p>
+                    For every \(u \in C\) where \(u \neq v_0\), then there will be some adjacent vertices \(a, b\) such that \(a \rightarrow u \rightarrow b\). Since we go in one way, and come out another, this must have an even incidence, even if there are multiple "in and outs".
+                </p>
+
+                <p>
+                    In the case that \(u = v_0\), then the adjacent vertices are \(v_{k-1} \rightarrow u \rightarrow v_1\). This is identical to the case before and must lead to an even incidence.
+                </p>
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <p class="side">
+                <b><i>Lemma 2.</i></b> Let \(G = (V, E)\) be undirected where all vertices in \(V\) are even degrees.
+                <br><br>
+                Let a vertex \(u \in V\) be such that \(\textrm{deg}(u) > 0\). Then, \(G\) has a cycle that goes through \(u\), of a length \(> 0\). 
+            </p>
+
+            <button class="collapsible">Proof of Lemma 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Start at vertex \(u\). Take any outgoing edge, \((u, v)\), and remove it. The degree of \(v\) will now be odd, therefore there must be at least 1 outgoing edge, e.g. \((v, w)\). Now remove \((v, w)\), and continue on.
+                </p>
+
+                <p class="side">
+                    <b><i>Claim.</i></b> We can only get stuck (no more edges to remove) if we get back to \(u\).
+                    <br><br>
+                    <b><i>Subproof.</i></b> After removing \((v, w)\) \(\textrm{deg}(v)\) remains even. When we enter vertex \(w\), \(\textrm{deg}(w)\) decreases by 1 to become odd. Therefore, since it is odd, \(\textrm{deg}(w) > 0\). This means there is always an outgoing edge. 
+                    <br><br>
+                    <i>Except</i>, however, when the degree is already odd when we enter. Since we always take a vertex down by 2 degrees when we leave, apart from \(u\), then this is only true when we are at \(u\). Therefore, when we enter \(u\), we take \(u\) down to an even degree - this <i>can</i> be 0. If it's not 0, then we can keep going, but if it <i>is</i> 0, then we have found a cycle, and thus completes the subproof. \(\vartriangleright\)
+                </p>
+
+                <p>
+                    As \(G\) has finite edges, we must get stuck after at most \(|E|\) moves, which means we have a cycle through \(u\)
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <p>
+                Now we can prove Euler's theorem.
+            </p>
+
+            <button class="collapsible">Proof of Euler's Theorem...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 5.</i></b> We need to prove both necessity and sufficiency. 
+                </p>
+
+                <p>
+                    <i>For necessity:</i> A graph \(G = (V, E)\) is connected, and \(G\) has an eulerian cycle \(\implies \textrm{deg}(v) \textrm{ even } \forall v \in V\).
+                    <br><br>
+                    Suppose we have a cycle \(C\). Because of <i>lemma 1</i> every \(v \in V\) is incident with an even number of edges of \(G\) (since there is an eulerian cycle), with loops counted twice, thus we can say that every vertex on \(G\) has an even degree.
+                </p>
+
+                <p>
+                    <i>For sufficiency:</i> \(G\) is connected and all vertices are even degree \(\implies\) there is an eulerian cycle.
+                    <br><br>
+                    We have 2 cases to consider: <br>
+                    (1) \(G\) has no edges, thus there is a single vertex and it is a trivial case. <br>
+                    (2) \(\exists v \in V : \textrm{deg}(v) > 0\). By <i>lemma 2</i>, we can find a cycle \(C\) which goes through \(v\). Let us remove all edges in \(C\) from the graph. 
+                </p>
+
+                <p>
+                    From (2) we have two results: either the graph is empty (in which case we're done) or there is a new <i>subgraph</i> of \(G\), with \(|E| \geq 1\) and also \(\textrm{deg}(v)\) even \(\forall v\).
+                    <br><br>
+                    Every \(v \in V\) is incident with an even number of edges from cycle \(C\). 
+                </p>
+
+                <p style="font-style: italic;">
+                    Comment: We started with \(G\) and found a cycle \(C\) where we have vertices left. How do we integrate these vertices into \(C\)?
+                </p>
+
+                <p>
+                    We extend C as follows:
+                    <br><br>
+                    Since there is \(\geq 1\) edge untraversed, suppose there exists an edge \((w, w') \in E\) of the subgraph of \(G\). The original graph \(G\) is connected, so \(\exists\)path \(v_0 \longrightarrow^* w\). Say that \(v_0 \rightarrow v_1 \rightarrow v_2 \rightarrow ... \rightarrow w \longrightarrow^* v_k\) is the path.
+                    <br><br>
+                    Consider the largest \(i \in \{0, 1, 2, ..., k\}\) such that \(v_i\) visited by \(C\). If \(i < k\), then \((v_i, v_{i+1})\) is untraversed (since \(v_{i+1}\) would be unvisited).
+                    <br><br>
+                    \(\implies\) subgraph will have \(\textrm{deg}(v_i) > 0\), and \(v_i\) is on \(C\).
+                    <br><br>
+                    We then find a new \(C'\) in the subgraph that passes through \(v_i\), by <i>lemma 2</i>.
+                </p>
+
+                <p style="font-style: italic;">
+                    We can plug the new cycle into the original cycle by adjusting the paths to \(u \longrightarrow^* v_i\) followed by \(C' : v_i \longrightarrow^* v_i\) then \(v_i \longrightarrow^* u\).
+                </p>
+
+                <p>
+                    Consider \(i = k\). Then \(v_k\) on \(C\), \(v_k = w\) so \(w\) is on \(C\). Again the degree of \(w = 0\), which is a cycle (by <i>lemma 2</i>). 
+                </p>
+
+                <p>
+                    Continue this process. Each step removes \(\geq 1\) edges, until we reach termination. Termination means an empty subgraph, thus we have found an eulerian cycle.
+                </p>
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <h2 id="gra-5">Hamiltonian Cycles and Planar Graphs</h2>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A <b>HAMILTONIAN</b> cycle is a path that visits each <i>vertex exactly once</i>.
+            </p>
+
+            <p>
+                It is computationally difficult to find an optimal hamiltonian cycle, the problem is intractable.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A graph is <b>PLANAR</b> if it can be embedded in a 2D euclidean space with no edge crossing. <i>(Planar Embedding)</i>
+            </p>
+
+            <p>
+                Standard non-planar graphs are \(K_{3, 3}\) and \(K_5\).
+            </p>
+
+            <img src="k33k5.svg" style="max-width: 420px; width:100%;">
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Take any edge \(u-v\) and add a vertex in the middle such that \(u-x-v\). This is a <b>SUBDIVISION</b> of the edge \(\{u, v\}\).
+                <br><br>
+                Formally, \(G = (V, E) \longrightarrow G' = (V', E')\) where \(V' = V \cup \{x\}\) and \(E' = (E \setminus \{u, v\}) \cup \{\{u, x\}, \{x, v\}\}\).
+            </p>
+
+            <p>
+                A property of non-planar graphs is that if we apply a subdivison to \(G\) to get \(G'\), \(G'\) is also not planar. This leads us to:
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 6.</i></b> <i>(Kuratowski)</i> A graph is not planar <i>iff</i> it has a <i>subgraph</i> that is <i>isomorphic</i> to a graph derived from \(K_{3, 3}\) or \(K_5\) through graph subdivisions.
+            </p>
+
+            <p class="blue">
+                <b><i>Formula.</i></b> The well known Euler's formula for planar graphs, given a set of faces \(F\), and vertices and edges \(V, E\), we get that
+                \[|V| - |E| + |F| = 2\]
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 7.</i></b> Back to the <i>four colour map theorem</i>, where a map (i.e. a <i>planar graph</i>) needs only 4 colours to colour every territory (vertex) with a colour such that no territory borders directly another territory of the same colour (no two vertices of the same colour share an edge). 
+                <br><br>
+                A complete proof of this was only found after 1950 with computer assistance, and so is outside of scope. 
+            </p>
         </div>
 
 
