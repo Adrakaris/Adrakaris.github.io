@@ -50,6 +50,7 @@
                 <li><a href="#functions">Functions</a></li>
                 <li><a href="#cardinality">Set Cardinality</a></li>
                 <li><a href="#graphs">Graphs</a></li>
+                <li><a href="#trees">Trees</a></li>
             </ol>
         </div>
 
@@ -2185,6 +2186,180 @@
                 <b><i>Theorem 7.</i></b> Back to the <i>four colour map theorem</i>, where a map (i.e. a <i>planar graph</i>) needs only 4 colours to colour every territory (vertex) with a colour such that no territory borders directly another territory of the same colour (no two vertices of the same colour share an edge). 
                 <br><br>
                 A complete proof of this was only found after 1950 with computer assistance, and so is outside of scope. 
+            </p>
+        </div>
+
+        <div id="trees" class="colourband">
+            <h2>Trees</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#tre-1">Finding Trees</a></li>
+                <li><a href="#tre-2">Definitions of Trees</a></li>
+                <li><a href="#tre-3">Rooted Trees</a></li>
+            </ol>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A graph is a <b>TREE</b> if it is <b>connected</b> and <b>acyclic</b>.
+            </p>
+
+            <p>
+                If an acyclic graph is disconnected, there must be multiple connected components which are acyclic. Thus, this graph is multiple trees, and is termed a <b>forest</b>.
+            </p>
+
+            <h2 id="tre-1">Finding Trees</h2>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A subgraph \(G' = (V, F)\) of \(G = (V, E)\) is a <b>SPANNING TREE</b> of \(G\) if \(G'\) is a tree. (note the two \(V\)s are the same.)
+            </p>
+
+            <p class="side">
+                <b><i>Theorem 1.</i></b> Any connected graph has at least 1 spanning tree.
+            </p>
+
+            <p class="side">
+                <b><i>Lemma 1.</i></b> Suppose an edge is removed from a cycle in a connected graph. Then, the graph remains connected.
+            </p>
+
+            <button class="collapsible">Proof of Lemma 1...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> We consider a connected graph \(G = (V, E)\) which has a cycle. \(\forall u, v \in V \; \exists\)path \(u \longrightarrow^* v\) in \(G\). 
+                    <br><br>
+                    For \(u, v\), if the path avoids the edge that would be removed by <i>lemma 1</i> then the path remains unchanged. Otherwise, replace the edge removed by <i>lemma 1</i> with the rest of the cycle between the endpoints of the removed path. This will exist, because the removed edge is in a cycle. Thus \(G\) remains connected.
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <button class="collapsible">Proof of Theorem 1...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 1.</i></b> We need to perform induction on \(|E|\) in a connected graph \(G = (V, E)\).
+                </p>
+
+                <p>
+                    Base case: \(|E| = 0\), which implies \(|V| = 1\). A single vertex is a trivial tree.
+                </p>
+
+                <p>
+                    Inductive case: Assume that for an \(|E| = m\), there exists a spanning tree, then let us look at when \(E = |m + 1|\).
+                    <br><br>
+                    If \(G\) then has no cycles, then we have a tree. However, if there now exists a cycle, we remove some edge from the cycle, obtaining \(G_1 = (V, E_1)\) where \(|E_1| = n\). We can do this and leave the graph connected because of <i>lemma 1</i>. By inductive hypothesis, then, \(G_1\) has a spanning tree \(T = (V, F)\), which is also a spanning tree of \(G\).
+                </p>
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <p class="side">
+                <b><i>Lemma 2.</i></b> Adding a new edge to a connected undirected graph on existing vertices leads to a cycle. 
+            </p>
+
+            <button class="collapsible">Proof of Lemma 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> Suppose we have a new edge \(e = \{u, v\}\). In a connected graph there will exist a path \(u \longrightarrow^* v\). Adding the new edge \(e\) will make a cycle consisting of \(u \longrightarrow^* v, \{v, u\}, u\).
+                </p>
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <p class="side">
+                <b><i>Lemma 3.</i></b> Let an undirected simple graph be \(G = (V, E)\). Let \(|V| = p, \; |E| = q\).
+                <br><br>
+                \(G\) has <i>at least</i> \(p - q\) connected components. <br>
+                If \(G\) is acyclic, then it has <i>exactly</i> \(p - q\) connected components. 
+                <br><br>
+                <i>This lemma is really only defined if \(q < p\).</i>
+            </p>
+
+            <button class="collapsible">Proof of Lemma 3...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> We can first observe, that every graph \(G = (V, E)\) can be obtained by starting on a graph with \((V, \varnothing)\) and adding all edges in \(E\). Suppose \(E = \{e_1, e_2, ..., e_q\}\).
+                </p>
+
+                <p>
+                    One can see the graph \((V, \varnothing)\) has \(|V|\) connected components. Let us add a single edge \(e = (u, v)\) into the graph. Two cases can follow:
+                    <br><br>
+                    Either \(u, v\) are in different connected components, in which case 2 components become one, and the total number of connected components goes down by 1. Or, \(u, v\) are in the same component, in which case we create a cycle, by <i>lemma 2</i>. 
+                </p>
+
+                <p>
+                    Repeate this operation until \((V, \varnothing) \longrightarrow (V, E)\). Each addition can decrement the number of connected components, or not. Thus, we can see that we will eventually have at least \(p-q\) connected components.
+                    <br><br>
+                    If \(G\) is acyclic, however, then only the <i>"Either"</i> case may occur, and we will get exactly \(p-q\) connected components.
+                </p>
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <h2 id="tre-2">Definitions of Trees</h2>
+
+            <div class="ccontent" style="display: block;">
+                <p>
+                    <b><i>Theorem 2.</i></b> <i>("On 5 definitions of trees")</i> Let \(G = (V, E)\) be an undirected, simple graph. Let \(|V| = p, \; |E| = q\). Then, the following are equivalent:
+                </p>
+
+                <ol>
+                    <li>\(G\) is a tree.</li>
+                    <li>\(G\) is acyclic and \(q = p-1\)</li>
+                    <li>\(G\) is connected and \(q = p-1\)</li>
+                    <li>\(G\) is connected and removing any edge will make \(G\) unconnected</li>
+                    <li>\(G\) is acyclic and adding any edge will create a cycle</li>
+                </ol>
+            </div>
+
+            <button class="collapsible">Proof of Theorem 2...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof 2.</i></b> These are five statements effectively linked by \(\iff\) arrows. To try prove every single one of these would be extremely impractical, but we can drastically reduce the amount of proof we have to do by proving in a cycle: \((1) \implies (2) \implies (3) \implies (4) \implies (5) \implies (1)\). Thus, if we prove this cycle then we can see every point will link to another, and thus all points implicate all others (even if it's through intermediaries). 
+                    <br><br>
+                    Throughout we will be referring to a graph \(G\) with properties \(p\) and \(q\) as described by the theorem paragraph above. 
+                </p>
+
+                <p>
+                    <b>(1) implies (2):</b> By <i>lemma 3</i>, an acyclic graph has exactly \(p-q\) connected components. Since \(G\) is connected, we know there is only 1 connected component. Thus \(p-q=1\implies q = p-1\), so \((1) \implies (2) \; \vartriangleright\)
+                </p>
+
+                <p>
+                    <b>(2) implies (3):</b> By <i>lemma 3</i>, \(G\) has exactly \(p-q\) connected components, since it is acyclic, as point (2) asserts. (2) also asserts that \(p-q=1\), if you rearrange the equation. This means that \(G\) has exactly 1 connected component, which means it is connected, as (3) asserts. So \((2) \implies (3) \; \vartriangleright\)
+                </p>
+
+                <p>
+                    <b>(3) implies (4):</b> By <i>lemma 3</i> again, \(q = p-1\). After removing one edge, we will then get \(q' = p - 2\). The new graph, by <i>lemma 3</i> has \(\geq p - (p - 2) = 2\) connected components, so \(G\) would become disconnected. So \((3) \implies (4) \; \vartriangeright\)
+                </p>
+
+                <p>
+                    <b>(4) implies (5):</b> \(G\) cannot have a cycle otherwise (4) will not hold, by <i>lemma 1</i>. By <i>lemma 2</i> then adding an edge to \(G\) will create a cycle. So \((4) \implies (5) \; \vartriangleright\)
+                </p>
+
+                <p>
+                    <b>(5) implies (1)</b> Every edge addition creates a cycle. If the graph is disconnected, then adding an edge necessarily <i>can</i> yield no cycles, since that edge can be between connected components. Therefore, we can say that \(G\) is connected. We know that \(G\) is acyclic, as (5) asserts, and an acyclic connected graph is the very definition of a tree, so \((5) \implies (1)\)
+                </p>
+
+                $$\tag*{$\Box$}$$
+            </div>
+
+            <h2 id="tre-3">Rooted Trees</h2>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A <b>ROOTED TREE</b> is a tree where there exists <b>one unique vertex</b> which is designated as the <b>root</b>, from which the rest of the tree branches.
+            </p>
+
+            <img src="rootedtree.svg" style="max-width: 600px;width: 100%;">
+
+            <p>
+                Rooted trees have many applications in computer science, particularly in cases such as binary search trees, or to store mathmematical operations.
+            </p>
+
+            <p>
+                Rooted trees can also reflect an ordering of nodes. These are generally directed trees.
+            </p>
+
+            <img src="treelabels.svg" style="max-width: 540px; width: 100%;">
+
+            <p>
+                Terminal nodes are called leaves, though from 126 you should know this. <i>Principal</i> subtrees are subtrees which are children of the root node, and any further subtrees are subtrees of subtrees. 
             </p>
         </div>
 
