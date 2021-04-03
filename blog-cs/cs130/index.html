@@ -51,6 +51,7 @@
                 <li><a href="#cardinality">Set Cardinality</a></li>
                 <li><a href="#graphs">Graphs</a></li>
                 <li><a href="#trees">Trees</a></li>
+                <li><a href="#partorder">Partial Orders</a></li>
             </ol>
         </div>
 
@@ -2360,6 +2361,146 @@
 
             <p>
                 Terminal nodes are called leaves, though from 126 you should know this. <i>Principal</i> subtrees are subtrees which are children of the root node, and any further subtrees are subtrees of subtrees. 
+            </p>
+        </div>
+
+        <div class="colourband" id="partorder">
+            <h2>Partial Orders</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <a href="#par-1">Products of Partial Orders</a>
+                <a href="#par-2">Hasse Diagrams</a>
+            </ol>
+
+            <p>
+                Recall: a partial order is a relation that is reflexive, antisymmetric, and transitive.
+            </p>
+
+            <p>
+                Suppose we have a set \(P\) and a partial order \(\leq \subseteq P \times P\). Then \((P, \leq)\) is a <b>partially ordered set</b>, or "poset". <i>Note: \(\leq\) is generally used here to refer to <b>any</b> partial order, not just "less than or equal to"</i>.
+            </p>
+
+            <p class="side">
+                <b><i>Example 1.</i></b> Consider the posets \((\mathbb{Z}, \leq), (\mathbb{N}, \leq), (\mathbb{Q}, \leq), (\mathbb{R}, \leq)\), which are over the same partial order. However, since the sets the relation acts over are different, these are different posets.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A <b>TOTAL / LINEAR ORDER</b> is a partial order where \(\forall x, y \in P: x \leq y \lor y \leq x\). <br>Basically, everything can be comparable. 
+            </p>
+
+            <p class="side">
+                <b><i>Example 2.</i></b> Consider the set \(2^{\{a, b\}} = \{\varnothing, \{a\}, \{b\}, \{a, b\}\}\), the partial order \(\subseteq\) (Subset-eq), and hence the poset \((2^{\{a, b\}}, \subseteq)\). Here, let us look at \(\{a\}, \{b\}\). \(\{a\} \subsetneq \{b\} \land \{b\} \subsetneq \{a\}\).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> \(x, y \in P\) are <b>INCOMPARABLE</b> if \(x \not \leq y \land y \not \leq x\) (generic partial order \(\leq\)).
+            </p>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> Take the set \(\mathbb{N} \setminus \{0\}\) or simply \(\mathbb{Z}^+\). Consider the set \((\mathbb{Z}^+, \leq)\) (less than or equal), which we know to be a poset <i>(The proof is left as an excersise to the reader)</i>. 
+                <br><br>
+                Consider also \((\mathbb{Z}^+, |)\), where \(x | y := x\) is a factor of \(y\). 
+                <br><br>
+                We can represent the partial order structure as a directed graph, with \(A \longrightarrow B\) meaning \(A \leq B\) (generic P.O.). 
+            </p>
+
+            <img src="partialordergraph.svg", style="max-width: 630px; width: 100%;">
+
+            <p>
+                Note that there is an element which is "less than or equal to" all elements in the set - the root. Note also the structure of the graphs - one is a total (linear) order and one is not. 
+            </p>
+
+            <p>
+                There are four very important definitions to do with partial orders.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> For an element \(x \in P\) in a poset \((P, \leq)\) (generic P.O.), \(x\) is:
+                <br><br>
+                &emsp;(1) The <b>LEAST</b> element if \(\forall y \in P, \; x \leq y\) <br>
+                &emsp;(2) The <b>GREATEST</b> element if \(\forall y \in P, \; y \leq x\) <br>
+                &emsp;(3) A <b>MINIMAL</b> element if \(\forall y \in P, \; y \leq x \implies y = x\)
+                &emsp;(4) A <b>MAXIMAL</b> element if \(\forall y \in P, \; x \leq y \implies y = x\)
+            </p>
+
+            <p>
+                Note: Least and Minimal are different in that there must be a <b>unique</b> least, while there can be multiple minimums. Similarly for greatest (unique) and maximal (multiple). 
+            </p>
+
+            <img src="minimalmaximal.svg" style="max-width: 630px;width: 100%;">
+
+            <h2 id="par-1">Products of Partial Orders</h2>
+
+            <p>
+                We can build larger posets from smaller ones. 
+            </p>
+
+            <p>
+                Suppose we have posets \((P, \leq_P), (Q, \leq_Q)\), what would be \((P \times Q, ?)\)? Let us try over an example of lexocographical ordering over sets of words \(P, Q\).
+            </p>
+
+            <p>
+                Define \(\leq_{\textrm{lex}}\) as the lexicographical ordering partial order. We can then define:
+                \begin{align}
+                (p_1, q_1) \leq_{\textrm{lex}} (p_2, q_2) &\textrm{ iff} &p_1 <_P p_2 \\
+                &\textrm{  or} &p_1 = p_2 \land q_1 \leq_Q q_2
+                \end{align}
+                Where \(x < y\) is just \(x \leq y \land x \neq y\).
+            </p>
+
+            <p>
+                Alternatively, we can use component-wise ordering. Let us define a generic partial order \(\leq_\textrm{pr}\) ("pr" for product) as this partial order. Here,
+                
+                \[(p_1, q_1) \leq_{\textrm{lex}} (p_2, q_2) \textrm{ iff } p_1 \leq p_2 \land q_1 \leq q_2\]
+            </p>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> Let \(P = \{0, 1\}\).
+                <br><br>
+                Define a relation \(\leq\) as:
+                \[
+                \leq = \begin{cases}
+                1 \leq 1
+                &0 \leq 0\\
+                0 \leq 1
+                &1 \not \leq 0\\
+                \end{cases}
+                \]
+                We can draw this relation simply as \(0 \longrightarrow 1\). 
+                <br><br>
+                We now want the product \((P, \leq) \times (P, \leq)\). \(P^2 = \{00, 01, 10, 11\}\), and now let's check this with our two known ordering methods.
+                <br><br>
+                If we use lexicographical order, then the graph looks like \(00 \longrightarrow 01 \longrightarrow 10 \longrightarrow 11\), which means from a total order we get yet another total order.
+                <br><br>
+                If we use component-wise order, then (bear with me here) the graph looks something like \(00 \longrightarrow (01, 10) \longrightarrow 11\), where \(01, 10\) are incomparable. Here, from a total order we have something which is not a total order.
+            </p>
+
+            <h2 id="par-2">Hasse Diagrams</h2>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> On a set \(P\), for \(x, y \in P\), \(x\) is <b>COVERED</b> by \(y\), also written \(x \lessdot y\), if and only if \(x < y\) and there exists <b>no</b> \(z \in P : x < z < y\).
+            </p>
+
+            <p>
+                You can think of covering as \(y\) succeeds \(x\), if that helps. In the graphs we've been looking at, these arrows represent covering. Thus, these graphs are...
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> The <b>HASSE DIAGRAM</b> of a poset \((P, \leq)\) (generic P.O.) is the <b>directed graph</b> \(G_{(P, \leq)} = (V, E)\) where \(V = P, \; E = \{(x, y) : x \lessdot y\}\).
+                <br><br>
+                This graph is also <b>acyclic</b> (a cycle reduces everything in that cycle down to 1 element effectivly).
+            </p>
+
+            <p>
+                However Hasse diagrams have their limits. Consider the poset \((\mathbb{Q}, \leq)\) (less than or equal), can we make a Hasse diagram of this? Between every \(x, y \in \mathbb{Q}\) we can find another element, so actually we can't have proper coverings. Thus, \(\mathbb{Q}\) is dense.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A partial order is <b>DENSE</b> if no coverings can be found. 
             </p>
         </div>
 
