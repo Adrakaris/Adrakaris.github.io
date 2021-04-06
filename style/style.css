@@ -379,7 +379,7 @@ blockquote {
 .overlay {
 	background-color: #00000030;
 	box-shadow: 0 0 5px 5px #00000030;
-
+}
 
 
 @media (max-width: 768px) {
@@ -402,6 +402,7 @@ blockquote {
 
 	.parsmaller{
 		min-height: 480px;
+		/*background-image: url("images/taichuan_smaller_size.jpg");*/
 
 		background-attachment: fixed;
 		background-position: bottom;
@@ -409,5 +410,9 @@ blockquote {
 		background-size: cover;
 		align-content: center;
 		z-index: 0;
+		/*height: 100vh;
+		background-image: url("images/taichuan_smaller_size_squish.jpg");
+		background-position: top;*/
+		/*background-size: 100%;*/
 	}
 }
