@@ -381,6 +381,10 @@ blockquote {
 	box-shadow: 0 0 5px 5px #00000030;
 }
 
+figcaption {
+	text-align: center;
+}
+
 
 @media (max-width: 768px) {
 	.columncontainer {

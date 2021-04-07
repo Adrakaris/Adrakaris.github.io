@@ -52,6 +52,7 @@
                 <li><a href="#graphs">Graphs</a></li>
                 <li><a href="#trees">Trees</a></li>
                 <li><a href="#partorder">Partial Orders</a></li>
+                <li><a href="#prob">Probability</a></li>
             </ol>
         </div>
 
@@ -2372,8 +2373,8 @@
             <h2>Introduction</h2>
 
             <ol>
-                <a href="#par-1">Products of Partial Orders</a>
-                <a href="#par-2">Hasse Diagrams</a>
+                <li><a href="#par-1">Products of Partial Orders</a></li>
+                <li><a href="#par-2">Hasse Diagrams</a></li>
             </ol>
 
             <p>
@@ -2501,6 +2502,56 @@
 
             <p class="blue">
                 <b><i>Definition.</i></b> A partial order is <b>DENSE</b> if no coverings can be found. 
+            </p>
+        </div>
+
+        <div id="prob" class="colourband">
+            <h2>Probability</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="pro-1">Events</a></li>
+            </ol>
+
+            <p class="blue">
+                <b><i>Notation.</i></b> A <b>SAMPLE SPACE</b>, denoted \(\Omega\) is a set of all possible outcomes. 
+                <br><br>
+                Consider a 6 sided dice. The sample space would be \(\Omega = \{1, 2, 3, 4, 5, 6\}\), where the elements of the set are <B>ELEMENTARY OUTCOMES</B>.
+                <br><br>
+                An <b>EVENT</b> \(E\) is a subset of the sample space, \(E \subseteq \Omega\). (can be denoted with any, often capital, letter)
+            </p>
+
+            <p>
+                For a 6 sided die, we can have the events even (\(E = \{2, 4, 6\}\)), odd (\(O = \{1, 3, 5\}\)), and small (\(S = \{1, 2, 3\}\)) as examples of events.
+            </p>
+
+            <p>
+                We can then perform set operations on these events. For example, \(O \cup E = \Omega, \; O \cap E = \varnothing, \; O \cap S = \{1, 3\}\). These are all meaningful things to consider.
+            </p>
+
+            <p class="blue">
+                <b><i>Notation.</i></b> We define the <b>COMPLEMENT</b> of \(A \in \Omega\) as \(\bar{A} = A \setminus \Omega\). 
+                <br><br>
+                Events \(A, B\) are <b>DISJOINT</b>, or mutually exclusive, if and only if \(A \cap B = \varnothing\). 
+            </p>
+
+            <p>
+                We can then use this notation to describe events.
+            </p>
+
+            <p class="side">
+                <b><i>Example 1.</i></b> <i>"Two coins are tossed"</i>. We have an outcome for one coin of \(\{H, T\}\). Therefore, 2 coins would be \(\Omega = \{H, T\}^2 = \{HH, HT, TH, TT\}\). We can then define some events:
+                <br><br>
+                \(E_1 : \)
+            </p>
+
+            <h2 id="pro-1">Events</h2>
+
+            <p class="side">
+                <b><i>Excersise 1.</i></b> 
             </p>
         </div>
 
