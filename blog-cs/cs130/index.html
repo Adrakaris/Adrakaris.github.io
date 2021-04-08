@@ -2513,7 +2513,12 @@
             <h2>Introduction</h2>
 
             <ol>
-                <li><a href="pro-1">Events</a></li>
+                <li><a href="#pro-1">Combinatorics and Assigning Probabilities</a></li>
+                <li><a href="#pro-2">Events</a></li>
+                <li><a href="#pro-3">Conditional Probabilities</a></li>
+                <li><a href="=pro-4">Law of Total Probability</a></li>
+                <li><a href="#pro-5">Bayes' Theorem and Independent Events</a></li>
+                <li><a href="#pro-6">Random Variables</a></li>
             </ol>
 
             <p class="blue">
@@ -2545,14 +2550,485 @@
             <p class="side">
                 <b><i>Example 1.</i></b> <i>"Two coins are tossed"</i>. We have an outcome for one coin of \(\{H, T\}\). Therefore, 2 coins would be \(\Omega = \{H, T\}^2 = \{HH, HT, TH, TT\}\). We can then define some events:
                 <br><br>
-                \(E_1 : \)
+                \(E_1 : \) coin 1 heads \(= \{HH, HT\} \subseteq \Omega\) <br>
+                \(E_2 : \) coin 1 = coin 2 \(= \{HH, TT\} \subseteq \Omega\) <br>
             </p>
-
-            <h2 id="pro-1">Events</h2>
 
             <p class="side">
-                <b><i>Excersise 1.</i></b> 
+                <b><i>Example 2.</i></b> <i>"Three dice thrown"</i>. The sample space of one die is \(\{1, 2, 3, 4, 5, 6\}\), thus the sample space of 3 dice is \(\{1, 2, 3, 4, 5, 6\}^3\).
             </p>
+
+            <p>
+                When throwing coins of dice simultaneously, one can argue that the order is not distinct, and, for example, \(HT = TH\). However, modelling with this is different than with distinct order, so we will maintain the latter.
+            </p>
+
+            <p class="side">
+                <b><i>Example 3.</i></b> <i>"Hand of five cards"</i>. We can think of the sample space of drawing a single card from a standard deck to be
+                \[C = \{\spadesuit, \clubsuit, \diamondsuit, \heartsuit\} \times \{A, 2, ..., Q, K\}\]
+                How would we represent the sample space of 5 cards drawn?
+            </p>
+
+            <button class="collapsible">Answer 3...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 3.</i></b> The sample space of 5 cards could be \(\Omega = C^5\), but that's assuming the cards can duplicate, or are replaced when they are drawn. How, then, do we exclude replacement?
+                </p>
+
+                <p>
+                    Suppose we have 2 cards drawn instead. We could exclude duplicates by saying \(\Omega = C \times C \setminus \{(x, x) : x \in C\}\), however we now have pairs \((x, y)\) and \((y, x)\), which are the same two cards, just in a different order. If we want to then treat these as the same, we have to further restrict as:
+
+                    \[ \Omega = (C \times C \setminus \{(x, x) : x \in C\}) / R \]
+                    \[ \textrm{where } R : (x, y) R (y, x) \; \forall x, y \in C.\]
+
+                    This is already pretty horribly complex, but perhaps we can simplify this? Instead of looking at cartesian products, we can look at <i>cardinalities</i>, and the fact that sets are unordered, and thus we can simplify to:
+
+                    \[\Omega = \{A \subseteq C : |A| = 2\}.\]
+                </p>
+
+                <p>
+                    Hence, logically, for five cards, the sample space is:
+
+                    \[\Omega = \{A \subseteq C : |A| = 5\}.\]
+                </p>
+            </div>
+
+            <h2 id="pro-1">Combinatorics and Assigning Probabilities</h2>
+
+            <p>
+                Let 2 finite sites be \(A, B\), and let \(A \times B\) be finite. \(|A| \times |B| = |A \times B|\).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Let us have a bijection \(f : S \longrightarrow S\) where \(|S| < \infty\). Also, let \(|S| = n \; (n \in \mathbb{N}\). The set of <b>PERMUTATIONS</b> of \(S, \; \textrm{Perm}(s)\) is the set of sequences of <b>length n</b>, consisting of elements from \(S\) with <b>no repetition</b>.
+            </p>
+
+            <p>
+                \(|\textrm{Perm}(S)| = n!\).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Let us have an injection \(f : \{1, 2, ..., k\} \longrightarrow S\). An <b>ARRANGEMENT</b> is a sequence of length \(k\) consisting of elements from \(S\) with <b>no repetition</b>.
+            </p>
+
+            <p>
+                For example, if \(S = \{a, b, c\}\), an arrangement of length 2 \(\textrm{Arr}(s, 2) = ab, ba, bc, cb, ac, ca\). 
+                <br><br>
+                Thus \(|\textrm{Arr}(S, 2)| = n(n-1)\), where \(|S| = n\). And more generally: \(|\textrm{Arr}(S, k) = n(n-1) ... (n - k + 1)\) (\(k\) factors total).
+            </p>
+
+            <p>
+                Arrangements distinguish order, however if one doesn't want to, there is another construct.
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A <b>COMBINATION</b> is a <b>subset</b> of \(S\) of size \(k\). \(\textrm{Comb}(S, k) = \{C \subseteq S : |C| = k\}\).
+            </p> 
+
+            <p>
+                If we say that arrangements \(a_1, a_2\) are related by \(a_1 \sim a_2\) if the contents of \(a_1, a_2\) are the same. Thus, the equivalence classes of \(\sim\) are combinations. 
+            </p>
+
+            <p>
+                There are \(k\) pairings for length \(k\) equivalence classes, so
+                \[|\textrm{Comb}(S, k)| = |\textrm{Arr}(S, k)| / k! = \frac{n(n-1)...(n-k+1)}{k!}\]
+                \[= \frac{n(n-1)...(n-k+1)(n-k)(n-k-1)...1}{k! (n-k)(n-k-1)...1} = \frac{n!}{k!(n-k)!} = {n\choose k}\]
+                Which is the binomial coefficient n choose k.
+            </p>
+
+            <p>
+                For a sample space \(\Omega\) and an event \(E \subseteq \Omega\), we can begin to assing actual probabilities to \(E\)
+            </p>
+
+            <p class="blue">
+                <b><i>Notation.</i></b> \(P(E)\) is the <b>PROBABILITY</b> of \(E\), and is calculated/represented two ways.
+                <br><br>
+                On frequencies <i>(frequentist)</i> \(P(E) = \frac{\# \textrm{times } E \textrm{ occurs}}{\# \textrm{experiments performed}}\)
+                <br><br>
+                Or on belief <i>(bayesian)</i>, meaning for a probability \(0 \leq P(E) \leq 1\), the higher the number the more certain we are.
+            </p>
+
+            <p class="small">
+                <i>Don't ask.</i>
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> The <b>PROBABILITIY SPACE</b> is denoted \((\Omega, F, P)\), where \(\Omega\) is the sample space, \(F\) is the collection of all events, i.e. \(F = 2^\Omega\), and \(P\) is a probability function s.t. \(P : F \longrightarrow [0, 1]\). 
+            </p>
+
+            <p>
+                Let us consider \(|\Omega| < \infty, \; F = 2^\Omega\). Suppose \(\Omega = \{\omega_1, \omega_2, ... \omega_m\}\).
+                <br><br>
+                Then, for all the probabilities \(p_1, p_2, ..., p_m \in \mathbb{R}\), 
+                \[p_i \geq 0 \; \forall i, \; \sum_{i=1}^{m} p_i = 1.\]
+
+                Suppose an event \(E = \{\omega_1, \omega_2, ..., \omega_k\}\), then 
+                \[P(E) = \sum_{i=1}^{k} p_i = \sum_{\omega_i \in E} p_i.\]
+            </p>
+
+            <p class="side">
+                <b><i>Example 4.</i></b> For a fair coin \(\Omega = \{H, T\}\), and \(p_H = \frac{1}{2}, p_T = \frac{1}{2}\). <br>
+                Whereas for a loaded coin \(\Omega = \{H, T\}\), but perhaps \(p_H = 0.6, p_T = 0.4\). 
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> An <b>ELEMENTARY</b> event is a single \(\{\omega\} \in \Omega\), where \(\omega \in \Omega\). 
+            </p>
+
+            <p class="side">
+                <b><i>Example 5.</i></b> Let us consider a fair dice We have a sample space \(\Omega = \{1, 2, 3, 4, 5, 6\}\) where \(p_1 = p_2 = ... = p_6 = \frac{1}{6}\). Our probability space will be \((\Omega, 2^\Omega, P)\). 
+                <br><br>
+                An event \(\textrm{Even} = \{2, 4, 6\}\) has a probability \(P(\textrm{Even}) = 3 \times \frac{1}{6} = \frac{1}{2}\).
+                <br><br>
+                Now let us consider a loaded dice. It has the same sample space, but the probabilities may look something like \(p_1 = p_2 = ... = p_5 = \frac{1}{10}, p_6 = \frac{1}{2}\). Here, \(P(\textrm{Even}) = \frac{1}{10} + \frac{1}{10} + \frac{1}{2} = \frac{7}{10}\).
+            </p>
+
+            <h2 id="pro-2">Events</h2>
+
+            <p class="side">
+                <b><i>Example 6.</i></b> Find the probability of getting 2 heads when a fair coin is tossed 3 times.
+            </p>
+
+            <button class="collapsible">Answer 6...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 6.</i></b> Our sample space is \(\Omega = \{HHH, HHT, ..., TTT\} = \{H, T\}^3\). All 8 outcomes are equally likely. 
+                    <br><br>
+                    Thus \(p_{ABC} = \frac{1}{8} \; \forall A, B, C \in \{H, T\}\)&emsp;(\(p_i \geq 0\))
+                </p>
+
+                <p>
+                    Let the event exactly 2 heads be \(E = \{HHT, HTH, THH\}\). \(P(E) = p_{HHT} + p_{HTH} + p_{THH} = \frac{3}{8}\). 
+                </p>
+
+                <p>
+                    However, let's suppose some bigger numbers. Suppose \(\Omega = \{H, T\}^{10}\) and we want three heads. \(2^10 = 1024\) so the probability of one elementary event is \(p_i = \frac{1}{1024}\). 
+                    \[P(\textrm{3 heads}) = \sum_{i \in \textrm{3 heads}} p_i = \frac{1}{1024} \cdot |\textrm{3 heads}|.\]
+                </p>
+
+                <p>
+                    We can represent this problem a set of size 10, and a combination of 3 out of 10 elements. Some magic happens, and thus we can conclude
+                    \[P(\textrm{3 heads}) = \frac{1}{1024} {10 \choose 3} = \frac{15}{128}.\]
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Example 7.</i></b> Find the probability of being dealt a flush in poker (5 cards of the same suit).
+            </p>
+
+            <button class="collapsible">Answer 7...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 7.</i></b> Let our sample space \(\Omega = \{A \subseteq C : |A| = 5\}\) where \(C = \{\spadesuit, \clubsuit, \diamondsuit, \heartsuit\} \times \{A, 2, ..., Q, K\}\)
+                </p>
+
+                <p>
+                    We can assert that \(P(\{\omega\}) = \frac{1}{|\Omega|}\). 
+                    <br><br>
+                    Let \(F\) be a flush. What is \(P(F)\)? Well, if we say that \(F = F_{\spadesuit} \cup F_{\clubsuit} \cup F_{\diamondsuit} \cup F_{\heartsuit}\), then 
+                    \[P(F) = P(F_{\spadesuit}) \cup P(F_{\clubsuit}) \cup P(F_{\diamondsuit}) \cup P(F_{\heartsuit}) = 4P(F_{\heartsuit})\]
+                    since each \(F_i\) has the same probability.
+                    <br><br>
+                    We now want all \(A \subseteq C : |A| = 5, A \subseteq \textrm{Hearts}\). \(\textrm{Hearts} = \{\heartsuit\} \times \{A, 2, 3, ..., K\}\). Thus,
+
+                    \begin{align}
+                        F_\heartsuit &= \{\textrm{All } A \subseteq \textrm{Hearts} : |A| = 5\} \\
+                        \implies P(F_\heartsuit) &= P(\{\omega\}) |F_\heartsuit| = \frac{1}{|\Omega|} \cdot |F_\heartsuit| \\
+                        \implies P(F) &= \frac{4|F_\heartsuit|}{|\Omega|}
+                    \end{align}
+
+                    \[|\Omega| = {52 \choose 5}, |F_\heartsuit| = {13 \choose 5}\]
+                    \[\therefore P(F) = \frac{4 {13 \choose 5}}{52 \choose 5}.\]
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Theorem.</i></b> For events \(A_i\), 
+                \[P(A_1 \cup A_2 \cup ... \cup A_k) = \sum_{i=1}^{k} P(A_i) \]
+                if all \(A_i\) are disjoint. 
+            </p>
+
+            <p>
+                \(P(A \cup B) = P(A) + P(B)\) is only true if \(P(A \cap B) = 0\).
+            </p>
+
+            <p>
+                Let us consider a fair die. Events \(A = \{1, 2, 3\}\) and \(B = \{2, 4, 6\}\). We can see that \(P(A) = 0.5\) and \(P(B) = 0.5\)
+                <br><br>
+                However \(P(A \cup B) = P(\{1, 2, 3, 4, 6\}) = \frac{5}{6}\), which does not match the upper equation. So what then is \(P(A \cup B)\) generally?
+            </p>
+
+            <p>
+                \begin{align}
+                    P(A \cup B) &= P(A) + P(\bar{A} \cap B) \\
+                    \therefore P(B) &= P(\bar{A} \cap B) + P(A \cap B) \\
+                    \textrm{Since} B &= (A \cup (\Omega \setminus A)) \cap B \\
+                    \therefore P(A \cup B) - P(B) &= P(A) - P(A \cap B) \\
+                    P(A \cup B) &= P(A) + P(B) - P(A \cap B).
+                \end{align}
+
+                <i>Commentary:</i> If A and B intersect, then the probability of A union B must be careful to not count the overlap twice. That is what is going on in line 1. We are excluding any part of A that might overlap with B in \(P(\bar{A} \cap B)\). In line 3, we can see that \(A \cup (\Omega \setminus A)\) is equivalent to just \(\Omega\), and we can use that fact to get line 2 (my intuition here is a bit wooly).
+            </p>
+
+            <p class="side">
+                <b><i>Corollary.</i></b> \(P(A \cup B) = P(A) + P(B) - P(A \cap B)\)
+                \[\implies P(A \cup B) \leq P(A) + P(B)\]
+                The <i>union bound</i> for 2 events.
+            </p>
+
+            <p>
+                \(A \cap B\) can be thought of as a "product" of events \(AB\), but does that mean \(P(AB) = P(A)P(B)\)? Generally, no, however if the two events are <b>independent</b>, then yes.
+            </p>
+
+            <p>
+                We can do operations on sets over probabilities. Let's let the sample space be \(\Omega\), an event \(A \subseteq \Omega\) and \(\bar{A} = \Omega \setminus A\).
+            </p>
+
+            <p class="side">
+                <b><i>Theorem.</i></b> \(P(\bar{A}) = 1 - P(A)\).
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> \(A \cup \bar{A} = \Omega\) and \(A \cap \bar{A} = \varnothing\).
+                    \begin{align}
+                        \therefore P(A \cup \bar{A}) &= P(A) + P(\bar{A}) \\
+                        \implies P(\Omega) &= P(A) + P(\bar{A}) \\
+                        \implies 1 &= P(A) + P(\bar{A}) \\
+                        \therefore P(\bar{A}) &= 1 - P(A).
+                    \end{align}
+                    $$\tag*{$\Box$}$$
+                </p>
+            </div>
+
+            <h2 id="pro-3">Conditional Probability</h2>
+
+            <p>
+                
+            </p>
+
+            <p>
+                Let a probability space be \((\Omega, 2^\Omega, P)\). We have events \(A, B \in 2^\Omega\) with \(P(B) > 0\).
+            </p>
+
+            <p class="blue">
+                <b><i>Notation.</i></b> The conditional probability "A <b>GIVEN</b> B" is \(P(A | B) = \frac{P(A \cap B)}{P(B)}\).
+            </p>
+
+            <p class="side">
+                <b><i>Example 8.</i></b> Let us consider a fair dice. Let \(A = \{1, ..., 5\}\) and \(B = \{2, 4, 6\}\). 
+
+                \[P(A | B) = \frac{P(A \cap B)}{P(B)} = \frac{P(\{2, 4\})}{P(B)} = \frac{2/6}{3/6} = \frac{2}{3}.\]
+                \[P(B | A) = \frac{P(A \cap B)}{P(A)} = \frac{2/6}{5/6} = \frac{2}{5}.\]
+            </p>
+
+            <p>
+                A important point is that conditional probability is still probability. It is no different from regular probability, and regular probability principles can still be applied to conditional probability.
+            </p>
+
+            <p>
+                What does this mean? Well, let us define a probability space \((\Omega, 2^\Omega, P)\), an event \(B \in 2^\Omega\) with \(P(B) > 0\). 
+                <br><br>
+                \(\forall A \in 2^\Omega\), define the conditional probability \(P(A | B) = Q(A)\) where \(Q : 2^\Omega \longrightarrow [0, 1] \subseteq \mathbb{R}\). This is rather important, as it allows us to derive the following.
+            </p>
+
+            <p>
+                Knowing that:
+
+                \[ P(E \cup F) = P(E) + P(F) - P(E \cap F) \]
+                \[ Q(E \cup F) = Q(E) + Q(F) - Q(E \cap F) \]
+
+                We can get that:
+
+                \[P(E \cup F | B) = P(E|B) + P(F|B) - P(E \cap F | B)\]
+
+                <i>Comment:</i> We get line 2 because of the fact that we can treat conditionals as just regular probabilities. 
+                <br><br>
+                We can also get:
+
+                \[ P(\bigcup_{i = 1}^{n} A_i | B) \leq \sum_{i = 1}^{n} P(A_i | B) \]
+            </p>
+
+            <h2 class="pro-4">Law of Total Probability</h2>
+
+            <p class="side">
+                <b><i>Theorem.</i></b> Assume we have some finite events \(B_1, B_2, ..., B_k\) which <b>partition</b> a sample space \(\Omega\). This means the following holds:
+                \[P(B_1 \cup ... \cup B_k) = 1\]
+                \[P(B_i \cap b_j) = 0 \; \forall i, j : i \neq j\]
+                Additionally, assert that \(P(B_i) > 0 \; \forall i\). Then,
+                \[\forall A \in 2^\Omega, \; P(A) = \sum_{i=1}^{k} P(A | B_i) P(B_i) \]
+            </p>
+
+            <button class="collapsible">Proof...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Proof.</i></b> 
+                    \begin{align}
+                        P(A | B_i) P(B_i) &= \frac{P(A \cap B{i})}{P(B_i) \cdot P(B_i)} \\
+                        &= P(A \cap B_i) \\
+                        \therefore \sum_{i=1}^{k} P(A | B_i) P(B_i) &= \sum_{i=1}^{k} P(A \cap B_i) \\
+                        \therefore P(\bigcup_{i=1}^{k} A \cap B_i) &= P (A \cap \bigcup_{i=1}^{k} B_i) \\
+                        &= P(A \cap \Omega) = P(A)
+                    \end{align}
+                    $$\tag*{$\Box$}$$
+
+                    <i>Comment:</i> In line 3, we can go straight to a summation, since the \(B_i\) sets are disjoined. In line 4, we use set operations to shift the big cup, and then in we know that the union of all \(B\)s gives \(\Omega\), since we defined the \(B\)s to partition \(\Omega\).
+
+                </p>
+            </div>
+
+            <p class="blue">
+                \[P(A \cap B) = P(A | B) P(B)\]
+            </p>
+
+            <p class="side">
+                <b><i>Example 9.</i></b> Only 2 factories manufacture zoggles. 20% of zoggles from factory 1 are defective, and 5% from factory 2 are defective. Factory 1 produces twice as many zoggles as factory 2.
+                <br><br>
+                (1) What is the probability that a zoggle chosen randomly is satisfactory? <br>
+                (2) If a chosen zoggle is defective, what is the probability that it came from factory 1?
+            </p>
+
+            <button class="collapsible">Answer 9...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 9.</i></b> Let's first of all try define a probability space, \((\Omega, 2^\Omega, P)\). 
+                    <br><br>
+                    \(\Omega\) is the set of all zoggles ever. 
+                    <br><br>
+                    For a random zoggle \(z \in \Omega\), \(F_i\) denotes the event that the zoggle comes from factory \(i\). We can also say \(F_1 \cup F_2 = \Omega\) and \(F_1 \cap F_2 = \varnothing\).
+                    <br><br>
+                    Let \(D\) be the set of defective zoggles, then we know that \(P(D | F_1) = 0.2\) and \(P(D | F_2) = 0.05\). 
+                </p>
+
+                <p>
+                    For part (1) we want to find the propability of a satisfactory zoggle, \(P(\bar{D})\). 
+
+                    \[P(\bar{D}) = 1 - P(D) = 1 - P(D |F_1)P(F_1) - P(D|F_2)P(F_2)\]
+
+                    We now need to know \(P(F_1), P(F_2)\). \(P(F_1) + P(F_2) = 1\), and we know that a random zoggle is twice as likely to come from 1 than 2, so \(P(F_1) = 2P(F_2)\), thus \(P(F_1) = \frac{2}{3}\) and \(P(F_2) = \frac{1}{3}\). Thus substituting,
+
+                    \begin{align}
+                    P(\bar{D}) &= 1 - 0.2 (\frac{2}{3}) - 0.05 (\frac{1}{3}) \\
+                    &= \frac{3 - 0.4 - 0.05}{3} = \frac{2.55}{3} = 0.85.
+                    \end{align}
+                </p>
+
+                <p>
+                    For part (2), we want to find out \(P(F_1 | D)\). 
+
+                    \[P(F_1 | D) = \frac{P(F_1 \cap D)}{P(D)} = \frac{P(F_1 \cap D)}{1 - P(\bar{D})}\]
+
+                    We know \(1 - P(\bar{D})\), but what about \(P(F_1 \cap D)\)? Well, we know that \(P(D | F_1) = 0.2\), thus
+
+                    \begin{align}
+                        P(D | F_1) = 0.2 &= \frac{P(D \cap F_1)}{P(F_1)} \\
+                        P(D \cap F_1) &= P(D | F_1) P(F_1) \\
+                        \therefore P(F_1 | D) &= \frac{P(D | F_1) P(F_1)}{1 - P(\bar{D})} \\
+                        &= \frac{0.2 \cdot 2/3}{0.85} = \frac{8}{9}.
+                    \end{align}
+                </p>
+
+            </div>
+
+            <h2 id="pro-5">Bayes' Theorem and Independent Events</h2>
+
+            <p>
+                <a href="https://www.youtube.com/watch?v=HZGCoVF3YvM">3blue1brown's video on Bayes' Theorem</a>
+            </p>
+
+            <p>
+                When looking at a pair of events \(E, F\) and the probabilities \(P(E|F), P(F|E)\), there is an important link between them.
+            </p>
+
+            <p>
+                Let us have a disjoined series of events \(B_1, ..., B_k\) which partition \(\Omega\), with \(P(B_i) > 0 \; \forall i\). Let us look at an arbitrary event \(A \in 2^\Omega\) where \(P(A) > 0\). If \(A\) occurs, how likely is it for any one of the \(B_i\)s to occur? Essentially, \(P(B_i | A)\)?
+                <br><br>
+                By definition,
+                \[P(B_i | A) = \frac{P(B_1 \cap A)}{P(A)} = \frac{P(A | B_i)P(B_i)}{ \sum_{j=1}^{k} P(A| B_j) P(B_j) }\]
+                Recall the zoggles question. That does something similar, but the events \(B\) just correspond to \(F_1, F_2\).
+            </p>
+
+            <p class="blue">
+                <b>BAYES' THEOREM</b>, for the conditions mentioned in the above paragraph, is defined as
+
+                \[ P(B_i | A) = \frac{P(A | B_i)P(B_i)}{\sum_{j=1}^{k}P(A | B_j) P(B_j)} \]
+
+                Or more simply for only 2 events as
+
+                \[ P(B|A) = \frac{P(A|B)P(B)}{P(A)} \]
+            </p>
+
+            <p>
+                We call \(P(B_i)\) the prior event, \(P(A | B_i)\) the conditional event, and \(P(B_i | A)\) the posterior event.
+            </p>
+
+            <p class="side">
+                <b><i>Example 10.</i></b> Suppose there is a disease. Suppose a test has been invented for this disease. 
+                <br><br>
+                P(test positive | disease) \(= 1 - \beta = 0.9\); <br>
+                P(test positive | no disease) \(= \alpha = 0.01\); 
+                <br><br>
+                In this population, the proportion of people without the disease is \(1 - \gamma\) where \(\gamma = 0.001\).
+                <br><br>
+                Suppose you take the test, and the test is positive. What is the probability P(disease | test positive)? <i>(This is left as an excersise by Dimitry)</i>
+            </p>
+
+            <button class="collapsible">Answer 10 (work it out yourself first)...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 10.</i></b> <i>(My Answer)</i> First, let us say that \(+\) indicates a positive test, and \(D\) indicates that the person has the disease. We want \(P(D | +)\).
+
+                    \[ P(D | +) = \frac{P(+|D)P(D)}{P(+)} \textrm{ (Bayes)}\]
+
+                    We also know that
+
+                    \begin{align}
+                        (1)\; P(+ | D) &= \frac{P(+ \cap D)}{P(D)} \\
+                        (2)\; P(+ | \bar{D}) &= \frac{P(+ \cap \bar{D})}{P(\bar{D})}
+                    \end{align}
+
+                    We need to find the two components, \(P(+|D)P(D)\) and \(P(+)\).
+
+                    \begin{align}
+                        P(+ | D)P(D) &= 0.9 \cdot 0.001\\
+                        P(+) &= P(+|D)P(D) + P(+|\bar{D})P(\bar{D}) = 0.9 \cdot 0.001 + 0.01 \cdot 0.999\\
+                        \therefore P(D|+) &= \frac{0.9 \cdot 0.001}{0.9 \cdot 0.001 + 0.01 \cdot 0.999} \\
+                        &= \frac{10}{121} \approx 0.0826.
+                    \end{align}
+                </p>
+
+                <p class="small">
+                    Submit a PR if you don't think I'm right.
+                </p>
+            </div>
+
+            <p>
+                Let's now talk about independent events. We've talked about conditional probability, \(P(A | B)\). When does the equality \(P(A | B) = P(A)\) hold?
+            </p>
+
+            <p>
+                What this asserts is that
+                \[\frac{P(A \cap B)}{P(B)} = P(A) \implies P(A \cap B) = P(A)P(B)\]
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> Events \(A, B \in 2^\Omega\) are <b>INDEPENDENT</b> if they satisfy the equation \(P(A \cap B\) = P(A)P(B).
+            </p>
+
+            <p>
+                Say we had a fair coin and toss it twice, the outcome of one toss is independent of the other. We can easily come up with the probability values for the sample space of that experiment; 0.25 each result.
+            </p>
+
+            <p>
+                However in more complex systems it may be incredibly hard to assign probabilities straight away, and in this case it would be more meaningful to look at two independent events from the definition of independence, rather than working backwards. 
+            </p>
+
+            <p>
+                If we had a loaded coin with \(P(H) = 0.4, P(T) = 0.6\), and toss it twice (\(A, B\)) then it is more prudent to consider something like \(P(TT) = P(A)P(B) = 0.6^2\) in this case.
+            </p>
+
+            <h2 id="pro-6">Random Variables</h2>
+
         </div>
 
 
