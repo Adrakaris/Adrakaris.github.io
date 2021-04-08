@@ -948,7 +948,7 @@
             </p>
 
             <p class="blue">
-                <b><i>Definition.</i></b> A relation is <b>SYMMETRIC</b> if \( aRb \implies bRa \l \forall a,b\in S \).
+                <b><i>Definition.</i></b> A relation is <b>SYMMETRIC</b> if \( aRb \implies bRa \; \forall a,b\in S \).
             </p>
 
             <p class="blue">
@@ -1102,7 +1102,7 @@
             <button class="collapsible">Proof...</button>
             <div class="ccontent">
                 <p>
-                    <b><i>Proof.</i></b> \( \forall [a], [b] \in S / R, \)  \( [a] \cup [b] = \varnothing \) unless \( [a] = [b] \) (From Lemma 2).
+                    <b><i>Proof.</i></b> \( \forall [a], [b] \in S / R, \)  \( [a] \cap [b] = \varnothing \) unless \( [a] = [b] \) (From Lemma 2).
                     <br><br>
                     \( \bigcup_{A \in S/R} A \subseteq S \), but \( \forall x \in S, \) \( x \in [x] \in S/R \). Therefore, \( \bigcup_{A \in S/R} = S \).
                     $$\tag*{$\Box$}$$
@@ -1226,13 +1226,13 @@
             </p>
 
             <p class="side">
-                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0} \). Is ths now a function?
+                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0}\} \). Is ths now a function?
             </p>
 
             <button class="collapsible">Answer 4...</button>
             <div class="ccontent">
                 <p>
-                    <b><i>Answer 4.</i></b> No. Whereas it is true that \( \forall x \in \mathbb{R}_{\geq 0} \; \exists y \in R : (x, y) \in T'' \), this is not a <i>unique</i> mapping. If \( x = 4 \), both \( (4,2) \) and \( (4, -2) \) are part of \( T'' \).
+                    <b><i>Answer 4.</i></b> No. Whereas it is true that \( \forall x \in \mathbb{R}_{\geq 0} \; \exists y \in \mathbb{R} : (x, y) \in T'' \), this is not a <i>unique</i> mapping. If \( x = 4 \), both \( (4,2) \) and \( (4, -2) \) are part of \( T'' \).
                 </p>
             </div>
 
