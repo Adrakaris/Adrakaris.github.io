@@ -183,8 +183,8 @@
                     </li><br>
                     <li>
                         Distributivity (works both ways)<br>
-                        &emsp;\( A \cap (B \cup C) = (A \cap B) \cup (B \cap C) \)<br>
-                        &emsp;\( A \cup (B \cap C) = (A \cup B) \cap (B \cup C) \)
+                        &emsp;\( A \cap (B \cup C) = (A \cap B) \cup (A \cap C) \)<br>
+                        &emsp;\( A \cup (B \cap C) = (A \cup B) \cap (A \cup C) \)
                     </li>
                 </ul>
             </p>
@@ -195,7 +195,8 @@
 
             <p>
                 We also can define De Morgan's law, as <br>
-                \( \overline{A \cap B} = \bar{A} \cup \bar{B} \) and \( \overline{A \cup B} = \bar{A} \cap \bar{B} \).
+                \[ \overline{A \cap B} = \bar{A} \cup \bar{B} \textrm{ and } \overline{A \cup B} = \bar{A} \cap \bar{B} \]
+                In case the overlines don't show up, that is the complement of A intersect B equals the compliment of A union the compliment of B. And similarly with the \(\cup, \cap\) reversed.
             </p>
 
             <p>
@@ -978,7 +979,7 @@
             </p>
 
             <p>
-                Relation (3) is reflexive, symmetric, and transitive, but <i>not</i> symmetric. Try to find a counterexample.
+                Relation (3) is reflexive, symmetric, and transitive, but <i>not</i> antisymmetric. Try to find a counterexample.
             </p>
 
             <p>
@@ -2519,6 +2520,8 @@
                 <li><a href="=pro-4">Law of Total Probability</a></li>
                 <li><a href="#pro-5">Bayes' Theorem and Independent Events</a></li>
                 <li><a href="#pro-6">Random Variables</a></li>
+                <li><a href="#pro-7">Working With Expectations</a></li>
+                <li><a href="#pro-8">Infinite Sample Spaces and Randomness</a></li>
             </ol>
 
             <p class="blue">
@@ -3073,11 +3076,11 @@
                 \]
                 Define \(X = \sum_{i=1}^{n} X_i\). \(X\) has a <b>BINOMIAL distribution</b> with parameters \(n, p\).
                 <br><br>
-                If we talk about bernoulli distribution, \(X ~ \textrm{Ber}(p)\) (another notation), this is the same as saying \(X ~ B(1, p)\) (notation for binomial). 
+                If we talk about bernoulli distribution, \(X ~ \textrm{Ber}(p)\) (another notation), this is the same as saying \(X \sim B(1, p)\) (notation for binomial). 
                 \begin{array} {|r|r|}\hline x & 0 & 1 \\ \hline P(X = x) & p & 1-p \\ \hline  \end{array}
-                However binomials have more outcomes, so for example \(X ~ B(3, p)\) will have a table like
+                However binomials have more outcomes, so for example \(X\sim B(3, p)\) will have a table like
                 \begin{array} {|r|r|}\hline x & 0 & 1 & 2 & 3 \\ \hline P(X = x) & (1-p)^3 & 3(1-p)^{2}p & 3(1-p)p^2 & p^3 \\ \hline  \end{array}
-                As an aside, \(X\) may have a <b>UNIFORM distribution</b>, \(X ~ \textrm{Unif}(\{0, 1, 2, 3\})\), which as one can probably guess means all probabilities are the same.
+                As an aside, \(X\) may have a <b>UNIFORM distribution</b>, \(X\sim \textrm{Unif}(\{0, 1, 2, 3\})\), which as one can probably guess means all probabilities are the same.
 
             </p>
 
@@ -3090,7 +3093,7 @@
                 <br><br>
                 Suppose we have a prob. space \((\Omega, 2^\Omega, P)\) and a random var \(X : \Omega \longrightarrow \mathbb{R}\). Suppose \(X\) only takes values \(0, 1, 2, 3\) (this would be the range of X).
                 <br><br>
-                The expectation of X, \(EX = \sum_{i=0}^{3} i\cdot P(X=i)\).
+                The expectation of X, \(EX = \sum_{i=0}^{3} i P(X=i)\).
             </p>
 
             <p>
@@ -3103,8 +3106,8 @@
 
             <p class="blue">
                 <b><i>Definition.</i></b> More generally, if the range of a random var \(X = \{a_1, a_2, ..., a_n\} \subseteq \mathbb{R}\), then the <b>EXPECTATION</b> of X, 
-                \[ EX = \sum_{i=1}^n a_i \cdot P(X = a_1) \]
-                Or, more implicitly as \(EX = \sum_{k} k \cdot P(X = k)\).
+                \[ EX = \sum_{i=1}^n a_i P(X = a_1) \]
+                Or, more implicitly as \(EX = \sum_{k} k P(X = k)\).
             </p>
 
             <p>
@@ -3175,6 +3178,136 @@
                 <br><br>
                 We can also ask what the middle value is, which is 3, the median. Half the time we are getting > 3, and half the time we are getting < 3.
             </p>
+
+            <h2 id="pro-7">Working With Expectations</h2>
+
+            <p>
+                Let's go through a couple more examples for more on expectation. We've already seen the uniform, bernoulli, and binomial distributions. Let's try compute the expectations for all of them.
+            </p>
+
+            <p>
+                Consider \(X \sim \textrm{Unif}(\{1, 2, ..., n\})\). So \(P(X = k) = \frac{1}{n} \forall k \in \Omega\). Therefore,
+                \[EX = \sum_{k=1}^{n} (k) \cdot \frac{1}{n} = \frac{1}{n} \cdot \frac{n(n+1)}{2} = \frac{n+1}{2}\]
+            </p>
+
+            <p>
+                Consider \(X\sim \textrm{Ber}(p)\). Let \(P(X = 1) = p\) and \(P(X = 0) = 1 - p\). Therefore,
+                \[EX = 0 (1-p) + 1 p = p\]
+            </p>
+
+            <p>
+                Consider \(X \sim B(n, p)\). First, let us consider some examples, which justify a theorem we can use. 
+            </p>
+
+            <p>
+                <i>Note: These examples are quite long and are collapsed to save space.</i>
+            </p>
+
+            <button class="collapsible">Example 17. Let us have a table of 4...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Example 17.</i></b> Let us have a table of 4 elementary outcomes. The values are the probabilities of those outcomes, and are arbitrarily given (as long as they add to 1). In order from left to right, let's call these outcomes \(w_1, w_2, w_3, w_4\).
+                    \begin{array} {|r|r|}\hline 0.1 & 0.2 \\ \hline 0.3 & 0.4 \\ \hline  \end{array}
+                    Our probability space is \(\Omega, 2^\Omega, P\), and we will define a random value X such that
+
+                    \[X(\omega) = \begin{cases} 0 &\textrm{if top row} \\
+                            1 &\textrm{if bottom row} \end{cases}
+                    \]
+
+                    And we will define a second random variable Y such that
+
+                    \[Y(\omega) = \begin{cases} 0 &\textrm{if left column} \\
+                            1 &\textrm{if right column} \end{cases}
+                    \]
+
+                    Note that these are bernoulli variables. \(P(X = 1) = 0.3 + 0.4 = 7\), whilst \(P(Y = 1) = 0.2 + 0.4 = 0.6\), thus \(X \sim B(1, 0,7)\) and \(Y \sim B(1, 0.6)\). Let \(Z = X + Y\), what is Z?
+
+                    \begin{array} {|r|r|}\hline \omega \approx w & w_1 & w_2 & w_3 & w_4 \\ \hline Z & 0 & 1 & 1 & 2 \\ \hline  \end{array}
+
+                    Z is also a random variable \(Z : \Omega \longrightarrow \{0, 1, 2\}\). Now what is the expectation for Z? Well, we can compute this as 
+
+                    \[E[Z] = 0 \cdot 0.1 + 1 \cdot 0.2 + 1 \cdot 0.3 + 2 \cdot 0.4 = 1.3 \]
+
+                    Is this significant? Well, \(E[X] = 0.7, E[Y] = 0.6\) (we know since they're both bernoulli), and it seems that \(E[X + Y] = E[X] + E[Y]\).
+                </p>
+
+                <p>
+                    Naturally we wonder whether this is true for everything, or is just a specific case. Well, in fact, this is \(true for all\) cases.
+                </p>
+
+                <p>
+                    Let's look at \(E[X + Y]\). This is just \(0.1(0 + 0) + 0.2(0+1) + 0.3(1+0) + 0.4(1+1)\). In the brackets we have sums \((a + b)\), where \(a\) is the value of X and \(b\) is the corresponding value of Y in that case. Thus, we can separate this into \((0 \cdot 0.1 + 0 \cdot 0.2 + 1 \cdot 0.3 + 1 \cdot 0.4) + (0 \cdot 0.1 + 1 \cdot 0.2 + 0 \cdot 0.3 + 1 \cdot 0.4)\), which is nothing but \(E[X] + E[Y]\).
+                </p>
+
+                <p class="small">
+                    <i>Note: this is not a proof, just a brief justification.</i>
+                </p>
+            </div>
+
+            <p class="blue">
+                <b>Lineariy of expectation</b> is the term used to refer to the case of \(E[X] + E[Y] = E[X +Y]\), and \(E[aX] = aE[X]\).
+            </p>
+
+            <button class="collapsible">Example 17.1. Continuing on from example 17...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Example 17.1.</i></b> Continuing on from example 17, let us consider a random variable \(W = X \cdot Y\). 
+
+                    \begin{array} {|r|r|}\hline \omega \approx w & w_1 & w_2 & w_3 & w_4 \\ \hline XY & 0 & 0 & 0 & 1 \\ \hline  \end{array}
+
+                    Now what is \(E[XY]\)? \(E[XY] = P(\{\omega_4\}) = 0.4\). 
+                </p>
+
+                <p>
+                    Note that \(E[X]E[Y] = 0.42 \neq E[XY]\). Therefore, we cannot have a multiplication rule. But perhaps we can find different probabilities of our square such that \(E[X]E[Y] = E[XY]\).
+
+                    begin{array} {|r|r|}\hline 0.32 & 0.48 \\ \hline 0.08 & 0.12 \\ \hline  \end{array}
+
+                    ote that \(X, Y\) still work the same way. \(E[X] = 0.2, \; E[Y] = 0.6\). 
+                </p>
+
+                <p>
+                    Now let us consider \(XY\). Note that \(XY = 1\) if and only if \(X = Y = 1\), which means \(E[XY] = 0.12\). In this case, \(E[XY] = E[X]E[Y]\)
+                </p>
+
+                <p>
+                    This only happens because the values of the new grid were chosen systematically. Note that columns 1 and 2 have a total probability of 0.4 and 0.6 respectively, and rows 1 and 2 have a total probability of 0.8 and 0.2 respectively. The probability of each grid is just the product of the respective row and column probabilities.
+                </p>
+
+                <p>
+                    This is a situation where X and Y are <i>independent</i> random variables. <i style="font-size: 8pt;">Left undiscussed.</i>
+                </p>
+            </div>
+
+            <p>
+                While \(E[X+Y] = E[X] + E[Y]\) is always true, \(E[XY] = E[X]E[Y]\) is <b>not</b> always true.
+            </p>
+
+            <p>
+                Let's now look back at \(X \sim B(n, p)\). Basically, X is the sum of successive bernoulli trials, so we \(X = X_1 + X_2 + ... + X_n\) where \(X_i\) are individual "tries" out of \(n\) total. Thus,
+
+                \[EX = EX_1 + EX_2 + ... + EX_n = p + p + ... + p = np. \]
+            </p>
+
+            <p>
+                Let us now talk about functions of random variables. Suppose a prob. space \((\Omega, 2^\Omega, P)\), a random variable \(X\), and a function \(g\), such that
+                \begin{align}
+                X &: \Omega \longrightarrow \mathbb{R}\\
+                g &: \mathbb{R} \longrightarrow \mathbb{R}
+                \end{align}
+                Particularly, functions \(g\) that are like \(g(x) = x^2\), \(g(x) = x^3\).
+            </p>
+
+            <p>
+                Now, we want to look at whether or not we can compute \(E[g(X)]\). We can see that \(g(X) = g \circ X\) thus \(g : \Omega \longrightarrow \mathbb{R}\), and so \(g\) is also a random variable. So we can say
+                \[ \sum_{k} kP(g(X) = k)\]
+            </p>
+
+            <p>
+                Probability 06-4 01:36
+            </p>
+
+            <h2 id="pro-8">Infinite Sample Spaces and Randomness</h2>
 
         </div>
 
