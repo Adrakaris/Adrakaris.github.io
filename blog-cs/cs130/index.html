@@ -1226,7 +1226,7 @@
             </p>
 
             <p class="side">
-                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}_{\geq 0}\} \). Is ths now a function?
+                <b><i>Example 4.</i></b> So let a relation \( T'' \subseteq \mathbb{R}_{\geq 0} \times \mathbb{R} \), where \( T = \{(u^2, u) : u \in \mathbb{R}\} \). Is ths now a function?
             </p>
 
             <button class="collapsible">Answer 4...</button>
@@ -3028,6 +3028,153 @@
             </p>
 
             <h2 id="pro-6">Random Variables</h2>
+
+            <p>
+                 We know about \((\Omega, 2^\Omega, P)\), events, and probabilties. But often it may be more helpful to talk about functions, something like \(X : \Omega \longrightarrow \mathbb{R}\).
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> A <b>RANDOM VARIABLE</b> is defined as a function of the form \(X : \Omega \longrightarrow \mathbb{R}\)
+            </p>
+
+            <p class="side">
+                <b><i>Example 11.</i></b> <i>(Bernoulli Trial)</i> Let our sample space be \(\Omega = \{h, t\}\). Let \(P(t) = 0.4 = p\), thus \(P(h) = 0.6 = 1-p\). Define a function \(X(\omega)\) where
+                \[
+                X(\omega) = \begin{cases}
+                            1 & \textrm{if } \omega = t \\
+                            2 & \textrm{if } \omega = h \end{cases}
+                \]
+
+                We say in this case that the random variable \(X\) has a <b>BERNOULLI distribution</b> with parameter \(p\). 
+            </p>
+
+            <p>
+                Link to what a <a href="https://en.wikipedia.org/wiki/Bernoulli_distribution#:~:text=The%20Bernoulli%20distribution%20is%20a,not%20be%200%20and%201." class="text">Bernoulli Distribution</a> is. [<a href="https://simple.wikipedia.org/wiki/Bernoulli_distribution#:~:text=The%20Bernoulli%20distribution%20is%20a,not%20be%200%20and%201." class="text">Simple English Page</a>]
+            </p>
+
+            <p class="side">
+                <b><i>Example 12.</i></b> Let our prob. space be \((\Omega, 2^\Omega, P)\) with an event \(A \in 2^\Omega\), we can define an <b>INDICATOR function</b> of \(A\) as:
+                \[
+                \mathbb{1}_{A}(\omega) = \begin{cases}
+                                         1 &\textrm{if } \omega \in A \\
+                                         0 &\textrm{if } \omega \not \in A \end{cases}
+                \]
+                \(\mathbb{1}_A\) is a random variable that has a bernoulli distribution with parameter \(P(A)\).
+                <br><br>
+                Sometimes the indicator function is denoted by square brackets; \([A]\).
+            </p>
+
+            <p class="side">
+                <b><i>Example 13.</i></b> <i>(Binomial Distribution)</i> Supupose we flip a coin \(n\) times, and all the tosses are independent. Each time we get tails with probability \(p\). Then, we can define a random variable \(X_i\) (which has a bernoulli with param \(p\))
+                \[
+                X_i = \begin{cases}
+                    1 &\textrm{if } i \textrm{th toss gives tails} \\
+                    0 &\textrm{otherwise.} \end{cases}
+                \]
+                Define \(X = \sum_{i=1}^{n} X_i\). \(X\) has a <b>BINOMIAL distribution</b> with parameters \(n, p\).
+                <br><br>
+                If we talk about bernoulli distribution, \(X ~ \textrm{Ber}(p)\) (another notation), this is the same as saying \(X ~ B(1, p)\) (notation for binomial). 
+                \begin{array} {|r|r|}\hline x & 0 & 1 \\ \hline P(X = x) & p & 1-p \\ \hline  \end{array}
+                However binomials have more outcomes, so for example \(X ~ B(3, p)\) will have a table like
+                \begin{array} {|r|r|}\hline x & 0 & 1 & 2 & 3 \\ \hline P(X = x) & (1-p)^3 & 3(1-p)^{2}p & 3(1-p)p^2 & p^3 \\ \hline  \end{array}
+                As an aside, \(X\) may have a <b>UNIFORM distribution</b>, \(X ~ \textrm{Unif}(\{0, 1, 2, 3\})\), which as one can probably guess means all probabilities are the same.
+
+            </p>
+
+            <p>
+                A benefit of talking about distributions over individual events is that instead of coming up with individual sample spaces, what we're interested in is something that abstracts away the sample space. If we have a random variable with a particular distribution it doesn't entirely matter what the specifics of the sample space are. 
+            </p>
+
+            <p>
+                We want to look at something called the "expectation" of random variables. 
+                <br><br>
+                Suppose we have a prob. space \((\Omega, 2^\Omega, P)\) and a random var \(X : \Omega \longrightarrow \mathbb{R}\). Suppose \(X\) only takes values \(0, 1, 2, 3\) (this would be the range of X).
+                <br><br>
+                The expectation of X, \(EX = \sum_{i=0}^{3} i\cdot P(X=i)\).
+            </p>
+
+            <p>
+                This is almost like a weighted average. If in the previous example \(X\) has a uniform distribution, then \(EX\) is simply an average of the four possible values.
+            </p>
+
+            <p>
+                Of course more often than not, the probabilities of different values are different. 
+            </p>
+
+            <p class="blue">
+                <b><i>Definition.</i></b> More generally, if the range of a random var \(X = \{a_1, a_2, ..., a_n\} \subseteq \mathbb{R}\), then the <b>EXPECTATION</b> of X, 
+                \[ EX = \sum_{i=1}^n a_i \cdot P(X = a_1) \]
+                Or, more implicitly as \(EX = \sum_{k} k \cdot P(X = k)\).
+            </p>
+
+            <p>
+                If the range of X is infinitely countable, then we can use a similar definition with some caveats, but if the range of X is uncountable, then it gets more complicated.
+            </p>
+
+            <p>
+                <b><i>Example 14.</i></b> A roulette wheel contains the 37 numbers 0, 1, 2, ..., 36. 18 numbers are black, 18 are red, and 0 is green. If you bet on black or red and are correct, you get back double your stake. If 0 comes up, you get only half your stake. If you are incorrect, it is all lost. What are your expected returns for a £1 bet?
+            </p>
+
+            <button class="collapsible">Answer 14...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Answer 14.</i></b> We can consider the prob. state \((\Omega, 2^\Omega, P)\). Let \(\Omega = \{0, 1, 2, ..., 36\}\), \(\textrm{Black} = \{1, 2, ..., 18\}\), and \(\textrm{Red} = \{19, 20, ..., 36\}\). \(P(\{\omega\} = \frac{1}{37} \; \forall \omega \in \Omega\). 
+                    <br><br>
+                    However, we can do something simpler. Note that our black and red events are not necessarily accurate or representative - the numbers for example are wrong.
+                    <br><br>
+                    Perhaps a better space would be \((\Omega', 2^{\Omega'}, P')\) where \(\Omega' = {r, b, 0}\) (red, black, zero). The probabilities thus are no longer uniform, and \(P'(r) = P'(b) = \frac{18}{37}\), and \(P(0) = \frac{1}{37}\). 
+                </p>
+
+                <p>
+                    Suppose we bet black. What is our return? Let return be a function \(R : \Omega' \longrightarrow \mathbb{R}\) where
+                    \begin{align}
+                    R(r) &= 0 \\
+                    R(b) &= 2 \\
+                    R(0) &= 0.5
+                    \end{align}
+
+                    Our expected return is then the expectation \(E[R]\).
+                    
+                    \begin{align}
+                        E[R] &= P(r)R(r) + P(b)R(b) + P(0)R(0) \\
+                        &= \frac{18}{37} \times 0 + \frac{18}{37} \times 2 + \frac{1}{37} \times \frac{1}{2} \\
+                        &= \frac{73}{74}
+                    \end{align}
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Example 15.</i></b> The average donation is £10, but most people donate more. Can this be proven?
+            </p>
+
+            <button class="collapsible">Answer 15...</button>
+            <div class="ccontent">
+                <p>
+                    Our notion of average is expectation, so we ask can the expectation of a random variable be 10, but most of the outcomes are more than 10?
+                </p>
+
+                <p>
+                    The answer is yes. To give an example, suppose 100 people give £6, and 200 people give £12. The total amount donated is \(6 \times 100 + 12 \times 200 = £3000\). Thus the average, since there are 300 people, will be £10. But we can clearly see most people give more than 10. 
+                </p>
+            </div>
+
+            <p class="side">
+                <b><i>Example 16.</i></b> Consider 7 numbers, \(1, 2, 2, 3, 4, 7, 9\). 
+                <br><br>
+                We draw one of these numbers at random. What is the average value we expect to get? What <i>is</i> average?
+                <br><br>
+                Let's formulate this as a prob. space \(\Omega, 2^\Omega, P\), where \(\Omega = \{\omega_1, \omega_2, ..., \omega_7\}\) are our 7 values. We will then assign a random variable \(X(\omega)\) to the values based on our starting 7 numbers. 
+
+                \begin{array} {|r|r|}\hline \omega \in \Omega & w_1 & w_2 & w_3 & w_4 & w_5 & w_6 & w_7 \\ \hline X(\omega) & 1 & 2 & 2 & 3 & 4 & 7 & 9 \\ P(\{w\} & \hline \frac{1}{7} & \frac{1}{7} & \frac{1}{7} & \frac{1}{7} & \frac{1}{7} & \frac{1}{7} & \frac{1}{7} \\ \hline \end{array}
+
+                <i style="font-size: 8pt;">Just ignore the \(w\) standin for \(\omega\) I didn't want to type omega 7 times.</i>
+                <br><br>
+                The most natural thing would be to ask for the expectation \(EX = \frac{7+2+9+1+4+3+2}{7} = 4\), and this means that we should expect a \(\frac{\textrm{total value}}{\textrm{no. of experiments}}\) value to be roughly 4.
+                <br><br>
+                However, if we want the most frequent outcome, then that would be 2. 2 is the mode. 
+                <br><br>
+                We can also ask what the middle value is, which is 3, the median. Half the time we are getting > 3, and half the time we are getting < 3.
+            </p>
 
         </div>
 
