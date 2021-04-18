@@ -63,6 +63,17 @@ html.boxed .body {
 	z-index: 0;
 }
 
+.w {
+	max-width: 1000px;
+}
+
+.cornell {
+	display: grid;
+	grid-template-columns: 1fr 5fr;
+	grid-column-gap: 20px;
+	max-width: 840px;
+}
+
 .parallax {
 	min-height: 480px;
 
@@ -285,6 +296,13 @@ button.collapsible {
 	font-style: italic;
 }
 
+button.nul {
+	border: none;
+	border-spacing: 0px 0px;
+	padding-left: 0px;
+	margin-left: 0px;
+}
+
 .ccontent {
 	border-left: 1px solid #a17667;
 	border-spacing: 10px 0px;
@@ -293,6 +311,13 @@ button.collapsible {
 	overflow: hidden;
 	display: none;
 	transition: max-height 0.2s ease-out;
+}
+
+.cnul {
+	border: none;
+	border-spacing: 0px 0px;
+	padding-left: 0px;
+	margin-left: 0px;
 }
 
 h1 {
@@ -361,6 +386,11 @@ p.blue {
 	margin-left: -10px;
 }
 
+p.ir {
+	text-align: right;
+	font-style: italic;
+}
+
 
 code {
 	font-family: JBMono;
@@ -398,6 +428,11 @@ figcaption {
 		text-align: center;
 		padding: 5px;
 		grid-column-gap: 0px;
+	}
+
+	.cornell {
+		display: grid;
+		grid-template-columns: 1fr;
 	}
 
 	a.nav {

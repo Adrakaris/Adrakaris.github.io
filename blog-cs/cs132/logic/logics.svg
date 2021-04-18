@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   width="772"
+   height="136.02197"
+   id="svg1189"
+   sodipodi:docname="logics.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <metadata
+     id="metadata1195">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1193" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     id="namedview1191"
+     showgrid="false"
+     fit-margin-top="15"
+     fit-margin-left="15"
+     fit-margin-bottom="15"
+     fit-margin-right="15"
+     inkscape:zoom="1.6925"
+     inkscape:cx="386"
+     inkscape:cy="70.021973"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1189" />
+  <text
+     x="636"
+     y="100.02197"
+     style="font-size:11px;font-family:Arial;text-anchor:start"
+     dominant-baseline="middle"
+     id="text1015">B</text>
+  <text
+     x="636"
+     y="20.021973"
+     style="font-size:11px;font-family:Arial;text-anchor:start"
+     dominant-baseline="middle"
+     id="text1017">A</text>
+  <text
+     x="406"
+     y="40.021973"
+     style="font-size:11px;font-family:Arial;text-anchor:start"
+     dominant-baseline="middle"
+     id="text1019">B</text>
+  <text
+     x="346"
+     y="40.021973"
+     style="font-size:11px;font-family:Arial;text-anchor:start"
+     dominant-baseline="middle"
+     id="text1021">A</text>
+  <text
+     x="116"
+     y="40.021973"
+     style="font-size:11px;font-family:Arial;text-anchor:start"
+     dominant-baseline="middle"
+     id="text1023">A</text>
+  <line
+     x1="656"
+     y1="40.021973"
+     x2="686"
+     y2="40.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1025" />
+  <line
+     x1="686"
+     y1="40.021973"
+     x2="686"
+     y2="80.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1027" />
+  <line
+     x1="656"
+     y1="80.021973"
+     x2="686"
+     y2="80.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1029" />
+  <line
+     x1="596"
+     y1="80.021973"
+     x2="626"
+     y2="80.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1031" />
+  <line
+     x1="596"
+     y1="40.021973"
+     x2="596"
+     y2="80.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1033" />
+  <line
+     x1="596"
+     y1="40.021973"
+     x2="626"
+     y2="40.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1035" />
+  <line
+     x1="626"
+     y1="80.021973"
+     x2="627"
+     y2="80.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1037" />
+  <line
+     x1="655"
+     y1="80.021973"
+     x2="656"
+     y2="80.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1039" />
+  <circle
+     cx="630"
+     cy="80.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1041"
+     r="3" />
+  <circle
+     cx="652"
+     cy="80.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1043"
+     r="3" />
+  <line
+     x1="633"
+     y1="78.021973"
+     x2="650"
+     y2="72.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1045" />
+  <line
+     x1="756"
+     y1="60.021973"
+     x2="756"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1047" />
+  <line
+     x1="536"
+     y1="120.02197"
+     x2="756"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1049" />
+  <line
+     x1="536"
+     y1="60.021973"
+     x2="536"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1051" />
+  <line
+     x1="536"
+     y1="60.021973"
+     x2="546"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1053" />
+  <line
+     x1="746"
+     y1="60.021973"
+     x2="756"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1055" />
+  <line
+     x1="686"
+     y1="60.021973"
+     x2="716"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1057" />
+  <line
+     x1="566"
+     y1="60.021973"
+     x2="596"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1059" />
+  <line
+     x1="626"
+     y1="40.021973"
+     x2="627"
+     y2="40.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1061" />
+  <line
+     x1="655"
+     y1="40.021973"
+     x2="656"
+     y2="40.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1063" />
+  <circle
+     cx="630"
+     cy="40.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1065"
+     r="3" />
+  <circle
+     cx="652"
+     cy="40.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1067"
+     r="3" />
+  <line
+     x1="633"
+     y1="38.021973"
+     x2="650"
+     y2="32.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1069" />
+  <line
+     x1="716"
+     y1="60.021973"
+     x2="746"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1071" />
+  <path
+     d="m 738,60.021973 m 0,-8 v 16 m 0,-8 -15,8 v -16 l 15,8"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1073" />
+  <path
+     d="m 736,60.021973 m -2,-11 8,-8 m 1,-1 -4,2 2,2 2,-4 -4,2"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1075" />
+  <path
+     d="m 736,60.021973 m 4,-4 8,-8 m 1,-1 -4,2 2,2 2,-4 -4,2"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1077" />
+  <line
+     x1="546"
+     y1="60.021973"
+     x2="553"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1079" />
+  <line
+     x1="553"
+     y1="50.021973"
+     x2="553"
+     y2="70.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1081" />
+  <line
+     x1="559"
+     y1="55.021973"
+     x2="559"
+     y2="65.021973"
+     style="stroke:#000000;stroke-width:3;stroke-linecap:square"
+     id="line1083" />
+  <line
+     x1="559"
+     y1="60.021973"
+     x2="566"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1085" />
+  <text
+     x="556"
+     y="48.021973"
+     style="font-size:12px;font-family:Arial;text-anchor:middle"
+     dominant-baseline="baseline"
+     id="text1087">+5V</text>
+  <line
+     x1="366"
+     y1="60.021973"
+     x2="396"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1089" />
+  <line
+     x1="396"
+     y1="60.021973"
+     x2="397"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1091" />
+  <line
+     x1="425"
+     y1="60.021973"
+     x2="426"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1093" />
+  <circle
+     cx="400"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1095"
+     r="3" />
+  <circle
+     cx="422"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1097"
+     r="3" />
+  <line
+     x1="403"
+     y1="58.021973"
+     x2="420"
+     y2="52.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1099" />
+  <line
+     x1="496"
+     y1="60.021973"
+     x2="496"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1101" />
+  <line
+     x1="276"
+     y1="120.02197"
+     x2="496"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1103" />
+  <line
+     x1="276"
+     y1="60.021973"
+     x2="276"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1105" />
+  <line
+     x1="276"
+     y1="60.021973"
+     x2="286"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1107" />
+  <line
+     x1="486"
+     y1="60.021973"
+     x2="496"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1109" />
+  <line
+     x1="426"
+     y1="60.021973"
+     x2="456"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1111" />
+  <line
+     x1="306"
+     y1="60.021973"
+     x2="336"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1113" />
+  <line
+     x1="336"
+     y1="60.021973"
+     x2="337"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1115" />
+  <line
+     x1="365"
+     y1="60.021973"
+     x2="366"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1117" />
+  <circle
+     cx="340"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1119"
+     r="3" />
+  <circle
+     cx="362"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1121"
+     r="3" />
+  <line
+     x1="343"
+     y1="58.021973"
+     x2="360"
+     y2="52.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1123" />
+  <line
+     x1="456"
+     y1="60.021973"
+     x2="486"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1125" />
+  <path
+     d="m 478,60.021973 m 0,-8 v 16 m 0,-8 -15,8 v -16 l 15,8"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1127" />
+  <path
+     d="m 476,60.021973 m -2,-11 8,-8 m 1,-1 -4,2 2,2 2,-4 -4,2"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1129" />
+  <path
+     d="m 476,60.021973 m 4,-4 8,-8 m 1,-1 -4,2 2,2 2,-4 -4,2"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1131" />
+  <line
+     x1="286"
+     y1="60.021973"
+     x2="293"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1133" />
+  <line
+     x1="293"
+     y1="50.021973"
+     x2="293"
+     y2="70.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1135" />
+  <line
+     x1="299"
+     y1="55.021973"
+     x2="299"
+     y2="65.021973"
+     style="stroke:#000000;stroke-width:3;stroke-linecap:square"
+     id="line1137" />
+  <line
+     x1="299"
+     y1="60.021973"
+     x2="306"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1139" />
+  <text
+     x="296"
+     y="48.021973"
+     style="font-size:12px;font-family:Arial;text-anchor:middle"
+     dominant-baseline="baseline"
+     id="text1141">+5V</text>
+  <line
+     x1="236"
+     y1="60.021973"
+     x2="236"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1143" />
+  <line
+     x1="16"
+     y1="120.02197"
+     x2="236"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1145" />
+  <line
+     x1="16"
+     y1="60.021973"
+     x2="16"
+     y2="120.02197"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1147" />
+  <line
+     x1="16"
+     y1="60.021973"
+     x2="26"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1149" />
+  <line
+     x1="226"
+     y1="60.021973"
+     x2="236"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1151" />
+  <line
+     x1="136"
+     y1="60.021973"
+     x2="196"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1153" />
+  <line
+     x1="46"
+     y1="60.021973"
+     x2="106"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1155" />
+  <line
+     x1="106"
+     y1="60.021973"
+     x2="107"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1157" />
+  <line
+     x1="135"
+     y1="60.021973"
+     x2="136"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1159" />
+  <circle
+     cx="110"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1161"
+     r="3" />
+  <circle
+     cx="132"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2"
+     id="ellipse1163"
+     r="3" />
+  <line
+     x1="113"
+     y1="58.021973"
+     x2="130"
+     y2="52.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1165" />
+  <line
+     x1="196"
+     y1="60.021973"
+     x2="226"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1167" />
+  <path
+     d="m 218,60.021973 m 0,-8 v 16 m 0,-8 -15,8 v -16 l 15,8"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1169" />
+  <path
+     d="m 216,60.021973 m -2,-11 8,-8 m 1,-1 -4,2 2,2 2,-4 -4,2"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1171" />
+  <path
+     d="m 216,60.021973 m 4,-4 8,-8 m 1,-1 -4,2 2,2 2,-4 -4,2"
+     style="fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="path1173" />
+  <line
+     x1="26"
+     y1="60.021973"
+     x2="33"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1175" />
+  <line
+     x1="33"
+     y1="50.021973"
+     x2="33"
+     y2="70.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1177" />
+  <line
+     x1="39"
+     y1="55.021973"
+     x2="39"
+     y2="65.021973"
+     style="stroke:#000000;stroke-width:3;stroke-linecap:square"
+     id="line1179" />
+  <line
+     x1="39"
+     y1="60.021973"
+     x2="46"
+     y2="60.021973"
+     style="stroke:#000000;stroke-width:2;stroke-linecap:square"
+     id="line1181" />
+  <text
+     x="36"
+     y="48.021973"
+     style="font-size:12px;font-family:Arial;text-anchor:middle"
+     dominant-baseline="baseline"
+     id="text1183">+5V</text>
+  <circle
+     cx="686"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2"
+     id="ellipse1185"
+     r="2" />
+  <circle
+     cx="596"
+     cy="60.021973"
+     style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:2"
+     id="ellipse1187"
+     r="2" />
+</svg>

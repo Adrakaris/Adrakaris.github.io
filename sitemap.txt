@@ -4,3 +4,4 @@ http://www.adrakaris.github.io/blog.html
 http://www.adrakaris.github.io/blog-misc/wyvern/index.html
 http://www.adrakaris.github.io/blog-cs/cs130/index.html
 http://www.adrakaris.github.io/blog-cs/cs118/index.html
+http://www.adrakaris.github.io/blog-cs/cs132/index.html

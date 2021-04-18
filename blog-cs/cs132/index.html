@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS132</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  
+	<meta name="viewport" content="width=device-width" initial-scale=1.0> 
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script type="text/javascript" src="../../js/goback.js"></script>
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div class="columncontainer cthreeside">
+					<div class="column tinycolumn">
+						<a href="../../about.html" class="nav">About</a>
+						<!--<button onclick="goBack()" class="nav">Back</button>-->
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Back</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="./index.html" class="nav"><!--Link--></a>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS132</h1>
+					<p class="subheading">Computer Systems and Architecture</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			<ol>
+				<li><a href="#datarep">Data Representation</a></li>
+				<li><a href="#logic">Digital Logic</a></li>
+			</ol>
+		</div>
+
+		<div class="colourband" id="datarep">
+			<h2>Data Representation</h2>
+		</div>
+
+		<div class="cbox">
+
+			<p>
+				<i>Editor's note:</i> Since data rep is a topic covered fairly extensively in GCSE and A level CS, these notes will be brief.
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Representations and Binary.
+					</p>
+				</div>
+				<div>
+					<p>
+						Numbers can be represented in many different ways (decimal, octal, etc) but we most often use binary when dealing with computer systems.
+					</p>
+
+					<p>
+						Computers work with transistors, and <b>TTL</b> (transistor-transistor logic) works over voltages. Transistors work over a range of about five volts, and we assign the range 0 - 0.8V as 0 and 2.4 - 5V as 1 (and a forbidden zone in the middle), which gives us binary values. 
+					</p>
+
+					<p>
+						The reason we do this is to achieve something called <b>noise immunity</b>, where natural fluctuations in voltage won't affect the bits.
+					</p>
+				</div>
+			</div>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Mathematical Operators.
+					</p>
+				</div>
+				<div>
+					<p>
+						Do recall that overflow exists when working in binary. 
+					</p>
+
+					<p>
+						We can (fairly) easily make a circuit that adds two binary numbers. However what do we do for subtraction? We could either build a subtractor, or easier find a way to represent negative binary numbers. How about working with decimal numbers.
+					</p>
+				</div>
+
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						(Negatives) Signed Magnitude
+					</p>
+				</div>
+				<div>
+					<p>
+						The largest bit of a binary number acts as the <i>sign</i>, a "flag" which is 1 if the number is negative and 0 if the number is positive;
+						\[1101_{2SM} = -1 \times (4 + 0 + 1) = -5.\]
+						This can represent numbers in the range \([-2^{n-1}, 2^{n-1}]\), for \(n\) bits.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						(Negatives) Two's Complement
+					</p>
+				</div>
+				<div>
+					<p>
+						The more commonly used, two's complement is where the largest bit is a negative number;
+						\[1101_{2TC} = -8 + 4 + 0 + 1 = -3.\]
+						Two's complement represent numbers in the range \([-2^n, 2^{n-1}]\), and a major advantage of two's complement is that it has no unique zero. Signed magnitude numbering has two zeros, \(1000 \equiv 0000\) which can be problematic, whilst two's complement has only \(0000\).
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						(Decimals) Fixed Point
+					</p>
+				</div>
+				<div>
+					<p>
+						A fixed decimal point where to the right are negative powers of two. However this is limited by accuracy (depending on where the fixed point is), nor can it represent very large numbers
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						(Decimals) Floating Point
+					</p>
+				</div>
+				<div>
+					<p>
+						A floating point number is represented with \( (\textrm{sign}) \textrm{ mantissa} \times 2^{\textrm{exponent}} \). One bit is allocated to the sign, a few for the exponent, and the rest for the mantissa. More bits equal more numbers that can be represented.
+					</p>
+
+					<button class="collapsible nul">IEE754...</button>
+					<div class="ccontent cnul">
+						<p>
+							The IEEE 754 standard gives 32 bits for a single float, 64 bits for a double, and 128 bits for a quad. For a single precision float, 1 bit is the sign, 8 bits for the exponent and 23 bits for the mantissa.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband" id="logic">
+			<h2>Digital Logic</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<a href="#log-1">Basic Logic Functions</a>
+			</ol>
+
+			<h2 id="log-1">Basic Logic Functions</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Switches and bulbs.
+					</p>
+				</div>
+				<div>
+					<p>
+						We can think about logic using switches and bulbs. Below, are three diagrams of circuits, with labelled switches.
+					</p>
+
+					<img src="logic/logics.svg" style="width: 100%;">
+
+					<p>
+						Notice how from left to right, these circuits make the NOT, AND, and OR circuits. 
+					</p>
+
+					<p>
+						For \(n\) inputs, there are \(2^n\) combinations of inputs, and \(2^{(2^n)}\) possible functions and outputs.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Note on Notation.
+					</p>
+				</div>
+				<div>
+					<p>
+						In 132, true and false are denoted as \(1, 0\), and the operators AND, OR, and NOT are denoted by \(A \cdot B , A+B, \bar{A}\) respectively. 
+					</p>
+				</div>
+				<div>
+					<p class="ir">
+						Gates.
+					</p>
+				</div>
+				<div>
+					<p>
+						
+					</p>
+				</div>
+			</div>
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+				<div class="columncontainer ctwo">
+					<div>
+						<p class="small">
+							© 2020-2021 Yijun Hu, all rights reserved.
+						</p>
+					</div>
+					<div>
+						<p class="small rj">
+							Designed by Yijun Hu
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+</body>
+</html>
