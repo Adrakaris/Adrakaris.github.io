@@ -115,7 +115,7 @@
 					<p>
 						The more commonly used, two's complement is where the largest bit is a negative number;
 						\[1101_{2TC} = -8 + 4 + 0 + 1 = -3.\]
-						Two's complement represent numbers in the range \([-2^n, 2^{n-1}]\), and a major advantage of two's complement is that it has no unique zero. Signed magnitude numbering has two zeros, \(1000 \equiv 0000\) which can be problematic, whilst two's complement has only \(0000\).
+						Two's complement represent numbers in the range \([-2^{n-1}, 2^{n-1}-1]\), and a major advantage of two's complement is that it has no unique zero. Signed magnitude numbering has two zeros, \(1000 \equiv 0000\) which can be problematic, whilst two's complement has only \(0000\).
 					</p>
 				</div>
 
@@ -159,6 +159,8 @@
 
 			<ol>
 				<a href="#log-1">Basic Logic Functions</a>
+				<a href="#log-2">Karnaugh Maps</a>
+				<a href="#log-3">Combinatorial Logic Circuits</a>
 			</ol>
 
 			<h2 id="log-1">Basic Logic Functions</h2>
@@ -197,13 +199,347 @@
 				</div>
 				<div>
 					<p class="ir">
-						Gates.
+						Logic Gates.
 					</p>
 				</div>
 				<div>
 					<p>
+						Logic gates and truth tables. Included only for completeness' sake.
+					</p>
+					<button class="collapsible">Expand for gates...</button>
+					<div class="ccontent">
+						<p>
+							Below are images of logic gates, along with their truth tables. 
+						</p>
+
+						<img src="https://instrumentationtools.com/wp-content/uploads/2017/07/instrumentationtools.com_digital-logic-gates-truthtables.png" style="max-width: 100%">
+					</div>
+					<p>
+						We can combine logic gates to form more complicated circuits, for example exclusive or, \(A \oplus B\)
+					</p>
+					<button class="collapsible">Expand...</button>
+					<div class="ccontent">
+						<img src="https://www.electronicshub.org/wp-content/uploads/2015/07/exor-equivalent-circuit.jpg" style="max-width: 100%">
+					</div>
+					
+					<p>
+						Note that NOT, AND and OR are <b>fundamental</b> gates, since they are the building blocks of any function.
+					</p>
+
+					<p>
+						NAND and NOR are <b>universal</b> gates, since they alone can be used to make any other logic gate. 
+					</p>
+					
+
+					<p>
+						We often want to simplify expressions as possible, because simplifying expressions leads to less logic gates, which is cheaper. (Also, simplifying to one universal gate can also be cheaper due to economy of scale of buying only one gate.)
+					</p>
+
+					<p>
+						Two main methods of simplification are <b>boolean algebra</b> and <b>Karnaugh Maps</b>. Boolean algebra is covered in <a href="../cs130/index.html#proplogic" class="text">CS130</a>, though of course do note that 132 uses different syntax. 
+					</p>
+				</div>
+			</div>
+
+			<h2 id="log-2">Karnaugh Maps (K-Maps)</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						K-maps.
+					</p>
+				</div>
+				<div>
+					<p>
+						Karnaugh maps (also called k-maps) can show unambiguously a boolean expression in its simplest form. 
+					</p>
+
+					<p>
+						Look at the following table. It is a k-map for 3 variables \(A, B, C\). The top row groups AB together, and the left column displays values of C. Within the table each of the squares represent a different combination of values of A, B, C to input into a function we want to simplify.
+					</p>
+
+					<img src="logic/kmap-example.png" style="max-width: 100%;">
+
+					<p>
+						Note the ordering of AB: 00 <b>01 11</b> 10. This is <i>deliberate</i>, and with this ordering it means that to "step" from any square to any orthogonally adjacent (sides touching) square, the result will differ by <b>only one variable.</b>
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Rules.
+					</p>
+				</div>
+				<div>
+					<p>
+						Usually, when you get a function, only certain squares in the grid will give an overall result of 1. We do this by a process of <b>grouping 1s</b>.
+					</p>
+
+					<p>
+						Basically, in a map, you want to group adjacent ones. The groups must be <b>rectangular</b> in shape, and not have any "turns" - an L shape for example is forbidden. Furtherfore, groups must be <b>powers of two</b> in size.
+					</p>
+
+					<p>
+						Groups may <b>wrap around</b> edges - like pacman. 
+					</p>
+
+					<p>
+						Groups are permitted to overlap.
+					</p>
+
+					<p>
+						<b>Minimum no. of groups</b>, ideally bigger size groups, make more <b>optimal solution</b>. 
+					</p>
+
+					<p>
+						Then to find the simplfied equation, find only the variables that remain constant in a group, and only include that.
+					</p>
+
+					<p>
+						Have a look at the example below.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						<b>Example.</b>
+					</p>
+				</div>
+				<div>
+					<p class="side">
+						Simplify the function \(f = AB\bar{C}D + A\bar{B}\bar{C}D + \bar{A}\bar{B}CD + \bar{A}BCD\). 
+					</p>
+
+					<div style="border-left: 1px solid #a17667;	border-spacing: 10px 0px;	padding-left: 10px;	margin-left: -10px;">
+						<p >
+							Take the following karnaugh map - note that we have to split now AB / CD.
+						</p>
+
+						<img src="logic/kmap-gr1.png" style="max-width: 100%">
+
+						<p>
+							In the red group, A remains constant 1, B changes, C remains consant 0, and D remains constant 1, therefore we get \(A \cdot \bar{C} \cdot D\). Similarly for the blue group, A remains constant 0, B changes, and C, D remain constant 1, therefore we get \(\bar{A} \cdot C \cdot D\).
+						</p>
+						<p>
+							Thus \(f = A \cdot \bar{C} \cdot D + \bar{A} \cdot C \cdot D\)
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p class="ir">
+						Equivalences.
+					</p>
+				</div>
+				<div>
+					<p>
+						It is possible to have equivalent constructions which are all the optimal solution. For example, for the following map:
+					</p>
+
+					<img src="logic/kmap-gr2.png" style="max-width: 100%">
+
+					<p>
+						The optimal solution could either comprise of red, green, and blue, or red, purple, and blue. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						<b>Example</b> of wrapping.
+					</p>
+				</div>
+				<div style="border-left: 1px solid #a17667;	border-spacing: 10px 0px;	padding-left: 10px;	margin-left: -10px;">
+					<p>
+						Look at the karnaugh map below. The optimal grouping is shown.
+					</p>
+
+					<img src="logic/kmap-gr3.png" style="max-width: 100%">
+
+					<p>
+						Thus here \(f = \bar{B} + \bar{A} \cdot \bar{C}\)
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Impossibilites.
+					</p>
+				</div>
+				<div>
+					<p>
+						Sometimes, however, with specific cases, minimising this way is impossible.
+					</p>
+
+					<img src="logic/kmap-gr4.png" style="max-width: 100%">
+
+					<p>
+						This is actually \((A \oplus B) \oplus (C \oplus D)\). It is thus only of use in cases, especially where exclusive or is involved. 
+					</p>
+
+					<p>
+						Sometimes, even, it is easier to extract \(\bar{f}\), i.e. 0s from the map. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						"Don't care" conditions.
+					</p>
+				</div>
+				<div>
+					<p>
+						Denoted often with an \(\times\), this can be assumed to be either 1 or 0 depending on context. 
+					</p>
+
+					<img src="logic/kmap-gr5.png" style="max-width: 100%">
+
+					<p>
+						The case where \(\times\) is a 0, we have \(f = A + B + C \cdot D\).
+					</p>
+
+					<img src="logic/kmap-gr6.png" style="max-width: 100%">
+
+					<p>
+						The case where \(\times\) is a 1, we have \(f = A + B + D\).
+					</p>
+				</div>
+			</div>
+
+			<h2 id="log-3">Combinatorial Logic Circuits</h2>
+
+			<p>
+				<i>Editor's note:</i> Apologies for the PNG and not SVG images, but I'm not going to switch to svg or use latex because it takes long enough.
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Half bit adder.
+					</p>
+				</div>
+				<div>
+					<p>
+						There are several combinatorial logic ciruits one should know about. First of all, we want to look at adding bits, since addition is very important generally. To start adding bits, we start off with only a half bit adder, where we add \(A, B\) and get a \(\Sigma, \textrm{Carry}\). 
+					</p>
+
+					<figure>
+						<img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Half_Adder.svg" style="max-width: 200px; width: 100%; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>Half Adder (Wikimedia Commons)</i></figcaption>
+					</figure>
+
+					<p>
+						Which has a truth table of:
+
+						\begin{array} {|r|r|}\hline A & B & \Sigma & \textrm{Carry} \\ \hline 0 & 0 & 0 & 0 \\ \hline 0 & 1 & 1 & 0 \\ \hline 1 & 0 & 1 & 0 \\ \hline 1 & 1 & 0 & 1 \\ \hline  \end{array}
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Full bit adder.
+					</p>
+				</div>
+				<div>
+					<p>
+						Now that's just a <i>half</i> adder, a full adder on the other hand requires taking a carry as an input. Thus, we take an \(A, B, C_{\textrm{in}}\) and get a \(\Sigma, C_{\textrm{out}}\).
+					</p>
+
+					<p>
+						The logic diagram of a full adder is not strictly necessary, but Matt has said he would be pleased if someone produced it, so it's included below.
+					</p>
+
+					<figure>
+						<img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Full-adder.svg" style="max-width: 300px; width: 100%; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>Full Adder (Wikimedia Commons)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p class="ir">
+						N-bit adder.
+					</p>
+				</div>
+				<div>
+					<p>
+						We can then string together a series of full bit adders to form an \(n\)-bit adder.
+					</p>
+
+					<figure>
+						<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/4-bit_ripple_carry_adder.svg" style="max-width: 400px; width: 100%; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>N-bit adder (Wikimedia Commons)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p class="ir">
+						Subtraction with adders.
+					</p>
+				</div>
+				<div>
+					<p>
+						Since subtraction is nothing but addition of negative numbers, we can use two's complement principle to do this. We have a toggle bit \(M\) which hooks onto \(B\). 
+					</p>
+
+					<p>
+						To convert a number to two's complement, we flip the bits and add 1, so what we can do is flip all the bits of B if M is 1, and then add on M to fit two's complement. An operation to flip the bits of B when M is 1 is <b>exclusive or</b> (check the truth table). We can now build an \(n\)-bit adder-subtractor.
+					</p>
+
+					<figure>
+						<img src="https://www.electronicshub.org/wp-content/uploads/2015/06/Parallel-subtactor-and-adder.jpg" style="width: 100%; max-width: 440px; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>N-bit adder-subtractor (<a href="https://www.electronicshub.org/binary-adder-and-subtractor/">Electronics Hub</a>)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p class="ir">
 						
 					</p>
+				</div>
+				<div>
+					<p>
+						There are many other important combinatorial logic circuits that one needs to know (but not necessarily draw the internals of).
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Active Low Decoder.
+					</p>
+				</div>
+				<div>
+					<p>
+						Active low, often written \(\overline{\textrm{Enable}}\) (with an overline), is where 0 denotes the "true" state. Naturally, Active High also exists, but low seems more commonplace.
+					</p>
+
+					<img src="logic/actlow.png" style="max-width: 100%">
+
+					<p>
+						A decoder takes an "encoded" binary value and translates it into the appropriate discrete output.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Encoder.
+					</p>
+				</div>
+				<div>
+					<p>
+						On the oher hand, the other way round would be an encoder, which takes in a series of inputs and returns an "encoded" binary value. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Multiplexer.
+					</p>
+				</div>
+				<div>
+					<p>
+						A multiplexer "chooses" from a series of \(2^n\) inputs based on \(n\) selection inputs. The following truth table shows a 4-1 (4 in 1 out) multiplexer.
+					</p>
+
+					<img src="logic/multiplex.png" style="max-width: 100%">
 				</div>
 			</div>
 		</div>
