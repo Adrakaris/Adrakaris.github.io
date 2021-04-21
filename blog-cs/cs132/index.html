@@ -161,6 +161,7 @@
 				<a href="#log-1">Basic Logic Functions</a>
 				<a href="#log-2">Karnaugh Maps</a>
 				<a href="#log-3">Combinatorial Logic Circuits</a>
+				<a href="#log-4">Sequential Logic Circuits</a>
 			</ol>
 
 			<h2 id="log-1">Basic Logic Functions</h2>
@@ -540,8 +541,81 @@
 					</p>
 
 					<img src="logic/multiplex.png" style="max-width: 100%">
+
+					<p>
+						Note how the denary value \(n\) of the binary \(S_{0}S_{1}\) will choose which value \(X_n\) is "channeled through".
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						De-multiplexer.
+					</p>
+				</div>
+				<div>
+					<p>
+						Opposite to the multiplexer we have a de-multiplexer (a Demux) which does almost the opposite to what a multiplexer does. Have a look at the truth table. 
+					</p>
+
+					<p>
+						Note that this Demux is active-<b>low</b>.
+					</p>
+
+					<img src="logic/demux.png" style="max-width: 100%">
+
+					<p>
+						The denary value \(n\) given by \(S_{0}S_{1}\) will choose which \(Y_n\) \(A\) is sent through.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Applications.
+					</p>
+				</div>
+				<div>
+					<p>
+						These circuits can be used for source control - i.e. controlling which source gets sent through - so you can have one line for multiple senders. Another application may be converting from serial to parallel, or vice versa. 
+					</p>
 				</div>
 			</div>
+
+			<h2 id="log-4">Sequential Logic Circuits</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						
+					</p>
+				</div>
+				<div>
+					<p>
+						A sequential logic circuit is a circuit whose outputs are <b>logical functions</b> of <b>inputs</b> and <b>current state</b>. It's often used to build memory. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Flip flops.
+					</p>
+				</div>
+				<div>
+					<p>
+						The flip flop is one of the most important circuits. It is stable in two states. 
+					</p>
+
+					<img src="logic/flipflip.svg" style="width: 100%">
+
+					<p>
+						The truth table of the flip flop is given as follows:
+
+						\begin{array} {|r|r|}\hline \bar{S} & \bar{R} & Q & P \\ \hline 0 & 0 & \times & \times \\ \hline 0 & 1 & 1 & 0 \\ \hline 1 & 0 & 0 & 1 \\ \hline 1 & 1 & N/A & N/A \\ \hline  \end{array}
+
+						A cross in this table indicates a <i style="color: #D00">hazard</i> - basically don't have set and reset on at the same time, it's bad. N/A means no change in state. 
+					</p>
+				</div>
+			</div>
+
 		</div>
 		
 
