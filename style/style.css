@@ -320,6 +320,13 @@ button.nul {
 	margin-left: 0px;
 }
 
+.ncontent {
+	border-left: 1px solid #a17667;	
+	border-spacing: 10px 0px;	
+	padding-left: 10px;	
+	margin-left: -10px;
+}
+
 h1 {
 	font-family: Urbanist;
 	font-size: 36pt;

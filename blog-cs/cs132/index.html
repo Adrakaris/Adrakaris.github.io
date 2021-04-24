@@ -158,10 +158,10 @@
 			<h2>Introduction</h2>
 
 			<ol>
-				<a href="#log-1">Basic Logic Functions</a>
-				<a href="#log-2">Karnaugh Maps</a>
-				<a href="#log-3">Combinatorial Logic Circuits</a>
-				<a href="#log-4">Sequential Logic Circuits</a>
+				<li><a href="#log-1">Basic Logic Functions</a></li>
+				<li><a href="#log-2">Karnaugh Maps</a></li>
+				<li><a href="#log-3">Combinatorial Logic Circuits</a></li>
+				<li><a href="#log-4">Sequential Logic Circuits</a></li>
 			</ol>
 
 			<h2 id="log-1">Basic Logic Functions</h2>
@@ -306,12 +306,12 @@
 						<b>Example.</b>
 					</p>
 				</div>
-				<div>
-					<p class="side">
+				<div class="ncontent">
+					<p>
 						Simplify the function \(f = AB\bar{C}D + A\bar{B}\bar{C}D + \bar{A}\bar{B}CD + \bar{A}BCD\). 
 					</p>
 
-					<div style="border-left: 1px solid #a17667;	border-spacing: 10px 0px;	padding-left: 10px;	margin-left: -10px;">
+					<div>
 						<p >
 							Take the following karnaugh map - note that we have to split now AB / CD.
 						</p>
@@ -349,7 +349,7 @@
 						<b>Example</b> of wrapping.
 					</p>
 				</div>
-				<div style="border-left: 1px solid #a17667;	border-spacing: 10px 0px;	padding-left: 10px;	margin-left: -10px;">
+				<div class="ncontent">
 					<p>
 						Look at the karnaugh map below. The optimal grouping is shown.
 					</p>
@@ -613,6 +613,99 @@
 
 						A cross in this table indicates a <i style="color: #D00">hazard</i> - basically don't have set and reset on at the same time, it's bad. N/A means no change in state. 
 					</p>
+
+					<p>
+						Below is a time diagram of the flip flop. Remember that S and R are active low. 
+					</p>
+
+					<img src="logic/flipfloptimestep.png" style="width: 100%; max-width: 400px;">
+				</div>
+
+				<div>
+					<p class="ir">
+						D-type latch.
+					</p>
+				</div>
+				<div>
+					<p>
+						Uses a flip flop, and makes a 1 bit memory circuit. There are inputs \(D, \textrm{Enable}\) and outputs \(Q, \bar{Q}\). \(D\) is usually referred to as "Data".
+					</p>
+
+					<img src="logic/dlatych.svg" style="max-width: 500px; width: 100%">
+
+					<p>
+						It has the truth table of the following:
+						\begin{array} {|r|r|}\hline \textrm{Enable} & D & Q & \bar{Q} \\ \hline 0 & 0 & Q & \bar{Q} \\ \hline 0 & 1 & Q & \bar{Q} \\ \hline 1 & 0 & 0 & 1 \\ \hline 1 & 1 & 1 & 0 \\ \hline  \end{array}
+						Note how when Enable is false, no matter what changes with data the latch retains its state, whilst when Enable is true the latch will take on the value of data.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Edge triggering.
+					</p>
+				</div>
+				<div>
+					<p>
+						<b>Edge triggering</b> means that a latch, or logic circuit is enabled when the state <b>changes</b>, and not depending on what the state is. For example, when something is active only on the transition of \(1 \rightarrow 0\) or \(0 \rightarrow 1\). 
+					</p>
+
+					<p>
+						Something which is active at a steady value is called <b>level triggered</b>.
+					</p>
+
+					<img src="logic/edgetrigger.svg" style="max-width: 100%">
+				</div>
+
+				<div>
+					<p class="ir">
+						Clocked flip flops.
+					</p>
+				</div>
+				<div>
+					<p>
+						Clocked flip flops are flips that flop only on the <i>rising edge</i> of a clock input. There are three types - most importantly D-type (<i>delay</i>), along with T-type (<i>toggle</i>) and JK-type.
+					</p>
+
+					<img src="logic/floptypes.png" style="max-width: 100%">
+				</div>
+
+				<div>
+					<p class="ir">
+						N-bit register
+					</p>
+				</div>
+				<div>
+					<p>
+						We can connect multiple D-type latches together to store an \(N\)-bit binary word. Below is a diagram of a 4 bit parallel load register, you can extrapolate the rest.
+					</p>
+
+					<figure>
+						<img src="logic/4b-barallel.gif" style="width: 100%; max-width: 440px; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>4 bit parallel register (<a href="https://www.electronics-tutorials.ws/sequential/seq_5.html">Electronics Hub</a>)</i></figcaption>
+					</figure>
+
+					<p>
+						In a <b>parallel</b> load register, the binary input \(A\) is loaded all simultaneously. Alternatively, we can have what's called a <b>shift</b> register, where each clock cycle will shift the bits along the register like a queue. The diagram displayed below shows a shift register that only goes one way. Of course, you can also have a two-way shift register. 
+					</p>
+
+					<figure>
+						<img src="logic/4b-serial.gif" style="width: 100%; max-width: 440px; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>4 bit serial in parallel out register (<a href="https://www.electronics-tutorials.ws/sequential/seq_5.html">Electronics Hub</a>)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p class="ir">
+						3-state logic.
+					</p>
+				</div>
+				<div>
+					<p>
+						3-state logic is different from regular I/O logic circuits. It, as the name implies, introduces a third state, which is termed "<b>unconnected</b>". 
+					</p>
+
+					<img src="logic/tristate.svg" style="width: 180px; max-width: 100%">
 				</div>
 			</div>
 
