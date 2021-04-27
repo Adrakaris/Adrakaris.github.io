@@ -43,6 +43,7 @@
 			<ol>
 				<li><a href="#datarep">Data Representation</a></li>
 				<li><a href="#logic">Digital Logic</a></li>
+				<li><a href="#assembler">The Assembler</a></li>
 			</ol>
 		</div>
 
@@ -702,12 +703,81 @@
 				</div>
 				<div>
 					<p>
-						3-state logic is different from regular I/O logic circuits. It, as the name implies, introduces a third state, which is termed "<b>unconnected</b>". 
+						3-state logic is different from regular I/O logic circuits. It, as the name implies, introduces a third state, which is termed "<b>unconnected</b>". If the gate is enabled, the input is disconnected from the output. The gate is there to provide communication between subsystems, when we have a main bus, multiple systems connected to it, and we don't want collisions.
 					</p>
 
-					<img src="logic/tristate.svg" style="width: 180px; max-width: 100%">
+					<div class="columncontainer ctwo" style="grid-template-columns: 1fr 2fr;">
+						<div style="width: 180px">
+							<img src="logic/tristate.svg" style="max-width: 100%">
+							<p>
+								<i>Right: devices connected to a central hub (<a href="https://www.sciencedirect.com/topics/computer-science/tristate-buffer">ScienceDirect</a>)</i>
+							</p>
+						</div>
+						<div>
+							<img src="logic/threestate.gif" style="max-width: 100%">
+						</div>
+					</div>
+
+					<p>
+						A circuit gets messy if there are lots of parallel lines, so for busses there is a consise representation where the bus is represented as a thick line, with a slash through it and a number describing its width.
+					</p>
+					
+				</div>
+
+				<div>
+					<p class="ir">
+						Physical details.
+					</p>
+				</div>
+				<div>
+					<p>
+						Physical implementation of logic gates should always be specified, as logic gates <i>generally</i>, but not always, float high, active low. 
+					</p>
+
+					<p>
+						<i>Propagation delay</i>, the time it takes for a logic gate to work, needs to be taken into account. Often, these are measured on nanosecond scales. For example, a NOT gate may have a delay of 1.2 ns whilst an AND has a delay of 1.7 ns (illustrative purposes only).
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Logic ICs
+					</p>
+				</div>
+				<div>
+					<p>
+						Three acronyms:
+					</p>
+
+					<ul>
+						<li><b>PAL</b> Programmable Array Logic</li>
+						<li><b>PLA</b> Programmable Logic Array <i style="color: #FFF">People's Liberation Army</i></li>
+						<li><b>FPGA</b> Field Programmable Gate Array</li>
+					</ul>
+
+					<p>
+						Describing types of programmable logic circuits. A diagram for a PLA circuit is shown below.
+					</p>
+
+					<img src="logic/PLA.svg" style="max-width: 600px; width: 100%">
 				</div>
 			</div>
+
+		</div>
+
+		<div class="colourband" id="assembler">
+			<h2>The Assembler</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<li><a href="#ass-1">Microprocessors</a></li>
+			</ol>
+
+			<h2 id="#ass-1">Microprocessors</h2>
+
 
 		</div>
 		
