@@ -778,6 +778,167 @@
 
 			<h2 id="#ass-1">Microprocessors</h2>
 
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						CPU.
+					</p>
+				</div>
+				<div>
+					<p>
+						The CPU controls, and performs instructions. It is housed on a chip - the microprocessor.
+					</p>
+
+					<p>
+						The CPU will continuously perform an instruction cycle - the <b>FDE Cycle</b>. Note: one FDE cycle will take <i>several</i> clock ticks. 
+					</p>
+
+					<p>
+						It contains the following components:
+					</p>
+
+					<ul>
+						<li>ALU - does calculations</li>
+						<li>CU - decodes and handles logic</li>
+						<li>PC - memory address tracking</li>
+						<li>IR (Instruction Reg.), MAR (Mem. Address Reg.), and MDR/MBR (Mem. Data Reg.)</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						FDE Cycle.
+					</p>
+				</div>
+				<div>
+					<div class="columncontainer" style="grid-column-gap: 20px">
+						<div>
+							<p style="text-decoration: underline;">Fetch</p>
+							<ul>
+								<li>Taking an address from the PC</li>
+								<li>Retrieving instruction</li>
+								<li>Storing in IR</li>
+								<li>Incrmenting PC</li>
+							</ul>
+						</div>
+						<div>
+							<p style="text-decoration: underline;">Decode</p>
+							<ul>
+								<li>Decode operation</li>
+								<li>Read address to establish opcode type</li>
+							</ul>
+						</div>
+						<div>
+							<p style="text-decoration: underline;">Execute</p>
+							<ul>
+								<li>Execute instruction</li>
+								<li>This will depend on the instruction being executed</li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+
+				<div>
+					<p class="ir">
+						Worked Example - <b>the programmer's model</b>.
+					</p>
+				</div>
+				<div>
+					<p>
+						In 132, we take the 68008 (68K) architecture as our base architecture to work from. Do note that this is a specific architecture, and questions in the exam will not consider a specific architecture.
+					</p>
+
+					<p>
+						We have what's called a <i>programmer's model</i> to represent this, which is a commonly used abstraction. 
+					</p>
+
+					<img src="ass/programmers-model.svg" style="max-width: 100%">
+
+					<p>
+						Internal registers are 32 bits wide, internal data buses however are 16 bits wide (<i>which means to move 32 bits of data takes 2 clock cycles</i>). The 68008 has an 8 bit external data bus, and a 20 bit address bus.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						On Data.
+					</p>
+				</div>
+				<div>
+					<p>
+						The data registers \(D_0 - D_7\) are <i>on-chip</i>, meaning that they are very fast. (Technically, only 1 register is needed, but it is helpful to have more for intermediate steps).
+					</p>
+
+					<p>
+						This is a <i>16 bit</i> architecture, where the registers store the following data types (and lengths):
+					</p>
+
+					<ul>
+						<li>LONG - 32 bits</li>
+						<li>WORD - 16 bits</li>
+						<li>SHORT - 8 bits</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						The <b>S</b>tatus <b>R</b>egister (The CCR).
+					</p>
+				</div>
+				<div>
+					<p>
+						This register actially consists of 2 registers, and the bits stored here are <i>flags</i>. We don't usually touch the system flags, so they'll be omitted. The user flags will be explained below.
+					</p>
+
+					<img src="ass/sr.svg" style="width: 400px; max-width: 100% ">
+
+					<ul>
+						<li>C - Carry</li>
+						<li>V - Overflow</li>
+						<li>Z - Zero</li>
+						<li>N - Negative</li>
+						<li>X - Extend</li>
+					</ul>
+
+					<p>
+						Flags are used for control sequences in assembly.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						On Addresses.
+					</p>
+				</div>
+				<div>
+					<p>
+						Registers \(A_0 - A_6\) are <i>pointer registers</i> - they point to memory addresses.
+					</p>
+
+					<p>
+						\(A_7\) is the <i>system stack pointer</i>, which is a special pointer which can hold subroutine return addresses. Additionally, the stack pointer points to the next free location in the system stack (LiFo). 
+					</p>
+
+					<p>
+						Address operations do not alter the CCR. Only the ALU can incur changes in it. 
+					</p>
+
+					<P>
+						The PC is a 32 bit register that points to the next instruction. 
+					</P>
+				</div>
+
+				<div>
+					<p class="ir">
+						CPU Diagram.
+					</p>
+				</div>
+				<div>
+					<img src="ass/diagram.svg" style="max-width: 100%">
+				</div>
+			</div>
+
 
 		</div>
 		
