@@ -44,6 +44,7 @@
 				<li><a href="#datarep">Data Representation</a></li>
 				<li><a href="#logic">Digital Logic</a></li>
 				<li><a href="#assembler">The Assembler</a></li>
+				<li><a href="#memsys">Memory Systems</a></li>
 			</ol>
 
 			<i>Editor's note: Diagrams may be omitted if time does not permit. The University has fairly stringent IP regulations for university-made resources, so all diagrams are mine or sourced externally from publically available websites.</i>
@@ -780,7 +781,7 @@
 				<li><a href="#ass-3">Assembly</a></li>
 			</ol>
 
-			<h2 id="#ass-1">Microprocessors</h2>
+			<h2 id="ass-1">Microprocessors</h2>
 
 			<div class="cornell">
 				<div>
@@ -1015,7 +1016,7 @@
 				</div>
 			</div>
 
-			<h2 id="#ass-3">Assembly</h2>
+			<h2 id="ass-3">Assembly</h2>
 
 			<div class="cornell">
 				<div>
@@ -1043,11 +1044,10 @@
 					<p>
 						Or, for a bigger block of code;
 					</p>
-				</div>
-			</div>
 
-					
-<div class="codediv">	ORG 	$4B0    | starts at hex 4B0
+					<button class="collapsible">Expand...</button>
+					<div class="ccontent">
+	<div class="codediv">	ORG 	$4B0    | starts at hex 4B0
 		move.b 	#5, D0   	| load D0 with 5
 		add.b 	#$A, D0 	| Add 10 to D0
 		move.b  D0, ANS 	| Store result in ANS
@@ -1055,6 +1055,13 @@
 ANS:	DS.B 	1 			| allocate 1 byte of memory 
 					| and give name ANS
 </div>
+</div>
+				</div>
+			</div>
+
+
+					
+
 
 			<div class="cornell">
 				<div>
@@ -1098,9 +1105,187 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 					</p>
 				</div>
 			</div>
+		</div>
 
-			<h2></h2>
+		<div class="colourband" id="memsys">
+			<h2>Memory Systems</h2>
+		</div>
 
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<li><a href="#mem-1">Memory Heirarchy</a></li>
+			</ol>
+
+			<h2 id="mem-1">Memory Heirarchy</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						
+					</p>
+				</div>
+				<div>
+					<p>
+						There are many factors affecting memory technology
+					</p>
+
+					<ul>
+						<li>Frequency of access</li>
+						<li>Access time</li>
+						<li>Capacity</li>
+						<li>Cost per bit</li>
+					</ul>
+
+					<p>
+						Ideally we want to have low cost, high capacity, and high performance memory, but as the adage goes: "pick two" but sometimes even only one.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Memory Organisation.
+					</p>
+				</div>
+				<div>
+					<p>
+						Closest to the CPU we have low capacity, expensive, <i>very</i> fast memory, and furthest externally we have high capacity, low cost but slow memory. From the CPU,
+					</p>
+
+					<ul>
+						<li>Registers</li>
+						<li>Cache</li>
+						<li>Main Store <i>(RAM)</i></li>
+						<li>Magnetic Disk <i>(Sequential AM)</i></li>
+						<li>Optical Disk / Magnetic Tape</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Reasons for Organisation.
+					</p>
+				</div>
+				<div>
+					<p>
+						Mostly economics. Also, because of small loops, array optimisation, data structures, etc, memory access locations are rather predictable. 
+					</p>
+
+					<p>
+						<b>Temporal locality:</b> if a particular location is accessed, it is likely to be referenced again in the near future.
+					</p>
+
+					<p>
+						<b>Spatial locality:</b> if a location is referenced, it is likely that nearby locations will be referenced soon. 90% of locations are within +/- 2 KB of a referenced location. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Cache Memory.
+					</p>
+				</div>
+				<div>
+					<p>
+						Because of the 90% principle, we should probably store those 2 KB in cache. 
+					</p>
+
+					<p>
+						Cache is much much closer to the CPU than MS, and comes in 3 levels, (smallest, quickest) L1, L2, L3 (largest, slowest), and is on the CPU chip itself. They are all relatively small though to limit cost. 
+					</p>
+
+					<p>
+						If required data is found in cache, it is referred to as a <b>cache hit</b>. This is a big speed improvement from accessing MS. For reference, L1 cache is ~0.5 ns, L2 cache is ~7 ns, and MS is ~100 ns. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Moore's Law.
+					</p>
+				</div>
+				<div>
+					<p>
+						Summed: <i>"The number of transistors in a chip doubles every 18 months"</i>. Moore's law is now starting to be broken, as clock speeds have flattened, but now core counts are increasing. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Relevance to Cache?
+					</p>
+				</div>
+				<div>
+					<p>
+						We have cache because whilst memory <i>capacity</i> has increased á'la Moore's law, however memory <i>speed</i> hasn't really. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Cache Concepts.
+					</p>
+				</div>
+				<div>
+					<p>
+						Caching Read-Only data is fairly straightforward. Does not need to consider changing copies across memory hierarchy, relatively consistent. 
+					</p>
+
+					<p>
+						For caching writes, though, there are two main strategies.
+					</p>
+
+					<p>
+						<b>Write Through.</b> updates item in cache and write-through to update lower levels of the memory heirarchy.
+					</p>
+
+					<p>
+						<b>Write Back.</b> only update in cache and copy back to MS only when retiring. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Cache Misses and Performance. 
+					</p>
+				</div>
+				<div>
+					<p>
+						We measure the performance of a cache with <i>hit rate</i> (\(h\)) and <i>miss rate</i> (\(1-h\)), and hit rate is calculated as:
+
+						\[h = \frac{\# \textrm{ times words are in cache}}{\textrm{Total } \# \textrm{ memory references}}\]
+
+						There are many categories for misses to go in.
+					</p>
+
+					<ul>
+						<li>
+							<B>Compulsory.</B> which would occur regardless of cache size, such as the first access block for a new application.
+						</li>
+
+						<li>
+							<b>Capacity.</b> when cache is not hard enough for all blocks needed. 
+						</li>
+
+						<li>
+							<b>Conflict.</b> which occurs as a result of placement <i>strategy</i> of blocks which are not fully associative - blocks may be discarded and retrieved.
+						</li>
+
+						<li>
+							<b>Coherency.</b> which occur due to cache flushes in <i>multicore</i> systems.
+						</li>
+					</ul>
+
+					<p>
+						We can also measure performance with <i>average memory access time</i>, \(a\) defined as
+
+						\[a = h + mp\]
+
+						Where \(p\) is a given penalty constant. 
+					</p>
+				</div>
+			</div>
 		</div>
 		
 
