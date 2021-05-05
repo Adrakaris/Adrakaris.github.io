@@ -1036,13 +1036,71 @@
 						Assembly has a 1:1 conversion to binary machine code. Assembly is more readable. Standard format of <code>[label]: &lt;opcode&gt; &lt;operands&gt;&emsp;| comment</code>. For example:
 					</p>
 
-					<div class="codediv">START: move.b #5 D0 &emsp; | Load D0 with 5</div>
+					<p>
+						<code>START: move.b #5 D0 &emsp; | Load D0 with 5</code>
+					</p>
+
+					<p>
+						Or, for a bigger block of code;
+					</p>
+				</div>
+			</div>
 
 					
 <div class="codediv">	ORG 	$4B0    | starts at hex 4B0
-	move.b 	#5 D0   | load D0 with 5</div>
+		move.b 	#5, D0   	| load D0 with 5
+		add.b 	#$A, D0 	| Add 10 to D0
+		move.b  D0, ANS 	| Store result in ANS
+
+ANS:	DS.B 	1 			| allocate 1 byte of memory 
+					| and give name ANS
+</div>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						
+					</p>
+				</div>
+				<div>
+					<p>
+						There are three suffixes to move, <code>.b</code> byte, <code>.w</code> word, <code>.l</code> long.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Moving Longs.
+					</p>
+				</div>
+				<div>
+					<p>
+						Longs are twice as long as a bus can move. There are multiple methods to move longs. One good to know method is <b>big endian</b>, where the biggest bytes are moved first. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Addressing Modes.
+					</p>
+				</div>
+				<div>
+					<p>
+						Addressing modes tell what type of data operands are. They can be <i>constants, data structures,</i> or <i>variables</i>
+					</p>
+
+					<p>
+						The 68k has the addressing modes <code>DIR</code>ect or DATA, <code>IMM</code>ediate, <code>ABS</code>olute, <code>A</code>ddress <code>R</code>egister <code>I</code>mmediate, and <code>REL</code>ative. 
+					</p>
+
+					<p>
+						Direct points to a register; immediate means a constant; absolute means an explicit memory address <i>(shouldn't be used)</i>; ARI means accessing memory addresses stored in address registers; and relative takes an address and a constant, and accesses memory at that address + a constant offset. 
+					</p>
 				</div>
 			</div>
+
+			<h2></h2>
+
 		</div>
 		
 
