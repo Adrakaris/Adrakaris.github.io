@@ -79,28 +79,24 @@
                 <b>Overriding</b> means having two methods with the same name and parameters, one in the parent class, one in the child class. The child class method implementation overrides the parent class.
             </p>
 
-            <div class="codediv">
-                class Dog { <br>
-                &emsp;public void bark() { <br>
-                &emsp;&emsp;System.out.println("woof") <br>
-                &emsp;} <br>
-                } <br><br>
-                class BigDog extends Dog { <br>
-                &emsp;public void bark() { <br>
-                &emsp;&emsp;System.out.println("woof but louder") <br>
-                &emsp;} <br>
-                }
-
-            </div>
+<div class="codediv">class Dog { 
+    public void bark() { 
+        System.out.println("woof") 
+    } 
+} 
+class BigDog extends Dog { 
+    public void bark() { 
+        System.out.println("woof but louder") 
+    } 
+}</div>
 
             <p>
                 <b>Overloading</b> means having two methods in the same class with the same name, but different parameters. Either can be used depending on the method signature called.
             </p>
 
-            <div class="codediv">
-                public int max(int a, int b) {...}<br><br>
-                public double max(double a, double b) {...}
-            </div>
+<div class="codediv">public int max(int a, int b) {...}
+
+public double max(double a, double b) {...}</div>
         </div>
 
         <div id="generics" class="colourband">
