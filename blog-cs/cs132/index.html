@@ -3,7 +3,7 @@
 <head>
 	<title>CS132</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all" id="theme-link">  
 	<meta name="viewport" content="width=device-width" initial-scale=1.0> 
 	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
 	<script type="text/javascript" src="../../js/goback.js"></script>
@@ -16,14 +16,14 @@
 			<div class="parallax parsmaller">
 				<div class="columncontainer cthreeside">
 					<div class="column tinycolumn">
-						<a href="../../about.html" class="nav">About</a>
+						<button class="nav dark-light">Darkmode</button>
 						<!--<button onclick="goBack()" class="nav">Back</button>-->
 					</div>
 					<div class="column tinycolumn">
-						<a href="../../blog.html" class="nav">Back</a>
+						<a href="../../about.html" class="nav">About</a>
 					</div>
 					<div class="column tinycolumn">
-						<a href="./index.html" class="nav"><!--Link--></a>
+						<a href="../../blog.html" class="nav">Back</a>
 					</div>
 				</div>
 				<div class="cbox"> 		
@@ -45,6 +45,7 @@
 				<li><a href="#logic">Digital Logic</a></li>
 				<li><a href="#assembler">The Assembler</a></li>
 				<li><a href="#memsys">Memory Systems</a></li>
+				<li><a href="#iomech">IO Mechanisms</a></li>
 			</ol>
 
 			<i>Editor's note: Diagrams may be omitted if time does not permit. The University has fairly stringent IP regulations for university-made resources, so all diagrams are mine or sourced externally from publically available websites.</i>
@@ -1558,6 +1559,189 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				</div>
 			</div>
 		</div>
+
+		<div class="colourband" id="iomech">
+			<h2>IO Mechanisms</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<li><a href="#io-1">Memory-Mapped IO</a></li>
+				<li><a href="#io-2">Polling</a></li>
+				<li><a href="#io-3">Handshaking</a></li>
+			</ol>
+
+			<h2 id="io-1">Memory-Mapped IO</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Definition.
+					</p>
+				</div>
+				<div>
+					<p>
+						Same address system for both memory and IO devices. IO devices are assigned their own memory address.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Advantages.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>Simpler tham many alternatives</li>
+						<ul>
+							<li>Especially compared to <i>port-mapped IO</i>, which requires special extra instructions.</li>
+							<li>CPU Requires less logic</li>
+						</ul>
+						<li>Uses existing (general purpose and memory) instructions.</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Disadvantages.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>Requires giving up existing memory.</li>
+						<ul>
+							<li>This is not a concern with 64 bit addresses.</li>
+							<li>Is slightly more of a concern with 32 or 16 bit, or embedded systems.</li>
+						</ul>
+					</ul>
+				</div>
+			</div>
+
+			<h2 id="io-2">Polling</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						
+					</p>
+				</div>
+				<div>
+					<p>
+						<i>"Synchronising with IO devices"</i>
+					</p>
+
+					<p>
+						Most IO devices are much slower than the CPU. Creates a problem with syncing between them. 
+					</p>
+
+					<p>
+						Need methods to check for <i>Read - </i>is there data to be read, and <i>Write -</i> is device ready to accept data.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Busy Write.
+					</p>
+				</div>
+				<div>
+					<div class="columncontainer ctwo" style="column-width: 20px; grid-template-columns: 2fr 1fr;">
+						<div>
+							<ul>
+								<li>Constant checking</li>
+								<li>Kind of inefficient</li>
+								<li>Lots of redundant processing</li>
+							</ul>
+
+							<p>
+								Requires only simple hardware (support only for "ready"), and simple software (simple loop and check). 
+							</p>
+
+							<p>
+								However wastes CPU time, thus wasing power.
+							</p>
+						</div>
+						<div>
+							<img src="io/busywrite.svg" style="max-width: 100%">
+						</div>
+					</div>
+					
+				</div>
+
+				<div>
+					<p class="ir">
+						Interleaved Write.
+					</p>
+				</div>
+				<div>
+					<div class="columncontainer ctwo" style="column-width: 20px; grid-template-columns: 2fr 1fr;">
+						<div>
+							<ul>
+								<li>Almost always better method for general systems.</li>
+								<li>Unless it is a single task system - or critical systems.</li>
+							</ul>
+
+							<p>
+								Doesn't waste CPU time as much, but can lead to delayed response. 
+							</p>
+
+							<p>
+								Fine for some situations but really bad if there is a <i>hard</i> real time comtext (next imput <i>really depends</i> on previous one).
+							</p>
+						</div>
+						<div>
+							<img src="io/interwrite.svg" style="max-width: 100%">
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h2 id="io-3">Handshaking</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						
+					</p>
+				</div>
+				<div>
+					<p>
+						Ways of solving timing problems.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Types
+					</p>
+				</div>
+				<div class="columncontainer" style="grid-column-gap: 20px;">
+					<div>
+						<p style="text-align: center;">Unsynched</p>
+
+						<p>
+							<i>System just sends data to IO device.</i>
+						</p>
+					</div>
+					<div>
+						<p style="text-align: center;">Open-Ended</p>
+
+						<p>
+							<i>Systems sends data to IO device, then asserts its validity. IO device manages the rest.</i>
+						</p>
+					</div>
+					<div>
+						<p style="text-align: center;">Closed-loop <i>(proper one)</i></p>
+
+						<p>
+							<i>Like prior but IO device asserts readiness to receive.</i>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
 		
 
 		<footer>
@@ -1580,5 +1764,6 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 	</div>
 
 	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
 </body>
 </html>

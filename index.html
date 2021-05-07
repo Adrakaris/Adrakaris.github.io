@@ -3,7 +3,7 @@
 <head>
 	<title>Yijun Hu</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="./style/style.css" media="all">
+	<link rel="stylesheet" type="text/css" href="./style/style.css" media="all" id="theme-link">
 	<meta name="viewport" content="width=device-width" initial-scale=1.0>
 	<link rel="icon" type="image/png" href="./style/images/DragonIcon.png">
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -15,18 +15,18 @@
 			<div class="parallax home">
 				<div class="columncontainer cthreeside">
 					<div class="column tinycolumn">
+						<button class="nav dark-light">Darkmode</button>
+					</div>
+					<div class="column tinycolumn">
 						<a href="./about.html" class="nav">About</a>
 					</div>
 					<div class="column tinycolumn">
 						<a href="./blog.html" class="nav">Blog</a>
 					</div>
-					<div class="column tinycolumn">
-						<a href="./index.html" class="nav"><!--Showcase--></a>
-					</div>
 				</div>
 				<div class="cbox"> <!--id="cfixed">-->			
 					<!--<h1>Ad·rak·aris</h1>-->
-					<img src="style/images/name.svg" style="width: 128px; display: block; margin-left: auto; margin-right: auto; max-width: 30%; margin-top: auto; margin-bottom: auto;">
+					<img src="style/images/name.svg" class="except" style="width: 128px; display: block; margin-left: auto; margin-right: auto; max-width: 30%; margin-top: auto; margin-bottom: auto;">
 					<!--<div class="columncontainer cthreesmall">
 						<div class="column tinycolumn">
 							<a href="about/index.html" class="nav">About</a>
@@ -113,7 +113,7 @@
 		</footer>
 	</div>
 
-	
+	<script type="text/javascript" src="js/toggle-darklight.js"></script>
 
 </body>
 </html>

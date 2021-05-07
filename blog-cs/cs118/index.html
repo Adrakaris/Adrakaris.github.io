@@ -3,7 +3,7 @@
 <head>
     <title>CS118</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all" id="theme-link">  <!--TODO: CHANGE HREF-->
     <meta name="viewport" content="width=device-width" initial-scale=1.0>
     <link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
     <script type="text/javascript" src="../../js/goback.js"></script>
@@ -15,13 +15,15 @@
             <div class="parallax parsmaller">
                 <div class="columncontainer cthreeside">
                     <div class="column tinycolumn">
+                        <button class="nav dark-light">Darkmode</button>
+                        
+                    </div>
+                    <div class="column tinycolumn">
                         <a href="../../about.html" class="nav">About</a>
+                        
                     </div>
                     <div class="column tinycolumn">
                         <a href="../../blog.html" class="nav">Back</a>
-                    </div>
-                    <div class="column tinycolumn">
-                        <a href="./index.html" class="nav"><!--Link--></a>
                     </div>
                 </div>
                 <div class="cbox">      
@@ -146,5 +148,7 @@ public double max(double a, double b) {...}</div>
         </footer>
 
     </div>
+
+    <script type="text/javascript" src="../../js/toggle-darklight.js"></script>
 </body>
 </html>
