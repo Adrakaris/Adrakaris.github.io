@@ -596,6 +596,10 @@
 					<p>
 						A sequential logic circuit is a circuit whose outputs are <b>logical functions</b> of <b>inputs</b> and <b>current state</b>. It's often used to build memory. 
 					</p>
+
+					<p class="blue">
+						Thus, <b>Combinatorial</b> circuits are "time independent" circuits which do not depend on any previous inputs to generate an output, whereas <b>sequential</b> circuits are those which depend on clock cycles, and depend on both current and past inputs ("current state") to generate output.
+					</p>
 				</div>
 
 				<div>
@@ -696,6 +700,22 @@
 					<figure>
 						<img src="logic/4b-serial.gif" style="width: 100%; max-width: 440px; margin-left: auto; margin-right: auto; display: block;">
 						<figcaption><i>4 bit serial in parallel out register (<a href="https://www.electronics-tutorials.ws/sequential/seq_5.html">Electronics Hub</a>)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p class="ir">
+						N-bit counter
+					</p>
+				</div>
+				<div>
+					<p>
+						We can also make counters by stringing up flip flops.
+					</p>
+
+					<figure>
+						<img src="logic/count.png" style="width: 100%; max-width: 358px; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>4 bit counter (<a href="https://electronics.stackexchange.com/questions/223986/asynchronous-down-counter-using-d-flip-flops">found off stack exchange</a>)</i></figcaption>
 					</figure>
 				</div>
 
@@ -940,7 +960,7 @@
 					</p>
 				</div>
 				<div>
-					<img src="ass/diagram.svg" style="max-width: 100%">
+					<img src="ass/diagram.svg" style="max-width: 100%; display: block; margin-left: auto; margin-right: auto;">
 				</div>
 
 
@@ -1116,6 +1136,8 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 
 			<ol>
 				<li><a href="#mem-1">Memory Heirarchy</a></li>
+				<li><a href="#mem-2">Memory Cell Organisation</a></li>
+				<li><a href="#mem-3">Common Memory Components</a></li>
 			</ol>
 
 			<h2 id="mem-1">Memory Heirarchy</h2>
@@ -1283,6 +1305,255 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 						\[a = h + mp\]
 
 						Where \(p\) is a given penalty constant. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Multilevel Caches.
+					</p>
+				</div>
+				<div>
+					<p>
+						Basically, CPU ⇄ L1 Cache ⇄ L2 Cache ⇄ L3 Cache ⇄ MS. The L1 cache is the most often used, and is the quickest. 
+					</p>
+
+					<p>
+						Memory is often a bottleneck in speed - we want faster memory but faster memory is smaller, otherwise it would be egregiously expensive. We can't then use the fastest memory for everything, since large data sets may not be stored entirely. 
+					</p>
+
+					<p>
+						A solution to this is prefetching data to mask loading times, and reuse data as much as possible.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="mem-2">Memory Cell Organisation</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Main Store Memory.
+					</p>
+				</div>
+				<div>
+					<p>
+						We call main store RAM, but there are two types of RAM: <b>S</b>RAM (Static) and <B>D</B>RAM (Dynamic).
+					</p>
+
+					<p>
+						SRAM uses a single flip flop per bit, kinda like what we've seen before. DRAM however uses the presence or absence of charge in a capacitor. Since this charge leaks over time, a circuit is needed to refresh it periodically.
+					</p>
+
+					<p>
+						DRAM is cheaper in SRAM.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						SRAM.
+					</p>
+				</div>
+				<div>
+					<p>
+						A typical cell uses 4 <i>coupled</i> transistors for a stable logic gate. (There are 6 transistors in total). 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						DRAM.
+					</p>
+				</div>
+				<div>
+					<p>
+						Has a single transistor and capacitor, which makes it more dense-able.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Organisation.
+					</p>
+				</div>
+				<div>
+					<p>
+						The memory cell is the basic element of memory. It takes a \(R / \bar{W}\) input, a SELECT input, and a DATA I/O. When RW is low, data is accepted in from the DATA line, whilst when RW is high, the bit stored is sent on the data line. 
+					</p>
+
+					<p>
+						Memory cells are arranged in grids <i><a href="http://edu.cs.tut.fi/pd2006/lecture4/memarray.jpg">(Temp Figure)</a></i>, much like original core memory, with a decoder between the address bus and the memory setup. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Choices in Organisation.
+					</p>
+				</div>
+				<div>
+					<p>
+						If we have a 16 by 8 grid, then we have 128 cells, with 4 address lines and 8 data lines. 
+					</p>
+
+					<p>
+						A 1 kb device, could have a 128 by 8 grid arrangement, which would require 7 address pins, and in total 15 I/O pins including data, R/W, etc. 
+					</p>
+
+					<p>
+						A poor design would be something like 1024 by 1, since then you need a lot of address pins, and it is inefficient. We generally want to minimise memory cell space.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Minimising Space.
+					</p>
+				</div>
+				<div>
+					<p>
+						Naturally, the most cell for room is a square. However we can't just have one massive chonky square, but we can extend the idea with individual cells to organising arrays of cells. <!--Index Rows, Index COlumns, see minimising space in notes.-->
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Noise.
+					</p>
+				</div>
+				<div>
+					<p>
+						Noise is unwanted interference to our signal, and from a source to a destination there is always noise. This noise can come from all over, such as thermal noise, noise from electric components, etc. This is why in digital logic we have a forbidden zone, as mentioned in the first section. (Granted, if the noise gets too large this buffer also becomes useless.)
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Detecting single, isolated errors.
+					</p>
+				</div>
+				<div>
+					<p>
+						Single, isolated errors are considered to occur at random. There are several methods to detect and/or correct these isolated errors. We could:
+					</p>
+
+					<ul>
+						<li>Send a message three times and use majority rule. However this is very expensive and costly data wise.</li>
+						<li>If the probability of an error is very low, then the probability of two errors is even lower. So we could use <i>parity bitting</i>.</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Parity bits.
+					</p>
+				</div>
+				<div>
+					<p>
+						Note how ASCII is a 7 bit system, but is always displayed in blocks of 8 bits. This is because the 8th bit is a <b>parity</b> bit, which flips depending on how many 1s is in the binary string. 
+					</p>
+
+					<p>
+						<b>Even</b> parity tries to make the overall string have an even number of 1s: \(\underline{0}1000001\). <b>Odd parity</b> does the opposite: \(\underline{1}1000001\).
+					</p>
+
+					<p>
+						We can calulate parity bit in hardware via finite state machines. 
+					</p>
+
+					<figure>
+						<figcaption><i>(diagram pending)</i></figcaption>
+					</figure>
+
+					<p>
+						In hardware, it just so happens that we can XOR all the bits together with a "dummy" parity bit (0) to work out the result. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Error Checking with Parity.
+					</p>
+				</div>
+				<div>
+					<p>
+						When the receiver receives data, they
+					</p>
+
+					<ul>
+						<li>Compute a new parity bit from the message received (excluding original parity bit)</li>
+						<li>Compare new bit against original parity bit, if they are different then ask for retransmission</li>
+					</ul>
+
+					<p>
+						However, this doesn't work if there is more than one error. It is inadequate in dealing with <i>burst errors</i>. A solution to this is to compute a further checksum over numtiple bytes.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Dealing with Burst Errors. 
+					</p>
+				</div>
+				<div>
+					<p>
+						<div class="columncontainer ctwo" style="column-width: 20px; grid-template-columns: 2fr 1fr;">
+							<div>
+								<ul>
+									<li>Compute bit <i>column</i> parity checksum values - this comes out as 100 1001 (K)</li>
+									<li>Send "MessageK" instead of "Message"</li>
+									<li>This will detect all burst errors under 14 bits</li>
+									<li>However, it <b>cannot</b> detect an even number of errors in a single column</li>
+									<li>This can be extended to character parity as well as column parity</li>
+									<li>This has the ability to not only identify that there is an error, but also <i>what</i> and <i>where</i> the error is - so we can <b>correct</b> it.</li>
+								</ul>
+							</div>
+							<div>
+								<img src="mem/bursty.png" style="max-width: 100%; width: 257px;">
+							</div>
+						</div>
+					</p>
+				</div>
+			</div>
+
+			<h2 id="mem-3">Common Memory Components</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						HDDs.
+					</p>
+				</div>
+				<div>
+					<p>
+						HDDs are stacked magnetic disks, (double sided) which are read using a magnetic read/write head, which moves across the disk which spins. 
+					</p>
+
+					<p>
+						Data is stored on radial tracks, made up of sectors, with inter-sector gaps between them. On old disks, there are the same number of sectors on each radial track - meaning that the outer sectors are less space efficient, whereas newer disks will have more sectors as you near the outside of the disk. 
+					</p>
+
+					<p>
+						Performace issues can arise because of moving parts, which makes HDDs more likely to fail than SSDs. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Optical Disks.
+					</p>
+				</div>
+				<div>
+					<p>
+						Optical disks have a spiral track, and has a laser read head. Optical disks work off multiple methods - one of which is where the disk has pits and bumps, and the way laser light is reflected will encode information. Other disks (read/write ones) use dyes.
+					</p>
+
+					<p>
+						Data is often written more than once, which adds resilience to scratches and damage. 
+					</p>
+					<p>
+						Optical disks have a very slow seek time - 10x slower than HDDs. 
 					</p>
 				</div>
 			</div>
