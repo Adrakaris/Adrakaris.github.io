@@ -1571,6 +1571,7 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				<li><a href="#io-1">Memory-Mapped IO</a></li>
 				<li><a href="#io-2">Polling</a></li>
 				<li><a href="#io-3">Handshaking</a></li>
+				<li><a href="#io-4">Interrupts</a></li>
 			</ol>
 
 			<h2 id="io-1">Memory-Mapped IO</h2>
@@ -1739,6 +1740,214 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 							<i>Like prior but IO device asserts readiness to receive.</i>
 						</p>
 					</div>
+				</div>
+
+				<div>
+					<p class="ir">
+						Timing Diagram.
+					</p>
+				</div>
+				<div>
+					<p>
+						Below is an example timing diagram - the actual numbered timings are not important, just note the delay in timing.
+					</p>
+
+					<figure>
+						<img src="io/handshake.png" style="max-width: 352px; width: 100%; margin-left: auto; margin-right: auto; display: block;">
+						<figcaption><i>Handshaking Diagram (<a href="http://www.interfacebus.com/Glossary-of-Terms-Handshaking-Protocol.html">Electronic Engineering Dictionary</a>)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p class="ir">
+						Hardware Implementations.
+					</p>
+				</div>
+				<div>
+					<p>
+						Usually done with proprietary chips. Sometimes there is an interface chip, and the CPU interfaces with software, whilst the chip does the actual work. 
+					</p>
+				</div>
+			</div>
+
+			<h2 id="io-4">Interrupts</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Overview.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>Comes in two types, <code>IRQ</code> (interrupt request) and <code>NMI</code> (non-maskable interrupt.</li>
+						<li>Interrupts are <b>asynchronous</b>.</li>
+						<li>IRQ interrupts can be refused/ignored in code, based on the priority level it comes with. NMIs however, are <i>never</i> ignored.</li>
+						<li>However, if ignored enough, an IRQ <i>can</i> become an NMI.</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Effect.
+					</p>
+				</div>
+				<div>
+					<p>
+						When an interrupt is received in code, it immediately halts and performs the following steps in order:
+					</p>
+
+					<ol>
+						<li>Save state of working registers</li>
+						<li>Service the interrupt</li>
+						<li>Restore registers</li>
+					</ol>
+
+					<p>
+						Whereupon the program will continue where it left off. 
+					</p>
+
+					<p>
+						The CPU uses a stack structure to store and restore register states. 
+					</p>
+
+					<p>
+						(In more detail) Upon <b>receiving</b> an interrupt:
+					</p>
+
+					<ol>
+						<li>CPU completes the current instruction</li>
+						<li>Push current PC onto stack</li>
+						<li>Push Status Register(s) onto stack</li>
+						<li>Load to PC the address of the interrupt handler</li>
+						<li>Handle the interrupt handler</li>
+					</ol>
+
+					<p>
+						Upon <b>returning</b> from being interrupted:
+					</p>
+
+					<ol>
+						<li>Pop PC from stack <i>(Not necessarily the same stack!)</i></li>
+						<li>Pop SR(s)</li>
+						<li>Load PC with original address</li>
+					</ol>
+
+					<p>
+						(2, 3) in receiving and returning are termed <b>context switches</b>.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Nested Interrupt.
+					</p>
+				</div>
+				<div>
+					<p>
+						Interrupts can be nested within interrupts, but <i>only if</i> the nested interrupt is of a <i>higher</i> priority or an NMI. A lower priority interrupt can and will get masked away. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Interrupts for IO. 
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>Switches can be connected to IRQs.</li>
+						<li>Hard drives can interruppt when requested data is ready to send.</li>
+						<li>A timer can generate an IRQ at a set time interval.</li>
+						<li>The printer can send an IRQ when ready to receive next character to print.</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Advantages (of Interrupts).
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>Fast response</li>
+						<li>No wasted CPU time / power</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Disadvantages.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>All data transfers are controlled by the CPU</li>
+						<li>Interrupts are more complex both hardware and software wise</li>
+					</ul>
+
+					<p>
+						There is, unfortunately, no best solution.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="io-5">Direct Memory Access</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						Overview.
+					</p>
+				</div>
+				<div>
+					<p>
+						Direct Memory Access is often abbreviated to <b>DMA</b>.
+					</p>
+
+					<ul>
+						<li>Often, the CPU is the bottleneck of all IO. A DMA controller (DMAC) is used where a large amount of data needs to be transferred at high speed.</li>
+						<li>It is specialised and optimised for this, whereas the CPU is general purpose.</li>
+						<li>The control of the system bus is relinquished to the DMAC when required.</li>
+						<li>DMA IO can be 10 times faster.</li>
+					</ul>
+
+				</div>
+
+				<div>
+					<p class="ir">
+						How It Works.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>DMA transfer request from IO</li>
+						<li>DMA passes to CPU</li>
+						<li>CPU initialises DMAC:</li>
+						<ul>
+							<li>Whether In/Out?</li>
+							<li>The start ADRS sent to DMAC ADRS register</li>
+							<li>The number of words to the count register</li>
+							<li>DMAC is enabled</li>
+						</ul>
+						<li>DMAC requests the use of system buses</li>
+						<li>CPU responds with acknowledgement when ready</li>
+					</ul>
+
+					<p>
+						There are two modes of operation.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Cycle Stealing.
+					</p>
+				</div>
+				<div>
+					<p>
+						
+					</p>
 				</div>
 			</div>
 		</div>
