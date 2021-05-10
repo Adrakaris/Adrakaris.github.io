@@ -1,5 +1,7 @@
-# Adrakaris
+# Yijun Hu's Website
 
-## The Spring of the Earth
+This is a website made by me. Hello. 
 
-Website.
+It has lecture notes on there too for revision purposes. Feel free to open a PR or contact me directly if you feel the notes are wrong somewhere. 
+
+*All rights reserved - explicit permission is given for distribution of revision notes under [CC ShareAlike](https://creativecommons.org/licenses/by-sa/4.0/) guidelines.*

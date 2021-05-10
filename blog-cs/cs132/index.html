@@ -1975,6 +1975,7 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 			<ol>
 				<li><a href="#arc-1">Microprocessor Organisation</a></li>
 				<li><a href="#arc-2">Instructions and Control Symbols</a></li>
+				<li><a href="#arc-3">The Control Unit</a></li>
 			</ol>
 
 			<h2 class="arc-1">Microprocessor Organisation</h2>
@@ -2102,6 +2103,111 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				<div>
 					<p>
 						Shows the clock step the microinstruction is performed on. Several microinstructions are able to be performed on the same clock tick (if they don't overlap / interfere), under <i>reasonable</i> step timing setups. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Micro and Macro Instructions.
+					</p>
+				</div>
+				<div>
+					<p>
+						Note in the implementation the opcodes are divided up into arithmetic and memory related.
+					</p>
+
+					<p>
+						The FETCH macroinstruction is performed before every "doing" instruction.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						PATP 6.
+					</p>
+				</div>
+				<div>
+					<p>
+						<a href="patp/6.pdf">PDF.</a> A trace table showing the effects of all microinstructions. Here a macro fetch is 6 microinstructions. 
+					</p>
+				</div>
+			</div>
+
+			<h2 id="arc-3">The Control Unit</h2>
+
+			<div class="cornell">
+				<div>
+					<p class="ir">
+						Points.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>The CU takes several inputs</li>
+						<ul>
+							<li>An opcode from the IR</li>
+							<li>Values from the CCR</li>
+							<li>Stream of clock pulses</li>
+						</ul>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						PATP 5.
+					</p>
+				</div>
+				<div>
+					<p>
+						<a href="patp/5.pdf">PDF.</a> Shows microoperations for ALL macrooperations. 
+					</p>
+
+					<button type="button" class="collapsible">PATP Timing Assumptions...</button>
+					<div class="ccontent">
+						<ol>
+							<li>Enables are <i>level</i> triggered</li>
+							<li>Clocks are <i>falling</i> triggered</li>
+							<li>Output can be enabled onto bus and clocked elsewhere</li>
+							<li>ALU has values P, Q loaded at start, ALUReg can be clocked at cycle end</li>
+							<li>For MS: If MAR loaded during 1 cycle, R, W, EMS can be used next cycle</li>
+						</ol>
+					</div>
+				</div>
+
+				<div>
+					<p class="ir">
+						PATP 7.
+					</p>
+				</div>
+				<div>
+					<p>
+						<a href="patp/7.pdf">PDF.</a> The microoperations and states can be treated as a truth table.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Analysing Control Signals.
+					</p>
+				</div>
+				<div>
+					<p>
+						An effort to determine the number of control steps / clock cycles of an instruction. We want to minimise the number of control steps taken. A fetch in PATP takes 4 and all others take 2.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Design Approaches.
+					</p>
+				</div>
+				<div>
+					<p>
+						A <b>hardwired / random logic</b> approach is treating the CU like a massive combinatorial circuit and using a sequencer to regulate clock ticks.  
+					</p>
+
+					<p>
+						A <b>microprogrammed</b> approach stores every primitive microinstruction as a microprogram, which is stored in a ROM called microprogram memory. 
 					</p>
 				</div>
 			</div>
