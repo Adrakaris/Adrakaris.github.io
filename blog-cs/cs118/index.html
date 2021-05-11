@@ -4,6 +4,7 @@
     <title>CS118</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../../style/style.css" media="all" id="theme-link">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
     <meta name="viewport" content="width=device-width" initial-scale=1.0>
     <link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
     <script type="text/javascript" src="../../js/goback.js"></script>
@@ -81,7 +82,7 @@
                 <b>Overriding</b> means having two methods with the same name and parameters, one in the parent class, one in the child class. The child class method implementation overrides the parent class.
             </p>
 
-<div class="codediv">class Dog { 
+<pre><code class="lang-java">class Dog { 
     public void bark() { 
         System.out.println("woof") 
     } 
@@ -90,15 +91,15 @@ class BigDog extends Dog {
     public void bark() { 
         System.out.println("woof but louder") 
     } 
-}</div>
+}</code></pre>
 
             <p>
                 <b>Overloading</b> means having two methods in the same class with the same name, but different parameters. Either can be used depending on the method signature called.
             </p>
 
-<div class="codediv">public int max(int a, int b) {...}
+<pre><code class="lang-java">public int max(int a, int b) {...}
 
-public double max(double a, double b) {...}</div>
+public double max(double a, double b) {...}</code></pre>
         </div>
 
         <div id="generics" class="colourband">
@@ -150,5 +151,6 @@ public double max(double a, double b) {...}</div>
     </div>
 
     <script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+    <script type="text/javascript" src="../../js/prism.js"></script>
 </body>
 </html>
