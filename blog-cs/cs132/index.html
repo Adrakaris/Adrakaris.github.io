@@ -1976,6 +1976,7 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				<li><a href="#arc-1">Microprocessor Organisation</a></li>
 				<li><a href="#arc-2">Instructions and Control Symbols</a></li>
 				<li><a href="#arc-3">The Control Unit</a></li>
+				<li><a href="#arc-4">RISC and CISC</a></li>
 			</ol>
 
 			<h2 class="arc-1">Microprocessor Organisation</h2>
@@ -2128,7 +2129,7 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				</div>
 				<div>
 					<p>
-						<a href="patp/6.pdf">PDF.</a> A trace table showing the effects of all microinstructions. Here a macro fetch is 6 microinstructions. 
+						<a href="patp/6.pdf" class="text">PDF.</a> A trace table showing the effects of all microinstructions. Here a macro fetch is 6 microinstructions. 
 					</p>
 				</div>
 			</div>
@@ -2159,7 +2160,7 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				</div>
 				<div>
 					<p>
-						<a href="patp/5.pdf">PDF.</a> Shows microoperations for ALL macrooperations. 
+						<a href="patp/5.pdf" class="text">PDF.</a> Shows microoperations for ALL macrooperations. 
 					</p>
 
 					<button type="button" class="collapsible">PATP Timing Assumptions...</button>
@@ -2181,7 +2182,7 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				</div>
 				<div>
 					<p>
-						<a href="patp/7.pdf">PDF.</a> The microoperations and states can be treated as a truth table.
+						<a href="patp/7.pdf" class="text">PDF.</a> The microoperations and states can be treated as a truth table.
 					</p>
 				</div>
 
@@ -2203,14 +2204,180 @@ ANS:	DS.B 	1 			| allocate 1 byte of memory
 				</div>
 				<div>
 					<p>
-						A <b>hardwired / random logic</b> approach is treating the CU like a massive combinatorial circuit and using a sequencer to regulate clock ticks.  
+						A <b>hardwired / random logic</b> approach is treating the CU like a massive combinatorial circuit and using a <i>sequencer</i> to regulate clock ticks.  
 					</p>
 
 					<p>
 						A <b>microprogrammed</b> approach stores every primitive microinstruction as a microprogram, which is stored in a ROM called microprogram memory. 
 					</p>
 				</div>
+
+				<div>
+					<p class="ir">
+						PATP 8.
+					</p>
+				</div>
+				<div>
+					<p>
+						<a href="patp/8.pdf" class="text">PDF.</a> Describes the signal timings of a random logic control signal generator.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						PATP 9.
+					</p>
+				</div>
+				<div>
+					<p>
+						<a href="patp/9.pdf" class="text">PDF.</a> Shows the CU diagram with the random control signal generator (RCSG). 
+					</p>
+
+					<p>
+						The RCSG takes "rounds" from sequencer, has a path for each instruction. Gives the signals to run the fetch and executes. Also has a mechanism to reset sequence for moving onto new stage.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Advantages and Disadvantages.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>(+) VERY FAST</li>
+						<li>(-) Complex hardware</li>
+						<li>(-) Extremely inflexible, not expandable</li>
+						<li>(-) Long design time (because of complex)</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						PATP 10.
+					</p>
+				</div>
+				<div>
+					<p>
+						<a href="patp/10.pdf" class="text">PDF.</a> Shows a microprogrammed CU. It has a list of routines in ROM to follow. 
+					</p>
+
+					<p>
+						It's much more complex in terms of layout, and is basically replicationg a <i>micro</i>-FDE cycle. 
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Terminology.
+					</p>
+				</div>
+				<div>
+					<p class="blue">
+						The <b>Microprogram Routine</b> describes how to generate CU outpits for 1 macro-instruction.
+					</p>
+
+					<p class="blue">
+						A <b>Microaddress</b> is an address location within microprogram memory.
+					</p>
+
+					<p class="blue">
+						A <b>MicroPC</b> is an internal microprogram counter.
+					</p>
+
+					<p class="blue">
+						A <b>MicroIR</b> is the internal instruction register for the current microinstruction. 
+					</p>
+
+					<p class="blue">
+						<b>Microinstructions</b> hold CU output values and other felds to control microprogram flow.
+					</p>
+
+					<p>
+						It's turtles all the way down.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Note on End of Fetch.
+					</p>
+				</div>
+				<div>
+					<p>
+						Can lead to different cases since different execute opcodes. Conditionals because of special cases.
+					</p>
+				</div>
+
+				<div>
+					<p class="ir">
+						Advantages and Disadvantages.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>(+) Easier to design and implement</li>
+						<li>(+) Very flexible</li>
+						<li>(+) Can be reprogrammed for new instructions</li>
+						<li>(-) Slower than hardwired implementation.</li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="ir">
+						Addons.
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>We can add more memory \(\longrightarrow\) bigger operand size,</li>
+						<li>Add more instructions \(\longrightarrow\) bigger opcode size,</li>
+						<li>Add more registers and address registers,</li>
+						<li>Plus many other things which add to complexity.</li>
+					</ul>
+
+					<p>
+						<i>
+							Note: the PATP is turing complete. Just like how <a href="https://en.wikipedia.org/wiki/Brainfuck" class="text">Brainfuck</a> or <a href="https://esolangs.org/wiki/Subleq#:~:text=Subleq%20refers%20to%20a%20kind,%22%2C%20conventionally%20abbreviated%20to%20subleq.">SUBLEQ</a> is turing complete. 
+						</i>
+					</p>
+				</div>
 			</div>
+
+			<h2 id="arc-4">RISC and CISC</h2>
+
+			<div class="cornell">
+				<div>
+					<p style="font-style: italic; text-align: right;">
+						
+					</p>
+				</div>
+				<div>
+					<p class="blue">
+						<b>RISC</b> stands for Reduced Instruction Set Computer, whilst <b>CISC</b> stands for Complex Instruction Set Computer.
+					</p>
+
+					<p>
+						RISC as an idea was released in the 80s, with the aim to kind of "reset focus" since at the time instruction sets were growing very fat. <i>(Don't write this verbatim in any exam)</i>
+					</p>
+
+					<p>
+						Though instruction sets were getting bigger, data movement, flow control, and arithmetic operations still dominated use frequency, but they weren't necessarily being optimised for - the idea with RISC is to simplify and reduce the instruction set to optimise for these essential operations. 
+					</p>
+
+					<p>
+						ARM is the largest manufacturer of RISC processors. They have less instructions, but are more efficient and integrated.
+					</p>
+
+					<p>
+						Intel makes CISC processors, and to ensure backwards compatibility kind of have to. However, they have also engineered their processors to have a "core" optimised RISC system, with other instructions stacked on top, in a hybrid system.
+					</p>
+				</div>
+			</div>
+
+			<p>
+				<i>Editor's Note:</i> Multicore processing is omitted since it is not examined. 
+			</p>
 		</div>
 		
 
