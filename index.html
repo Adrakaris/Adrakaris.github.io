@@ -13,15 +13,20 @@
 	<div class="hidden">
 		<header>
 			<div class="parallax home">
-				<div class="columncontainer cthreeside">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 9fr 1fr; grid-column-gap: 10px; padding: 5px; ">
 					<div class="column tinycolumn">
-						<button class="nav dark-light">Darkmode</button>
-					</div>
-					<div class="column tinycolumn">
-						<a href="./about.html" class="nav">About</a>
+						<a href="./index.html" class="nav">Home</a>
 					</div>
 					<div class="column tinycolumn">
 						<a href="./blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="./about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
 					</div>
 				</div>
 				<div class="cbox"> <!--id="cfixed">-->			
@@ -62,6 +67,10 @@
 			<p>
 				The <a href="blog.html" class="text">Blog</a> contains notes for university modules (of course, written up using \( \LaTeX \) where required), as well as some of my origami designs, and I plan to slowly add to it as and when I can.
 			</p>
+
+			<p>
+				I also have a store for art - you can buy the background image of this site as a poster! And other things, of course.
+			</p>
 		</div>
 		
 
@@ -80,16 +89,31 @@
 				</div>-->
 				<div class="column">
 					<h3>Github</h3>
-					<img src="./style/images/gh.png" alt="Github Profile">
+					
 					<div class="buttonwrapper">
-						<a href="https://github.com/Adrakaris">Coding Projects</a>
+						<a href="https://github.com/Adrakaris"><img src="./style/images/gh.png" alt="Github Profile"></a>
 					</div>
+
 				</div>
 				<div class="column">
 					<h3>DCS Site</h3>
-					<img src="./style/images/wwcs.png" alt="Warwick DCS Building">
+					
 					<div class="buttonwrapper">
-						<a href="https://www.dcs.warwick.ac.uk/~u2009169/index.html">Computer Science Site</a>
+						<a href="https://www.dcs.warwick.ac.uk/~u2009169/index.html"><img src="./style/images/wwcs.png" alt="Warwick DCS Building"></a>
+					</div>
+				</div>
+
+				<div class="column">
+					<h3>Blog</h3>
+					<div class="buttonwrapper">
+						<a href="blog.html"><img src="./style/images/blogplop.png" alt="Blog" class="except"></a>
+					</div>					
+				</div>
+
+				<div class="column">
+					<h3>Art Store</h3>
+					<div class="buttonwrapper">
+						<a href="https://www.redbubble.com/people/Adrakaris/shop" ><img src="./style/images/redbub.png" alt="Redbubble Store" class="except"></a>
 					</div>
 				</div>
 			</div>
