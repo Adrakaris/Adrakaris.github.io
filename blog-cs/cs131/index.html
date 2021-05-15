@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS131</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all" id="theme-link">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="./style/prism.css" media="all">
+	<meta name="viewport" content="width=device-wi./..dth" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 9fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+                        <a href="../../index.html" class="nav">Home</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="../../blog.html" class="nav">Back</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="../../about.html" class="nav">About</a>
+                    </div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS131</h1>
+					<p class="subheading">Mathematics For Computer Scientists 2</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			<ol>
+				<li><a href="#zrc">Number Systems</a></li>
+			</ol>
+
+			<p>
+				Yulia has already provided very comprehensive notes on all topics of 131, so these will summarise those and only include the most important points. Said notes are linked to when required (you will need an ITS account). 
+			</p>
+		</div>
+
+
+		<div class="colourband" id="zrc">
+			<h2>Number Systems</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Introduction</h2>
+			<ol>
+				<li><a href="#zrc-1">Integers</a></li>
+				<li><a href="#zrc-2">Reals</a></li>
+				<li><a href="#zrc-3">Complex Numbers</a></li>
+			</ol>
+
+			<h2 id="zrc-1">Integers</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part1/note1.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				Integers, denoted \(\mathbb{Z}\). We use a denary/decimal (base-10) system with 10 digits, but there is also binary, which uses 2 digits.
+			</p>
+
+			<p>
+				Subscripts are used to denote base; \(10011_{\textrm{two}} = 19_{\textrm{ten}}\) or \(10011_{2} = 19_{10}\).
+			</p>
+
+			<p class="side">
+				<b><i>Decimal to Binary Conversion Alg.</i></b> Divide decimal number repeatedly by 2 to get remainders \(r_0, r_1, r_2,...r_n\). The binary representation is \(r_{n}r_{n-1}...r_{1}r_0\) (note the switched order).
+			</p>
+
+			<button class="collapsible">Problems...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Q.</i></b> Convert \(244_{10}\) to binary.
+				</p>
+
+				<p>
+					<b><i>Q.</i></b> The <i>hexadecimal</i> system is base 16, with digits 0123456789ABCDEF. Convert \(21BAD_{16}\) to decimal.
+				</p>
+			</div>
+
+
+			<p class="side">
+				<b><i>Generic Base Conversion Alg.</i></b> Let us have an integer \(b\). To convert a base 10 integer to a base \(b\) integer, divide repeatedly by \(b\) to get remainders \(r_0, r_1,...r_n\), thus the base \(b\) representation would be \(r_{n}r_{n-1}...r_{1}r_0\) (note the switched order).
+			</p>
+
+			<p class="side">
+				<b><i>Division Algorithm.</i></b> If \(a, b \in \mathbb{Z}\) with \(b \neq 0\), then there exist unique \(q, r \in \mathbb{Z}\) with
+				\begin{align}
+				&a = qb + r, &0 \leq r < |b|
+				\end{align}
+				Where \(q\) is the <b>quotient</b> and \(r\) the <b>remainder</b>.
+			</p>
+
+			<p>
+				If \(0 < b < a\) then an algorithm to compute \(q, r\) would be to iteratively compute \(a - b, a - 2b, ..., a-nb, a - (n-1)b\) where \(a - (n-1)b < 0\) is the first strictly negative number. Then \(q = n, r = a-nb\).
+			</p>
+
+			<p>
+				If \(a = qb\) (all integers) then \(b\) <i>divides</i> \(a\). The greatest common denominator is denoted \(\gcd(a, b)\).
+			</p>
+
+			<p>
+				\(\gcd(0, n) = n \; \forall n \in \mathbb{Z}^+\)
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>EUCLIDEAN ALGORITHM.</i></b> Let \(r_1, r_0\) be integers s.t. \(0 < r_1 < r_0\).
+				</p>
+
+				<ol>
+					<li>
+						For each \(i\), define \(r_{i+1}\) as the remainder of \(\frac{r_{i-1}}{r_i}\). <br>The <b>last</b> non-zero remainder \(r_N = \gcd(r_1, r_0)\).
+					</li>
+					<br>
+					<li>
+
+						\(r_{i-1} = q_i r_i + r_{i+1} \; (1 \leq 1 \leq N\) can be used to write this last nonzero remainder, thus
+						\[\gcd(r_1, r_0) = xr_1 + yr_0 \textrm{ for some integers } x, y.\]
+					</li>
+				</ol>
+			</div>
+			<br>
+			<button class="collapsible">Problems...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Q.</i></b> Find the greatest common divisor of 16579 and 30031, and determine integers \(x\) and \(y\) such that \(\gcd(16579, 30031) = x16579 + y30031\).
+
+				</p>
+			</div>
+
+			<p>
+				Of Modular Arithmetic, two integers \(a, b\) are congruent modulo \(n\) (another integer) if \(a-b = kn \; k \in \mathbb{Z}\), i.e. \(a = b + kn\). Written \(a \equiv b \mod n\) or \(a \stackrel{\mod{}}{\equiv} b\).
+			</p>
+
+			<p>
+				Two congruencies with the same mod \(n\) can be added, subtracted, multiplied just like normal equations. 
+			</p>
+
+			<p>
+				In a computer, for negative integers we use two's complement, see <a href="../cs132/index.html#datarep" class="text">here</a>.
+			</p>
+
+			<p>
+				We are also working with a system modulo \(2^N\) where \(N\) is the number of bits. Thus the 32 bit limit of \([2^{31}, 2^{31} - 1]\) which is \(2^{32}\) integers.
+			</p>
+
+			<h2 id="zrc-2">Reals</h2>
+
+			<p>
+				Reals are denoted \(\mathbb{R}\), and have a subset \(\mathbb{Q}\) which are numbers definable as \(\frac{m}{n}, \; m, n \in \mathbb{Z}, \; n \neq 0\). We can always pick rationals such that \(n \geq 1\) and \(\gcd(m, n) = 1\). Every nonzero rational has an inverse. 
+			</p>
+
+			<p>
+				Reals which are the solutions of polynomial equations are called <b>algebraic</b>, an example would be \(\sqrt{2}\) (being the solution of \(x^2 = 2\)).
+			</p>
+
+			<p>
+				Those which are not are called <b>transcendental</b>, such as \(\pi, e\).
+			</p>
+
+			<p>
+				A real number can be thought of as a sequence of rational numbers, which converges to said real. e.g. \(\pi\) is the limit of \(3, 3.1, 3.14, 3.141, 3.1415...\)
+			</p>
+
+			<p>
+				All properties of real numbers come from <b>13 axioms</b>, of which 1-8 are <b>algebraic</b> properties, and 9-12 are <b>order properties</b>.
+			</p>
+
+			<div class="blue">
+				<p>
+				For all \(x, y, z \in \mathbb{R}\):
+			</p>
+
+			<ol>
+				<li><b>Commutativity</b>: \(x + y = y + x, \;  xy = yx\)</li>
+				<li><b>Associativity</b>: \(x + (y + z) = (x + y) + z\) (same with multiplication)</li>
+				<li>Multiply <b>distributes</b> over add: \(x(y + z) = xy + xz\)</li>
+				<li><b>Additive Identity</b>: \(\exists 0 \in \mathbb{R }: x + 0 = x\)</li>
+				<li><b>Multiplicative identity</b>: \(\exists 1 \in \mathbb{R} : x \cdot 1 = x\)</li>
+				<li>Multiplicative and additive identites are <b>distinct</b>: \(1 \neq 0\)</li>
+				<li>Every element has an <b>additive inverse</b>: \(\exists (-x) \in \mathbb{R}: x + (-x) = 0\)</li>
+				<li>Every \(\neq 0\) element has a <b>mul. inverse</b>: \(x \neq 0 \implies \exists x^{-1} \in \mathbb{R} : x \cdot x^{-1} = 1\)</li>
+				<li><b>Transitivity</b> of ordering: \(x < y \land y < z \implies x < z\)</li>
+				<li><b>Trichotomy Law</b>: only <b>one</b> of \(x < y,\; x > y,\; x = y\)</li>
+				<li><b>Order preserved</b> under add: \(x < y \implies x + z < y + z\)</li>
+				<li><b>Order preserved</b> under mul: \(0 < z \land x < y \implies xz < yz\)</li>
+				<li><b>Completeness</b>: <i>Every non-empty subset of \(\mathbb{R}\) that is bounded above has a least upper bound</i></li>
+			</ol>
+			</div>
+
+			
+
+			<p class="side">
+				<b><i>Excersise.</i></b> Show that \(0 < 1 \).
+			</p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					We first need a lemma.
+				</p>
+
+				<p>
+					<b><i>Lemma 1.</i></b> \(\forall x ,\; x^2 \geq 0\).
+				</p>
+
+				<p>
+					<b><i>Proof of Lemma 1.</i></b> Consider the cases where \(x < 0\) and \(x \geq 0\).
+				</p>
+
+				<p>
+					When \(x \geq 0\),
+					\begin{align}
+					x \geq 0 &\implies x^2 \geq 0 \cdot 0 \textrm{ by ax. 12}\\
+					&\implies \geq 0.
+					\end{align}
+				</p>
+
+				<p>
+					When \(x < 0\), \(-x \geq 0\), so:
+					\begin{align}
+					x^2 = x \cdot x &= (-x)(-x) \\
+					&\geq 0 \cdot 0 \textrm{ by prev case}\\
+					&\geq 0. &\triangleright
+					\end{align}
+				</p>
+
+				<p>
+					Then, we can prove. <br>
+					<b><i>Proof.</i></b>
+					\begin{align}
+					1^2 &\geq 0 \textrm{ by lemma}\\
+					\implies 1 &\geq 0\\
+					1 &\neq 0 \textrm{ by ax. 6 } \therefore 1 > 0.
+					\end{align}
+					$$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<p class="side">
+				<b><i>Excersise.</i></b> Show that \(a > 0 \implies \frac{1}{a} > 0\).
+			</p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> Let \(a > 0\)
+					\begin{align}
+					\textrm{If } \frac{1}{a} &= 0 \\
+					\implies 1 &= a(\frac{1}{a}) = a \cdot 0 = 0 \\
+					&\textrm{which is a contradiction to ax. 6.}
+					\end{align}
+
+					\begin{align}
+					\textrm{If } \frac{1}{a} &< 0 \\
+					\implies a (\frac{1}{a}) &< a \cdot 0 \textrm{ by ax. 12} \\
+					\implies 1 &= 0 \textrm{ which is a contradiction.}
+					\end{align}
+
+					By axiom 10 we get that \(\frac{1}{a} > 0\). $$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<p></p>
+			<button class="collapsible">More Problems...</button>
+			<div class="ccontent">
+				<p>
+					<b>Q.</b> Show if \(a, b > 0\) then \(a < b \Longleftrightarrow a^2 < b^2\). <i>Note: you have to prove both ways.</i>
+				</p>
+
+				<p>
+					<b>Q.</b> Show if \(a < b \land c < 0 \implies ac > bc\).
+				</p>
+			</div>
+
+			<p></p>
+
+			<button class="collapsible">Intervals, n<sup>th</sup> roots and Modulus/Abs basics...</button>
+			<div class="ccontent">
+				<p>
+					<b>Intervals</b> are ranges represented by brackets. \((a, b)\) ranges are called <b>open</b>, \([a, b), \; (a, b]\) are called <b>semi-open</b> or <b>semi-closed</b> and \([a, b]\) ranges are called <b>closed</b>. \(\infty\) is not a real number and cannot appear in closed ranges.
+				</p>
+
+				<p>
+					Let \(n \in \mathbb{Z}^+\). For any \(a \in \mathbb{R}_{\geq 0}, \; \exists! x \geq 0\) with \(x^n = a\). This \(x\) is the <b>\(n^{th}\) root</b> of \(a\), \(a^{\frac{1}{n}}\). For any positive real \(a, b\) and \(n \in \mathbb{Z}^+\) we have
+
+					\[a < b \Longleftrightarrow a^{\frac{1}{n}} < b^{\frac{1}{n}}\]
+
+					There's also of course \(a^\frac{1}{2} \equiv \sqrt{a}\) and all that comes with it.
+				</p>
+
+				<p>
+					The <b>Modulus or Absolute</b> of \(x\), \(|x|\) is basically \(x\) but without negatives. \(|x| = \sqrt{x^2} \; \forall x \in \mathbb{R}\).
+				</p>
+			</div>
+			<p></p>
+
+			<div class="blue">
+				<p>
+				There are 4 properties of modulus:
+			</p>
+
+			<ol>
+				<li>\(-|x| \geq x \geq |x|\)</li>
+				<li>\(|xy| = |x||y|\)</li>
+				<li>\(|x + y| \geq |x|+|y|\)</li>
+				<li>\(||x| - |y|| \leq |x - y|\)</li>
+			</ol>
+			</div>
+
+			
+
+			<p>
+				For a set of real numbers \(S\)
+			</p>
+
+			<ul>
+				<li>\(u\) is an <b>upper bound</b> of S if \(u \geq x \forall x \in S\)</li>
+				<li>\(U\) is the <b>least upper bound (supremum)</b> of S if \(U\) is an UB of S and \(U \leq u \forall u\)</li>
+				<li>\(l\) is a <b>lower bound</b> of S if \(l \leq x \forall x \in S\)</li>
+				<li>\(L\) is the <b>greatest lower bound (infimum)</b> of S if \(L\) is a LB of S and \(L \geq l \forall l\)</li>
+			</ul>
+
+			<img src="bounds.svg" style="max-width: 100%; width: 600px">
+
+			<p>
+				The <i>completeness axiom</i> suggests that for every set which has a lower bound has a greatest lower bound. 
+			</p>
+
+			<div class="blue">
+				<p>
+					<b>Important consequences of the completeness axiom:</b>
+				</p>
+
+				<ul>
+					<li><b>The ARCHIMEDIAN PROPERTY</b> of \(\mathbb{R}\): <br>if \(\epsilon \in \mathbb{R}; \epsilon > 0\) then \(\exists n \in \mathbb{Z}^+ : n\epsilon > 1\).</li> 
+					<li>Between any two real numbers there are both rational and irrational numbers.</li>
+					<li>Every real number can be represented by a (possibly infinite) decimal expansion.</li>
+				</ul>
+			</div>
+
+
+			<h2 id="zrc-3">Complex Numbers</h2>
+
+			<p>
+				In the set \(\mathbb{C}\), of the form \(a + ib\) where \(i^2 = \sqrt{-1}\). Often denoted \(z\).
+			</p>
+
+			<p>
+				Representable by an ordered pair \(z = (a, b)\) where \(Re_z = a\) and \(Im_z = b\). Also represnetable as a point on a 2d plane, the <i>complex plane</i> or <i>argand diagram</i>.
+			</p>
+
+			<p>
+				For \(a, b \in \mathbb{R}\) the <b>complex conjugate</b> of \(z = a + ib\) is \(\overline{z} = a - ib\) (overline). Effectively reflecting along x axis. 
+			</p>
+
+			<p>
+				<b>Properties of complex conjugates (\(\forall z, w \in \mathbb{C}\)):</b>
+			</p>
+
+			<ul>
+				<li>\(\overline{z + w} = \overline{z} + \overline{w}\)</li>
+				<li>\(\overline{zw} = \overline{z}\overline{w}\)</li>
+				<li>\(\overline{(\frac{z}{w})} = \frac{\overline{z}}{\overline{w}}\)</li>
+				<li>\(\overline{\overline{z}} = z\)</li>
+				<li>\(z \in \mathbb{R} \Longleftrightarrow \overline{z} = z\)</li>
+				<li>\(Re_z = \frac{z + \overline{z}}{2}\)</li>
+				<li>\(Im_z = \frac{z - \overline{z}}{2i}\)</li>
+			</ul>
+
+		</div>
+
+		<footer>
+			<div class="cbox">
+				<div class="columncontainer ctwo">
+					<div>
+						<p class="small">
+							© 2020-2021 Yijun Hu, all rights reserved.
+						</p>
+					</div>
+					<div>
+						<p class="small rj">
+							Designed by Yijun Hu
+						</p>
+					</div>
+				</div>
+			</div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<!--<script type="text/javascript" src="../../js/prism.js"></script>-->
+</body>
+</html>

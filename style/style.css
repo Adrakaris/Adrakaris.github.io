@@ -414,6 +414,16 @@ blockquote {
 	color: #f1f2e9;
 }
 
+.blue {
+	border-width: thin;
+	border-style: solid;
+	border-color: #1f7282;
+	border-spacing: 10px 10px;
+	/*padding: 10px;*/
+	padding-left: 10px;
+	margin-left: -10px;
+}
+
 .overlay {
 	background-color: #00000030;
 	box-shadow: 0 0 5px 5px #00000030;
