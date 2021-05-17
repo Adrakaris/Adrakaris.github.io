@@ -607,7 +607,7 @@
 
 			<div class="blue">
 				<p>
-					<b><i>Subspaces.</i></b> A <b>subspace</b> of \(\mathbb{R^n}\) is a non-empty subset \(S \subseteq \mathbb{R}^n\) such that:
+					<b><i>Subspaces.</i></b> A <b>subspace</b> of \(\mathbb{R}^n\) is a non-empty subset \(S \subseteq \mathbb{R}^n\) such that:
 					\begin{align}
 					(1) &\vec{u}, \vec{v} \in S \implies \vec{u} + \vec{v} \in S;\\
 					(2) &\vec{u} \in S, \lambda \in \mathbb{R} \implies	\lambda \vec{u} \in S.
@@ -704,6 +704,158 @@
 			<p class="side">
 				<b><i>Theorem.</i></b> A set \(\{\vec{u}_1, \vec{u}_2, ..., \vec{u}_m\}\) of nonzero vectors is linearly <i>depending</i> <b>iff</b> some / any vector \(\vec{u}_r\) is a linear combination of its predecessors \{\vec{u}_1, \vec{u}_2, ..., \vec{u}_m{r-1}\}
 			</p>
+
+			<p><i>(proof omitted)</i>
+			</p>
+
+			<h2 id="vec-4">Basis and Dimension</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note6.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p class="blue">
+				<b><i>Basis.</i></b> Let \(S\) be a subspace of \(\mathbb{R}^n\). A set of vectors is a <b>basis</b> of S if it is a <i>linearly independent</i> set which spans S.
+			</p>
+
+			<p> 
+				e.g. The set \(\{(1,0,0), (0,1,0), (0,0,1)\}\) is a basis for \(\mathbb{R}^3\). In fact, it is the <b>standard basis</b>.
+			</p>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> Let \(S\) be subspace of \(\mathbb{R}^n\). If a set \(\vec{v}_1, \vec{v}_2, ..., \vec{v}_m\) spans S, then any <i>linearly indep.</i> subset of S has <i>at most</i> \(m\) vectors.
+			</p>
+
+			<p><i>(proof omitted)</i></p>
+
+			<p>
+				This leads to the fact that any two bases for a subpace S have the <b>same</b> number of elems. 
+			</p>
+
+			<p class="blue">
+				<b><i>Dimension.</i></b> The <b>dimension</b> of a subspace of \(\mathbb{R}^n\) is the number of vectors in the basis.
+			</p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Show that the set \(S = \{(x, y, z) : x + 2y - z = 0\}\) is a subspace of \(\mathbb{R}^3\), and find a basis and dimension of \(S\).
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> We can rewrite S as:
+					\begin{align}
+					S &= \{(x, y, x+2y = 0) : x, y \in \mathbb{R}\} \\
+					&= \{x(1, 0, 1) + y(0, 1, 2) : x, y \in \mathbb{R}\} \\
+					&= \textrm{ span } \{(1, 0, 1), (0, 1, 2)\}.
+					\end{align}
+
+					Whih shows that S is a subspace, since the span of any nonempty finite set is a subspace (known property). 
+				</p>
+
+				<p>
+					By inspection we can see that the two vectors in the set are independent, thus it is a basis. Thus the dimension of S is 2. 
+				</p>
+			</div>
+
+			<p>
+				(Supposedly) we can use the theorem from <a href="#vec-3">lineaer independence</a> to construct a basis from as panning set. 
+			</p>
+
+			<div class="blue">
+				<p>
+					Let \(\{\vec{v}_1, \vec{v}_2, ..., \vec{v}_m\}\) be a basis of a subspace S of \(\mathbb{R}^n\). Then removing each \(\vec{v}_i\) which is a linear combination of its "predecessors" will leave a basis for S. 
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Find a basis for and dimension of a subspace S (of \(\mathbb{R}^4\)) spanned by
+					\[\{(2,1,0,-3), (-1,0,-1,2), (1,2,-3,0), (0,0,0,1), (0,1,-2,0)\}.\]
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> Let's look at (1, 2, -3, 0) and see if it is a lin. comb. of predecessors. 
+					\[(1, 2, -3, 0) = \alpha(2,1,0,-3) + \beta(-1,0,-1,2)\]
+					\begin{align}
+					&\implies \begin{cases} 2\alpha - \beta &= 1 \\ \alpha &= 2 \\ -\beta &= -3 \\ -3\alpha + 2\beta &= 0 \end{cases}
+					&\implies \begin{cases} \alpha &= 2 \\ \beta &= 3. \end{cases}
+					\end{align}
+					We can see it is a linear combination, so we remove, giving
+					\[\{(2,1,0,-3), (-1,0,-1,2), (0,0,0,1), (0,1,-2,0)\}.\]
+				</p>
+
+				<p>
+					Now we next check \((0,0,0,1)\). 
+					\[(0,0,0,1) = \alpha(2,1,0,-3) + \beta(-1,0,-1,2)\]
+					\begin{align}
+					&\implies \begin{cases} 2\alpha - \beta &= 0 \\ \alpha &= 0 \\ -\beta &= 0 \\ -3\alpha + 2\beta &= 1 \end{cases}
+					&\implies \begin{cases} \alpha &= 0 \\ \beta &= 0 \\ -3\alpha + 2\beta &= 1. \end{cases}
+					\end{align}
+
+					Which have no solution of \(\alpha, \beta\) and thus (0, 0, 0, 1) is not a linear combination of priors. Thus \(\{(0,0,0,1),(2,1,0,-3),(-1,0,-1,2)\}\) is a lin. indep. set.
+				</p>
+
+				<p>
+					Check the last one against all others,
+					\[(0,1,-2,0) = \alpha(2,1,0,-3) + \beta(-1,0,-1,2) + \gamma(1, 2, -3, 0)\]
+					\begin{align}
+					&\implies \begin{cases} 2\alpha - \beta &= 0 \\ \alpha &= 1 \\ \beta &= 2 \\ -3\alpha + 2\beta + \gamma &= 0 \end{cases}
+					&\implies \begin{cases} \alpha &= 1 \\ \beta &= 2 \\ \gamma &= -1. \end{cases}
+					\end{align}
+					So we remove that, thus finally the remaining set \(\{(0,0,0,1),(2,1,0,-3),(-1,0,-1,2)\}\) is the final basis of \(S\), which gives \(S\) a dimension of 3.
+				</p>
+			</div>
+
+			<p>
+				There are a few quick checks one can do beforehand. 
+			</p>
+
+			<div class="blue">
+				<p>
+					Let S be an \(m\)-dimensional subspace of \(\mathbb{R}^n\) then
+				</p>
+				<ol>
+					<li>Any subset of S with more than \(m\) vectors is linearly <i>dependent</i>;</li>
+					<li>A subset of S is a basis <i>if and only if</i> it is a linearly independent set containing \(m\) vectors.</li>
+				</ol>
+
+				<p>
+					It then follows that any subset of \(\mathbb{R}^n\) is linearly <i>dependent</i>, and a subset of \(\mathbb{R}^n\) <i>iff</i> it is a linearly independent set containing \(n\) vectors. 
+				</p>
+			</div>
+			<p></p>
+
+			<button class="collapsible">\(\mathbb{R}^2, \mathbb{R}^3\) properties...</button>
+			<div class="ccontent">
+				<p>
+					Subspaces of \(\mathbb{R}^2\):
+				</p>
+				<ol>
+					<li>There is one 0 dim subspace \(\{\vec{0}\}\)</li>
+					<li>A 1D subspace is spanned by a single non-zero vector: straight lines through origin.</li>
+					<li>The only 2D subspace is \(\mathbb{R}^2\)</li>
+				</ol>
+
+				<p>
+					Subspaces of \(\mathbb{R}^3\):
+				</p>
+				<ol>
+					<li>There is one 0 dim subspace \(\{\vec{0}\}\)</li>
+					<li>A 1D subspace is spanned by a single non-zero vector: straight lines through origin.</li>
+					<li>A 2D subspace is spanned by 2 lin. indep. vectors: plains containing the origin</li>
+					<li>The only 3D subspace is \(\mathbb{R}^3\)</li>
+				</ol>
+			</div>
+
+			
 		</div>
 
 		<footer>
