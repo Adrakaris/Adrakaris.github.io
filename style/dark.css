@@ -24,9 +24,17 @@
     src: url("./font/jbmono/JetBrainsMono-Regular.woff2") format("woff2");
 }
 
+:root {
+    --bg-col: #2e2e2e;
+    --txt-col: #eaeaea;
+    --band-col: #6e5046;
+    --band-txt: #f1f2e9;
+    --band-col-lighter: #c7917f;
+}
+
 html, body {
-    background-color: #2e2e2e;
-    color: #FFF;
+    background-color: var(--bg-col);
+    color: var(--txt-col);
     font-family: Manrope, sans-serif;
     height: 100%;   
     margin: 0;
@@ -108,8 +116,8 @@ html.boxed .body {
 }
 
 .colourband {
-    background-color: #6e5046;
-    color: #f1f2e9;
+    background-color: var(--band-col);
+    color: var(--band-txt);
     margin: 0 -500%;
     padding: 0.5rem 500%;
     text-align: center;
@@ -149,8 +157,8 @@ html.boxed .body {
 
 .buttonwrapper {
     padding: 5px;
-    background-color: #6e5046;
-    color: #f1f2e9;
+    background-color: var(--band-col);
+    color: var(--band-txt);
     font-family: Manrope;
     text-align: center;
     margin: 5px;
@@ -163,7 +171,7 @@ html.boxed .body {
 }
 
 .buttonwrapper a {
-    color: #ffffff;
+    color: var(--text-col);
     text-decoration: none;
     display: inline-block;
     width: 100%;
@@ -183,7 +191,7 @@ html.boxed .body {
 .boxdiv {
     border-width: thin;
     border-style: solid;
-    border-color: #c7917f;
+    border-color: var(--band-col-lighter);
     border-spacing: 10px 10px;
     padding: 10px;
 }
@@ -203,28 +211,28 @@ img.except {
 }
 
 header {
-    background-color: #6e5046;/*#637457;*/ /*#D52A2A;*/
-    color: #f1f2e9;
+    background-color: var(--band-col);/*#637457;*/ /*#D52A2A;*/
+    color: var(--band-txt);
     margin: 0 -500%;
     padding: 0.5rem 500%;
 }
 
 header.green {
     background-color: #3a6342;
-    color: #f1f2e9;
+    color: var(--band-txt);
 }
 
 footer {
-    background-color: #6e5046;
-    color: #f1f2e9;
+    background-color: var(--band-col);
+    color: var(--band-txt);
     margin: 0 -500%;
     padding: 0.5rem 500%;
-    box-shadow: 0 50vh 0 50vh #6e5046;
+    box-shadow: 0 50vh 0 50vh var(--band-col);
 }
 
 footer.green {
     background-color: #3a6342;
-    color: #f1f2e9;
+    color: var(--band-txt);
     box-shadow: 0 50vh 0 50vh #3a6342;
 }
 
@@ -233,7 +241,7 @@ a.nav {
     text-align: center;
     letter-spacing: 1px;
     margin-top: -30px;
-    color: #f1f2e9; /*#c9baad;*/
+    color: var(--band-txt); /*#c9baad;*/
     font-size: 8;
     text-decoration: none;
     letter-spacing: 2px;
@@ -241,7 +249,7 @@ a.nav {
 }
 
 a {
-    color: #c7917f;
+    color: var(--band-col-lighter);
     text-decoration: none;
 }
 
@@ -250,7 +258,7 @@ a.text {
 }
 
 a.white {
-    color: #f1f2e9;
+    color: var(--band-txt);
 }
 
 a.black {
@@ -262,7 +270,7 @@ button.nav {
     font-size: 8;
     text-align: center;
     margin-top: -30px;
-    color: #f1f2e9; /*#c9baad;*/
+    color: var(--band-txt); /*#c9baad;*/
     font-size: 16px;
     text-decoration: none;
     letter-spacing: 2px;
@@ -273,7 +281,7 @@ button.nav {
 }
 
 .active, .collapsible:hover {
-    background-color: #f1f2e9;
+    background-color: var(--band-txt);
 }
 
 .collapsible:after {
@@ -292,10 +300,10 @@ button.nav {
 
 button.collapsible {
     font-family: Manrope;
-    color: #c7917f;
+    color: var(--band-col-lighter);
     background: none;
     border: none;
-    border-left: 1px solid #c7917f;
+    border-left: 1px solid var(--band-col-lighter);
     border-spacing: 10px 0px;
     padding-left: 10px;
     margin-left: -10px;
@@ -314,7 +322,7 @@ button.nul {
 }
 
 .ccontent {
-    border-left: 1px solid #c7917f;
+    border-left: 1px solid var(--band-col-lighter);
     border-spacing: 10px 0px;
     padding-left: 10px;
     margin-left: -10px;
@@ -331,7 +339,7 @@ button.nul {
 }
 
 .ncontent {
-    border-left: 1px solid #c7917f; 
+    border-left: 1px solid var(--band-col-lighter); 
     border-spacing: 10px 0px;   
     padding-left: 10px; 
     margin-left: -10px;
@@ -388,7 +396,7 @@ p.rj {
 }
 
 p.side {
-    border-left: 1px solid #c7917f;
+    border-left: 1px solid var(--band-col-lighter);
     border-spacing: 10px 0px;
     padding-left: 10px;
     margin-left: -10px;
@@ -430,7 +438,7 @@ blockquote {
 
 .green {
     background-color: #3a6342;
-    color: #f1f2e9;
+    color: var(--band-txt);
 }
 
 .overlay {

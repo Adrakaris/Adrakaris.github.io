@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
     <meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
     <link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 
@@ -42,24 +43,118 @@
         </header>
 
         <div class="cbox">
-            <P>
-                These notes are work in progress. Note: they may never be done and this page will redirect.    
-            </P>
+            <p>
+                <i>Editor's note:</i> I'm not going to write full notes for 126. I'm just going to be putting down specifics on what I found confusing from the material. 
+            </p>
 
-            <pre><code class="lang-java">public class ArrayList&lt;E&gt; {
-    private E[] data;
-
-    public ArrayList&lt;E&gt;() {
-        super();
-    }
-}</code></pre>
+            <ol>
+                <li><a href="#algos">Algorithmic Analysis</a></li>
+            </ol>
         </div>
 
-        <!---
-        <div class="colourband">
-            <h2>Heading 2</h2>
+        <div class="colourband" id="algos">
+            <h2>Algorithmic Analysis</h2>
         </div>
-        --->
+
+        <div class="cbox">
+            <p>
+                In the analysis of algorithms we are looking at the efficiency of said algorithms. In particular, we are interested in <i>asymptotic</i> analysis, which is looking at how the running time (or memory use) \(f(n)\) changes as a function of the number of inputs, \(n\).
+            </p>
+
+            <h2>Big-O and Friends</h2>
+
+            <p>
+                The most common asymptotic analysis measure is worst case analysis, big-O. However there is also big-omega and big theta, and these are all abstractions of the actual running time function, which we shall call \(f(n)\).
+            </p>
+
+            <div class="cornell">
+                <div>
+                    <p style="font-style: italic; text-align: right;">
+                        Big-O.
+                    </p>
+                </div>
+                <div>
+                    <p class="side">
+                        Big-O looks at <b>worst cases</b>. Formally, \(f(n) = O(g(n))\) if \(\exists c \geq 0 : c \cdot g(n) \geq f(n) \; \forall n \geq n_0\), where \(n_0 \in \mathbb{N}\) is some constant such that the prior statement becomes true. 
+                    </p>
+
+                    <p>
+                        Basically, we say \(f(n)\) is on the order of some \(g(n)\) (\(O(g(n))\)) if you can scale \(g\) (positive scale factor) to make it always above or equal \(f\) as \(n\) increases beyond a certain threshold. 
+                    </p>
+
+                    <p>
+                        We generally look for the <i>smallest</i> possible function \(g\) such that this is true, which gives our <i>worst case</i>.
+                    </p>
+
+                    <p>
+                        <i>Example:</i> Say our running time \(f(n) = 3n^2 + 20\log n + 4\). We can note that the part of the function that increases the quickest is the \(n^2\) term (ignoring coefficients), and so if we <i>scale up the \(n^2\) term</i> enough, say to \(23n^2\), we will always be greater than \(f(n)\) past some point (possibly even at the start). Thus, we get a big-O of \(O(n^2)\).
+                    </p>
+                </div>
+
+                <div>
+                    <p class="ir">
+                        Big-Omega.
+                    </p>
+                </div>
+                <div>
+                    <p class="side">
+                        Big-Omega looks at <b>best cases</b>. Formally, \(f(n) = \Omega(g(n))\) if \(\exists c \geq 0 : c \cdot g(n) \leq f(n) \; \forall n \geq n_0\), where \(n_0 \in \mathbb{N}\) is some constant. See something familiar?
+                    </p>
+
+                    <p>
+                        In layman's terms, \(f(n)\) is on the order \(\Omega(g(n))\) if there is some positive scale factor that will put \(g\) always below or equal to \(f\) after a certain threshold \(n_0\).
+                    </p>
+
+                    <p>
+                        <i>Example:</i> Say our \(f(n) = 2n^3 + 4n + \log n\). The part of the function that increases the slowest is \(\log n\), thus our big omega can be \(\Omega(\log n)\). Of course, it can also be \(\Omega(1)\), or anything that increases slower than log, but it becomes less useful.
+                    </p>
+                </div>
+
+                <div>
+                    <p class="ir">
+                        Big-Theta
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        Big-Theta looks at <b>average cases</b>. Formally, \(f(n) = \Theta(g(n))\) if \(\exists c_1, c_2 \geq 0 : c_1 \cdot g(n) \leq f(n) \leq c_2 \cdot g(n) \; \forall n \geq n_0\), where \(n_0 \in \mathbb{N}\).
+                    </p>
+
+                    <p>
+                        Here we have two variables: \(c_1, c_2\), and what this means is that we need a function \(g\), where if we scale it by two <i>different</i> values, \(f\) will be squeezed between the two scaled \(g\)s. 
+                    </p>
+
+                    <p>
+                        If a function has both \(O(h(n))\) and \(\Omega(h(n))\) (same \(h(n)\)!) then that function is \(\Theta(h(n)\).
+                    </p>
+                </div>
+            </div>
+
+            <p>
+                To summarise:
+            </p>
+
+            <div class="columncontainer" style="grid-column-gap: 20px">
+                <div>
+                    <p style="text-decoration: underline;">\(O(n)\)</p>
+                    <ul>
+                        <li>Worst case (\(f(n)\) is always lower)</li>
+                    </ul>
+                </div>
+                <div>
+                    <p style="text-decoration: underline;">\(\Omega(n)\)</p>
+                    <ul>
+                        <li>Best case (\(f(n)\) is always higher)</li>
+                    </ul>
+                </div>
+                <div>
+                    <p style="text-decoration: underline;">\(\Theta(n)\)</p>
+                    <ul>
+                        <li>Average case (\(f(n)\) is always between)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         <footer>
             <div class="cbox">
