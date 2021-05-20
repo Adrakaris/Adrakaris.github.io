@@ -4,8 +4,8 @@
 	<title>CS131</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all" id="theme-link">  <!--TODO: CHANGE HREF-->
-	<link rel="stylesheet" type="text/css" href="./style/prism.css" media="all">
-	<meta name="viewport" content="width=device-wi./..dth" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<!--<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">-->
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
 	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -1241,7 +1241,45 @@
 				The definition on the notes is uh, <!-- fuck awful --> just do the same thing as above but the matrix will be square.
 			</p>
 
-			
+			<h2 id="mat-6">Eigenvalues and Eigenvectors</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note14.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				Relating to matrices multiplying vectors, and especially where the vectors don't change direction. 
+			</p>
+
+			<p class="blue">
+				For a matrix A and a vector \(\vec{r}\), if \(A\vec{r} = \lambda \vec{r}, \; \lambda \in \mathbb{R}\), then \(\vec{r}\) is the <b>eigenvector</b> and \(\lambda\) is the <b>eigenvalue</b>.
+			</p>
+
+			<p class="blue">
+				A number \(\lambda\) is an eigenvalue of A if and only if it satisfies the <b>characteristic equation</b>
+				\[|A - \lambda I| = 0.\]
+			</p>
+
+			<p>
+				For an order \(n\) matrix there are \(n\) (not necessarily unique) eigenvalues. Eigenvalues can also be \(\in \mathbb{C}\).
+			</p>
+
+			<p>
+				Recall that diagonal matrices are written \(\textrm{diag}[a_{11}, a_{22}, ..., a_{nn}]\).
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Diagonalisation of Matrices.</i></b> For an order \(n\) matrix A:
+					\[A = UDU^{-1}\]
+					Where \(D = \textrm{diag}[\lambda_1, \lambda_2, ..., \lambda_n]\) (the eigen values), and
+					\(U = [\vec{v}_1, \vec{v}_2, \dots, \vec{v}_n]\) are the <i>corresponding</i> eignvectors of said eigenvalues.
+				</p>
+
+				<p>
+					Note that if you have repeated eigenvalues, you have to find multiple <i>distinct</i> (lin. indep.) eigenvectors for that eigenvalue.
+				</p>
+			</div>
 		</div>
 
 		
