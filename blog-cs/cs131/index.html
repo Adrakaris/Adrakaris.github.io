@@ -1063,6 +1063,11 @@
 			<h2 id="mat-3">Matrix Inverse, Determinants</h2>
 
 			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note10.pdf" class="text">Link to first PDF.</a> <br>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note11.pdf" class="text">Link to second PDF.</a>
+			</p>
+
+			<p>
 				The determinant of a \(3 \times 3\) matrix is denoted the same way, and is defined
 
 				\[
@@ -1116,6 +1121,73 @@
 				\end{align}
 				Where the column vector x are the variables, and column vector y are the values of the equations. 
 			</p>
+
+			<p class="blue">
+				<b><i>Linear independence via determinants.</i></b> A set of \(n\) vectors in \(\mathbb{R}^n\) is linearly independent <i>if and only if</i> it is the set of column vectors of a matrix with nonzero determinant.
+			</p>
+
+			<p>
+				Basically, bang \(n\)  \(\mathbb{R}^n\) vectors into a square matrix, compute the determinant, and if it is 0, then those vectors are linearly dependent.
+			</p>
+
+			<h2 class="mat-4">Linear Transformations</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note9.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<div class="blue">
+				<p>
+					A function \(T : \textrm{R}^m \longrightarrow \mathbb{R}^n\) is a <b>linear transformation</b> if, \(\forall \vec{u}, \vec{v} \in \mathbb{R}^n, \lambda \in \mathbb{R}\), we have:
+
+					\[ T(\vec{u} + \vec{v}) = T(\vec{u}) + T(\vec{v}), \]
+					\[ T(\lambda \vec{u}) = \lambda T(\vec{u}). \]
+
+					Which are preservation of addition and scaling respectively. Also,	
+				</p>
+
+				<p>
+					\[T(\vec{0}) = \vec{0}.\]
+				</p>
+			</div>
+
+			<p>
+				For simple problems, verifying that the transformation fits the two rules of addition and scaling is sufficient.
+			</p>
+
+			<div class="side">
+				<p>
+					<b><i>Example.</i></b> Let \(\vec{u}\) be a nonzero 2D vector. If \(\vec{x} \in \mathbb{R}^2\) then we define the <b>projection</b> of \(\vec{x}\) onto \(\vec{u}\) to be a vector \(P_{\vec{u}}(\vec{x})\) such that
+				</p>
+				<ol>
+					<li>\(P_{\vec{u}}(\vec{x})\) is a multiple of \(\vec{u}\)</li>
+					<li>\(\vec{x} - P_{\vec{u}}(\vec{x})\) is perpendicular to \(\vec{u}\).</li>
+				</ol>
+				<p>
+					We have by (1) that \(P_{\vec{u}}(\vec{x}) = \alpha \vec{u}\) for some \(\alpha \in \mathbb{R}\), so by (2)
+					\[0 = (\vec{x} - P_{\vec{u}}(\vec{x})) \cdot \vec{u} = (\vec{x} - \alpha \vec{u}) \cdot \vec{u} = \vec{x} \cdot \vec{u} - \alpha |\vec{u}|^2,\]
+					\[\implies \alpha = \frac{\vec{x}\cdot\vec{u}}{|\vec{u}|^2}.\]
+				</p>
+				<p>
+					The projection can then be regarded as a function \(P_\vec{u} : \mathbb{R}^2 \longrightarrow \mathbb{R}^2\) defined \(\forall \vec{x} \in \mathbb{R}^2\):
+					\[P_{\vec{u}}(\vec{x}) = (\frac{\vec{x}\cdot\vec{u}}{|\vec{u}|^2})\vec{u}.\]
+					This function can be verified to be a linear transformation.
+				</p>
+			</div>
+			<p></p>
+			<div class="side">
+				<p>
+					<b><i>Example.</i></b> For \(\theta \in [0, 2\pi)\) define \(R_\theta : \mathbb{R}^2 \longrightarrow \mathbb{R^2}\) to be a function describing rotation about angle \(\theta\) through origin. After a bit of derivation, we get
+
+					\[R_\theta (x, y) = (x\cos\theta - y\sin\theta, x\sin\theta - y\cos\theta).\]
+
+					Or alternatively in matrix form (let \((x', y')\) be \(R_\theta (x, y)\)) as
+
+					\[
+					\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix}\ \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} x \\y \end{bmatrix}.
+					\]
+				</p>
+			</div>
 		</div>
 
 		

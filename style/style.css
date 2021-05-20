@@ -424,6 +424,13 @@ blockquote {
 	margin-left: -10px;
 }
 
+.side {
+	border-left: 1px solid #a17667;
+	border-spacing: 10px 0px;
+	padding-left: 10px;
+	margin-left: -10px;
+}
+
 .overlay {
 	background-color: #00000030;
 	box-shadow: 0 0 5px 5px #00000030;

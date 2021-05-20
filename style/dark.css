@@ -446,6 +446,13 @@ blockquote {
     box-shadow: 0 0 5px 5px #00000030;
 }
 
+.side {
+    border-left: 1px solid var(--band-col-lighter);
+    border-spacing: 10px 0px;
+    padding-left: 10px;
+    margin-left: -10px;
+}
+
 figcaption {
     text-align: center;
 }
