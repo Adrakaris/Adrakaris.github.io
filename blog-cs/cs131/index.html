@@ -870,6 +870,8 @@
 				<li><a href="#mat-1">Matrix Algebra</a></li>
 				<li><a href="#mat-2">Matrix Inverse, Linear Equations</a></li>
 				<li><a href="#mat-3">Matrix Inverse, Determinants</a></li>
+				<li><a href="#mat-4">Linear Transformations</a></li>
+				<li><a href="#mat-5">Matrices and Linear Transformations</a></li>
 			</ol>
 
 			<h2 id="mat-1">Matrix Algebra</h2>
@@ -1133,7 +1135,7 @@
 			<h2 class="mat-4">Linear Transformations</h2>
 
 			<p>
-				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note9.pdf" class="text">Link to the PDF.</a>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note12.pdf" class="text">Link to the PDF.</a>
 			</p>
 
 			<div class="blue">
@@ -1188,6 +1190,58 @@
 					\]
 				</p>
 			</div>
+
+			<h2 id="mat-5">Linear Transformations and Matrices</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part2/note13.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				Referring back to the last example in the last section, it is further true that <b>every</b> \(M_{m \times n}\) matrix can act as a linear transformation (\(T(\vec{x}) = M\vec{x}\)). Vectors are column vectors.
+			</p>
+
+			<p>
+				For a basis \(V = \{\vec{v}_1, \vec{v}_2, ... \vec{v}_n\}\) of \(\mathbb{R}^n\), every \(\vec{x} \in \mathbb{R}^n\) has a linear expansion \(\vec{x} = a_1 \vec{v}_1 + a_2 \vec{v}_2 + ... + a_n \vec{v}_n\).
+			</p>
+
+			<p>
+				These coefficients \(a_1 ... a_n\) are the <b>coordiates of \(x\) with respect to basis \(V\)</b>.
+			</p>
+
+			<p>
+				Let \(T : \mathbb{R}^m \longrightarrow \mathbb{R}^n\) be a linear transformation, V be a basis in \(\mathbb{R}^m\) and W a basis in \(\mathbb{R}^n\).
+			</p>
+
+			<p>
+				For each vector \(\vec{v}\) in V \(T(\vec{v})\) has an expansion in W. The <b>Matrix of a linear transformation</b> T with respect to V and W is the \(m \times n\) matrix where each column \(i\) contains the coefficients of the expansion of \(T(\vec{v}_i)\) for each \(\vec{v}_i \in V\).
+			</p>
+
+			<p>
+				When \(m = n, \; W = V\) then it is referred to as the <b>matrix of T with respect to basis V</b>.
+			</p>
+
+			
+			<div class="blue">
+				<p>
+					<b><i>Matrix of a linear transformation.</i></b> For a linear transformation T (as above), M the matrix of T with respect to bases V, W (as above); the columns of M contain the coordinates of the <i>images</i> of the basis vectors in V w/ respect to W. 
+				</p>
+
+				<p>
+					If \(\vec{x} \in \mathbb{R}^m\) has coordinates \([x_1,...,x_n]\) with respect to V then the coordinates with respect to W, \([y_1, ... , y_n]\) are
+					\[\begin{bmatrix} y_1 \\ \vdots \\ y_n \end{bmatrix} = M \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix}.\]
+				</p>
+			</div>
+
+			<p>
+				A matrix that changes between two different bases in \(\mathbb{R}^n\) is called a <b>transition matrix</b>.
+			</p>
+
+			<p>
+				The definition on the notes is uh, <!-- fuck awful --> just do the same thing as above but the matrix will be square.
+			</p>
+
+			
 		</div>
 
 		
