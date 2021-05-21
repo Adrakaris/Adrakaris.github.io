@@ -1294,6 +1294,7 @@
 				<a href="#seq-1">Sequences</a>
 				<a href="#seq-3">Series</a>
 				<a href="#seq-2">Recurrences</a>
+				<a href="=seq-4">Decimal Representation of Reals</a>
 			</ol>
 
 			<p class="small">
@@ -1832,6 +1833,57 @@
 			</p>
 			<p>
 				Etc. just like diff. eqns. 
+			</p>
+
+			<h2 id="seq-4">Decimal Representation of Reals</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part3/note16.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				Rational numbers can be represented by expansions, so can repeating decimals. 
+			</p>
+
+			<p>
+				Repeating decimals can be expressed as a fraction by summing an appropriate geometric series. 
+			</p>
+
+			<p>
+				For example, \(0.4\overline{9}\) can be expanded as follows;
+				\begin{align}
+				0.4\overline{9} &= \frac{4}{10} + \frac{0}{10^2} + \frac{9}{10^3} + ... \\
+				&= \frac{4}{10} + \frac{9}{10}(1 + \frac{1}{10} + \frac{1}{10^2} + ...) \\
+				&= \frac{4}{10} + \frac{9}{100}(\frac{1}{1-0.1}) = \frac{4}{10} + \frac{9}{90} = \frac{4}{10} + \frac{1}{10} = \frac{1}{2}.
+				\end{align}
+			</p>
+
+			<p>
+				The decimal expansion of any arbitarary real can be computed by squeezing between two converging sequences.
+			</p>
+
+			<button class="collapsible nul">Expand if you really want to see...</button>
+			<div class="ccontent cnul">
+			<p>
+				 If that real \(x\) is not an integer, it is between one integer and the next consecutive one. Now divide the integer gap into 10 fractions - if \(x\) is not on a fraction then it is between two consecutive division points,
+
+				\[a_0 + \frac{a_1}{10} < x < a_0 + \frac{a_1 + 1}{10}\]
+
+				Where \(a_1 \in \{0..9\}\). We can then repeat to get
+
+				\[a_0 + \frac{a_1}{10} + \frac{a_2}{10^2} < x < a_0 + \frac{a_1}{10} + \frac{a_2 + 1}{10^2} \]
+
+				etc etc.
+			</p>
+			</div>
+			
+
+			<p>
+				Every rational has a terminating or repeating decimal, there's some formal <i>rigorous</i> waffle and then you compute it via long division really.
+			</p>
+
+			<p>
+				Not sure why this is here save the fact that yes decimals are related to series.
 			</p>
 		</div>
 		
