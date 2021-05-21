@@ -281,7 +281,7 @@ button.nav {
 }
 
 .active, .collapsible:hover {
-    background-color: var(--band-txt);
+    background-color: #333;
 }
 
 .collapsible:after {

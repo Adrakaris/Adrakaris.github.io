@@ -47,6 +47,7 @@
 				<li><a href="#zrc">Number Systems</a></li>
 				<li><a href="#vec">Vectors</a></li>
 				<li><a href="#matrices">Matrices</a></li>
+				<li><a href="#sequences">Sequences and Series</a></li>
 			</ol>
 
 			<p>
@@ -1282,6 +1283,413 @@
 			</div>
 		</div>
 
+		<div class="colourband" id="sequences">
+			<h2>Sequences and Series</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<a href="#seq-1">Sequences</a>
+				<a href="#seq-3">Series</a>
+				<a href="#seq-2">Recurrences</a>
+			</ol>
+
+			<p class="small">
+				By the way, did I ever mention I hate sequences and series?
+			</p>
+
+			<h2 id="seq-1">Sequences</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part3/note15.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				A sequence \((a_n)\) is an infinite list of numbers \((a_0, a_1,...)\). We can define sequences through <i>n<sup>th</sup> term</i> rules or <i>recursively</i>.
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Convergent Sequence.</i></b> A sequence \(a_n\) is said to <b>converge </b>to a <b>limit</b> \(l \in \mathbb{R}\) if for every small \(\epsilon > 0\) there is a related integer \(N\) such that \(|a_n - l| < \epsilon \; \forall n > N\). This is denoted as
+					\begin{align}
+					&\lim_{n \rightarrow \infty} a_n = l; &a_n \rightarrow l.
+					\end{align}
+				</p>
+				
+			</div>
+
+			<p>
+				In layman's terms, if a sequence converges, then for every (increasingly small) positive number, the difference between the sequence's terms and the limit will be eventually smaller.
+			</p>
+			<p>
+				\(N\) here is like a <i>threshold indicator</i>, where every term of the sequence after \(N\) will be within the \(\epsilon\) difference.
+			</p>
+			<p>
+				We generally worth with \(n \in \mathbb{N}\).
+			</p>			
+
+			<div class="side">
+				<p>
+					<b><i>Example.</i></b> The sequence \(a_n = \frac{1}{n}\) converges to 0. We can prove this by going to the definition - let us have a small \(\epsilon > 0\). 
+				</p>
+				<p>
+					Then \(\exists N : a_N - 0 < \epsilon\), or \(\frac{1}{N} < \epsilon\). We can choose any integer \(N > \frac{1}{e}\), to demonstrate that this is possible for any \(\epsilon\). For any \(n > N\):
+
+					\[|\frac{1}{n} - 0| = \frac{1}{n} < \frac{1}{N} < \epsilon,\]
+
+					to write it out as an equation.
+				</p>
+			</div>
+
+			<p>
+				If possible, try break a large sequence down into simpler components. They can be combined using the following:
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Combination Rules for Convergent Sequences.</i></b> For convergent sequences \(a_n \rightarrow \alpha, b+n \rightarrow \beta, c_n \rightarrow \gamma\):
+				</p>
+
+				<ol>
+					<li><b>Sum</b> rule: \(a_n + b_n \rightarrow \alpha + \beta\)</li>
+					<li><b>Scalar multiple</b> rule: \(\lambda a_n \rightarrow \lambda\alpha, \; \lambda \in \mathbb{R}\)</li> 
+					<li><b>Product</b> rule: \(a_n b_n \rightarrow \alpha\beta\)</li>
+					<li><b>Reciprocal</b> rule: \(\frac{1}{a_n} \rightarrow \frac{1}{\alpha}\)</li>
+					<li><b>Quotient</b> rule: \(\frac{b_n}{a_n} \rightarrow \frac{\beta}{\alpha}\)</li>
+					<li><b><i>Hybrid</i></b> rule: \(\frac{b_n c_n}{a_n} \rightarrow \frac{\beta\gamma}{\alpha}\)</li>
+				</ol>
+
+			</div>
+			<p></p>
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Show that the following sequence converges, find its limit:
+					\[ a_n = \frac{(n+2)(2n-1)}{3n^2 + 1} \]
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					The components do not converge themselves, a technique here is <i>dividing by the fastest increasing term</i>. Dividing by \(n^2\),
+
+					\[ a_n = \frac{\frac{(n+2)}{n}\frac{(2n-1)}{n}}{\frac{3n^2 +1}{n^2}} = \frac{(1 + \frac{2}{n})(2 - \frac{1}{n})}{3 + \frac{1}{n^2}}. \]
+				</p>
+				<p>
+					Now the components \(\frac{1}{n}\) and \(\frac{1}{n^2}\) converge to 0, so applying combination rules we can get
+
+					\[a_n \rightarrow \frac{(1+0)(2-0)}{3+0} = \frac{2}{3}. \]
+				</p>
+			</div>
+
+			<p>
+				A sequence \(a_n\) is <b>bounded above</b> if there is a number \(U : a_n \leq U \forall n\). \(a_n\) is <b>bounded below</b> if there is a number \(L : L \leq a_n \forall n\). A sequence is <b>bounded</b> if it is bounded both above and below.
+			</p>
+
+			<p>
+				A <b>subsequence</b> of a sequence is obtained from the original sequence by deleting some terms. We can say \(a_{2n}, a_{2n+1}\) are the even and odd subsequences respectively of \(a_n\).
+			</p>
+
+			<p>
+				A sequence \(a_n\) is an <b>increasing</b> sequence if \(a_{n+1} \geq a_n \;\forall n\). It is  a <b>decreasing</b> sequence if \(a_{n+1} \leq a_n \;\forall n\). 
+			</p>
+
+			<div class="blue">
+				<p><b><i>Basic Properties of Convergent Sequences.</i></b></p>
+
+				<ol>
+					<li>A convergent sequence has a <i>unique</i> limit.</li>
+					<li>If \(a_n \rightarrow l\) then <i>every subsequence</i> of \(a_n\) also converges to \(l\).</li>
+					<li>If \(a_n \rightarrow l\) then \(|a_n| \rightarrow |l|\).</li>
+					<li><b>The squeeze rule.</b> If \(a_n \rightarrow l, b_n \rightarrow l; a_n < c_n < b_n \; \forall n\) then \(c_n \rightarrow l\).<sup>1</sup></li>
+					<li>A convergent sequence is always bounded.<sup>2</sup></li>
+					<li>An increasing sequence which is bounded above converges. A decreasing sequence which is bounded below converges.</li>
+				</ol>
+
+				<p class="small">
+					<sup>1</sup>The sequence \(c_n\) is "squeezed" between two sequences which both converge to the same limit, so naturally it will too.<br>
+					<sup>2</sup>\(\exists B > 0 : - B \leq a_n \leq B, \; \forall n\).
+				</p>
+			</div>
+
+			<p>
+				You can demonstrate an alternating sequence (e.g. \((-1)^n\)) doesn't converge by looking at <i>subsequences</i>.
+			</p>
+
+			<p>
+				Reminder: the binomial theorem is
+				\[(1 + x)^n = 1 + nx + \frac{n(n-1)}{2!}x^2 + ... + \frac{n!}{k!(n-k)!}x^k\]
+			</p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Show that for \(x \geq 0, n > 0\), this: \((1+x)^{\frac{1}{n}} \leq 1 + \frac{x}{n}\).
+				</p>
+
+				<p>
+					Hence deduce/show that if \(c > 0\) then \(c^\frac{1}{n} \rightarrow 1\).
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> Firstly, we can rearrange and use the binomial theorem.
+					\begin{align}
+					1 + x &\leq (1 + \frac{x}{n})^n. \\
+					(1 + \frac{x}{n})^n &= 1 + n\frac{x}{n} + \textrm{ (other positive terms) via binomial exp, so} \\
+					1 + x &\leq 1 + x + \textrm{ (other positive terms)} \\
+					\end{align}
+					Thus if we take \(n^\textrm{th}\) roots of each side we will demonstrate that
+					\[(1+x)^\frac{1}{n} \leq 1 + \frac{x}{n}.\]
+				</p>
+				<p>
+					For the second part, we need to consider separately the cases \(c \geq 1\) and \(c < 1\).
+				</p>
+				<p>
+					If \(c \geq 1\) then \(c^\frac{1}{n} \geq 1\). If we use the inequality we demonstrated in the first part, letting \(x = c-1 \geq 0\) we get
+					\[1 \leq c^\frac{1}{n} \leq 1 + \frac{c-1}{n}.\]
+				</p>
+				<p>
+					By the squeeze rule, we can (in an ideal world) see that \(c^\frac{1}{n} \rightarrow 1\). 
+				</p>
+				<p>
+					Finally if \(c < 1\) then \(\frac{1}{c} > 1\) and by the reciprocal rule \(\frac{1}{c^\frac{1}{n}} \rightarrow 1\).
+				</p>
+				<p class="small">
+					Did you get that? Me neither.
+				</p>
+			</div>
+
+			<p>
+				<b><i>Divergent Sequence.</i></b> A squence \(a_n\) is said to <b>diverge to infinity</b> if \(\forall K \in \mathbb{R}\; \exists N : n > N \implies a_n > K\). 
+			</p>
+
+			<p>
+				In plain english, there is a point in \(a_n\) where the terms are greater than any real number one picks.
+			</p>
+
+			<p>
+				We denote this as \(a_n \rightarrow \infty\). \(a_n\) diverges to \(-\infty\) if \(-a_n \rightarrow \infty\). 
+			</p>
+
+			<p>
+				A divergent sequence that doesn't go off to infinity is said to <b>oscillate</b>.
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Basic convergent sequences.</i></b>
+					\begin{align}
+					& \lim_{n \rightarrow \infty} \frac{1}{n^p} = 0 & \forall p > 0 \\
+					& \lim_{n \rightarrow \infty} c^n = 0 & \forall c : |c| < 1 \\
+					& \lim_{n \rightarrow \infty} c^\frac{1}{n} = 1 & \forall c > 0 \\
+					& \lim_{n \rightarrow \infty} n^p c^n = 0 & \forall p > 0 \land |c| < 1 \\
+					& \lim_{n \rightarrow \infty} \frac{c^n}{n!} = 0 & \forall c \in \mathbb{R} \\
+					& \lim_{n \rightarrow \infty} (1 + \frac{c}{n})^n = e^c & \forall c \in \mathbb{R}
+					\end{align}
+				</p>
+				
+			</div>
+
+			
+
+			<h2 id="seq-3">Series</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part3/note17.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<button class="collapsible">Addendum: Partial Fractions</button>
+			<div class="ccontent">
+				<p>
+					Partial fractions can be important in series.
+				</p>
+				<p>
+					Where a rational function is decomposed into a sum of simpler fractions, such as
+					\[\frac{cx+d}{(x-a)(x-b)} = \frac{A}{x-a} + \frac{B}{x-b}.\]
+				</p>
+				<p>
+					When there is no repeated factor, simply substituting \(x = a, x=b\) can eliminate a term and make it easy to find the unknowns \(A, B\). When there is however, we need to just pick values of \(x\) and solve from there.
+				</p>
+				<p>
+					If there is a repeated factor \((x-a)^n\), the partial sum will have all the fractions with denominations \((x-a), (x-a)^2,...\) up to \((x-a)^n\)
+				</p>
+				<p>
+					If the degree of the numerator is higher than the denominator, then we have to divide out the numerator (polynomial long division) to get a valid separable fraction,
+					\[\frac{x^3 + 3x}{(x+1)(x-3)} = x+2 + \frac{10x+6}{(x+1)(x-3)}.\]
+				</p>
+			</div>
+
+			<p>
+				A series \(\sum a_n\) is a pair of sequences:
+			</p>
+			<ol>
+				<li>A sequence \(a_n\) called the <b>sequence of terms</b></li>
+				<li>A sequence \(s_n\) called the <b>sequence of partial sums</b> defined as
+				\[s_n = \sum_{k=0}^{n} a_k.\]</li>
+			</ol>
+
+			<p>
+				If the sequence of partial sums converges to \(s\), then the series converges to the sum \(s\);
+				\[\sum_{n=0}^{\infty} a_n = s.\]
+				Divergent if not. 
+			</p>
+
+			<p>
+				A standard one is the geometric series, \(\sum r^n\) which will always converge to \(\frac{1}{1-r}\) when \(|r| < 1\). You can prove this by working out \(rs_n - s_n\).
+
+				\begin{align}
+				s_n - rs_n = 1 - r^{n+1} &\Longleftrightarrow s_n(1-r) = 1 - r^{n+1}\\
+				&\Longleftrightarrow s_n = \frac{1 - r^{n+1}}{1-r}.
+				\end{align}
+				And \(|r| < 1\) means that \(r\)-power will converge to 0.
+			</p>
+
+			<p>
+				A standard divergent series is the harmonic series, \(\sum \frac{1}{n}\). You can prove this by estimating partial sums \(s_2, s_4, s_8, s_{16}, ...\) and see that it will forever build to \(1 + 0.5 + 0.5 + 0.5 + ...\).
+				\[s_{2^n} > 1 + \frac{n}{2}.\]
+			</p>
+
+			<div class="blue">
+				<p><b><i>Basic Properties of Convergent Series.</i></b></p>
+				<ol>
+					<li><b>Sum rule</b>, \(\sum a_n\) converges to \(s,\; \sum b_n\) converges to \(t \implies \sum (a_n + b_n)\) converges to \(s + t\).</li>
+					<li><b>Multiple rule</b>, \(\sum a_n\) converges to \(s, \; \lambda \in \mathbb{R} \implies \sum \lambda a_n\) converges to \(\lambda s\).</li>
+					<li>\(\sum a_n\) converges \(\implies a_n \rightarrow 0\).</li>
+					<li>\(\sum |a_n|\) converges \(\implies \sum a_n\) also converges.</li>
+				</ol>
+			</div>
+
+
+
+
+			<h2 id="seq-2">Recurrences</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part3/note16.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				<i>Like the differential equations of sequences.</i>
+			</p>
+
+			<p>
+				A recurrence is a sequence defined, funnily enough, recursively.
+			</p>
+			<p>
+				For example, the fibonacci sequence \(F_n\) is defined as
+				\[F_n = F_{n-1} + F_{n-2}\]
+				\[F_0 = 0, F_1 = 1.\]
+			</p>
+			<p>
+				The <i>Towers of Hanoi</i> game's number of steps taken was computed to be the recurrence
+				\[T_n = 2T_{n-1} + 1.\]
+				For \(T_0 = 0\) this gives \(0, 1, 3, 7, 15, ...\) which we can see is \(T_n = 2^n - 1\). This latter form is the <b>closed form</b> of \(T_n\) and allows for immediate computation.
+			</p>
+
+			<p>
+				We are looking at solving linear recurrences with constant coefficients, of the form
+				\[x_n + a_1x_{n-1} + ... a_kx_{n-k} = f(n)\]
+				where \(f\) is a given function. (If the terms from 1 to k are given, then this describes a unique sequence.)
+			</p>
+			<p>
+				More importantly, we will look at <b>homogenous</b> (\(f(n) = 0\)) recurrences with \(k = 2\). Thus, we want the general solution of
+				\[x_n + ax_{n-1} + bx_{n-2} =0.\]
+
+			</p>
+			<p>
+				In the general case, we want to look for solutions of the form \(A\lambda^n\) where \(\lambda, A\) are constants. A bit of deriving later, we can get the auxillary equation in lambda.
+			</p>
+			<p class="blue">
+				The <b>auxillary equation</b> of the recurrence \(x_n + ax_{n-1} + bx_{n-2} = 0\) is
+				\[\lambda^2 + a\lambda + b = 0.\]
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>General Solution.</i></b> of the recurrence \(x_n + ax_{n-1} + bx_{n-2} = 0\),
+				</p>
+				<p>
+					Let \(\lambda_1, \lambda_2\) be the roots of the auxillary equation.
+				</p>
+				<ul>
+					<li>\(\lambda_1 \neq \lambda 2 \implies x_n = A\lambda_1^n + B\lambda_2^n\)</li>
+					<li>\(\lambda_1 = \lambda_2 \implies x_n = A\lambda_1^n + Bn\lambda_2^n\)</li>
+				</ul>
+				<p>
+					For constants \(A, B\), which can be found if the first two terms of the sequence are known.
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Find a closed form for the fibonacci sequence.
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> We have \(F_n = F_{n-1} + F_{n-2}\) so \(F_n - F_{n-1} - F_{n-2} = 0\). The auxillary equation is
+					\[\lambda^2 - \lambda - 1 = 0\]
+					Which has roots
+					\[\lambda = \frac{1 \pm \sqrt{5}}{2}\]
+					Or \(\phi\) and \(-(\frac{1}{\phi})\) (the golden ratio phi). Hence
+					\[F_n = A(\frac{1 + \sqrt{5}}{2}) + B(\frac{1 - \sqrt{5}}{2}).\]
+					We know \(F_0 = 0, F_1 = 1\) so if we substitue these values in, we get that \(A = \frac{1}{\sqrt{5}}, B = -\frac{1}{\sqrt{5}}\).
+
+					\begin{align}
+					F_n &= \frac{1}{\sqrt{5}}(\frac{1 + \sqrt{5}}{2}) -\frac{1}{\sqrt{5}}(\frac{1 - \sqrt{5}}{2}). \\
+					&= \frac{1}{\sqrt{5}}(\phi^n + \phi^{-n}).
+					\end{align}
+				</p>
+				<p>
+					Actually by some magic we can further simplify down to
+					\[F_n = \left \lfloor{\frac{\phi^n}{\sqrt{5}}}\right \rfloor\]
+				</p>
+			</div>
+
+			<p>
+				Non-homogenous recurrences have the \(f(n)\) bit not 0. 
+			</p>
+
+			<div class="blue">
+				<p><b><i>Finding solutions to non-homogenous recurrences.</i></b> of form \(x_n + ax_{n-1} + bx_{n-2} = f(n)\)</p>
+				<ol>
+					<li>
+						Find the general solution \(x_n = h_n\) of the homogenous recurrence:
+						\[x_n + ax_{n-1} + bx_{n-2} = 0.\]
+						(will have 2 arbitrary constants)
+					</li>
+					<li>
+						Find <i>any</i> particular solution \(x_n = p_n\) of the original recurrence. 
+					</li>
+					<li>
+						The general solution will be \(x_n = h_n + p_n\).
+					</li>
+				</ol>
+			</div>
+
+			<p>
+				Finding the particular solution \(p_n\) is not straight forward, but the technique is to try solutions that are <i>similar in form</i> to \(f(n)\). Substitue these into the original recurrence (as they are solutions!) and try solve. 
+			</p>
+
+			<p>
+				If \(f(n)\) is a constant, try find a constant \(k\).
+			</p>
+			<p>
+				If \(f(n)\) is a polynomial, try find a <i>same degree</i> polynomial. (substitute in a general polynomial)
+			</p>
+			<p>
+				Etc. just like diff. eqns. 
+			</p>
+		</div>
 		
 
 		<footer>
