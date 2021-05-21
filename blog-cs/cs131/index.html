@@ -1553,6 +1553,7 @@
 			<p>
 				A standard divergent series is the harmonic series, \(\sum \frac{1}{n}\). You can prove this by estimating partial sums \(s_2, s_4, s_8, s_{16}, ...\) and see that it will forever build to \(1 + 0.5 + 0.5 + 0.5 + ...\).
 				\[s_{2^n} > 1 + \frac{n}{2}.\]
+				Though any series \(\sum \frac{1}{n^k}\) where \(k > 1\) will always converge.
 			</p>
 
 			<div class="blue">
@@ -1565,7 +1566,150 @@
 				</ol>
 			</div>
 
+			<p>
+				No. 4 is only useful really when you have an "oscillating" series, like \(\sum \frac{(-1)^n}{2^n}\).
+			</p>
 
+			<div class="blue">
+				<p>
+					<b><i>The Comparison Test.</i></b> Suppose that \(0 \leq a_n \leq b_n\) for all \(n\),
+				</p>
+				<ol>
+					<li>If \(\sum b_n\) converges then so does \(\sum a_n\)</li>
+					<li>If \(\sum a_n\) diverges then so does \(\sum b_n\).</li>
+				</ol>
+			</div>
+
+			<p>
+				Usually with comparison test questions you just pull out equations from thin air, but (especially with rational functions) there's usually a technique for doing so based on the largest power of \(n\), and slowly chipping away a piece at a time until we get a very simple expression.
+			</p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Determine whether the following series converges or diverges:
+					\begin{align}
+					& (1)\; \sum \frac{n+2}{n^3 - n^2 + 1} & (2) \;\sum \frac{n^2 + 4}{2n^3 - n + 1}
+					\end{align}
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer 1.</i></b> Take a look at the fraction \(\frac{n+2}{n^3 - n^2 + 1}\). If we want to find a smaller fraction, we want a smaller numerator and a larger denominator than our current fraction.
+					\begin{align}
+					& n+2 \geq n & n^3 - n^2 + 1 \geq n^3
+					\end{align}
+					So we get the fraction \(\frac{n}{n^3}\) or \(\frac{1}{n^2}\) which we know will converge as a series. No help there.
+				</p>
+				<p>
+					For a larger fraction, we want a bigger numerator and a smaller denominator;
+
+					\begin{align}
+					n+2 &\leq n + 2n \textrm{ or } 3n \\n^3 - n^2 + 1 \geq n^3 - n^2 \textrm{ or } n^2 (n -1) &\geq \frac{n^3}{2}.
+					\end{align}
+
+					Admittedly, at the end we were pulling expressions out of thin air a bit but hopefully you can see that it's all valid. Thus
+					\[\frac{n+2}{n^3 - n^2 + 1} \leq \frac{6}{n^2}\]
+					and since we know \(\sum \frac{6}{n^2}\) converges (\(6 \sum \frac{1}{n^2}\)) the original one must too.
+				</p>
+
+				<p>
+					<b><i>Answer 2.</i></b> We're gonna be cheaty and say that this sequence does diverge. To show this, let's find a smaller fraction which diverges.
+
+					\begin{align}
+					n^2 + 4 &\geq n^2 \\
+					2n^3 -n + 1 &\leq 2n^3
+					\end{align}
+
+					(the \(-n\) more than cancels out the \(+1\)) and we can see that this gives us 
+
+					\[\frac{1}{2n} \leq \frac{n^2 + 4}{2n^3 -n+1}\]
+
+					And oh no, \(\sum \frac{1}{2n}\) diverges (multiple rule) so the original one must too.
+				</p>
+			</div>
+			<p></p>
+
+			<div class="blue">
+				<p>
+					<b><i>The Ratio Test.</i></b> If \(|\frac{a_{n+1}}{a_n}| \rightarrow L\) then
+				</p>
+				<ol>
+					<li>\(0 \leq L < 1 \implies \sum a_n\) converges.</li>
+					<li>\(L > 1\) or \(L \textrm{ is } \infty \implies \sum a_n\) diverges.</li>
+					<li>\(L = 1 \implies\) the test is inconclusive.</li>
+				</ol>
+			</div>
+
+			<p>
+				Useful in dealing with factorials.
+			</p>
+
+			<div class="blue">
+				<p><b><i>Basic Convergent Series.</i></b></p>
+				<ul>
+					<li>\(\sum_{n=0}^{\infty} r^n = \frac{1}{1-r}\) for all \(r : |r| < 1\)</li>
+					<li>\(\sum \frac{1}{n^k}\) converges for all \(k > 1\)</li>
+					<li>\(\sum n^k r^n\) converges for \(k > 0 \land |r| < 1\)</li>
+					<li>\(\sum_{n=0}^{\infty} \frac{c^n}{n!} = e^c\) for all \(c \in \mathbb{R}\)</li>
+				</ul>
+				<p><b><i>Basic Divergent Series.</i></b></p>
+				<ul>
+				<li>\(\sum \frac{1}{n^k}\) diverges for all \(k < 1\).</li></ul>
+			</div>
+
+			<p>
+				A <b>power series</b> is one of the form \(\sum a_n x^n\). Usually we start at \(n = 0\), such that the sequence goes \(a_0, a_1x, a_2x^2, ...\)
+			</p>
+
+			<p class="side">
+				<b><i>Lemma.</i></b> If \(\sum a_n R^n\) converges for some \(R \geq 0\), then \(\sum a_n x^n\) converges \(\forall x : |x| < R\). <i>(proof in notes)</i>
+			</p>
+
+			<p>
+				\(R \geq 0\) is the <b>radius of convergence</b> of a power series \(\sum a_n x^n\) if it converges according to the above, and diverges if \(|x| > R\). If a series converges \(\forall x\) then the radius is infinity. 
+			</p>
+
+			<p>
+				If the series \(\sum a_n x^n\) has a conv. rad \(R\) then it defines a function
+				\begin{align}
+				&f(x) = \sum_{n=0}^{\infty} a_nx^n &\forall x \in (-R, R)
+				\end{align}
+			</p>
+
+			<p>
+				You can find the <a href="https://www.youtube.com/watch?v=4L9dSZN5Nvg" class="text">radius of convergence using ratio test</a>, essentially evaluate
+				\[\lim_{n \rightarrow \infty} |\frac{a_{n+1}}{a_n}| < 1.\]
+				and you will get an \(|x| < ...\) where that something is your radius.
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Basic Properties of Power Series.</i></b> Let
+					\begin{align}
+					f(x) &= \sum_{n=0}^{\infty} a_nx^n & x \in (-R_1, R_1) \\
+					g(x) &= \sum_{n=0}^{\infty} b_nx^n & x \in (-R_2, R_2)
+					\end{align}
+					For positive \(R_1, R_2\), and let \(R = \min(R_1, R_2)\). Then for all \(x \in (-R , R)\),
+				</p>
+				<ol>
+					<li>If \(f(x) = g(x)\) then \(a_n = b_n\) for all \(n\)</li>
+					<li><b>Sum rule,</b> \(f(x) + g(x) = \sum_{n=0}^{\infty} (a_n + b_n) x^n\)</li>
+					<li><b>Multiple rule,</b> \(\lambda f(x) = \sum_{n=0}^{\infty} \lambda a_nx^n \; \forall \lambda \in \mathbb{R}\)</li>
+					<li><b>Product rule,</b> \(f(x)g(x) = \sum_{n=0}^{\infty} (a_0b_n + a_1b_{n-1} + ... + a_{n-1}b_1 + a_nb_0)x^n \).</li>
+				</ol>
+			</div>
+
+			<p>
+				This also gives the general binomial theorem, which for any \(q \in \mathbb{Q}, x \in (-1, 1)\)
+
+				\begin{align}
+				(1+x)^q &= \sum_{n=0}^{\infty} {q \choose n} x^n \\
+				{q \choose n} &= \frac{q!}{n!(q-n)!}
+				\end{align}
+			</p>
 
 
 			<h2 id="seq-2">Recurrences</h2>
