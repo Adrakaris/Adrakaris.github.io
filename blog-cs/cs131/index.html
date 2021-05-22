@@ -1898,9 +1898,14 @@
 			<ol>
 				<li><a href="#calc-1">Limits and Continuity</a></li>
 				<li><a href="#calc-2">Differentiation</a></li>
+				<li><a href="#calc-3">Properties of Differentiable Functions</a></li>
 			</ol>
 
 			<h2 id="calc-1">Limits and Continuity</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note19.pdf" class="text">Link to the PDF.</a>
+			</p>
 
 			<p>
 				<i>(Definitions)</i> let a function \(f: I \longrightarrow \mathbb{R}\) be defined on an interval \(I\). We're interested in a point \(a\) in that interval, where \(f\) may or may not be defined.
@@ -2017,7 +2022,7 @@
 
 
 			<p class="side">
-				<b><i>Theorem.</i></b> <i>(Intermediate Value Thm.)</i> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, \(f(a), f(b)\) have opposite signs, then there is a point \(c\) between  \(: f(c) = 0\).
+				<b><i>Intermediate Value Theorem.</i></b> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, \(f(a), f(b)\) have opposite signs, then there is a point \(c\) between  \(: f(c) = 0\).
 			</p>
 
 			<button class="collapsible">Problem...</button>
@@ -2043,7 +2048,7 @@
 			</div>
 
 			<p class="side">
-				<b><i>Theorem.</i></b> <i>(Extreme Value Thm.)</i> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, then \(\exists m, M \in [a, b]:\)
+				<b><i>Extreme Value Theorem.</i></b> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, then \(\exists m, M \in [a, b]:\)
 				\begin{align}
 				&f(m) \leq f(x) \leq f(M) &\forall x \in [a, b]
 				\end{align}
@@ -2054,6 +2059,9 @@
 			</p>
 
 			<h2 id="calc-2">Differentiation</h2>
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note20.pdf" class="text">Link to the PDF.</a>
+			</p>
 
 			<p>
 				If the limit of a real function \(f(x)\) at point \(a\)
@@ -2164,6 +2172,77 @@
 					\[\sum_{n=1}^\infty \frac{n}{2^n} = 2.\]
 				</p>
 			</div>
+
+			<h2 id="calc-3">Properties of Differentiable Functions</h2>
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note21.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				<i>(Things to be aware of)</i> Turning points, of which are local <i>maxima</i> and <i>minima</i>. 
+			</p>
+
+			<p class="side">
+				<b><i>Turning Point Theorem.</i></b> If a diff'able function \(f\) has a turning point at \(a\), \(f'(a) = 0\).
+			</p>
+
+			<p>
+				All points \(a\) where \(f(a) = 0\) are called <b>stationary points</b>, which aren't necessarily turning points. A stationary point which is neither a local maximum nor minimum is a <b>point of inflection</b>
+			</p>
+
+			<p>
+				To locate maxima and minima of a cont. function in a range \([a, b]\), we need only consider values at
+			</p>
+			<ul>
+				<li>The stationary points of \(f\) in \([a, b]\)</li>
+				<li>The end points \(a, b\)</li>
+			</ul>
+
+			<p class="side">
+				<b><i>Rolle's Theorem.</i></b> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, is diff'able on \(a, b\) and \(f(a) = f(b)\) then there is a point \(c \in a, b : f'(c) = 0\)
+			</p>
+
+			<p>
+				You have two end points with the same \(y\) value, so in the middle there must be <i>some</i> value which is a stationary point. (on horizontal lines, all the points work.)
+			</p>
+
+			<p class="side">
+				<b><i>Mean Value Theorem.</i></b> If \(f\) is continuous and diff'able over \([a, b]\) then \(\exists c \in [a,b] : \)
+				\[f'(c) = \frac{f(b) - f(a)}{b-a}. \]
+			</p>
+
+			<p>
+				Which is just Rolle's theorem but on a angled graph. 
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Consequences of the MVT.</i></b> Suppose \(f\) is continuous on \([a,b]\) and diff'able on \((a,b)\),
+				</p>
+				<ol>
+					<li>
+						<ul>
+							<li>\(f'(x) = 0 \forall x \in (a, b) \implies f\) is constant on \([a, b]\)</li>
+							<li>\(f'(x) > 0 \forall x \in (a, b) \implies f\) is <i>strictly</i> increasing</li>
+							<li>\(f'(x) < 0 \forall x \in (a, b) \implies f\) is <i>strictly</i> decreasing</i></li>
+						</ul>
+					</li>
+					<li>
+						<b>Second Derivative Test.</b> Suppose \(f'(c) = 0\). \(f''(c) > 0 \implies f\) has local <i>mini</i>mum; \(f''(c) < 0 \implies f\) has local <i>maxi</i>mum.
+					</li>
+				</ol>
+			</div>
+
+			<p>
+				For curve sketching:
+			</p>
+			<ul>
+				<li>Find stationary points, their co-ordinates, and their nature (max/min/infl)</li>
+				<li>Find where \(f(x) = 0\), i.e. intersects \(x\) axis</li>
+				<li>Find \(f\) where \(x = 0\), i.e. y-intercept</li>
+				<li>Determine what happens to \(f(x)\) as \(x \rightarrow \pm\infty\) (asymptotes?)</li>
+				<li>Investigate near where (if) \(f(x) \rightarrow \infty\), where a divide by zero is found or some other asymptote.</li>
+			</ul>
 		</div>
 		
 
