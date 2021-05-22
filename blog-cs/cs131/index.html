@@ -48,6 +48,7 @@
 				<li><a href="#vec">Vectors</a></li>
 				<li><a href="#matrices">Matrices</a></li>
 				<li><a href="#sequences">Sequences and Series</a></li>
+				<li><a href="#calculus">Calculus</a></li>
 			</ol>
 
 			<p>
@@ -1291,10 +1292,10 @@
 			<h2>Introduction</h2>
 
 			<ol>
-				<a href="#seq-1">Sequences</a>
-				<a href="#seq-3">Series</a>
-				<a href="#seq-2">Recurrences</a>
-				<a href="=seq-4">Decimal Representation of Reals</a>
+				<li><a href="#seq-1">Sequences</a></li>
+				<li><a href="#seq-3">Series</a></li>
+				<li><a href="#seq-2">Recurrences</a></li>
+				<li><a href="=seq-4">Decimal Representation of Reals</a></li>
 			</ol>
 
 			<p class="small">
@@ -1885,6 +1886,284 @@
 			<p>
 				Not sure why this is here save the fact that yes decimals are related to series.
 			</p>
+		</div>
+
+		<div class="colourband" id="calculus">
+			<h2>Calculus</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<li><a href="#calc-1">Limits and Continuity</a></li>
+				<li><a href="#calc-2">Differentiation</a></li>
+			</ol>
+
+			<h2 id="calc-1">Limits and Continuity</h2>
+
+			<p>
+				<i>(Definitions)</i> let a function \(f: I \longrightarrow \mathbb{R}\) be defined on an interval \(I\). We're interested in a point \(a\) in that interval, where \(f\) may or may not be defined.
+			</p>
+
+			<p>
+				When \(f(x)\) tends to a value \(l\) as \(x\) tends towards \(a\) from the left (negative side), we write the limit
+				\[\lim_{x \rightarrow a-} f(x) = l\]
+
+				Conversely, if \(f(x)\) tends to \(l\) as \(x\) to \(a\) from the other side we write
+				\[\lim_{x \rightarrow a+} f(x) = l\]
+
+				If \(\lim_{x \rightarrow a-} f(x) = l\) and \(\lim_{x \rightarrow a+} f(x) = l\) then
+				\[\lim_{x \rightarrow a} f(x) = l.\]
+
+				What this says that if every sequence \(x_n\) in \(I\) which converges to \(a\), \(x_n \neq a\), then \(\forall n\) the sequence \(f(x_n)\) converges to \(l\).
+			</p>
+
+			<button class="collapsible nul">Floor and Ceil...</button>
+			<div class="ccontent cnul">
+			<p>
+				The \(\left \lfloor{\textrm{floor}}\right \rfloor \) and \(\left \lceil{\textrm{ceiling}}\right \rceil \) functions always round down and up respectively to the nearest integer.
+			</p>
+
+			<p>
+				\(\forall k \in \mathbb{Z}\):
+				\begin{align}
+				& \lim_{x \rightarrow k-} \left \lfloor{x}\right \rfloor = k-1, & \lim_{x \rightarrow k+} \left \lfloor{x}\right \rfloor = k;
+				\end{align}
+				\begin{align}
+				& \lim_{x \rightarrow k-} \left \lceil{x}\right \rceil = k, & \lim_{x \rightarrow k+} \left \lceil{x}\right \rceil = k+1.
+				\end{align}
+			</p>
+			</div>
+
+			
+
+			<p class="side">
+				<b><i>Example.</i></b> Prove that \(\lim_x \rightarrow 0 \frac{1}{x}\) does not exist. 
+			</p>
+
+			<button class="collapsible">Proof...</button>
+			
+			<div class="ccontent">
+			<p>
+				<b><i>Proof.</i></b> We need to find a sequence \(x_n \rightarrow 0\) where \(f(x_n)\) does not converge. We can magic the sequence \(x_n = \frac{1}{n}\) which does converge to 0, but \(f(x_n) = n\) is an unbounded sequence which does not converge. Hence, the limit does not exist.
+				$$\tag*{$\Box$}$$
+			</p>
+			</div>
+
+			<p></p>
+
+			<div class="blue">
+				<p>
+					<b><i>Combination rules for limits.</i></b>  If \(\lim_{x \rightarrow a} f(x) = l\) and \(\lim_{x \rightarrow a} g(x) = m\) then
+				</p>
+				<ul>
+					<li><b>Sum</b> rule: \(\lim_{x \rightarrow a} (f(x) + g(x)) = l + m\)</li>
+					<li><b>Multiple</b> rule: \(\lim_{x \rightarrow a} \lambda f(x) = \lambda l\), \(\lambda \in \mathbb{R}\)</li>
+					<li><b>Product</b> rule: \(\lim_{x \rightarrow a} f(x)g(x) = lm\)</li>
+					<li><b>Quotient</b> rule: \(\lim_{x \rightarrow a} \frac{f(x)}{g(x)} = \frac{l}{m}\) provided \(m \neq 0\)</li>
+				</ul>
+
+				<p>
+					<b><i>Squeeze rule for limits.</i></b> If \(f(x) \leq g(x) \leq h(x)\) for all \(x \neq a\),
+					<div style="border-spacing: 0px 0px;">\[\lim_{x \rightarrow a} f(x) = l \land \lim_{x \rightarrow a} h(x) = l \implies \lim_{x \rightarrow a} g(x) = l.\]</div>
+				</p>
+			</div>
+
+			<p>
+				A continuous function is one with no "jumps" -
+			</p>
+
+			<p>
+				A function \(f : D \longrightarrow \mathbb{R}\) (\(D \subseteq \mathbb{R}\)) is <b>continuous at a point \(a\)</b> if \(\lim{x \rightarrow a} f(x)\) exists and equals \(f(a)\). \(f\) is continous if it is continous at every point in the interval.
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Combination rules for continuous functions.</i></b> If \(f, g\) are continuous at \(a\), then so are
+				</p>
+				<ul>
+					<li>The sum \(f+g\)</li>
+					<li>The scalar multiple \(\lambda f\) (\(\lambda \in \mathbb{R}\))</li>
+					<li>The product \(fg\)</li>
+					<li>The quotient \(\frac{f}{g}\) provided \(g(a) \neq 0\)</li>
+				</ul>
+				<p>
+					If \(f\) is continuous at \(a\) and \(g\) is continuous at \(f(a)\), then the composite \(g \circ f\) is also continous at \(a\).
+				</p>
+				
+			</div>
+
+			<p>
+				<i>\(g \circ f \equiv g(f(x))\).</i>
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Basic continuous functions.</i></b>
+				</p>
+				<ul>
+					<li>polynomials and rational functions*</li>
+					<li>The modulus/absolute function</li>
+					<li>The square root function, and n<sup>th</sup> root function where \(n \in \mathbb{Z}^+\)</li>
+					<li>Trig functions</li>
+					<li>Exponential functions</li>
+					<li>Functions defined by power series</li>
+				</ul>
+				<p class="small">
+					*The domain of rational functions exclude the divide by zero bit and so is continuous.
+				</p>
+			</div>
+
+
+			<p class="side">
+				<b><i>Theorem.</i></b> <i>(Intermediate Value Thm.)</i> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, \(f(a), f(b)\) have opposite signs, then there is a point \(c\) between  \(: f(c) = 0\).
+			</p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Show that there is a number \(x : x^{179} + \frac{163}{1 + x^2} = 119\).
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> Rearrange, let \(f(x) = x^{179} + \frac{163}{1 + x^2} - 119\). 
+				</p>
+
+				<p>
+					\(f(0) > 0,\; f(1) < 0\) thus by intermediate value theorem \(\exists x \in [1, 0] : f(x) = 0\). 
+				</p>
+				<p class="small">
+					<i>(You do have to conjure numbers to do this question)</i>
+				</p>$$\tag*{$\Box$}$$
+				
+			</div>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> <i>(Extreme Value Thm.)</i> If \(f : [a, b] \longrightarrow \mathbb{R}\) is continuous, then \(\exists m, M \in [a, b]:\)
+				\begin{align}
+				&f(m) \leq f(x) \leq f(M) &\forall x \in [a, b]
+				\end{align}
+			</p>
+
+			<p>
+				Basically, there's a maximum and minimum value of a function in a bound. 
+			</p>
+
+			<h2 id="calc-2">Differentiation</h2>
+
+			<p>
+				If the limit of a real function \(f(x)\) at point \(a\)
+				\[lim_{h \rightarrow 0} \frac{f(a + h) - f(a)}{h} \]
+				exists, then \(f(x)\) is differentiable at \(a\), we get \(f'(a)\).
+			</p>
+
+			<p>
+				The \(\frac{d}{dx}\) thing is called Leibniz notation.
+			</p>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> If \(f\) is differentiable at \(a\), \(f\) is also continuous at \(a\). However, \(f\) may be continuous but <i>not</i> diff'able.
+			</p>
+
+			<p>
+				For example, the function \(f(x) = |x|\) is continuous at 0 but not differnetiable, because at 0 the relevant limit does not exist (there's a crinkle).
+			</p>
+
+			<p>
+				Also though the notes is very from principles <i>""RIGOUR""</i> \(\frac{d(x^n)}{dx} = nx^{n-1}\) - in case you didn't know.
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Combination Rules for Derivatives.</i></b> If \(f, g\) are diff'able, the following are also diff'able and follow these rules:
+				</p>
+				<ul>
+					<li><b>Sum</b> rule (\(f + g\)): \((f +g)' = f' + g'\)</li>
+					<li><b>Multiple</b> rule (\(lambda f:\lambda \in \mathbb{R}\)): \((\lambda f)' = \lambda f'\)</li>
+					<li><b>Product</b> rule (\(fg\)): \((fg)' = fg' + gf'\)</li>
+					<li><b>Quotient</b> rule (\(f/g\)):  
+						<div style="border-spacing: 0px 0px;">\((\frac{f}{g})' = \frac{gf' - fg'}{g^2}\)</div>
+					</li>
+				</ul>
+			</div>
+
+			<p></p>
+			<div class="blue">
+				<p><b><i>Trig derivatives.</i></b></p>
+				<div style="border-spacing: 0px 0px;">
+				\begin{array}{ccc}
+				& \frac{d(\sin x)}{dx} = \cos x & \frac{d(\cos x)}{dx} = -\sin x &\frac{d(\tan x)}{dx} = \frac{1}{\cos ^2 x} = \sec ^2 x.
+				\end{array}
+				</div>
+				
+			</div>
+			<p></p>
+			<div class="blue">
+				<p>
+					<b><i>The Chain Rule.</i></b> (providing the functions \(y = f(z), \; z = g(x)\) are diff'able)
+
+					<div style="border-spacing: 0px 0px;">
+					\begin{align}
+					\frac{dy}{dx} &= \frac{dy}{dz} \times \frac{dz}{dx} \\
+					\textrm{or } (f \circ g)'(x) &= g'(x) f'(g(x))
+					\end{align}
+					</div>
+				</p>
+			</div>
+
+			<p></p>
+			<div class="blue">
+				<p>
+					<b><i>Diff'n of functions def' by power series.</i></b> If \(\sum(a_nx^n\) is a power series with radius of convergence R, and \(f\) is defined
+					\[f(x) = \sum_{n=0}^\infty a_nx^n : x \in (-R, R)\]
+					then it is diff'able and
+					\[f'(x) = \sum_{n=1}^\infty na_nx^{n-1}\]
+				</p>
+
+				<p>
+					<i>Pay attention: \(n=0\) changes to \(n=1\)</i>
+				</p>
+			</div>
+
+			<p>
+				The exponential function \(\exp(x)\) or \(e^x\) can be defined as a power series (its maclaurin series) and thus differentiable to get... \(e^x\). 
+			</p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Find \(\sum_{n=1}^\infty \frac{n}{2^n}\).
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> You've got to bear with me on this one, because the given solution is clearly written by someone who knew the answer already and have left out a lot of the logic leaps.
+				</p>
+
+				<p>
+					We start with a standard definition, for \(|x| = 1\)
+					\[\sum_{n=0}^\infty x^n = \frac{1}{1-x}\]
+					We differentiate the left to get
+					\[\sum_{n=1}^\infty nx^{n-1} = \frac{d}{dx} (\frac{1}{1-x}).\]
+					And the right resolves into \((1-x)^{-2}\).
+				</p>
+
+				<p>
+					This derivative form of the power set is very similar to the sum we want to find, so much so that if we take \(x = \frac{1}{2}\),
+
+					\[\sum_{n=1}^\infty n(\frac{1}{2})^{n-1} = \sum_{n=1}^\infty \frac{n}{2^{n-1}} \]
+
+					Which resolves down into \(4\) since we can just sub in \(x\) to the other side. Note that if we want to get to \(\frac{n}{2^n}\) from \(\frac{n}{2^n-1}\) we have to multiply by \(\frac{1}{2}\), so we multiply both sides by a half to get
+
+					\[\sum_{n=1}^\infty \frac{n}{2^n} = 2.\]
+				</p>
+			</div>
 		</div>
 		
 
