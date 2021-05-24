@@ -1899,6 +1899,13 @@
 				<li><a href="#calc-1">Limits and Continuity</a></li>
 				<li><a href="#calc-2">Differentiation</a></li>
 				<li><a href="#calc-3">Properties of Differentiable Functions</a></li>
+				<li><a href="#calc-4">L'hopital's Rule and Implicit Differentiation</a></li>
+				<li><a href="#calc-5">Differentiating Inverse Functions</a></li>
+				<li><a href="#calc-6">Integration</a></li>
+				<li><a href="#calc-7">Logs and Exponentials</a></li>
+				<li><a href="#calc-8">Taylor's Theorem</a></li>
+				<li><a href="#calc-9">First Order ODEs</a></li>
+				<li><a href="#calc-10">Second Order ODEs</a></li>
 			</ol>
 
 			<h2 id="calc-1">Limits and Continuity</h2>
@@ -2243,6 +2250,401 @@
 				<li>Determine what happens to \(f(x)\) as \(x \rightarrow \pm\infty\) (asymptotes?)</li>
 				<li>Investigate near where (if) \(f(x) \rightarrow \infty\), where a divide by zero is found or some other asymptote.</li>
 			</ul>
+
+
+			<h2 id="calc-4">L'hopital's Rule and Implicit Differentiation</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note22.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<div class="blue">
+				<p>
+					<div style="border-spacing: 0px 0px;">
+					<b><i>L'hopital's Rule.</i></b> Suppose that \(f(a) = 0, g(a) = 0\). If \(\lim_{x \rightarrow a} \frac{f'(x)}{g'(x)}\) exists then so does \(\lim_{x \rightarrow a} \frac{f(x)}{g(X)}\) also exists,
+
+					\[\lim_{x\rightarrow a} \frac{f(x)}{g(x)} = \lim_{x \rightarrow a} \frac{f'(x)}{g'(x)}. \]
+				</div>
+				</p>
+			</div>
+
+			<p>
+				You can repeat this and keep on differentiating if you keep getting \(\frac{0}{0}\), however there is no guarantee that you will get anywhere.
+			</p>
+
+			<p>
+				Implicit differentiation deals with functions not of the form \(y = f(x)\), such as \(x^2 + y^2 = 1\).
+			</p>
+
+			<p>
+				Two methods (that work the same): 
+			</p>
+			<ul>
+				<li>
+					Either consider a \(y\) term as a function of \(x\), thus because of chain rule append a \(\frac{dy}{dx}\) to the end of each \(y\) term, differentiate \(x\) terms as normal.
+					\begin{align}
+					\therefore d(x^2 + y^2 = 0)/dx &\implies 2x + 2y\frac{dy}{dx} = 0 \\
+					&\implies \frac{dy}{dx} = -\frac{2x}{2y} = -\frac{x}{y}.
+					\end{align}
+				</li>
+				<li>
+					Or, consider both as functions and append a \(dx\) or \(dy\).
+					\begin{align}
+					\therefore d(x^2 + y^2 = 0)/dx &\implies 2xdx + 2ydy = 0\\
+					&\implies 2ydy = -2xdx\\
+					&\implies \frac{dy}{dx} = -\frac{2x}{2y} = -\frac{x}{y}.
+					\end{align}
+				</li>
+
+			</ul>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Find \(\frac{dy}{dx}\) of \(y \sin x + \tan^{-1} y = 0\) in terms of \(y, x\).
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Answer.</i></b> First, differentiate \(y \sin x\). By product rule,
+					<div style="border-spacing: 0px 0px;">
+					
+					\[d(y \sin x) = \sin(x)dy + y\cos(x)dx\]
+					Then \(\tan^{-1} y\) is a standard derivative,
+					\[d(\tan^{-1} y) = \frac{1}{1+y^2} dy\]
+					Thus we get
+					\[ \sin(x)dy + y\cos(x)dx + \frac{1}{1+y^2}dy = 0\]
+					Collecting terms,
+					\[(\sin(x) + \frac{1}{1+y^2})dy = (-y\cos(x))dx \]
+					Dividing through,
+					\[\frac{dy}{dx} = \frac{-y \cos x}{\sin x + \frac{1}{1+ y^2}} \]
+					Which one can simplify if they wish.
+					</div>
+				</p>
+			</div>
+
+			<h2 id="calc-5">Differentiating Inverse Functions</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note23.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				Recall from 130 <a href="../cs130/index.html#func-2" class="text">Injection, Bijection, and Surjection</a>. Recall also the range of a function \(f : A \longrightarrow B\) is \(\{y \in B : f(x) = y, x \in A \}\).
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Differentiation of Inverse Functions.</i></b> Let \(f : [a, b] \longrightarrow \mathbb{R}\) be a continuous funciton. If \(f\) diff'able on \((a, b)\) and \(f'(x) > 0 \lor f'(x) < 0 \; \forall x \in (a, b)\), then \(f\) has an inverse function \(f^{-1}\) which is diff'able. Let \(y = f(x);\)
+				</p>
+				<div style="border-spacing: 0px 0px;">
+					\begin{align}
+					& (f^{-1})'(y) = \frac{1}{f'(x)} \equiv & \frac{dx}{dy} = \frac{1}{\frac{dy}{dx}}
+					\end{align}
+				</div>
+			</div>
+			<p></p>
+			<button class="collapsible">Example...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> To find the derivative of \(f\) given \(f(x) = x^\frac{1}{n}\) for some fixed \(n > 0\). The inverse function is gotten by writing \(y = x^\frac{1}{n}\), such that \(x = y^n\), thus \(f^{-1}(x) = y^n\). So
+				</p>
+				<div style="border-spacing: 0px 0px;">
+					\begin{align}
+						&\frac{dx}{dy} = ny^{n-1} & \frac{dy}{dx} = \frac{1}{ny^{n-1}}.
+					\end{align}
+				</div>
+				<p>
+					\(y = x^\frac{1}{n}\) so \(\frac{dy}{dx} = y^{n-1} = x^\frac{n-1}{n}\), thus
+				</p>
+				<div style="border-spacing: 0px 0px;">
+					\begin{align}
+					f'(x) &= \frac{dy}{dx} = \frac{1}{nx^\frac{n-1}{n}} \\
+					&= \frac{1}{n} x^\frac{1}{n-1}.
+					\end{align}
+				</div>
+			</div>
+
+			<p>
+				We can differentiate any rational power of \(x\) by the following:
+				\[\frac{d}{dx}x^\frac{p}{q} = ... = \frac{p}{q} x^{\frac{p}{q}-1}. \]
+				same way for regular differetiation.
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Trigonometric Inverse Derivatives.</i></b>
+				</p>
+				<div style="border-spacing: 0px 0px;">
+				<ul>
+					<li>
+						\(\mathbf{sin}^{-1}\). The inverse for the function \(\sin : [\frac{-\pi}{2}, \frac{\pi}{2}] \longrightarrow [-1, 1]\);
+						\begin{align}
+						&\frac{d}{dx}\sin^{-1}(x) = \frac{1}{\sqrt{1 - x^2}} &(-1&lt;x<1)
+						\end{align}
+					</li>
+					<li>
+						\(\mathbf{cos}^{-1}\). The inverse for the function \(\cos : [0, \pi] \longrightarrow [-1, 1]\);
+						\begin{align}
+						&\frac{d}{dx}\cos^{-1}(x) = \frac{-1}{\sqrt{1-x^2}} &(-1 < x < 1)
+						\end{align}
+					</li>
+					<li>
+						\(\mathbf{tan}^{-1}\). The inverse for the function \((\frac{-\pi}{2}, \frac{\pi}{2}) \longrightarrow \mathbb{R}\);
+						\begin{align}
+						&\frac{d}{dx}\tan^{-1}(x) = \frac{1}{1+x^2} & (x \in \mathbb{R})
+						\end{align}
+					</li>
+				</ul>
+				</div>
+			</div>
+
+			<h2 class="calc-6">Integration</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note24.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<button class="collapsible nul">Definition of Integration...</button>
+			<div class="ccontent cnul">
+				<p>
+					Let \(f:[a, b] \longrightarrow\mathbb{R}\) be a bounded function. A <b>partition</b> of \([a,b]\) is a set \(P = \{x_0, x_1, x_2,...,x_n\} :\)
+					\[a = x_0 < x_1 < x_2 < ... < x_{n-1} < x_n = b. \]
+					For such a partition P let
+				</p>
+				<ul>
+					<li>
+						\(m_r\) as the greatest lower bound \(\{f(x): x_{r-1} \leq x \leq x_r\}\)
+					</li>
+					<li>
+						\(M_r\) as the least upper bound \(\{f(x): x_{r-1} \leq x \leq x_r\}\)
+					</li>
+				</ul>
+				<p>
+					Also let the lower sum \(L(f, P\) and the upper sum \(U(f, P)\)
+					\begin{align}
+					L(f, P) &= \sum_{r=1}^{n} (x_r - x_{r-1})m_r, \\
+					U(f, P) &= \sum_{r=1}^{n} (x_r - x_{r-1})M_r.
+					\end{align}
+					These are the lower and upper estiamtes of the area under the graph of \(f\). For more points in the partition, we get a better estimate of an area. 
+				</p>
+				<p>
+					If there is a unique number A:
+					\[L(f,P) \leq A \leq U(f,P) \]
+					for every partition P of \([a, b]\) then we say that \(f\) is <b>integrable</b> over \([a, b]\). A is the <b>definite integral</b> of \(f\) between \(a, b\). \(\vartriangleright\)
+				</p>
+			</div>
+
+			<p>
+				\begin{align}
+				&\int_{a}^{a} f(x)dx = 0 &\int_{a}^{b} f(x)dx = - \int_{b}^{a} f(x)dx.
+				\end{align}
+			</p>
+
+			<p>
+				Some basic integrable functions (referring to the range \([a, b]\)):
+			</p>
+			
+			<ol>
+				<li>Any continuous function.</li>
+				<li>Any function which is increasing.</li>
+				<li>Any function which is decreasing.</li>
+			</ol>
+			
+
+			<div class="blue">
+				<p><b><i>Properties of definite intervals.</i></b></p>
+				<div style="border-spacing: 0px 0px;">
+				<ol>
+					<li>
+						<b>Sum rule:</b> \(f, g\) are integrable then so is \(f+g\), and
+						\[\int_{a}^{b} (f(x) + g(x))dx = \int_{a}^{b} f(x)dx + \int_{a}^{b} g(x)dx. \]
+					</li>
+					<li>
+						<b>Multiple (scalar) rule:</b> \(f\) integrable, \(\lambda \in \mathbb{R}\), then \(\lambda f\) integrable, and
+						\[\int_a^b \lambda f(x)dx = \lambda \int_a^b f(x)dx. \]
+					</li>
+					<li>
+						\(f\) integrable over \([a,c]\) and \([c,b]\), then \(f\) also integrable over \([a,b]\), and
+						\[\int_a^b f(x)dx = \int_a^c f(x)dx + \int_c^b f(x)dx. \]
+					</li>
+					<li>
+						If \(f(x) \leq g(x) \; \forall x \in [a, b]\) then provided both integrals exist,
+						\[\int_a^b f(x)dx \leq \int_a^b g(x)dx. \]
+					</li>
+				</ol>
+				</div>
+			</div>
+			<p></p>
+
+			<div class="blue">
+				<p>
+					<b><i>First Fundamental Theorem of Calculus.</i></b> Let \(f : [a,b] \longrightarrow \mathbb{R}\) be integrable, and define \(F : [a,b] \longrightarrow \mathbb{R}\) as
+					\[F(x) = \int_a^x f(t)dt. \]
+					If \(f\) continuous at \(c \in (a, b)\) then \(F\) is differentiable at \(c\), and
+					\[F'(c) = f(c). \]
+				</p>
+			</div>
+			<p></p>
+
+			<div class="blue">
+				<p>
+					<b><i>Second Fundamental Theorem of Calculus.</i></b> Let \(f : [a,b] \longrightarrow \mathbb{R}\) be continuous and suppose \(F\) is a diff'able function : \(F' = f\), then
+					\[\int_a^b f(x)dx = [F(x)]^b_a \]
+					Where \([F(x)]^b_a\) dentoes \(F(b) - F(a)\)
+				</p>
+				<div style="border-spacing: 0px 0px;"><p>
+					Alternatively, \(\frac{d}{dx}F(x) = f(x) \; \forall x\), and \(f\) continuous, then
+					\(\int f(x)dx = F(x) + c \)
+					for some c.
+				</p></div>
+			</div>
+
+			<h2 id="calc-7">Logs and Exponentials</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note25.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<p>
+				In the notes \(\log x\) means the <i>natural</i> log of \(x\), but here I will use \(\ln x\). It is always useful to specify.
+			</p>
+
+			<p>
+				For each \(x > 0\);
+				\[\ln x = \int_1^x \frac{1}{t}dt. \]
+			</p>
+
+			<div class="side">
+			<p>
+				<b><i>Properties of Logarithms.</i></b>
+				<ol>
+					<li>\(\ln(1) = 0.\)</li>
+					<li>log is a strictly increasing function.</li>
+					<li>log is a differentiable function, \(\frac{d(\ln x)}{dx}\)</li>
+					<li>\(\ln(xy) = \ln x + \ln y\)</li> 
+					<li>\(\ln(\frac{x}{y}) = \ln x - \ln y \)</li>
+					<li>\(\ln : (0, \infty) \longrightarrow \mathbb{R}\) is bijective</li>
+				</ol>
+			</p>
+			</div>
+			
+			<p>
+				Since \(\ln : (0, \infty) \longrightarrow \mathbb{R}\) is bijective, it has an inverse function \(\exp : \mathbb{R} \longrightarrow (0, \infty)\). \(e = \exp(1); e^x = \exp(x)\).
+			</p>
+
+			<div class="side">
+			<p>
+				<b><i>Properties of Exponentials.</i></b> For any \(x, y \in \mathbb{R}\),
+				<ol>
+					<li>\(\exp(x+y) = \exp(x)\exp(y)\) but likewise \(e^{x+y} = e^xe^y\)</li>
+					<li>\(\frac{d(\exp(x))}{dx} = \exp(x)\), \(\exp(0) = 1\)</li>
+					<li>\(\exp(x) = \lim_{n \rightarrow \infty} (1 + (\frac{x}{n})^n\)</li>
+					<li>\(\exp(x) = \sum_{n=0}^{\infty} \frac{x^n}{n!}\)</li>
+				</ol>
+			</p>
+			</div>
+			
+			<p>
+				For \(a > 0, x \in \mathbb{R}\), any exponential can be defined by
+				\[a^x = e^{x \ln a} \]
+				Then for \(a, b > 0; x, y \in \mathbb{R}\) the following properties hold:
+				\begin{align}
+				&\ln (a^x) = x \ln a &(ab)^x = a^xb^x \\
+				&a^xa^y = a^{x+y} &(a^x)^y = a^{xy} = (a^y)^x.
+				\end{align}
+			</p>
+
+			<p>
+				We can change bases of logarithms (provided \(b \neq 1\));
+				\[\log_b x = \frac{\ln x}{\ln b} \]
+			</p>
+
+			<h2 id="calc-8">Taylor's Theorem</h2>
+
+			<p>
+				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note26.pdf" class="text">Link to the PDF.</a>
+			</p>
+
+			<div class="blue">
+				<p>
+					<div style="border-spacing: 0px 0px;">
+					<b><i>Taylor's Theorem.</i></b> Let \(f\) be an \(n+1\) times diff'able function on an open interval containing some points \(a, x\). Then
+
+					\[f(x) = f(a) + f'(a)(x-a) + \frac{f''(a)}{2!}(x-a)^2 + ... + \frac{f^{(n)}(a)}{n!}(x-a)^n + R_n(x)\]
+
+					Where
+
+					\[R_n(x) = \frac{f^{(n+1)}(c)}{(n+1)!}(x-a)^{n+1} \]
+
+					For some number \(c\) between \(a, x\).
+					</div>
+				</p>
+			</div>
+
+			<p>
+				The resulting polynomial from evaluating some \(n\) terms is called the <b>Taylor polynomial of degree \(n\) of \(f\) at \(a\)</b>. This is however an <i>approximation</i>, and so the end term \(R_n(x)\) is the error in the approximation. 
+			</p>
+
+			<p>
+				If we can show \(R_n (x) \rightarrow 0\) as \(n \rightarrow \infty\) then we get a sequence of better and better approximations until we get the <b>taylor series</b>,
+
+				\[f(x) = \sum_{n=0}^\infty \frac{f^{(n)}(a)}{n!}(x-a)^n \] 
+
+				This will only converge for values of \(x\) within the radius of convergence of the power series. They can be used to approximate functions. 
+			</p>
+
+			<p>
+				When \(n = 0\), Taylor's reduces down to the mean value theorem. <i>(Proof of Taylor's is omitted)</i>
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>n<sup>th</sup> derivative test for the nature of stationary points.</i></b> Suppose a function \(f\) has a stationary point at \(a\) however \(f'(a) = f''(a) = ... = f^{(n-1)} = 0\), while \(f^{n}(a) \neq 0\). If \(f^{n}(a)\) is continuous,
+					<ol>
+						
+						<li>\(n\) even, \(f^{(n)}(a) > 0\); \(f\) has a local maximum</li>
+						<li>\(n\) even, \(f^{(n)}(a) < 0\); \(f\) has a local minimum</li>
+						<li>\(n\) odd; \(f\) has a point of inflection at \(a\)</li>
+					</ol>
+				</p>
+			</div>
+
+			<p>
+				When \(a = 0\), we get the Maclaurin's series, which is a special case of Taylor's series
+
+				\[f(x) = \sum_{n=0}^{\infty}\frac{f^{(n)}(0)}{n!}x^n \]
+			</p>
+
+			<div class="blue">
+				<p>
+					<b><i>Important Maclaurin Series.</i></b>
+
+					<div style="border-spacing: 0px 0px;">
+					\begin{align}
+					e^x &= 1 + x + \frac{x^2}{2!} + ... + \frac{x^n}{n!} &(x \in \mathbb{R}) \\
+
+					\sin x &= x - \frac{x^3}{3!} + \frac{x^5}{5!} - ... + \frac{(-1)^nx^{2n}}{(2n)!} &(x \in \mathbb{R}) \\
+
+					\cos x &= 1 - \frac{x^2}{2!} + \frac{x^4}{4!} - ... + \frac{(-1)^nx^{2n}}{(2n)!} &(x \in \mathbb{R}) \\
+
+					(1+x)^a &= 1 + ax + \frac{a(a-1)x^2}{2!} + ... + {a \choose n}x^n & (x \in \mathbb{R}) \\
+
+					\ln (1 + x) &= x - \frac{x^2}{2} + \frac{x^3}{3} - ... + \frac{(-1)^{n+1}x^n}{n} &(|x| < 1) \\
+
+					-\ln (1-x) &= x + \frac{x^2}{2} + \frac{x^3}{3} + ... + \frac{x^n}{n} &(|x| < 1)
+					\end{align}
+					</div>
+				</p>
+
+				<p>
+					These are all expressable as sums using the n<sup>th</sup> term, though bear in mind the last two start from \(n=1\).
+				</p>
+
+			</div>
+
 		</div>
 		
 
