@@ -2645,6 +2645,231 @@
 
 			</div>
 
+			<h2 id="calc-9">First Order ODEs</h2>
+
+			<p>
+				ODEs, Ordinary Differential Equations, are equations including derivatives, such as \(y' = 4x\) or \(y'' + 4y = x\), etc.
+			</p>
+
+			<p>
+				The <b>order</b> of a DE represents the <i>highest derivative</i> contained iwthin it. This section looks at 1st orders.
+			</p>
+
+			<p>
+				First order equations of the form \(y' = f(x)\) can be easily solved via integration. This will give us a <i>general solution</i> with the \(+ c\), representing a <i>family</i> of curves. If we are given constraints, we can get a <i>particular solution</i>.
+			</p>
+
+			<div class="blue">
+				<p>
+					<div style="border-spacing: 0px 0px;">
+					<b><i>Separable Equations.</i></b> A [1st order] ODE is called a <b>separable</b> equation if it can be written in the form
+					\[\frac{dy}{dx} = f(x)g(y) \]
+					Since this can be rewritten as
+					\[\frac{1}{g(y)} \frac{dy}{dx} = f(x) \textrm{ or } \frac{1}{g(y)}dy = f(x)dx \]
+					Which can be directly integrated,
+					\[\int \frac{1}{g(y)} dy = \int f(x)dx. \]
+					</div>
+				</p>
+			</div>
+
+			<p>
+				An example of a separable equiation is \(\frac{dy}{dx} + xy = 0\).
+			</p>
+
+			<div class="blue">
+				<p>
+					<div style="border-spacing: 0px 0px;">
+					<b><i>Homogenous Equations.</i></b> An ODE is called <b>homogenous</b> if it can be written in the form
+					\[\frac{dy}{dx} = f(\frac{y}{x}) \]
+					We let some variable \(v = \frac{y}{x} : y = xv\), thus
+					\[\frac{d(xv)}{dx} = f(v) \Longleftrightarrow x\frac{dv}{dx} + v = f(v) \Longleftrightarrow \frac{dv}{dx} = \frac{f(v) -v}{x}\]
+					This brings it into a separable form, into
+					\begin{align}
+					\frac{1}{f(v)-v}dv = \frac{1}{x}dx &\implies \int \frac{1}{x} dx = \int \frac{1}{f(v)-v} dv \\
+					&\implies \ln x = \int \frac{1}{f(v)-v} dv.
+					\end{align}
+					And replace \(v\) by \(\frac{y}{x}\) to get the original general equation.
+					</div>
+				</p>
+			</div>
+
+			<p>
+				The following problem <i>may</i> help.
+			</p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Solve \(2xy \frac{dy}{dx} = y^2 - x^2.\)
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<p>
+					<div style="border-spacing: 0px 0px;">
+					<b><i>Answer.</i></b> We can rearrange;
+					\[\implies \frac{dy}{dx} = \frac{y^2-x^2}{2xy} = \frac{1}{2}(\frac{y^2}{xy} - \frac{x^2}{xy}) = \frac{1}{2}(\frac{y}{x}-\frac{x}{y}). \]
+
+					This is homogenous, so we apply the above principle to this equation;
+
+					\begin{align}
+					\implies \frac{d(vx)}{dx} = \frac{1}{2}(v - \frac{1}{v}) &\implies x\frac{dv}{dx} + v = \frac{1}{2}(v - \frac{1}{v}) \\
+					&\implies \frac{dv}{dx} = -\frac{1}{x}(\frac{1+v^2}{2v})
+					\end{align}
+
+					Which is now in separable form. Now, skipping straight to \(\ln x = \dots\) form,
+
+					\begin{align}
+					\implies \ln x = \int \frac{-2v}{1 + v^2}dv & \implies \ln x = -\ln (1 + v^2) + c \\
+					&\implies x(1+v^2) = e^c.
+					\end{align}
+
+					Let the constant \(k = e^c\) and replacing \(v\) by \(\frac{y}{x}\). Thus
+
+					\[x(1 + \frac{y^2}{x^2}) = k \Longleftrightarrow x^2 + y^2 = kx.  \]
+					</div>
+				</p>
+			</div>
+
+			<p></p>
+
+			<div class="blue">
+				<div style="border-spacing: 0px 0px;">
+				<p>
+					<b><i>Linear Equations.</i></b> An ODE is called <b>linear</b> if it has the form
+					\[\frac{dy}{dx} + P(x)y  = Q(x). \]
+				</p>
+
+				<p>
+					Related to this is the <b>integrating factor</b>, \(I(x) = e^{\int P(x) dx}\). This can be derived if \(Q(x) = 0\). 
+				</p>
+
+				<p>
+					We multiply both sides of the equation by \(I(x)\), to get
+					\[\frac{dy}{dx}I(x) + yI(x)P(x) = Q(x)I(x) \]
+					Note the LHS is the result of the implicit differentiation of \(yI(x) \), thus
+					\begin{align}
+					\frac{d}{dx}(yI(x)) &= Q(x)I(x) \\
+					yI(x) &= \int Q(x)I(x) dx.
+					\end{align}
+				</p>
+				</div>
+			</div>
+			<p></p>
+
+			<button class="collapsible">Problem...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Problem.</i></b> Find the general solution to
+					\[(1+x^2)\frac{dy}{dx} + xy = x\sqrt{1+x^2}, \]
+					and the particular solution which satisfies \(y = \frac{1}{2}, x=0\).
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent">
+				<div style="border-spacing: 0px 0px;">
+				<p>
+					<b><i>Answer.</i></b> We can rearrange the equation to
+					\[\frac{dy}{dx} + \frac{xy}{1+x^2} = \frac{x}{\sqrt{1+x^2}} \]
+					The integrating factor is thus
+					\[e^{\int \frac{x}{1+x^2}dx} = e^{\frac{1}{2} \ln (1+x^2)} = (1 + x^2)^{\frac{1}{2}}.\]
+					Multiplying by this integrating factor,
+					\begin{align}
+					\sqrt{1+x^2} \frac{dy}{dx} + \frac{xy}{\sqrt{1+x^2}} &= x \\
+					\frac{d}{dx}(\sqrt{1+x^2} y) &= x 
+					\end{align}
+					Hence the general solution is
+					\[\sqrt{1+x^2}y = x^2 / 2 + c. \]
+					The particular solution is when you substitute the values for \(y, x\) into the equation to find c, and \(c = \frac{1}{2}\). That gives you the final specific curve. 
+				</p>
+				</div>
+			</div>
+
+			<h2 id="calc-10">Second Order ODEs</h2>
+
+			<p>
+				These are where there is a \(y''\) term, and are dealt with very similarly to recurrences. They take the form
+				\[ay'' + by' + cy = f(x) \]
+			</p>
+
+			<p>
+				If \(f(x) = 0\), then the equation is <b>homogenous</b>. To find the general solution, find the <i>general solution</i> of \(ay'' + by' + cy = 0\) find the <i>particular solution</i> of \(ay'' + by' + cy = f(x)\) and add them together.
+			</p>
+
+			<div class="blue">
+				<div style="border-spacing: 0px 0px;">
+				<p>
+					<b><i>Solving homongeous equations.</i></b> For the homogenous equation
+					\[ay'' + by' + cy = 0 \]
+				</p>
+
+				<p>
+					There's a lot of waffle, but we have an <i>auxillary equation</i>  that is relevant, which is 
+					\[a\lambda^2 + b\lambda + c = 0 \]
+				</p>
+
+				<p>
+					The roots of this equation determine the form of the general solution.
+				</p>
+
+				<ul>
+					<li>
+						<i>Roots are real and distinct.</i> The general solution is \(y = Ae^{\lambda_1 x} + Be^{\lambda_2 x}\).
+					</li>
+					<li>
+						<i>Roots are equal.</i> The general solution is \(y = Ae^{\lambda x} + Bxe^{\lambda x} = (A + Bx) e^{\lambda x}\).
+					</li>
+					<li>
+						<i>Complex Roots.</i> Let \(\lambda_1 = \alpha + i\beta\) and \(\lambda_2 = \alpha - i\beta\). Then, the general equation is \(y = e^{\alpha x} (A \cos \beta x + B \sin \beta x)\).
+					</li>
+				</ul>
+				</div>
+			</div>
+
+			<p></p>
+			<div class="blue">
+				<div >
+					<p>
+						<b><i>Finding particular solutions.</i></b> For the equation
+						\[ay'' + by' + cy = f(x) \]
+						Like in recurrences, we want <i>like</i> functions.
+					</p>
+
+					<table style="border-top: 1px solid black; border-bottom: 1px solid black">
+						<tr>
+							<th>\(f(x)\)</th><th>Form for a particular solution \(y\)</th>
+						</tr>
+						<tr>
+							<td>\(e^{\alpha x}\)</td><td>
+								<ul>
+									<li>\(y = Ae^{\alpha x}\) if \(\alpha\) is not a root of the aux eqn.</li>
+									<li>\(y = Axe^{\alpha x}\) if \(\alpha\) is one root.</li>
+									<li>\(y = Ax^2 e^{\alpha x}\) if \(\alpha\) is the repeated roots.</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td>Polynomial of degree \(n\)</td>
+							<td><ul>
+								<li>Polynomial of degree \(n\) if 0 is not a root.</li>
+								<li>Polynomial of degree \(n+1\) if 0 is a non-repeated root.</li>
+								<li>Polynomial of degree \(n+2\) if 0 is a repeated root.</li>
+							</ul></td>
+						</tr>
+						<tr>
+							<td>\(A \cos \alpha x + B \sin \alpha x\)</td>
+							<td><ul>
+								<li>\(y = C \cos \alpha x + D \sin \alpha x\) if \(\alpha i\) is not a root of the aux equation,</li>
+								<li>\(y = x(C \cos \alpha x + D \sin \alpha x)\) otherwise.</li>
+							</ul></td>
+						</tr>
+					</table>
+					<p></p>
+				</div>
+			</div>
+
 		</div>
 		
 
