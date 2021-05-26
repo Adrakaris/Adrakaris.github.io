@@ -2401,11 +2401,13 @@
 				</div>
 			</div>
 
-			<h2 class="calc-6">Integration</h2>
+			<h2 id="calc-6">Integration</h2>
 
 			<p>
 				<a href="https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs131/part4/note24.pdf" class="text">Link to the PDF.</a>
 			</p>
+
+
 
 			<button class="collapsible nul">Definition of Integration...</button>
 			<div class="ccontent cnul">
@@ -2452,7 +2454,87 @@
 				<li>Any function which is increasing.</li>
 				<li>Any function which is decreasing.</li>
 			</ol>
+
+			<p>
+				After this section are basic rules for integrals. However, I'm going to put collapsible sections in here for more integration techniques one can use.
+			</p>
+
+			<button class="collapsible">Integration by Substitution (u-sub)...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Integration by Substitution.</i></b> Like reverse-engineering a chain rule, this methods relies on the integrand being able to be written in the following form:
+					\[\int f(g(x))g'(x)dx \]
+					Where the function \(g(x)\) is contained within a bigger function, and its derivative is outside as a separate factor. 
+				</p>
+
+				<p>
+					We replace \(g(x)\) with a new variable, such as \(u\) and \(g'(x)dx\) with \(du\), and integrate over just the function of \(u\), \(\int f(u) du\), replacing in what \(u\) is meant to be afterwards.
+				</p>
+
+				<button class="collapsible nul">Why it works...</button>
+				<div class="ccontent cnul">
+					<p>
+						Let \(u = g(x)\). If we differentiate \(g(x)\) we get
+						\[\frac{du}{dx} = g'(x) \]
+						Now, look at the integral, \(\int f(g(x))g'(x)dx\). Replace every \(g\) instance with the equivalent \(u\) form to get
+						\begin{align}
+						\int f(g(x))g'(x)dx &= \int f(u) \frac{du}{dx} dx \\
+						&= \int f(u) du.
+						\end{align}
+					</p>
+				</div>
+				<p>
+					Try working out \(\int 2x\cos(x^2) dx\) this way, and \(\int \frac{9x^2 + 2}{3x^3+2x+7} dx\).
+				</p>
+				<button class="collapsible nul">Answers...</button>
+				<div class="ccontent cnul">
+					<ol>
+						<li>\(-\sin(x^2)\)</li>
+						<li>\(\ln(3x^3 + 2x + 7)\)</li>
+					</ol>	
+				</div>
+
+				<p>
+					Tangentially related is the <b>reverse chain rule</b> itself. Say we have an integral, \(- \int \cos(3x^2+2x) dx\), we can note that \(\sin (3x^2 + 2x)\) differentiates into \(-(6x+2) \cos(3x^2+2x) dx\) by chain rule, so integrating the original integrand back we divide by this extra factor, to get \(\frac{\sin(3x^2+2x)}{6x + 2}\).
+				</p>
+
+				<p>
+					In certain cases (i.e. like \(\int \frac{1}{1 - x^2} dx\)) we would have to substitute trig functions - in this case \(x = \tan \theta\). (\(dx = \sec^2 (\theta)d\theta\).) Then when we subsitute, using said example we get \(\int \frac{1}{\sec^2 \theta} \sec^2 \theta \: d\theta\). This is just \(\int 1 d\theta\) and is \(\theta + c\), or \(\tan^{-1} x + c\).
+				</p>
+				
+			</div>
+			<p></p>
+			<button class="collapsible">Integration by Parts</button>
+			<div class="ccontent">
+				<div style="border-spacing: 0px 0px;">
+				<p>
+					<b><i>Integration by Parts.</i></b> Integration by parts is just a formula:
+					\begin{align}
+					& \int f(x)g(x)dx = f(x) \int g(x)dx - \int f'(x) [\int g(x) dx] dx, \\
+					\textrm{or } & \int uv\: dx = u \int v\: dx - \int u' [\int v \: dx]\: dx.
+					\end{align}
+
+					It can alternatively be written
+
+					\[\int u \: dv = uv + \int v \: du \]
+				</p>
+
+				<p>
+					Try work out \(\int x \cos (x )dx\).
+				</p>
+				<button class="collapsible nul">Answer...</button>
+				<div class="ccontent cnul">
+					\begin{align}
+					\int x \cos (x )dx &= x \sin(x) - \int 1 \sin(x) dx \\
+					&= x \sin x + \cos x + c.
+					\end{align}
+				</div>
+				</div>
+			</div>
 			
+
+			<p></p>
+
 
 			<div class="blue">
 				<p><b><i>Properties of definite intervals.</i></b></p>
