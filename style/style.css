@@ -282,7 +282,7 @@ button.nav {
     content: '+';
     font-style: normal;
     font-size: 16px;
-    font-family: Manrope;
+    font-family: Manrope, sans-serif;
     float: right;
     margin-left: 5px;
 }
@@ -293,7 +293,7 @@ button.nav {
 }
 
 button.collapsible {
-    font-family: Manrope;
+    font-family: Manrope, sans-serif;
     color: var(--pink);
     background: none;
     border: none;
@@ -362,7 +362,7 @@ h3.c {
 }
 
 p {
-    font-family: "Manrope";
+    font-family: "Manrope", sans-serif;
     /*text-align: justify;*/
     z-index: 2;
 }
@@ -444,6 +444,30 @@ figcaption {
     text-align: center;
 }
 
+input[type=text].search {
+	background-color: var(--band-txt);
+	font-family: Manrope, sans-serif;
+	padding: 6px;
+ 	border: none;
+ 	margin-top: 8px;
+ 	/*margin-right: 16px;*/
+ 	font-size: 17px;	
+ 	width: 300px;
+}
+
+button.search {
+	background-color: var(--band-col);
+	padding: 6px;
+	margin-top: 8px;
+	margin-right: 16px;
+	font-size: 17px;
+	color: var(--band-txt);
+	font-family: Manrope, sans-serif;
+	border: none;
+	cursor: pointer;
+}
+
+/*-----------------------------------------------------------------------*/
 
 @media (max-width: 768px) {
     .columncontainer {

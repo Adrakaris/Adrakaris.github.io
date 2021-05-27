@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
     <link rel="icon" type="image/png" href="./style/images/DragonIcon.png">
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- <script type="text/javascript" src="js/jquery.js"></script> -->
 </head>
 <body>
 
@@ -19,11 +20,11 @@
                         <a href="./index.html" class="nav">Home</a>
                     </div>
                     <div class="column tinycolumn">
-                        <a href="./blog.html" class="nav">Blog</a> 
+                        <a href="./about.html" class="nav">About</a>
                     </div>
                     <div class="column tinycolumn">
                         
-                        <a href="./about.html" class="nav">About</a>
+                        
                     </div>
                     <div></div>
                     <div class="column">
@@ -62,16 +63,20 @@
                     <b><i>Plagiarism.</i></b> Plagiarism is very important, and we should all take care to not violate academic integrity guidelines. All content here is from my notes, based on lectures which are available to all university students taking the relevant modules. Most figures are my own, or sourced with links. I will, however, remove access to these notes if formally notified by the Department as required.
                 </p>
             </div>
+
+            <p></p>
         </div>
 
         
         <div class="colourband">
             <h2>Blog</h2>
-
-            <input type="text" placeholder="Search..">
+            <form onsubmit="return formActivate(this)">
+                <input class="search" type="text" placeholder="Search..">
+                <button type="submit" class="search">Go</button>
+            </form>
         </div>
 
-        <div class="cbox">
+        <div class="cbox" id="population">
             
         </div>
 
@@ -96,6 +101,7 @@
 
     <script type="text/javascript" src="./js/collapsible.js"></script>
     <script type="text/javascript" src="./js/toggle-darklight.js"></script>
-    <!-- <script type="text/javascript" src="./js/prism.js"></script> -->
+    <script type="text/javascript" src="./pages.js"></script>
+    <script type="text/javascript" src="./js/searchform.js"></script>
 </body>
 </html>
