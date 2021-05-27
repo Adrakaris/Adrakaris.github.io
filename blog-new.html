@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./style/style.css" media="all" id="theme-link">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="./style/prism.css" media="all">
+    <meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+    <link rel="icon" type="image/png" href="./style/images/DragonIcon.png">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <div class="hidden">
+        <header>
+            <div class="parallax parsmaller">
+                <div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 9fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+                    <div class="column tinycolumn">
+                        <a href="./index.html" class="nav">Home</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="./blog.html" class="nav">Blog</a> 
+                    </div>
+                    <div class="column tinycolumn">
+                        
+                        <a href="./about.html" class="nav">About</a>
+                    </div>
+                    <div></div>
+                    <div class="column">
+                        <button class="nav dark-light">Dark Mode</button>
+                    </div>
+                </div>
+                <div class="cbox">      
+                    <h1>Blog</h1>
+                </div>
+            </div>
+        </header>
+
+        <header>
+            <div class="cbox">
+                <h1>Introduction</h1>
+            </div>
+        </header>
+
+        <div class="cbox">
+            <p>
+                I have interest on a variety of subjects, from history, art, and culture to origami to technology, and this is a place to put them all. These articles may be informative, they may be musings on topics, or they may simply be revision notes to Ctrl+F through. 
+            </p>
+
+
+            <button class="collapsible">Note on Revision Notes...</button>
+            <div class="ccontent">
+                <p>
+                    I am not affiliated with the University of Warwick or the Department of Computer Science, however I am part of the <a href="https://warwick.guide/" class="text">CS Revision Guide</a> group here at Warwick - you should go check the site out; it has much more detail on certain topics which I have skipped over.
+                </p>
+
+                <p>
+                    <b><i>Contributions.</i></b> All contributions and corrections are welcome. If you find a mistake or something you'd like to add, I reccomend making a pull request on the repository. If you know my discord, you may also contact me there.
+                </p>
+
+                <p>
+                    <b><i>Plagiarism.</i></b> Plagiarism is very important, and we should all take care to not violate academic integrity guidelines. All content here is from my notes, based on lectures which are available to all university students taking the relevant modules. Most figures are my own, or sourced with links. I will, however, remove access to these notes if formally notified by the Department as required.
+                </p>
+            </div>
+        </div>
+
+        
+        <div class="colourband">
+            <h2>Blog</h2>
+
+            <input type="text" placeholder="Search..">
+        </div>
+
+        <div class="cbox">
+            
+        </div>
+
+        <footer>
+            <div class="cbox">
+                <div class="columncontainer ctwo">
+                    <div>
+                        <p class="small">
+                            © 2020-2021 Yijun Hu, all rights reserved.
+                        </p>
+                    </div>
+                    <div>
+                        <p class="small rj">
+                            Designed by Yijun Hu
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="./js/collapsible.js"></script>
+    <script type="text/javascript" src="./js/toggle-darklight.js"></script>
+    <!-- <script type="text/javascript" src="./js/prism.js"></script> -->
+</body>
+</html>
