@@ -3,9 +3,12 @@
 
 // console.log(pages)
 
+// get essential variables
 var populateDiv = document.querySelector("#population");  // div to populate
+var iText = document.querySelector("#se");  // gets the text box
+var iButton = document.querySelector("#sb");  // gets the button
 
-
+// define functions
 function createDiv(block) {
     var div = document.createElement("div");
 
@@ -17,7 +20,6 @@ function createDiv(block) {
     div.appendChild(title);
 
     var date = block["date"];
-    console.log(block)
     var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
     div.innerHTML += description;
 
@@ -43,8 +45,30 @@ function populatebox(array) {
 populatebox(pages);
 
 
-// on activate 
+// listeners
 
 function formActivate(form) {  // this should run when submit clicked on form
-
+    console.log("search clicked");
 }
+
+iButton.addEventListener("click", function() {
+    // do the search logic
+    console.log(`click, ${document.querySelector("#se").value}`)
+    var results = []
+    pages.forEach((block) => {
+        if (block["title"].toLowerCase().includes(document.querySelector("#se").value) || 
+            block["desc"].toLowerCase().includes(document.querySelector("#se").value)) {
+            results.push(block)
+        }
+    })
+
+    populatebox(results);
+});
+
+iText.addEventListener("keyup", function(event) {
+    // 13 is enter
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        document.querySelector("#sb").click();
+    }
+})
