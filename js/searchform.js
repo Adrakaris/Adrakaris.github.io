@@ -33,14 +33,8 @@ function populatebox(array) {
     }
 
     array.forEach((block) => {
-        console.log(block);
         populateDiv.appendChild(createDiv(block));
     });
-
-    // for (var blin in array) {  // make divs and add all children
-    //     console.log(blin)
-    //     populateDiv.appendChild(createDiv(blin));
-    // }
 }
 
 
