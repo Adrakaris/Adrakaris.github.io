@@ -19,9 +19,21 @@ function createDiv(block) {
     title.appendChild(title_a);
     div.appendChild(title);
 
+    if (block["picture"] != "") {
+        var picture = document.createElement("img");
+        picture.setAttribute("src", block["picture"]);
+        picture.setAttribute("style", "max-width: 160px; width: 100%; float:right;")
+        div.appendChild(picture)
+        // to fix formatting
+        div.setAttribute("style", "overflow: hidden;")
+    }
+
     var date = block["date"];
     var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
     div.innerHTML += description;
+
+    // TODO: images
+
 
 
     return div;
