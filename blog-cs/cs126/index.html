@@ -47,8 +47,13 @@
                 <i>Editor's note:</i> I'm not going to write full notes for 126. I'm just going to be putting down specifics on what I found confusing from the material. 
             </p>
 
+            <p>
+                Also, when I do include data structures they'll just be there as a brief description accompanying the important algorithms that are linked to them.
+            </p>
+
             <ol>
                 <li><a href="#algos">Algorithmic Analysis</a></li>
+                <li><a href="#sorts">Sorting Algorithms</a></li>
             </ol>
         </div>
 
@@ -154,6 +159,174 @@
                     </ul>
                 </div>
             </div>
+        </div>
+
+        <div class="colourband" id="sorts">
+            <h2>Sorting Algorithms</h2>
+        </div>
+
+        <div class="cbox">
+            <h2>Introduction</h2>
+
+            <ol>
+                <li><a href="#s-pq">PQ Sort</a></li>
+                <li><a href="#s-heap">Heapsort</a></li>
+            </ol>
+
+
+            <h2 id="s-pq">PQ Sort</h2>
+
+            <h3>Priority Queues</h3>
+
+            <p>
+                PQ sort, or Priority Queue sort, sorts data using priority queues.
+            </p>
+
+            <p>
+                A priority is a queue storing key value pairs, where the key denotes the priority. It has the following ADT:
+            </p>
+
+            <pre><code class="lang-java">interface PriorityQueue&lt;K, V&gt; {
+    void insert(K k, V v);
+    V removeMin();  // removes and returns
+    V min();  // return no remove
+    int size();
+    boolean isEmpty();
+}</code></pre>
+
+            <h3>PQ-Sorts</h3>
+            
+            <p>
+                This sort sorts items by inserting them into the PQ, using their values as the the ordering keys. Then, items are removed successively wih <code>removeMin()</code>.
+            </p>
+
+            <p>
+                The running time of said sort depends on the implementation of the PQ.
+            </p>
+
+            <div class="cornell">
+                <div>
+                    <p class="ir">
+                        Selection Sort.
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        A variation of a PQ sort using an unsorted list.
+                    </p>
+
+                    <ul>
+                        <li>Insertion is \(O(n)\)</li>
+                        <li>Removal of <i>one</i> item is \(O(n)\), thus overall removal is \(O(n^2)\)</li>
+                    </ul>
+
+                    <p>
+                        Thus Selection Sort is \(O(\textrm{horrible})\).
+                    </p>
+                </div>
+
+                <div>
+                    <p class="ir">
+                        Insertion Sort.
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        A variation of a PQ sort using a sorted list (sorted on insertion). This is also \(O(\textrm{horrible})\) (\(O(n^2)\)). 
+                    </p>
+                </div>
+            </div>
+
+            <h2 id="s-heap">Heapsort</h2>
+
+            <h3>Heaps</h3>
+
+            <p>
+                Heaps are binary tree structures obeying the follwing rules:
+            </p>
+            <ul>
+                <li><b>Heap Order</b>, where a node's value is always greater than or equal to that of its children (or \(\leq\), just has to be a total order).</li>
+                <li><b>A Complete Binary Tree</b> all levels of the tree (save possibly the last) are fully filled, and for the last level all nodes are filled from <i>left to right</i>. Thus the last node is the bottommost rightmost mode.</li>
+            </ul>
+
+            <p>Heaps can be used to implement PQs also.</p>
+
+            <button class="collapsible">Insertion...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Insertion.</i></b> Let \(k\) be the key of the element to insert.
+                </p>
+                <ol>
+                    <li>Insert a new node \(z\) in the last position.</li>
+                    <li>Store \(k\) at \(z\).</li>
+                    <li>Restore the <i>heap order property</i> via <i>upheap</i>.</li>
+                </ol>
+            </div>
+            <p></p>
+            <button class="collapsible">Upheap...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Upheap.</i></b> Restores heap order property by swapping \(k\) upwards along the path of insertion until it reaches the root, or a node whose parent key is \(\geq k\).
+                </p>
+
+                <p>
+                    A heap will always have a max hight \(O(\log n)\) so this operation is quite efficient.
+                </p>
+            </div>
+            <p></p>
+            <button class="collapsible">Removal...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Removal.</i></b> A PQ's <code>removeMin</code> corresponds to removing the root key. 
+                </p>
+                <ol>
+                    <li>Replace the root key with the key of the <i>last</i> node, and return the root key.</li>
+                    <li>Remove the last node (key \(\neq\) node).</li>
+                    <li>Restore the heap order property via <i>downheap.</i></li>
+                </ol>
+            </div>
+            <p></p>
+            <button class="collapsible">Downheap...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Downheap.</i></b> Let \(p\) be the root.
+                </p>
+
+                <ol>
+                    <li>If there is no right child of \(p\), then let \(c\) be the left child, else let \(c\) be the smaller child of \(p\).</li>
+                    <li>If \(\textrm{key}(p) \leq \textrm{key}(c)\), then the property already holds, END.</li>
+                    <li>
+                        Else if \(\textrm{key}(p) > \textrm{key}(c)\), we swap the <i>entries</i> at \(p, c\), and run the algorithm for \(c\) (i.e. recursively swapping the entry down). 
+                    </li>
+                </ol>
+
+                <p>
+                    This process terminates when the key being downheaped either reaches a leaf, or is greater than all its children. THis is \(O(\log n)\).
+                </p>
+            </div>
+            <p></p>
+            <button class="collapsible">Array-based Heaps...</button>
+            <div class="ccontent">
+                <p>
+                    <b><i>Array-Based Heap.</i></b> Let us have \(n\) elements. Element \(p\) is stored at sell \(f(p)\) such that 
+                    \[
+                    f(p) = \begin{cases} p \textrm{ is root} & 0, \\
+                        p \textrm{ left child of } q & 2f(q) + 1, \\
+                        p \textrm{ right child of } q & 2f(q) + 2.
+                        \end{cases}
+                     \]
+                </p>
+            </div>
+
+            <h3>Heapsort</h3>
+
+            <p>
+                Heapsorts sort a sequence S of \(n\) elements that have a <i>total</i> order relation. Each element is inserted into a Heap-based Priority Queue and then dequeued and put back into S in that order.
+            </p>
+
+            <p>
+                This takes \(O(n)\) space and \(O(n \log n)\) time.
+            </p>
         </div>
 
         <footer>

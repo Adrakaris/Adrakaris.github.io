@@ -23,7 +23,7 @@ var dark = {
     "--band-col": "#6e5046",
     "--band-txt": "#f1f2e9",
     "--pink": "#c7917f",
-    "--blue": "#1f7282",
+    "--blue": "#52b5c4",
     "--green": "#3a6342",
     "--overlay": "#00000030",
     "--tai-home": "url(\"images/taichuan_dark.jpg\")",
