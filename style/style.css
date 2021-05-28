@@ -439,7 +439,7 @@ blockquote {
 }
 
 .side {
-    border-left: 1px solid var(--side);
+    border-left: 1px solid var(--pink);
     border-spacing: 10px 0px;
     padding-left: 10px;
     margin-left: -10px;
@@ -475,6 +475,10 @@ button.search {
 	font-family: Manrope, sans-serif;
 	border: none;
 	cursor: pointer;
+}
+
+hr {
+    color: var(--pink);
 }
 
 /*-----------------------------------------------------------------------*/

@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2021, 5, 18)),
+        "link": "blog-misc/podcast/index.html",
+        "title": "I Did a Podcast",
+        "desc": "I featured in episode on my friend Leo's podcast, YASP. You can listen to it <a href=\"https://yasp.show/episodes\" class=\"text\">here</a>, or on <a href=\"https://podcasts.google.com/feed/aHR0cHM6Ly95YXNwLnNob3cvYXRvbS54bWw\" class=\"text\">Google Podcasts</a> and <a href=\"https://open.spotify.com/show/3ZkM1l13q6VPFngcOk5M8A?si=gfiDqUvfQ6GEVA3cJTk86Q&nd=1\" class=\"text\">Spotify</a>.</p>",
+        "picture": "blog-misc/podcast/yasp.svg",
+        "tags": ["misc"]
+    },
+    {
         "date": new Date(Date.UTC(2021, 5, 15)),
         "link": "blog-cs/cs131/index.html",
         "title": "Notes on CS131",

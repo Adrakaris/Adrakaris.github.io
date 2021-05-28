@@ -12,7 +12,7 @@ var light = {
     "--overlay": "#00000030",
     "--tai-home": "url(\"images/taichuan_smaller_size.jpg\")",
     "--tai-smol": "url(\"images/taichuan_smaller_size_squish.jpg\")",
-    "--filter": "brightness(.8) contrast(1.2)",
+    "--filter": "brightness(1) contrast(1)",
     "--img-bg": "#0000"
 }
 

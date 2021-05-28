@@ -11,6 +11,7 @@ var iButton = document.querySelector("#sb");  // gets the button
 var allButtom = document.querySelector("#tall");
 var csButton = document.querySelector("#tcs");
 var origamiButton = document.querySelector("#torigami");
+var miscButton = document.querySelector("#tmisc");
 
 // define functions
 function createDiv(block) {
@@ -22,7 +23,6 @@ function createDiv(block) {
         picture.setAttribute("style", "max-width: 160px; width: 100%; float:right;")
         div.appendChild(picture)
         // to fix formatting
-        div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink);")
     }
 
     var title = document.createElement("h2");
@@ -37,7 +37,7 @@ function createDiv(block) {
     var date = block["date"];
     var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
     div.innerHTML += description;
-    div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink); margin-top: 5px;")
+    div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink); margin-top: 5px; padding-bottom: 5px;")
 
     return div;
 }
@@ -103,4 +103,8 @@ csButton.addEventListener("click", function() {
 
 origamiButton.addEventListener("click", function() {
     populatebox(getResults("origami"));
+})
+
+miscButton.addEventListener("click", function() {
+    populatebox(getResults("misc"));
 })
