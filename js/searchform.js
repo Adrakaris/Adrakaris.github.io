@@ -12,6 +12,15 @@ var iButton = document.querySelector("#sb");  // gets the button
 function createDiv(block) {
     var div = document.createElement("div");
 
+    if (block["picture"] != "") {
+        var picture = document.createElement("img");
+        picture.setAttribute("src", block["picture"]);
+        picture.setAttribute("style", "max-width: 160px; width: 100%; float:right;")
+        div.appendChild(picture)
+        // to fix formatting
+        div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink);")
+    }
+
     var title = document.createElement("h2");
     var title_a = document.createElement("a");
     title_a.setAttribute("class", "text"); title_a.setAttribute("href", block["link"]);
@@ -19,22 +28,12 @@ function createDiv(block) {
     title.appendChild(title_a);
     div.appendChild(title);
 
-    if (block["picture"] != "") {
-        var picture = document.createElement("img");
-        picture.setAttribute("src", block["picture"]);
-        picture.setAttribute("style", "max-width: 160px; width: 100%; float:right;")
-        div.appendChild(picture)
-        // to fix formatting
-        div.setAttribute("style", "overflow: hidden;")
-    }
+    
 
     var date = block["date"];
     var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
     div.innerHTML += description;
-
-    // TODO: images
-
-
+    div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink); margin-top: 5px;")
 
     return div;
 }

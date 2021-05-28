@@ -18,7 +18,7 @@
 var pages = [
     {
         "date": new Date(Date.UTC(2021, 5, 15)),
-        "link": "blog-cs/cs131/index.htm",
+        "link": "blog-cs/cs131/index.html",
         "title": "Notes on CS131",
         "desc": "Summary of main points of CS131, for purpose of collating notes. <i>There is also a lot of MathJax, please be patient whilst it loads.</i></p>",
         "picture": "",
