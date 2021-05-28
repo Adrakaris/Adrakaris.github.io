@@ -8,6 +8,10 @@ var populateDiv = document.querySelector("#population");  // div to populate
 var iText = document.querySelector("#se");  // gets the text box
 var iButton = document.querySelector("#sb");  // gets the button
 
+var allButtom = document.querySelector("#tall");
+var csButton = document.querySelector("#tcs");
+var origamiButton = document.querySelector("#torigami");
+
 // define functions
 function createDiv(block) {
     var div = document.createElement("div");
@@ -51,6 +55,17 @@ function populatebox(array) {
 }
 
 
+function getResults(tag) {
+    var results = []
+    pages.forEach((block) => {
+        if (block["tags"].includes(tag)) {
+            results.push(block)
+        }
+    });
+    return results;
+}
+
+
 // after functions run on load
 
 populatebox(pages);
@@ -58,13 +73,9 @@ populatebox(pages);
 
 // listeners
 
-function formActivate(form) {  // this should run when submit clicked on form
-    console.log("search clicked");
-}
-
 iButton.addEventListener("click", function() {
     // do the search logic
-    console.log(`click, ${document.querySelector("#se").value}`)
+    // console.log(`click, ${document.querySelector("#se").value}`)
     var results = []
     pages.forEach((block) => {
         if (block["title"].toLowerCase().includes(document.querySelector("#se").value) || 
@@ -82,4 +93,14 @@ iText.addEventListener("keyup", function(event) {
         event.preventDefault();
         document.querySelector("#sb").click();
     }
+})
+
+allButtom.addEventListener("click", function() {populatebox(pages)})
+
+csButton.addEventListener("click", function() {
+    populatebox(getResults("cs"));
+})
+
+origamiButton.addEventListener("click", function() {
+    populatebox(getResults("origami"));
 })

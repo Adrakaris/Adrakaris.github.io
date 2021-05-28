@@ -240,6 +240,11 @@ a.nav {
     font-size: 8;
     text-decoration: none;
     letter-spacing: 2px;
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+a.nav:hover {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 a {
@@ -272,6 +277,11 @@ button.nav {
     background: none;
     margin: 0;
     padding: 0;
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+button.nav:hover {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);s
 }
 
 .active, .collapsible:hover {

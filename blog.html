@@ -8,7 +8,19 @@
     <meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
     <link rel="icon" type="image/png" href="./style/images/DragonIcon.png">
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <!-- <script type="text/javascript" src="js/jquery.js"></script> -->
+    <style type="text/css">
+        .cfive {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            grid-column-gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .cfive {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -72,6 +84,13 @@
             <h2>Blog</h2>
             <input id="se" class="search" type="text" placeholder="Search...">
             <button id="sb" type="submit" class="search">Go</button>
+            <div class="cbox"><div class="cfive">
+                <button id="tall" class="search">#all</button>
+                <button id="tcs" class="search">#cs</button>
+                <button id="torigami" class="search">#origami</button>
+                <button id="" class="search"></button>
+                <button id="" class="search"></button>
+            </div></div>
         </div>
 
         <div class="cbox" id="population">
