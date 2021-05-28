@@ -7,18 +7,14 @@ fc = ["© 2020-2021 Yijun Hu, all rights reserved.", "Designed by Yijun Hu"]
 var footer = document.querySelector("#fc2");
 
 var left = document.createElement("div");
-left.innerHTML = `<div>
-                        <p class="small">
+left.innerHTML = `<p class="small">
                             ${fc[0]}
-                        </p>
-                    </div>`;
+                        </p>`;
 
 var right = document.createElement("div");
-right.innerHTML = `<div>
-                        <p class="small rj">
+right.innerHTML = `<p class="small rj">
                             ${fc[1]}
-                        </p>
-                    </div>`;
+                        </p>`;
 
 footer.appendChild(left);
 footer.appendChild(right);
