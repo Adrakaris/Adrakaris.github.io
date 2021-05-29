@@ -2,6 +2,7 @@ https://yijun.hu/index.html
 https://yijun.hu/about.html
 https://yijun.hu/blog.html
 https://yijun.hu/blog-misc/wyvern/index.html
+https://yijun.hu/blog-misc/pdocast/index.html
 https://yijun.hu/blog-cs/cs130/index.html
 https://yijun.hu/blog-cs/cs118/index.html
 https://yijun.hu/blog-cs/cs132/index.html
