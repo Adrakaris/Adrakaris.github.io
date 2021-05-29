@@ -5,7 +5,7 @@
 // ALWAYS put </p> at the end of the description, but NOT <p> at start
 
 /*
-{
+    {
         "date": new Date(Date.UTC()),
         "link": "",
         "title": "",
@@ -17,7 +17,15 @@
 
 var pages = [
     {
-        "date": new Date(Date.UTC(2021, 5, 18)),
+        "date": new Date(Date.UTC(2021, 5, 29)),
+        "link": "blog-cs/cs141/index.html",
+        "title": "Notes on CS141",
+        "desc": "Brief notes on CS141, focusing on mainly the harder topics and not covering the basics.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
+        "date": new Date(Date.UTC(2021, 5, 28)),
         "link": "blog-misc/podcast/index.html",
         "title": "I Did a Podcast",
         "desc": "I featured in episode on my friend Leo's podcast, YASP. You can listen to it <a href=\"https://yasp.show/episodes\" class=\"text\">here</a>, or on <a href=\"https://podcasts.google.com/feed/aHR0cHM6Ly95YXNwLnNob3cvYXRvbS54bWw\" class=\"text\">Google Podcasts</a> and <a href=\"https://open.spotify.com/show/3ZkM1l13q6VPFngcOk5M8A?si=gfiDqUvfQ6GEVA3cJTk86Q&nd=1\" class=\"text\">Spotify</a>.</p>",

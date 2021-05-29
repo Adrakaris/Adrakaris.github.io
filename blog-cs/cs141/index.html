@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS141</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 9fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../index.html" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Back</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS141</h1>
+					<p class="subheading">
+						Functional Programming
+					</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Introduction</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			<p>
+				<i>Editor's Note:</i> I'll try to only cover the harder topics and stuff here. This assumes the reader knows basic functional programming.
+			</p>
+
+			<ol>
+				<li><a href="#typeclass">Type Classes</a></li>
+				<li><a href="#reasoning">Equational Reasoning</a></li>
+				<li><a href="#functors">Foldables and Functors</a></li>
+				<li><a href="#applicatives">Applicatives</a></li>
+			</ol>
+		</div>
+
+		<div class="colourband" id="typeclass">
+			<h2>Type Classes</h2>
+		</div>
+
+		<div class="cbox">
+			<p>
+				Type classes let us overload functions, and restrict polymorphism. For example, <code>(+) :: Int -> Int -> Int</code> is addition over integers, however addition should work for all numbers, so we can create a <code>Num</code> typeclass to allow addition to be defined over all numbers - which are <i>instances</i> of <code>Num</code>.
+			</p>
+
+			<pre><code class="lang-haskell">class Num a where
+	(+) :: a -> a -> a
+	(-) :: a -> a -> a
+	abs :: a -> a
+	...</code></pre>
+
+			<p>
+				We have method typings defined under the <code>Num</code> TC.
+			</p>
+
+			<p>
+				We can then define <code>instance Num Int where ...</code> and define all the methods underneath for the integers. 
+			</p>
+
+			<pre><code class="lang-haskell">class Show a where
+	show :: a -> String</code></pre>
+
+			<pre><code class="lang-haskell">instance Show Bool where
+	show True = "True"
+	show False = "False"</code></pre>
+
+			<p>
+				Of course, haskell polymorphism is not the same as OOP polymorphism. There are two main types of polymorphism in java and haskell, which are listed below,
+			</p>
+
+			<table>
+				<tr>
+					<th>Java</th>
+					<th>Parametric</th>
+				</tr>
+				<tr>
+					<td><i>Parametric Polymorphism.</i> Parameters, with generics, like <br><code>class LinkedList&lt;T&gt; { ...</code></td>
+					<td><i>Parametric Polymorthism.</i> With type variables, like <br><code>id :: a -> a</code> or <code>head :: [a] -> a</code></td>
+				</tr>
+				<tr>
+					<td><i>Subtype polymorphism.</i> Inheritance; <br><code>class Duck extends Bird { ...</code></td>
+					<td><i>Ad-hoc polymorphism.</i> Restriction via typeclass, <br><code>(+) :: Num a => a -> a -> a</code></td>
+				</tr>
+			</table>
+
+			<p>
+				Type classes can have superclasses, for example the <code>Ord</code> (total order) constraint has an <code>Eq</code> superclass;
+			</p>
+
+			<pre><code class="lang-haskell">class Eq a => Ord a where
+	(<)  :: a -> a -> Bool
+	(<=) :: a -> a -> Bool</code></pre>
+
+			<p>
+				Functions that are defined with typeclass constraints are overloaded.
+			</p>
+		</div>
+
+		<div class="colourband" id="reasoning">
+			<h2>Equational Reasoning</h2>
+		</div>
+
+		<div class="cbox">
+			<p>
+				Since functional programming is pure, we can use formal reasoning to prove the operation of programs. 
+			</p>
+
+			<p>
+				When we do equational reasoning, we can use {curly brackets} to denote comments.
+			</p>
+
+			<button class="collapsible ">Natural Numbers...</button>
+			<div class="ccontent ">
+				<p>
+					<b><i>Natural Numbers.</i></b> Let us define natural numbers as
+				</p>
+				<pre><code class="lang-haskell">data Nat = Zero
+		 | Succ Nat</code></pre>
+
+		 		<p>
+		 			Given the following definition for <code>add</code>;
+		 		</p>
+
+		 		<pre><code class="lang-haskell">add :: Nat -> Nat -> Nat
+add Zero m = m
+add (Succ n) m = Succ (add n m)</code></pre>
+
+				<p>
+		 			Let us try to prove the following statement: <code>∀m :: Nat   add Zero m = m</code>. 
+		 		</p>
+
+		 		<div class="codediv">add m Zero {known to be true}</div>
+
+		 		<p>
+		 			We can prove the statement by induction, given that
+		 		</p>
+
+		 		<div class="codediv">add Zero Zero = Zero {base case}
+add n Zero = n => add (Succ n) Zero = Succ n {recursive case}</div>
+
+		 		<p>
+		 			To prove the base case,
+		 		</p>
+
+		 		<div class="codediv">add Zero Zero
+= {applying add}
+  Zero. ⊳</div>
+
+		 		<p>
+		 			To prove the recursive case,
+		 		</p>
+
+		 		<div class="codediv">{assuming the inductive step; add n Zero = n}
+add (Succ n) Zero
+= {applying add}
+  Succ (add n Zero)
+= {inductive hypothesis}
+  Succ n. □</div>
+
+
+			</div>
+
+
+			<p>
+				The previous example above is fairly straight forward. Often with reasoning there's either direct application, or proving via induction. 
+			</p>
+
+			<ul>
+				<li>If you can rewrite a statement directly, do it.</li>
+				<li>If there are a finite number of values, you can do case analysis</li>
+				<li>If there are infinite values, it's a case of induction. </li>
+			</ul>
+
+			<p>
+				Since proofs here are always \(\Longleftrightarrow\) (even if it's not explicitly denoted), if it is hard to go forward, try starting with the end result and move backwards. 
+			</p>
+
+			<button class="collapsible">Lists...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Lists.</i></b> Let us define lists as
+				</p>
+
+				<pre><code class="lang-haskell">data [] a = []
+		| (:) a [a]
+
+-- thus
+[] :: [a]
+∀x :: a, ∀xs :: [a], x:xs :: [a]</code></pre>
+				
+				<p>
+					Let us define <code>map</code> as
+				</p>
+
+				<pre><code class="lang-haskell">map :: (a->b) -> [a] -> [b]
+map _ [] = []
+map f (x:xs) = f x : map f xs</code></pre>
+
+				<p>
+					We want to prove "map fusion"; <br><code>map f (map g xs) == map (f.g) xs</code>.
+				</p>
+
+				<p>
+					We can also use induction here,
+				</p>
+
+				<ul>
+					<li><code>map f (map g []) == map (f.g) []</code> (Base case) </li> 
+					<li><code>map f (map g xs) == map (f.g) xs => map f (map g (x:xs)) == map (f.g) (x:xs) </code> (Recursive case)</li>
+				</ul>
+
+				<p>
+					To prove the base case,
+				</p>
+
+				<div class="codediv">map f (map g [])
+= {mapping}
+  map f []
+= {mapping}
+  []
+= {unmapping with function (f.g)}
+  map (f.g) []. ⊳</div>
+
+				<p>
+					To prove the inductive case,
+				</p>
+
+				<div class="codediv">
+map f (map g (x:xs))
+= {mapping}
+  map f (g x : map g xs)
+= {mapping}
+  f (g x) : map f (map g xs)
+= {inductive step}
+  f (g x) : map (f.g) xs
+= {unapply . (composition)}
+  (f.g) x : map (f.g) xs
+= {unapply map}
+  map (f.g) (x:xs). □</div>
+			</div>
+
+			<p>
+				There's more equational reasoning, as well as the compiler thing and stuff, but admittedly it is rather beyond me. 
+			</p>
+		</div>
+
+		<div class="colourband" id="functors">
+			<h2>Foldables and Functors</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Foldables</h2>
+
+			<p>
+				A foldable is defined by the following typeclass
+			</p>
+
+			<pre><code class="lang-haskell">class Foldable t where
+	foldr :: (a->b->b) -> b -> t a -> b</code></pre>
+
+			<p>
+				Where <code>t a</code> is the foldable type. A foldable (one example of which being a binary tree) is a data structure / container that stores many data, and can be "collapsed down". 
+			</p>
+
+			<p>
+				<code>t</code> then would be a type that can contain another type, like <code>[a], BinTree a</code>.
+			</p>
+
+			<p>
+				<code>foldr</code> takes a function (a to b to b), an initial value b, a "container" t a, and returns the result of type b.
+			</p>
+
+			<pre><code class="lang-haskell">instance Foldable BinTree where
+	foldr f z Leaf = z
+	foldr f z (Node l x r) = f x (foldr f (foldr f z r) l)</code></pre>
+
+			<p>
+				This implementation is a postfix (DLR) implementation of folding over binary trees. However, <code>foldable</code>s can generally be derived by the compiler automatically, though you're not allowed to do that in the exam.
+			</p>
+
+			<h2>Functors</h2>
+
+			<div class="blue">
+			<p>
+				A data type <code>f</code> is a functor if there is a function <code>fmap</code> (or <code>(<$>)</code>) <code>:: (a->b -> f a -> f b</code>, and
+			</p>
+			<ul>
+				<li><code>fmap id = id</code></li>
+				<li><code>fmap (f.g) = fmap f . fmap g</code></li>
+			</ul>
+			</div>
+			
+
+			<p>
+				Basically, <code>f</code> is a container which stores a type, and it's a functor if you can map a function over elements in that container, whilst keeping it in said container form. 
+			</p>
+
+			<p>
+				Recall <code>map</code>, and note the <code>Maybe</code> data type;
+			</p>
+			<pre><code class="lang-haskell">data Maybe a = Nothing | Just a</code></pre>
+
+			<p>
+				<code>Maybe</code> here is a functor, and lists are also functors, as the follwing definitions show:
+			</p>
+
+			<pre><code class="lang-haskell">instance Functor [] where
+	fmap = map
+
+instance Functor Maybe where
+	fmap f (Just x) = Just $ f x
+	fmap _ Nothing = Nothing </code></pre>
+		</div>
+
+		<div class="colourband" id="applicatives">
+			<h2>Applicatives</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Kinds and the Either Type</h2>
+
+			<p>
+				Kinds are the types of types. Similar to the <code>expression :: type</code> notation, we have <code>type :: kind</code> <i>"kinding"</i>, however kinding is rarely written. 
+			</p>
+
+			<p>
+				The most important kind is <code>Type</code>, or <code>*</code>. Simple types have a kind of just <code>*</code>, however types that take constructors, such as <code>[a]</code>, has a kind of <code>[] :: * -> *</code>, same with <code>Maybe</code>. 
+			</p>
+
+			<p>
+				Recall how functors are written like <code>f a</code>, thus all functors should have kind <code>f :: * -> *</code>.
+			</p>
+
+			<p>
+				<code>Maybe</code> can be used to propagate an error case (with <code>Nothing</code>), however it is not very descriptive. Thus, we have an <code>Either</code> type, with a kind of <code>* -> * -> *</code>, and is defined
+			</p>
+
+			<pre><code class="lang-haskell">data Either e a = Left e | Right a</code></pre>
+
+			<p>
+				<code>Left</code> binds stronger than <code>Right</code>, and is used as an error case, but allows one to specify an error code (with custom data types).
+			</p>
+
+			<p>
+				<code>Either</code> is an instance of Functor, however since <code>Either</code> is of kind <code>* -> * -> *</code>, and functors must be of kind <code>* -> *</code>, we have to specify the first argument and treat <code>Either e</code> as one block. Thus,
+			</p>
+
+			<pre><code class="lang-haskell">instance Functor (Either e) where
+	-- it is often useful to write the specific type signature when defining;
+	-- fmap :: (a->b) -> (Either e) a -> (Either e) b  
+	fmap f (Left x) = Left x  -- the "Nothing" case
+	fmap f (Right y) = Right $ f y  -- the "f a" case</code></pre>
+
+			<h2>Applicative Functors</h2>
+
+			<p>
+				Some type <code>f</code> of kind <code>* -> *</code> is an <b>applicative functor</b> if it is a functor, and there exists a function of type <code>f (a->b) -> f a -> f b</code>. Thus, along with <code>$, <$></code> there is also
+			</p>
+
+			<pre><code class="lang-haskell"><*> :: Applicative f => f (a->b) -> f a -> f b</code></pre>
+
+			<p>
+				Thus the applicative class is defined as follows,
+			</p>
+
+			<pre><code class="lang-haskell">class Functor f => Applicative f where
+	pure :: a -> f a
+	(<*>) :: f (a->b) -> f a -> f b   -- "apply"</code></pre>
+
+			<p>
+				Think of <code><*></code> as an operator that applies a function stored in a container to a value stored in another container of the same type, and keeps the result in the container. 
+			</p>
+
+			<p>
+				It is often handy when applying a function <code>do :: a -> b -> c</code> to multiple arguments, all inside Applicatives (i.e. <code>f a, f b</code>), to do <code>do <$> f a <*> f b</code>, since the first operation would yield a curried function <code>(do a) :: b -> c</code> inside the container f.
+			</p>
+
+			<div class="blue">
+			<p>
+				An instance of Applicative must also follow all applicative laws, those being
+			</p>
+			
+				<ul>
+					<li><code>pure id <*> x = x</code></li>
+					<li>
+						<code>pure f <*> pure x = pure (f x)</code><br>
+						<code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m <*> pure y = pure ($ y) <*> m</code>
+					</li>
+				</ul>
+			</div>
+
+			<p>
+				<code>Maybe, Either</code> are all instances of Applicative, and for example <code>Maybe</code> is defined as follows:
+			</p>
+
+			<pre><code class="lang-haskell">instance Applicative Maybe where
+	pure = Just
+	Nothing <*> _ = Nothing
+	(Just f) <*> x = f <$> x</code></pre>
+
+			<p>
+				There are also the rather weird operations <code><*</code> and <code>*></code>, which (seem to) take two Applicatives, and discard either the first or second entirely, however they keep error cases. They are defined as follows (along with the <code>const</code> function):
+			</p>
+
+			<pre><code class="lang-haskell">const :: a -> b -> a
+const x _ = x
+
+(<*) :: Applicative f => f a -> f b -> f a
+x <* y = const <$> x <*> y
+
+(*>) :: Applicative f => f a -> f b -> f b
+x *> y = flip const <$> x <*> y</code></pre>
+
+			<p>
+				From this <a href=https://stackoverflow.com/questions/5836640/are-there-human-friendly-names-for-applicative-and-friends-methods">StackOverflow Post</a>, it seems that <code>*></code> is called "ignored" and <code><*</code> is called "ignoring".
+			</p>
+
+			<p>
+				So this is all well and good, but there are some things to bear in mind.
+			</p>
+
+			<pre><code class="lang-haskell">	Just 4 <* Nothing
+==> const <$> Just 4 <*> Nothing
+==> Just (const 4) <*> Nothing
+==> Nothing.  -- even when "Ignoring" since we have a Nothing argument we get Nothing.</code></pre>
+			
+			<pre><code class="lang-haskell">	Just 4 *> Just 8
+==> flip const <$> Just 4 <*> Just 8
+==> Just (flip const 4 8)
+==> Just 8.</code></pre>
+
+			<p>
+				The <b>unit type</b> is <code>() :: ()</code>. <code>()</code> is the sole value. It is also an empty tuple.
+			</p>
+
+			<p>
+				Take <code>f <$> as <*> bs <*> cs</code>, if the applicatives were <i>lists</i>, this would be the same as <code>[f a b c | a <- as, b <- bs, c <- cs]</code>.
+			</p>
+
+			<button class="collapsible">Example: Random Numbers...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Random Numbers.</i></b> Random numbers are, by definition, random, and in a pure language we can't have something be undeterminable, so how do we do it when we want random numbers? (Well, first, they're <i>pseudo</i>random, but still)
+				</p>
+
+				<p>
+					In Haskell we have the package <code>System.Random</code>. Within, we have the following:
+				</p>
+
+				<pre><code class="lang-haskell">StdGen :: *  -- this is a basic type
+MkStdGen :: Int -> StdGen  -- this is a type constructor
+next :: StdGen -> (Int, StdGen)</code></pre>
+
+				<p>
+					So with the basic <code>next</code> function and a <code>StdGen</code> (which is like a pseudorandom generator class). However if we wanted two random numbers, then we'd have to do something like
+				</p>
+
+				<pre><code class="lang-haskell">twoRandomNumbers :: StdGen -> ((Int, Int), StdGen)
+twoRandomNumbers rng = ((x, y), rng'')
+	where (x, rng')  = next rng
+		  (y, rng'') = next rng'</code></pre>
+
+				<p>
+					However this is rather clumsy of an implementation, and not very generalisable. So let us redo it whilst using a new <code>State</code> type that we make.
+				</p>
+
+				<pre><code class="lang-haskell">-- State is of kind * -> * -> *
+data State s a = St (s -> (a, s))
+
+-- we also have an accompanying function
+runState :: State a s -> s -> (a, s)
+runState (St m) = m</code></pre>
+
+				<p>
+					Yep, it's what it looks like; the data type State stores a <i>function</i>. The runState function thus extracts the function from the State data type. 
+				</p>
+
+				<p>
+					It represents a computation of the initial state s, to give a result of type a and the "next" or resulting state s. <code>State</code> here is an <i>applicative functor.</i>
+				</p>
+
+				<p>
+					We can "clean up" our random number functions with State as follows
+				</p>
+
+				<pre><code class="lang-haskell">randomNumber :: State StdGen Int
+randoNumber = St next
+
+twoRandomNumbers :: State StdGen (Int, Int)
+twoRandomNumbers = mkPair <$> randomNumber <*> randomNUmber
+	where mkPair a b = (a, b)</code></pre>
+
+				<p>
+					Note that these are no longer <i>functions</i> but rather just <i>definitions</i>, there's no arrows going on. However, random numbers can still be extracted by <code>runState</code>ing the <code>twoRandomNumbers</code> with an initial seed. 
+				</p>
+			</div>
+			
+		</div>
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>

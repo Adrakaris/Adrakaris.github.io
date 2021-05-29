@@ -6,12 +6,17 @@ https://prismjs.com/download.html#themes=prism-tomorrow&languages=markup+css+cli
  * @author Rose Pritchard
  */
 
+ @font-face {
+    font-family: JBMono;
+    src: url("./font/jbmono/JetBrainsMono-Regular.woff2") format("woff2");
+}
+
 code[class*="language-"],
 pre[class*="language-"] {
 	color: #ccc;
 	background: none;
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	font-size: 1em;
+	font-family: JBMono, Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 15px;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;

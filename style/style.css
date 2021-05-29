@@ -425,7 +425,7 @@ blockquote {
 
 .green {
     background-color: var(--green);
-    color: var(--band-col);
+    color: var(--band-txt);
 }
 
 .blue {
