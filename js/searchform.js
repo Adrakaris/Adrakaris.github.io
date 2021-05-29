@@ -78,8 +78,8 @@ iButton.addEventListener("click", function() {
     // console.log(`click, ${document.querySelector("#se").value}`)
     var results = []
     pages.forEach((block) => {
-        if (block["title"].toLowerCase().includes(document.querySelector("#se").value) || 
-            block["desc"].toLowerCase().includes(document.querySelector("#se").value)) {
+        if (block["title"].toLowerCase().includes(document.querySelector("#se").value.toLowerCase()) || 
+            block["desc"].toLowerCase().includes(document.querySelector("#se").value.toLowerCase())) {
             results.push(block)
         }
     })
