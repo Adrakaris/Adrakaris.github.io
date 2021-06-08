@@ -55,6 +55,7 @@
 				<li><a href="#reasoning">Equational Reasoning</a></li>
 				<li><a href="#functors">Foldables and Functors</a></li>
 				<li><a href="#applicatives">Applicatives</a></li>
+				<li><a href="#monads">Monads</a></li>
 			</ol>
 		</div>
 
@@ -383,14 +384,17 @@ instance Functor Maybe where
 
 			<pre><code class="lang-haskell"><*> :: Applicative f => f (a->b) -> f a -> f b</code></pre>
 
+			<div class="side">
+				
+			
 			<p>
-				Thus the applicative class is defined as follows,
+				Thus the <b>applicative class</b> is defined as follows,
 			</p>
 
 			<pre><code class="lang-haskell">class Functor f => Applicative f where
 	pure :: a -> f a
 	(<*>) :: f (a->b) -> f a -> f b   -- "apply"</code></pre>
-
+			</div>
 			<p>
 				Think of <code><*></code> as an operator that applies a function stored in a container to a value stored in another container of the same type, and keeps the result in the container. 
 			</p>
@@ -401,7 +405,7 @@ instance Functor Maybe where
 
 			<div class="blue">
 			<p>
-				An instance of Applicative must also follow all applicative laws, those being
+				<b><i>Applicative Laws.</i></b> An instance of Applicative must also follow all applicative laws, those being
 			</p>
 			
 				<ul>
@@ -519,6 +523,155 @@ twoRandomNumbers = mkPair <$> randomNumber <*> randomNUmber
 				</p>
 			</div>
 			
+		</div>
+
+		<div class="colourband" id="monads">
+			<h2>M̶̿̿̈́́̉̄̃҉͕̜̟̠͕̯̼͡o̡̙ͣ̂͑̇ͨ̕n̢̡̠̦̺̳͚͓͇ͣ̑̏̿̄a̛̠̝͍̜̠̞͖ͨ͆̄d͎̟̺̘̦̙̻͒̄͝s̄͗̅̿̚҉̷̩̖</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h2>Introduction</h2>
+			<p>
+				<i>"A monad is just a monoid in the category of endofunctors, what's so hard about that?"</i>
+			</p>
+
+			<p>
+				Suppose we have a basic programming language and intepreter defined in Haskell. <code>Expr</code> is the expression to evaluate, and we have a function <code>eval</code> which will return an evaluated value.
+			</p>
+
+			<pre><code class="lang-haskell">data Expr = Val Int
+		  | Add Expr Expr
+		  | Div Expr Expr
+
+eval :: ??</code></pre>
+
+		  	<p>
+		  		We want to write eval such that we don't get a runtime error when we divide by zero, so perhaps it would be prudent to use a safe division function. 
+		  		<pre><code class="lang-haskell">safeDiv :: Int -> Int -> Maybe Int</code></pre>
+
+		  		Which will return <code>Nothing</code> if we try to divide by zero.
+		  	</p>
+
+		  	<p>
+		  		We can then use this safeDiv function to write eval, however the following looks good at a glance, but does not typecheck:
+		  	</p>
+
+		  	<pre><code class="lang-haskell">eval :: Expr -> Maybe Int
+eval (Val n) = Just n
+eval (Add l r) = (+) <$> eval l <*> eval r  -- Need to use apply over maybes
+eval (Div l r) = safeDiv <$> eval l <*> eval r</code></pre>
+
+		  	<p>
+		  		This is because of the last line, which will make the compiler throw up an error. When we do <code>eval l</code> and <code>eval r</code>, we'll get <code>Maybe x</code> and <code>Maybe y</code> let's say, to use some unknowns x and y. Then, when we try to apply safeDiv over the two, we would get <code>Maybe (safeDiv x y)</code> which will be of type <code>Maybe(Maybe Int)</code>. Ah. 
+		  	</p>
+
+			<p>
+				Let's introduce a function called <code>bind</code> to solve this, which is often written as <code>>>=</code>. It can be defined for Maybe as the following:
+			</p>
+
+			<pre><code class="lang-haskell">(>>=) :: Maybe a -> (a -> Maybe b) -> Maybe b
+(>>=) Nothing _ = Nothing
+(>>=) (Just x) f = f x</code></pre>
+			
+			<p>
+				This lets us write our code in a way that actually works, that is as follows;
+				<pre><code class="lang-haskell">eval (Div l r) = eval l >>= (\x -> eval r >>= (\y -> x `safeDiv` y))</code></pre>
+				You don't actually need the brackets, and convention is to have a new line after the arrow, however I've put in brackets so you can see what is an argument of what.
+			</p>
+
+			<h2>The Monad Class</h2>
+
+			<p>
+				What we have just done is defined and used the essential function in the Monad class. 
+			</p>
+
+			<div class="side">
+			<p>
+				Monads are subclasses of applicative functors, and are defined as follows:
+			</p>
+
+			<pre><code class="lang-haskell">class Applicative m => Monad m where
+	(>>=) :: m a -> (a -> m b) -> m b
+
+	return :: a -> m a
+	return = pure</code></pre>
+
+			<p class="small">
+				<i>"return" is just a legacy from when Monads and Applicatives were not so linked.</i>
+			</p>
+			</div>
+
+			<p>
+				It is of kind <code>* -> *</code>
+			</p>
+
+			<div class="blue">
+				<p>
+				<b><i>Monad Laws.</i></b> Monads also have laws they must follow.
+			</p>
+
+			<ul>
+				<li>
+					The <i>left identity</i>: <code>pure x >>= f = f x</code>
+				</li>
+				<li>
+					The <i>right idenity</i>: <code>m >>= pure = m</code>
+				</li>
+				<li>
+					The <i>associativity rule</i>: <code>(m >>= f) >>= y</code>  \(\equiv\)  <code>m >>= (\x -> f x >>= y)</code>
+				</li>
+			</ul>
+			</div>
+			<p></p>
+
+			<button class="collapsible">Monad Helper Functions...</button>
+			<div class="ccontent">
+				<p>
+					Monads have helper functions in <code>Control.Monad</code>, some of which are listed below.
+				</p>
+				<ul>
+					<li><code>mapM :: Monad m => (a -> m b) -> [a] -> m [b]</code></li>
+					<li><code>void :: Functor f => f a -> f ()</code></li>
+					<li><code>join :: Monad m => m (m a) -> m a</code></li>
+					<li><code>replicateM :: Applicative f => Int -> f a -> f [a]</code></li>
+				</ul>
+			</div>
+
+			<p>
+				Since binds have a rather inconvenient notation, monads in haskell come with <b>do-notation</b>, which is a very <i>imperative</i> notation for monad binding. A <code>do</code> statement opens the block, and within <code>x <- code</code> is the equivalent of binding, with x being the computation the result of the code is bound to. 
+			</p>
+
+			<p>
+				A <code>do</code> block will run all the way to the end regardless, and so <code>return</code> or <code>pure</code> won't stop the running of the block, unlike an imperative return. 
+			</p>
+
+			<p>
+				Note that the error case is bound more strongly than the normal case, so if a <code><-</code> bind encounters a <code>Nothing</code> or a <code>Left e</code> (of an Either monad - did I mention Either is also a monad?) it will immediately return the error and not consider subsequent lines. 
+			</p>
+
+			<p>
+				To demonstrate, here's some example code.
+			</p>
+
+			<button class="collapsible">Do notation...</button>
+			<div class="ccontent">
+<pre><code class="lang-haskell">main :: IO ()
+main = do
+    line <- getLine
+    if null line
+        then return ()
+        else do
+            putStrLn $ reverseWords line
+            main 
+
+reverseWords :: String -> String
+reverseWords = unwords . map reverse . words</code></pre>
+			</div>
+
+			<p>
+				To differentiate <i>monadic</i> from <i>regular</i> values, regular values are often called <i>computaitons</i>. The things that are bound in do statements are said computations.
+			</p>
 		</div>
 
 		<footer>
