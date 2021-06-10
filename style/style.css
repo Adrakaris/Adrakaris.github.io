@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@460;750&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;600&display=swap');
 
 @font-face {
     font-family: Urbanist;
@@ -413,6 +414,28 @@ p.ir {
     font-style: italic;
 }
 
+p.classical {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    writing-mode: vertical-rl;
+    font-size: 16pt;
+}
+
+p.classical.h {
+    writing-mode: horizontal-tb;
+}
+
+p.classical.fancy {
+    font-family: "Long Cang", serif;
+}
+
+p.classical.border {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-spacing: 10px;
+    padding: 10px;
+}
 
 code {
     font-family: JBMono;
