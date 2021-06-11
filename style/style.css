@@ -539,5 +539,9 @@ hr {
         align-content: center;
         z-index: 0;
     }
+
+    p.classical {
+    writing-mode: horizontal-tb;
+    font-size: 16pt;
 }
 
