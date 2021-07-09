@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guqin Qinpu</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="./style/qin.css" media="all">
+    <!-- <link rel="stylesheet" type="text/css" href="../style/prism.css" media="all"> -->
+    <meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+    <link rel="icon" type="image/png" href="../style/images/DragonIcon.png">
+    <!-- <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> -->
+</head>
+<!-- <body> -->
+    <div class="hidden">
+        
+    
+        <header>
+            <div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 9fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+                    <div class="column tinycolumn">
+                        <a href="../index.html" class="nav">Home</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="../blog.html" class="nav">Blog</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="../about.html" class="nav">About</a>
+                    </div>
+                    <div></div>
+                    <div class="column">
+                        <button class="nav dark-light">Dark Mode</button>
+                    </div>
+            </div>
+            <div class="cbox">
+                <h1>Guqin Qinpu</h1>
+            </div>
+        </header>
+
+        <div class="cbox">
+            <h2>Note on ligatures and typefaces</h2>
+            <p>
+                This page uses a version of Noto Sans SC modified by me to include ligatures suitable for writing 减字谱 notation. If your browser for some reason struggles and does not like the ligatures, then this won't display properly.
+            </p>
+
+            <p>
+                If the following is a string of jumbled letters, then your ligatures are not displaying: 
+            </p>
+
+            <p class="qinpu">
+                \7t/da/9 -s-z7-6 \fan \1g/zh/7 \fanz \li/s-z5-4
+            </p>
+
+            <p>
+                You can find the font, termed Noto Qin, on my <a href="https://github.com/Adrakaris/guqin-jianzipu-font">GitHub here</a>.
+            </p>
+        </div>
+
+        <div class="colourband">
+            <h2>Sheet Music</h2>
+        </div>
+
+        <div class="cbox">
+            
+            <h2>红山</h2>
+            <p class="subheading">
+                <i>asra hakroson khrae</i>
+            </p>
+            <p>
+                The numbers do not indicate pitch, but rather beat. 1 unit is equal to 1 quartet. 勾 and 挑 are not shown, and are up to the player. Play verse and chorus in the order VVC VVC.
+            </p>
+            <p>
+                数字代表节奏。１代表一个四分音符。/2是八分（一半），2是二分，等等。弹的顺序：VVC VVC.
+            </p>
+            <p>
+                作者：我（胡艺钧） <z style="float: right;">Key F: C D F G A C D</z>
+            </p>
+            <table>
+                <tr><td>Verse (V)</td></tr>
+                <tr><td class="qinpu">
+                    | \5/s \6/da/108 \6/da/108 \6/mi/131 -s-z10-8 \6/s \5/da/131 \5/s | \6 \li-z7-6/s \5/mi/131 \7/da/131 | 
+                </td></tr>
+                <tr><td class="beat">
+                    |　　1　　1　　　1　　/2　　/2　　1　　1　　2　　|　　2　　/2 1　　/2　　4　|
+                </td></tr>
+                <tr><td class="qinpu">
+                    | \5/s \6/da/108 -x-z13-1 \fu \6/s \7 \5/da/123 -x-z13-1 \5/s | \6 \7 \5/da/123 -x-z13-1 \4/s \5 |
+                </td></tr>
+                <tr><td class="beat">
+                    |　　1　　2　　/2　　1　　　1　　1　　/2　　/2　　2　　|　　2　　/2　　/2　　/2　　1　　4　　|
+                </td></tr>
+
+                <tr><td>Chorus (C)</td></tr>
+                <tr><td class="qinpu">
+                    | \5/s \7/mi/131 \4/da/10 -x-z10-8 | \4/da/10 -x-z10-8 \5/s \7/da/131 \7 | \5/s \7/da/131 \7/s \6 \5/da/131 -s-9 | 
+                </td></tr>
+                <tr><td class="beat">
+                    |　　2　　1　　/2　1.5/2　| 　1　　/2　　/2　　1.5　　2.5　|　　/2　1.5/2　　1　　1　　1　　3　　|
+                </td></tr>
+                <tr><td class="qinpu">
+                    | \5/s \7/mi/131 \5/da/10 -x-z12-3 \6/s \7 \5/da/123 -x-z13-1 \5/s | \5/s \5/da/131 \6/s \4/da/108 -x-z13-1 \4/s \5 |
+                </td></tr>
+                <tr><td class="beat">
+                    |　　1　　2　　1　　　1　　1　　　2　　/2　　/2　　2　|　　1　　1.5/2　1　　/2　　　1　　1　　4　|
+                </td></tr>
+            </table>
+
+        </div>
+
+
+
+        <footer>
+            <div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../js/footerGen.js"></script>
+            </div>
+        </footer>
+
+    <script type="text/javascript" src="../js/collapsible.js"></script>  <!--This stays at the end-->
+    <script type="text/javascript" src="../js/toggle-darklight.js"></script>
+    <!-- <script type="text/javascript" src="../js/prism.js"></script> -->
+
+    </div>
+<!-- </body> -->
+</html>

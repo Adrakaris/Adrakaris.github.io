@@ -36,6 +36,7 @@ html, body {
     margin: 0;
     padding: 0;
     z-index: 2;
+    /*display: contents;*/
 }
 
 .header-row {
@@ -69,6 +70,12 @@ html.boxed .body {
 
 .w {
     max-width: 1000px;
+}
+
+.wgrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 20px;
 }
 
 .cornell {
@@ -106,16 +113,43 @@ html.boxed .body {
 }
 
 .hidden {
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
+    overflow-x: auto;
     position: relative;
     min-height: 100vh;
 }
 
+/*.shown {
+    position: relative;
+    min-height: 100vh;
+    display: contents;
+    overflow-x: auto;
+}*/
+
+/*.colourband:before {
+    border-left: 9999px solid var(--band-col);
+    box-shadow: 9999px 0 0 var(--band-col);
+    top: 0;
+    bottom: 0;
+    left: -9999px;
+    right: 0;
+    position: absolute;
+    content: "";  I hate css.
+}*/
+
 .colourband {
     background-color: var(--band-col);
     color: var(--band-txt);
-    margin: 0 -500%;
-    padding: 0.5rem 500%;
+    /*margin: 0 -500%;*/
+    /*padding: 0.5rem 500%;*/
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 100vw;
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    /*display: inline-block;*/
+    
     text-align: center;
 }
 
@@ -209,8 +243,14 @@ img.except {
 header {
     background-color: var(--band-col);
     color: var(--band-txt);
-    margin: 0 -500%;
-    padding: 0.5rem 500%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 100vw;
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    /*display: inline-block;*/
+    /*text-align: center;*/
 }
 
 header.green {
@@ -221,8 +261,13 @@ header.green {
 footer {
     background-color: var(--band-col);
     color: var(--band-txt);
-    margin: 0 -500%;
-    padding: 0.5rem 500%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    width: 100vw;
+    position: -webkit-sticky;
+    position: sticky;
+    left: 0;
+    /*display: inline-block;*/
     box-shadow: 0 50vh 0 50vh var(--band-col);
 }
 
@@ -507,6 +552,10 @@ hr {
 /*-----------------------------------------------------------------------*/
 
 @media (max-width: 768px) {
+    .hidden {
+        overflow-x: auto;
+    }
+
     .columncontainer {
         display: grid;
         grid-template-columns: 1fr; 
@@ -541,7 +590,13 @@ hr {
     }
 
     p.classical {
-    writing-mode: horizontal-tb;
-    font-size: 16pt;
+        writing-mode: horizontal-tb;
+        font-size: 16pt;
+    }
+
+    .wgrid {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
 }
 
