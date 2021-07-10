@@ -106,12 +106,12 @@
 			<p>
 				For Jianzipu, the most commonly used block is one to indicate plucking of a string, whether it be 挑、勾、抹 or whatever. It consists of a number, the main action,
 				and then either 散 or a finger position. Optionally, on top you can have a 泛音 indicator, taking the maximum number of components to 5 (since the finger position
-				has both a finger and a position). Somehow, these five blocks should all be representable without making tens or hundreds of different glyph codes. 
+				has both a finger and a position). Somehow, these five blocks should all be representable without making hundreds and hundreds of different glyph codes. 
 			</p>
 
 			<p>
 				For the main right hand action, every possible action requires the number to have a different placement - 散 is different from 抹 from 抹勾 - and so these would 
-				have to be indidually made for each string, 7 in total per. Not ideal but oh well, 7 is quite doable. That's the first two compoenents done. However, I can't be
+				have to be indidually made for each string, 7 in total per. Not ideal but oh well, 7 is quite doable. That's the first two components done. However, I can't be
 				doing that for the finger positons, the "relaxed" 散音, and a possible "resonant" 泛音 marker on top. The way I solved this, simply put, is by using negative
 				kerning. That is, kerning the ligature so that it overlaps with the previous character. 
 			</p>
@@ -143,7 +143,8 @@
 			<p>
 				For slides (上/下) the main character is the 上/下, which goes on the top position. Then, the numbers are added as combinators. We can't just
 				use standard <i>hui</i> positions, for reasons we'll come onto soon, so I decided to, as shown in the image above, make the middle and bottom
-				number separate components. For a whole number <i>hui</i>, the design states that you only use the bottom number. Thus, the middle numbers 
+				number separate components. For a whole number <i>hui</i>, you onlt use one number. Use the bottom number if possible,
+				if not then the middle. The middle numbers 
 				go from 1 to 13, and the bottom numbers go only from 1 to 9, with added 半 and 外. 
 			</p>
 
@@ -159,7 +160,7 @@
 				"falling" 注 and "rising" 绰 indicators. The falling tone is indicated with a water radical on the left, whilst, more problematically, the rising tone
 				is indicated by a small 卜 written normally <i>below</i> the finger position indicator. This, unfortunately, is where I decide to go against
 				normal convention, and indicate the falling zone instead in the position where the resonant indicator usually goes, above the finger position.
-				I think this is an acceptable sacrifice to make this work.
+				I think this is an acceptable sacrifice to make this work. The water radical can simply be kerned to go on the left hand side of the prior character.
 			</p>
 
 			<h2>Conclusions</h2>
