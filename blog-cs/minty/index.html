@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Linux Mint</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="./index.html" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="./blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="./about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>Linux Mint</h1>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>A New PC Setup</h1>
+			</div>
+		</header>
+
+		<div class="cbox">		
+			<p>
+				So, since forever, I had been programming on Windows - since, well, I did <i>everything</i> on Windows. However, at university they used linux 
+				on their systems, which, fair enough, so I learned to use a linux command line. Windows of course doesn't use the linux command line, it has its
+				own thing, and I didn't particularly like cmd, and that was that, until of course I heard of WSL.
+			</p>
+
+			<p>
+				WSL, or the Windows Subsystem for Linux, is basically a command line linux virtual machine that can run on Windows, interact with windows file
+				systems and run .exe files. All while having all the linux stuff a command line linux has - pretty nice. So I installed WSL(2) and rolled with that
+				for most of the year. 
+			</p>
+
+			<p>
+				Eventually, though, I realised what sort of bodge job I had with the WSL system, which can be summed up by <code>alias java="java.exe"</code>. 
+				Basically, because I didn't want to re-install all the things like Java, Python, Haskell, etc. onto WSL, since it seemed like just taking up 
+				extra space for nothing, I ended up using a system which was basically windows bash. This doesn't sound as bad as it was, since I just kept bodging
+				things into the bashrc file, and basically ended up not liking it much. Then, as I programmed more in Windows, the more I hated it. Windows was in itself
+				clunky and not suited to such things, and so I resolved that when I moved home to get a 500 GB SSD and install a linux distribution onto it. 
+			</p>
+
+			<p>
+				And so, of course, I did just that. Luckily a family member had a spare SATA SSD he could give me (so no extra £40 spent there) and I decided on Linux 
+				Mint. It had a very windows-like desktop packaged with it, and seemed to have a good, painless, install process. I plugged in the SSD, and spent an hour
+				or two getting it installed (and the rest of the day to configure it to my liking), and bam, I had Mint dual-bootable on my computer.
+			</p>
+
+			<p>
+				Now, I had two OSs running, and basically Mint was for work and programming, and Windows for everything else. I've kept windows as it is, but I don't 
+				use it for programming any more. I could now properly set up all the programming languages I needed, and have a terminal environment I was comfortable 
+				with. 
+			</p>
+
+			<p>
+				There's only two things really that I have complaints with though. First, I do miss windows terminal. Xcfe terminal with a background image and cascadia code
+				gets close, but there's nothing I found quite like that specific microsoft product. Second, C# is still a bit of a pain. Everything other language was
+				quite easy but Microsoft Java had to cause me that little extra bit of annoyance. I don't even really use it anyway; I like LibGDX better than MonoGame
+				so I'm sticking with Java for now. 
+			</p>
+
+			<figure style="max-width: 720px; width: 100%; margin-left: auto; margin-right: auto; display: block;">
+				<img src="konsol.png" alt="Linux Mint terminal with neofetch on">
+				<figcaption><i>Minty Fresh.</i></figcaption>
+			</figure>
+		</div>
+
+		<!---
+		<div class="colourband">
+			<h2>Heading 2</h2>
+		</div>
+		--->
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>
