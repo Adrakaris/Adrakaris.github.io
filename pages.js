@@ -18,6 +18,14 @@
 var pages = [
     {
         "date": new Date(Date.UTC(2021, 7, 10)),
+        "link": "blog-misc/guqin/",
+        "title": "Guqin Notation",
+        "desc": "The Guqin, or Chinese Zither, has a very specialised and old form of music score, called 减字谱, or \"reduced character score\". Usually it's handwritten, but I've made a font for it! </p>",
+        "picture": "",
+        "tags": ["misc"]
+    },
+    {
+        "date": new Date(Date.UTC(2021, 7, 10)),
         "link": "blog-cs/minty/",
         "title": "A New PC Setup",
         "desc": "I've recently installed a new SSD onto my computer and installed a separate Linux system. This is basically a ramble on why I did that and why I moved off Windows for programming.</p>",

@@ -327,7 +327,7 @@ button.nav {
 }
 
 button.nav:hover {
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);s
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 .active, .collapsible:hover {
@@ -344,7 +344,7 @@ button.nav:hover {
 }
 
 .active:after {
-    content: '-'
+    content: '-';
     font-style: normal;
 }
 
