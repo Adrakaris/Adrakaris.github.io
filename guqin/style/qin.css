@@ -1,6 +1,11 @@
 @font-face {
     font-family: Noto;
-    src: url("./guqin-noto-sans-sc.ttf") format("truetype");
+    src: url("./noto-qin-jianzipu.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: Dejavu;
+    src: url("dejavu-sm.ttf");
 }
 
 body {
@@ -8,9 +13,22 @@ body {
     font-variant-ligatures: contextual;
 }
 
+z-z {
+    float: right;
+}
+
+z-eu {
+    border-bottom: 1px solid var(--txt-col);
+}
+
+pre {
+    font-size: 16px;
+    font-family: Dejavu, sans-serif;
+}
+
 p.qinpu {
     font-family: Noto, sans-serif;
-    font-size: 24pt;
+    font-size: 32px;
     margin-top: -5px;
     margin-bottom: -5px;
 
@@ -23,11 +41,12 @@ p.qinpu {
 table {
     margin-left: auto;
     margin-right: auto;
+    overflow-wrap: unset;
 }
 
 td.qinpu {
     font-family: Noto, sans-serif;
-    font-size: 24pt;
+    font-size: 32px;
     margin-top: -5px;
     margin-bottom: -5px;
 
@@ -38,7 +57,15 @@ td.qinpu {
 }
 
 td.beat {
-    font-size: 10pt;
+    font-size: 16px;
+}
+
+tr.j {
+    line-height: 0pt;
+}
+
+td.j {
+    line-height: 0pt;
 }
 
 h2 {
