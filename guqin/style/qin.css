@@ -21,6 +21,11 @@ z-eu {
     border-bottom: 1px solid var(--txt-col);
 }
 
+q-in {
+    font-size: 16px;
+    font-family: Noto, sans-serif;
+}
+
 pre {
     font-size: 16px;
     font-family: Dejavu, sans-serif;
@@ -36,6 +41,10 @@ p.qinpu {
     padding-bottom: 5px;
     /*border-top: 1px solid grey;*/
     /*border-bottom: 1px solid grey;*/
+}
+
+p.qinpu.small {
+    font-size: 16px;
 }
 
 table {
