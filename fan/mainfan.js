@@ -37,4 +37,7 @@ function populatebox(array) {
     });
 }
 
+fanPages.forEach((block) => {
+    block["link"] = "../" + block["link"];
+})
 populatebox(fanPages.slice(0, 3))
