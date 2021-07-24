@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@460;750&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Long+Cang&display=swap');
 
 @font-face {
     font-family: Urbanist;
@@ -144,7 +145,7 @@ html.boxed .body {
     /*padding: 0.5rem 500%;*/
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    width: 100vw;
+    /* width: 100vw; */
     position: -webkit-sticky;
     position: sticky;
     left: 0;
@@ -245,7 +246,7 @@ header {
     color: var(--band-txt);
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    width: 100vw;
+    /* width: 100vw; */
     position: -webkit-sticky;
     position: sticky;
     left: 0;
@@ -263,7 +264,7 @@ footer {
     color: var(--band-txt);
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    width: 100vw;
+    /* width: 100vw; */
     position: -webkit-sticky;
     position: sticky;
     left: 0;
@@ -459,27 +460,42 @@ p.ir {
     font-style: italic;
 }
 
-p.classical {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    writing-mode: vertical-rl;
-    font-size: 16pt;
+p.cls {
+    padding-left: 0px;
+    padding-right: 10pt;
+    font-family: "Noto Serif SC", serif;
 }
 
-p.classical.h {
+p.cls.h {
     writing-mode: horizontal-tb;
 }
 
-p.classical.fancy {
+p.cls.fancy {
     font-family: "Long Cang", serif;
 }
 
-p.classical.border {
+p.cls.border {
     border-top: 1px solid black;
     border-bottom: 1px solid black;
     border-spacing: 10px;
     padding: 10px;
+}
+
+.clscont {
+    margin: 0 auto;
+    display: block;
+    /* text-align: center; */
+
+    writing-mode: vertical-rl;
+    font-size: 16pt;
+    letter-spacing: 5pt;
+    overflow: scroll;
+    direction: rtl;
+
+    max-height: 400px;
+    width: 600px;
+    max-width: inherit;
+    text-align: left;
 }
 
 code {
