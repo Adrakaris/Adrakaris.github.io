@@ -489,7 +489,7 @@ p.cls.border {
     writing-mode: vertical-rl;
     font-size: 16pt;
     letter-spacing: 5pt;
-    overflow: scroll;
+    overflow-x: scroll;
     direction: rtl;
 
     max-height: 400px;
