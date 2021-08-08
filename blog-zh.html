@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blog</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./style/style.css" media="all" id="theme-link">  <!--TODO: CHANGE HREF-->
+    <link rel="stylesheet" type="text/css" href="./style/prism.css" media="all">
+    <meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+    <link rel="icon" type="image/png" href="./style/images/DragonIcon.png">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style type="text/css">
+        .cfive {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-column-gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .cfive {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hidden">
+        <header>
+            <div class="parallax parsmaller">
+                <div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 9fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+                    <div class="column tinycolumn">
+                        <a href="./index-zh.html" class="nav">本页</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        <a href="./about-zh.html" class="nav">关于</a>
+                    </div>
+                    <div class="column tinycolumn">
+                        
+                        
+                    </div>
+                    <div></div>
+                    <div class="column">
+                        <button class="nav dark-light">晚夜模式</button>
+                    </div>
+                </div>
+                <div class="cbox">      
+                    <h1>博客</h1>
+                </div>
+            </div>
+        </header>
+
+        <header>
+            <div class="cbox">
+                <h1>前言</h1>
+            </div>
+        </header>
+
+        <div class="buttonwrapper beside" >
+			<a href="./blog.html">English</a>
+		</div>
+
+        <div class="cbox">
+            <p>
+                我对很多东西有兴趣，从历史到艺术、文化、折纸到技术，而这里是我所收存之处。 
+            </p>
+
+
+            <button class="collapsible">关于复习记录……</button>
+            <div class="ccontent">
+                <p>
+                    我跟华威大学的计算机部无关系，但是我在<a href="https://warwick.guide/" class="text">CS复习指南</a>群里。鼓励你去看一看（当然，无中文翻译）很多部分他们的注释比我的更详细。
+                </p>
+
+                <p>
+                    <b><i>贡献：</i></b> 什么贡献，纠正，都受欢迎。若找到错误，或欲加进去的，请在我的Github上做一个Pull Request。若知我的Discord/微信，可以跟我联系。
+                </p>
+
+                <p>
+                    <b><i>剽窃行为：</i></b> 我们都需要小心不做什么剽窃行为。这里的内容都是从我自己的记录，从发言记下来的，这些发言学这课目者都可以看的。大多图表都是我的，或有citations。如果被DCS通知，我会把这些删掉。
+                </p>
+            </div>
+
+            
+        </div>
+
+        
+        <div class="colourband">
+            <h2>博客</h2>
+            <input id="se" class="search" type="text" placeholder="Search...">
+            <button id="sb" type="submit" class="search">搜</button>
+            <div class="cbox"><div class="cfive">
+                <button id="tall" class="search">#全</button>
+                <button id="tcs" class="search">#计算机</button>
+                <button id="torigami" class="search">#折纸</button>
+                <button id="tmisc" class="search">#其他</button>
+                <button id="" class="search"></button>
+            </div></div>
+        </div>
+
+        <div class="cbox" id="population">
+            
+        </div>
+
+        <footer>
+            <div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="./js/footerGen.js"></script>
+            </div>
+        </footer>
+
+    </div>
+
+    <script type="text/javascript" src="./js/collapsible.js"></script>
+    <script type="text/javascript" src="./js/toggle-darklight.js"></script>
+    <script type="text/javascript" src="./pages-zh.js"></script>
+    <script type="text/javascript" src="./js/searchform.js"></script>
+    
+</body>
+</html>
