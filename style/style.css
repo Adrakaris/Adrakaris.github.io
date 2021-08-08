@@ -209,6 +209,12 @@ html.boxed .body {
     height: 100%;
 }
 
+.buttonwrapper.beside {
+    float: left; 
+    margin-left: 20px; 
+    margin-top: 20px;
+}
+
 .codediv {
     font-family: JBMono;
     border-width: thin;
@@ -567,7 +573,15 @@ hr {
 
 /*-----------------------------------------------------------------------*/
 
-@media (max-width: 768px) {
+@media (max-width: 800px) {
+    .buttonwrapper.beside {
+        display: inline-block;
+        
+        float: none;
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+
     .hidden {
         overflow-x: auto;
     }
