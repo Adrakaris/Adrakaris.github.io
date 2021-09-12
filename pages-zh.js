@@ -75,8 +75,8 @@ var pages = [
     {
         "date": new Date(Date.UTC(2021, 4, 7)),
         "link": "blog-misc/wyvern/index-zh.html",
-        "title": "虯龙 - 指导和图纸。",
-        "desc": "我设计的虯龙的指导（视频），2021年3月。视频在YouTube上，火墙禁止。</p>",
+        "title": "螭龙 - 指导和图纸。",
+        "desc": "我设计的螭（chí）龙的指导（视频），2021年3月。视频在YouTube上，火墙禁止。</p>",
         "picture": "blog-misc/wyvern/wyvern.jpg",
         "tags": ["origami"]
     },
