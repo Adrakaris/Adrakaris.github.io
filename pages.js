@@ -30,7 +30,7 @@ var pages = [
         "title": "A New PC Setup",
         "desc": "I've recently installed a new SSD onto my computer and installed a separate Linux system. This is basically a ramble on why I did that and why I moved off Windows for programming.</p>",
         "picture": "",
-        "tags": ["cs"]
+        "tags": ["tech"]
     },
     {
         "date": new Date(Date.UTC(2021, 5, 29)),

@@ -50,9 +50,9 @@ function recursiveFill(base, data) {
 
     console.log(fractions)
 
-    newContainer.setAttribute("style", `display: grid; grid-template-columns: ${fractions}; border-top: 1px solid black; border-left: 1px solid black; border-right: 1px solid black; margin-top: 10px; padding-top: 10px`)
+    newContainer.setAttribute("style", `display: grid; grid-template-columns: ${fractions}; border-top: 1px solid var(--pink); border-left: 1px solid var(--pink); border-right: 1px solid var(--pink); margin-top: 10px; padding-top: 10px`)
     // base.setAttribute("style", `display: grid; grid-template-columns: ${totalfraction}fr;`);  
-    base.setAttribute("style", `display: grid; grid-template-columns: 1fr;`)
+    base.setAttribute("style", `display: grid; grid-template-columns: 1fr; letter-spacing: 3px;`)
     base.appendChild(newContainer)
     return totalfraction;
 }

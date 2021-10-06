@@ -30,7 +30,7 @@ var pages = [
         "title": "新的电脑体系",
         "desc": "最近我刚安装了一个新的SSD，并安装了Linux。这篇文章就是说我为何开始在Linux上编程。</p>",
         "picture": "",
-        "tags": ["cs"]
+        "tags": ["tech"]
     },
     {
         "date": new Date(Date.UTC(2021, 5, 29)),

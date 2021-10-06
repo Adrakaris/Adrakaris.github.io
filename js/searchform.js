@@ -10,6 +10,7 @@ var iButton = document.querySelector("#sb");  // gets the button
 
 var allButtom = document.querySelector("#tall");
 var csButton = document.querySelector("#tcs");
+var techButton = document.querySelector("#ttech")
 var origamiButton = document.querySelector("#torigami");
 var miscButton = document.querySelector("#tmisc");
 
@@ -99,6 +100,10 @@ allButtom.addEventListener("click", function() {populatebox(pages)})
 
 csButton.addEventListener("click", function() {
     populatebox(getResults("cs"));
+})
+
+techButton.addEventListener("click", function() {
+    populatebox(getResults("tech"))
 })
 
 origamiButton.addEventListener("click", function() {
