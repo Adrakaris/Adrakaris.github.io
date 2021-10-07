@@ -44,31 +44,94 @@
 		</header>
 
 		<div class="cbox">
-			
+			<p>
+                These notes will be added to throughout the year. Check back later for more.
+            </p>
+
+            <ol>
+                <li><a href="#greedy">Greedy Algorithms</a></li>
+            </ol>
 		</div>
 
 
 		<div class="colourband">
-			<h2 id="2"></h2>
+			<h2 id="greedy">Greedy Algorithms</h2>
 		</div>
 
 		<div class="cbox">
+			<h3>Overview</h3>
+
 			<p>
-				
+				A <i>Greedy Algorithm</i> is one that builds up a solution from small steps, snatching or discarding the next available one without regard for the bigger picture, based on some simple rule(s).
 			</p>
-		</div>
 
+			<h3>Interval Scheduling</h3>
 
-        <div style="display: none;" id="justtemplate">
             <div class="cornell">
                 <div>
-                    <p class="ir"></p>
-                </div>
-                <div>
+					<p>
+						Interval Scheduing
+					</p>
                     
                 </div>
+                <div>
+					<p>
+						Suppose you manage a scheduling system for a conference room, and want to schedule as many meetings as possible, with no overlap between meetings and no rearranging of meeting times. 
+					</p>
+                    <p>
+						Let us call meetings <i>jobs</i>, the general term for this problem. Job \(j\) starts at time \(s_j\) and finishes at \(f_j\). Two jobs are <b>compatible</b> [to be scheduled] if they do not overlap.
+					</p>
+					<p>
+						Our goal is to make an algorithm with the following inputs and outputs
+						<ul>
+							<li><b><span class="sc">in:</span></b> A sequence of jobs (which are just pairs \((s_j,f_j\))</li>
+							<li><b><span class="sc">out:</span></b> The <b>maximum subset</b> of mutually compatible jobs</li>
+						</ul>
+					</p>
+
+					<p>
+						We can use a greedy algorithm to solve this, but we need the rules that allow us to implement it. We'll sort the jobs by a specific rule, then take jobs in order, provided they are compatible with all the jobs already selected. 
+					</p>
+
+					<p>
+						This ordering rule can be many things: earliest start time, earliest finish time, or shortest interval time being some possibilities. (You can try work out which one is correct, but I'm going to immediately reveal it below.)
+					</p>
+                </div>
+
+				<div>
+					<p>Earliest Finish First</p>
+				</div>
+				<div>
+					<p>
+						This is the correct sort rule. We can write an algorithm, for jobs \(j_i\) with starts/finishes \((s_i, f_i)\) for \(i = 1..n\).
+					</p>
+
+					<div class="codediv">earliest_finish_first(\(n\), \(s_{1..n}\), \(f_{1..n}\)):
+	sort jobs by finish time, and renumber them such that \(f_1 \leq f_2 \leq ... \leq f_n\)
+	\(S = \varnothing\)
+	for \(j = 1 .. n\):
+		if job \(j\) compatible with \(S\):
+			\(S\).add(\(j\))
+	return \(S\)</div>
+				</div>
+
+				<div>
+					<p>Running Time</p>
+				</div>
+				<div>
+					<p>We can prove this algorithm runs with \(O(n \log n)\). This is because:</p>
+
+					<p>We know that sorting is at best \(O(n \log n)\). </p>
+					<p>The for loop, we can prove is only \(O(n)\). If the for loop is \(O(n)\), then the compatibility check must be \(O(1)\)</p>
+					
+					<ul>
+						<li>If we keep a track of job \(j*\), which is the <i>last job</i> added to \(S\)</li>
+						<li>\(j\) would be compatible with \(S\) if and only if \(s_j \geq f_{j*}\)</li>
+					</ul>
+					<p>Thus comparison is indeed order \(O(1)\).</p>
+				</div>
             </div>
-        </div>
+		</div>
 
 		<footer>
 			<div class="cbox">

@@ -85,6 +85,11 @@ html.boxed .body {
     grid-column-gap: 20px;
     max-width: 840px;
 }
+.cornell div:nth-child(odd) *{
+    text-align: right;
+    font-style: italic;
+    /* ALWAYS USE THIS NOT IR */
+}
 
 .parallax {
     min-height: 480px;
@@ -422,6 +427,10 @@ h3.c {
     font-size: 20pt;
     letter-spacing: 2px;
     text-align: center;
+}
+
+.sc {
+    font-variant: small-caps;
 }
 
 p {
