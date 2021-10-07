@@ -1480,10 +1480,8 @@
                     <b><i>Proof 2.</i></b> <i>alternative</i>. We can write a small algorithm to enumerate this bijection. 
                 </p>
 
-                <div class="codediv">
-                    for \( i \in \mathbb{N} \): <br>
-                    &emsp;print(\( i, 2i \))
-                </div>
+                <div class="codediv">for \( i \in \mathbb{N} \):
+    print(\( i, 2i \))</div>
 
                 <p>
                     $$\tag*{$\Box$}$$
@@ -1513,14 +1511,12 @@
 
                 </p>
 
-                <div class="codediv">
-                    \( i = 0 \); print(\( 0, 0 \))<br>
-                    for \( j \in \mathbb{N} \setminus \{0\} \):<br>
-                    &emsp;\( i = i + 1 \)<br>
-                    &emsp;print(\( i, j \))<br>
-                    &emsp;\( i = i + 1 \)<br>
-                    &emsp;print(\( i, -j \))<br>
-                </div>
+                <div class="codediv">\( i = 0 \); print(\( 0, 0 \))
+for \( j \in \mathbb{N} \setminus \{0\} \):
+    \( i = i + 1 \)
+    print(\( i, j \))
+    \( i = i + 1 \)
+    print(\( i, -j \))</div>
 
                 <p>
                     $$\tag*{$\Box$}$$
@@ -1538,25 +1534,24 @@
                 </p>
 
                 <div class="codediv">
-                    \( x = 0; y = 0; t = 0; i = 1 \)<br>
-                    print(\( t, (x, y) \))<br>
-                    \( t \)++<br>
-                    while True:<br>
-                    &emsp;for \( j \) in range \( [1, i] \): <br>
-                    &emsp;&emsp;\( x\)++ <br>
-                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
-                    &emsp;for \( j \) in range \( [1, i] \): <br>
-                    &emsp;&emsp;\( y \)++ <br>
-                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
-                    &emsp;\( i \)++ <br>
-                    &emsp;for \( j \) in range \( [1, i] \): <br>
-                    &emsp;&emsp;\( x  \)-- <br>
-                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
-                    &emsp;for \( j \) in range \( [1, i] \): <br>
-                    &emsp;&emsp;\( y \)-- <br>
-                    &emsp;&emsp;print(\( t, (x, y) \)); \( t \)++; <br>
-                    &emsp;\( i \)++ <br>
-                </div>
+\( x = 0; y = 0; t = 0; i = 1 \)
+print(\( t, (x, y) \))
+\( t \)++
+while True:
+    for \( j \) in range \( [1, i] \):
+        \( x\)++
+        print(\( t, (x, y) \)); \( t \)++;
+    for \( j \) in range \( [1, i] \):
+        \( y \)++
+        print(\( t, (x, y) \)); \( t \)++;
+    \( i \)++
+    for \( j \) in range \( [1, i] \):
+        \( x  \)--
+        print(\( t, (x, y) \)); \( t \)++;
+    for \( j \) in range \( [1, i] \):
+        \( y \)--
+        print(\( t, (x, y) \)); \( t \)++;
+    \( i \)++</div>
             </div>
 
             <p class="side">
