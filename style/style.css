@@ -85,11 +85,10 @@ html.boxed .body {
     grid-column-gap: 20px;
     max-width: 840px;
 }
-.cornell div:nth-child(odd) *{
+div.cornell > div:nth-child(odd) *{
     text-align: right;
     font-style: italic;
-    /* ALWAYS USE THIS NOT IR */
-}
+} 
 
 .parallax {
     min-height: 480px;
@@ -471,6 +470,10 @@ p.blue {
 }
 
 p.ir {
+    text-align: right;
+    font-style: italic;
+}
+div.ir {
     text-align: right;
     font-style: italic;
 }

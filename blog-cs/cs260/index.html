@@ -65,10 +65,18 @@
 				A <i>Greedy Algorithm</i> is one that builds up a solution from small steps, snatching or discarding the next available one without regard for the bigger picture, based on some simple rule(s).
 			</p>
 
-			<h3>Interval Scheduling</h3>
+			<ol>
+				
+				<li><a href="#greedy1">Interval Scheduling</a></li>
+				<li><a href="#greedy2">Interval Partitioning</a></li>
+				<li><a href="#greedy3">Minimising Lateness</a></li>
+				<li><a href="#greedy4">Strategies of Analysis</a></li>
+			</ol>
+
+			<h3 id="greedy1">Interval Scheduling</h3>
 
             <div class="cornell">
-                <div>
+                <div class="ir">
 					<p>
 						Interval Scheduing
 					</p>
@@ -76,7 +84,7 @@
                 </div>
                 <div>
 					<p>
-						Suppose you manage a scheduling system for a conference room, and want to schedule as many meetings as possible, with no overlap between meetings and no rearranging of meeting times. 
+						You manage a scheduling system for a conference room, and want to schedule as many meetings as possible, with no overlap between meetings and no rearranging of meeting times. 
 					</p>
                     <p>
 						Let us call meetings <i>jobs</i>, the general term for this problem. Job \(j\) starts at time \(s_j\) and finishes at \(f_j\). Two jobs are <b>compatible</b> [to be scheduled] if they do not overlap.
@@ -98,7 +106,7 @@
 					</p>
                 </div>
 
-				<div>
+				<div class="ir">
 					<p>Earliest Finish First</p>
 				</div>
 				<div>
@@ -108,29 +116,362 @@
 
 					<div class="codediv">earliest_finish_first(\(n\), \(s_{1..n}\), \(f_{1..n}\)):
 	sort jobs by finish time, and renumber them such that \(f_1 \leq f_2 \leq ... \leq f_n\)
-	\(S = \varnothing\)
+	\(S = \varnothing\)  # set of jobs selected
 	for \(j = 1 .. n\):
 		if job \(j\) compatible with \(S\):
 			\(S\).add(\(j\))
 	return \(S\)</div>
 				</div>
 
-				<div>
+				<div class="ir">
 					<p>Running Time</p>
 				</div>
 				<div>
 					<p>We can prove this algorithm runs with \(O(n \log n)\). This is because:</p>
 
-					<p>We know that sorting is at best \(O(n \log n)\). </p>
-					<p>The for loop, we can prove is only \(O(n)\). If the for loop is \(O(n)\), then the compatibility check must be \(O(1)\)</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>We know that sorting is at best \(O(n \log n)\). </p>
+						<p>The for loop, we can prove is only \(O(n)\). If the for loop is \(O(n)\), then the compatibility check must be \(O(1)\)</p>
+						
+						<ul>
+							<li>If we keep a track of job \(j*\), which is the <i>last job</i> added to \(S\)</li>
+							<li>\(j\) would be compatible with \(S\) if and only if \(s_j \geq f_{j*}\)</li>
+						</ul>
+						<p>Thus comparison is indeed order \(O(1)\).</p>
+					</div>
+
 					
-					<ul>
-						<li>If we keep a track of job \(j*\), which is the <i>last job</i> added to \(S\)</li>
-						<li>\(j\) would be compatible with \(S\) if and only if \(s_j \geq f_{j*}\)</li>
-					</ul>
-					<p>Thus comparison is indeed order \(O(1)\).</p>
+				</div>
+
+				<div class="ir">
+					<p>Proof of Correctness</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Theorem.</i></b> The Earliest Finish First (EFF) algorithm is optimal.
+					</p>
+					
+					<button class="collapsible">Proof...</button>
+					<div class="ccontent">
+						<p><b><i>Proof.</i></b> We will prove by contradiction. Let us assume EFF is not optimal.</p>
+						<p>
+							Let \(i_1, i_2, ..., i_k\) be the set of jobs selected by EFF.
+						</p>
+						<p>
+							Let \(j_1, j_2, ..., j_m\) be the optimal set, with \(i_1 = j_1, i_2 = j_2, ... i_r = j_r\) for as large of a value of \(r\) as possible. If EFF is not optimal, then \(m > k\).
+						</p>
+						<p>
+							If job \(i_{r+1}\) does not exist, then by nature of the algorithm all jobs after \(i_r\) are incompatible with it. However, since \(i_r = j_r\), and we know that the optimal must <i>strictly</i> have more jobs than EFF, there must be compatible jobs after \(i_r\), thus we reach a contradiction.
+						</p>
+
+						<p>
+							If job \(i_{r+1}\) exists, it cannot finish later than \(j_{r + 1}\), because of the sorting rule. Thus we can just replace \(j_{r+1}\) with \(i_{r+1}\), and guarantee that all jobs \(j_r+2\) and afterwards is compatible. Thus the optimal is still optimal, and the condition that we have the <i>largest possible \(r\)</i> has been violated.
+						</p>
+
+						$$\tag*{$\Box$}$$
+					</div>
 				</div>
             </div>
+
+			<h3 id="greedy2">Interval Partitioning</h3>
+
+			<div class="cornell">
+				<div class="ir">
+					<p>Interval Partitioning</p>
+				</div>
+				<div>
+					<p>You are in charge of scheduling lectures into lecture rooms. Lecture \(j\) starts at \(s_j\) and finishes at \(f_j\), and your goal is to find the <i>minimum</i> number of classrooms needed to schedule all lectures such that no two overlap.</p>
+					
+					<p>
+						<ul>
+							<li><b><span class="sc">in:</span></b> A sequence of jobs (which are just pairs \((s_j,f_j\))</li>
+							<li><b><span class="sc">out:</span></b> The smallest possible collection of sets (classrooms) of compatible jobs</li>
+						</ul>
+					</p>
+
+					<p>
+						(As the section implies) we use a greedy algorithm, and need to decide the ordering rule. This can be: Earlist start first, Earliest finish first, Shortest lecture first, or something else.
+					</p>
+				</div>
+
+				<div class="ir">
+					<p>Earliest Start First</p>
+				</div>
+				<div>
+					<p>This is the correct sort rule.</p>
+					<div class="codediv">earliest_start_first(\(n\), \(s_1 .. s_n\), \(f_1 .. f_n\)):
+	sort lectures by start times, renumber s.t. \(s_1 \leq s_2 \leq ... \leq s_n\)
+	\(d = 0\)  # number of allocated rooms
+	for \(j = 1 .. n\):
+		if (lecture \(j\) compat. with all lectures in any classroom \(k\)):
+			schedule \(j\) in \(k\)
+		else:
+			allocate new room \(d+1\)
+			schedule \(j\) in room \(d+ 1\)
+			\(d = d+1\)
+	return the schedule</div>
+				</div>
+
+				<div ><p>Running Time</p></div>
+				<div>
+					<p>
+						If we use a suitable data structure to store the rooms in, this algorithm can be \(O(n \log n)\).
+					</p>
+
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							First of all, sorting is \(O(n \log n)\). If we store all rooms in a <i>Priority Queue</i>, with the key being the <i>finish time of the last lecture</i>:
+						</p>
+						<ul>
+							<li>When we allocate a new room, we insert it into the PQ.</li>
+							<li>When we schedule \(j\) in \(k\), we increase the key of \(k\) to \(f_j\).</li>
+							<li>To determine whether \(j\) is compatiable with any \(k\), we compare \(s_j\) to <code>findMin</code> of the PQ.</li>
+						</ul>
+
+						<p>
+							The total number of searches in the priority queue is on order \(O(n)\), where each PQ operation is \(O(\log n)\), thus we get \(O(n \log n)\).
+						</p>
+					</div>
+
+					<p>
+						This implementation will always schedule the next compatible lecture in the room with the earliest finish time.
+					</p>
+				</div>
+
+				<div>
+					<p>Definitions and Observations</p>
+				</div>
+				<div>
+					<p class="blue"><b><i>Definition.</i></b> The <b>Depth</b> of a set of open intervals is the max number of intervals that contain some point. Basically, the point where the most lectures overlap from all rooms determines the depth, which is the number of rooms.</p>
+
+					<img src="./classrooms.svg" alt="at most 3 concurrent lectures = depth 3" style="max-width: 400px; width: 100%;">
+
+					<p>
+						Minimum number of rooms would equal the depth (since no lectures can overlap)
+					</p>
+
+					<p>
+						Also take note that the Earliest Start First (ESF) never schedules two incompatible lectures in one room.
+					</p>
+				</div>
+
+				<div>
+					<p>Proof of Correctness</p>
+				</div>
+				<div>
+					
+
+					<p>
+						<b><i>Theorem.</i></b> ESF is optimal.
+					</p>
+
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Let \(d =\) the number of rooms ESF allocates.
+						</p>
+						<p>
+							Room number \(d\) is opened because we need to schedule a lecture \(j\), which is incompatible with all lectures in rooms \(1 .. d-1\). 
+						</p>
+						<p>
+							Because of the earliest start sort, each incompatible lecture in all prior rooms must have a start time \(\leq s_j\). Furthermore, all \(d\) lectures (including \(j\)) will have ended by \(f_j\).
+						</p>
+						<p>
+							Thus there will be \(d\) lectures overlapping at some time \(s_k + \epsilon\) for a number \(\epsilon\), which is our depth. Since depth = max number of rooms, this demonstrates that ESF is optimal.
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+
+			</div>
+
+			<h3 id="greedy3">Minimising Lateness</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Minimising Lateness</p>
+				</div>
+				<div>
+					<p>You are in charge of a single mainframe that can process one job at one time. Job \(j\) requires \(t+j\) units of time to process and is due at \(d_j\) (but can be late). (If \(j\) starts at \(s_j\) it finishes at \(f_j = s_j + t_j\).) Your goal is to schedule jobs to minimise <i>maximum lateness</i>.</p>
+
+					<p>
+						Let lateness be defined \(\ell_j = \max(0, f_j - d_j)\), and max lateness is thus \(L = \max(\textrm{all } \ell_j)\).
+					</p>
+
+					<p>
+						<ul>
+							<li><b><span class="sc">in:</span></b> A sequence of jobs (which are just pairs \((t_j,d_j\))</li>
+							<li><b><span class="sc">out:</span></b> An ordering of jobs with the least amount of lateness.</li>
+						</ul>
+					</p>
+
+					<p>
+						Some rules we can consider are order by: shortest processing time, earliest deadline, or shortest slack (\(d_j-t_j\)).
+					</p>
+				</div>
+
+				<div>
+					<p>Earliest Deadline First</p>
+				</div>
+				<div>
+					<div class="codediv">
+earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
+	sort jobs by due time and renumber s.t. \(d_1 \leq d_2 \leq ... \leq d_n\)
+	\(t = 0\)
+	for \(j = 1..n\):
+		assign job \(j\) to interval \([t, t+t_j] \)
+		\(s_j = t; f_j = t+t_j\)
+		\(t = t+t_j\)
+	return intervals \([s_1, f_1] .. [s_n, f_n] \)
+					</div>
+				</div>
+
+				<div>
+					<p>Important Observations and Lemmas</p>
+				</div>
+				<div>
+					<p>
+						<b><i>1.</i></b> There exists an optimal schedule with no idle time. If we have a schedule with idle time between jobs, which has no lateness, we can simply remove all idle time and still have no lateness. 
+					</p>
+
+					<p>
+						<b><i>2.</i></b> Earliest Deadline First (EDF) has no idle time by design.
+					</p>
+
+					<p class="blue">
+						<b><i>Definition.</i></b> Given a schedule S, an <b>inversion</b> is a pair of jobs \(i, j\) where \(i < j\) (meaning i is due before j) and \(j\) is scheduled before \(i\).
+					</p>
+
+					<p>
+						<b><i>3.</i></b> The EDF schedule is the (unique) schedule with no inversions (by design).
+					</p>
+
+					<p>
+						<b><i>4.</i></b> If some schedule with no idle time has an inversion, then it has an adjacent inversion (inverted jobs are next to each other)
+					</p>
+
+					<button class="collapsible">Proof of 4...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Let \(i-j\) be the <i>closest</i> inversion: <br>
+							
+						</p>
+						<p>
+							If \(i, j\) are adjacent, we are done. However, if we have a case like the following:
+						</p>
+						Schedule: <code>...[ ][j][k][ ][ ][i][ ]...</code>
+						<p>
+							Then there would exist a job \(k\) between \(j, i\), which is directly after \(j\).
+						</p>
+
+						<p>
+							If \(j > k\), then \(j-k\) is an adjacent inversion. Else if \(j < k\), then \(k > i\) and \(k-i\) is a <i>closer</i> inversion. Repeat until we encounter an adjacent inversion. $$\tag*{$\Box$}$$
+						</p>
+					</div>
+
+					<p>
+						<b><i>Key Lemma.</i></b> Eschanging two adjacent inverted jobs \(i, j\) reduces the number of inversions by one, and does <b>not</b> increase maximum lateness. 
+					</p>
+
+					<button class="collapsible">Proof of Lemma... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Let \(\ell\) denote the lateness <i>before</i>, and \(\ell'\) denote lateness <i>after</i>.
+						</p>
+						<p>
+							\(\ell'_k = \ell_k \; \forall k \neq i, j\), and \(\ell'_i \leq \ell_i\) when \(i\) is moved forward in the schedule.
+						</p>
+						<p>
+							if job \(j\) is not late, we are done. If it is late, then the new lateness \(\ell'_j = f'_j - d_j\) (by definition)
+							\begin{align}
+								\ell'_j &= f'_j - d_j \\
+								&= f_i - d_j \textrm{ (see diagram)} \\
+								&\leq f_i - d_i \textrm{ since } d_i \leq d_j \\
+								&\leq \ell_i
+							\end{align}
+
+							<img src="./inversion.svg" alt="Inverting i and j: new finish time of j is old finish time of i" style="max-width: 400px; width: 100%; display:block;">
+
+							Thus lateness does not increase. $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Proof of Correctness</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Theorem.</i></b> EDF is optimal.
+					</p>
+
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Let us define \(S*\) to be the optimal schedule with the <i>fewest</i> inversions. (We say that optimal solutions may have inversions).
+						</p>
+
+						<p>
+							By observation 1 \(S*\) will have no idle time. 
+						</p>
+
+						<p>
+							<i>Case 1</i> If \(S* \) has no inversions, then the schedule \(S\) generated by EDF will equal \(S*\) by observation 3.
+						</p>
+						<p>
+							<i>Case 2.</i> If \(S* \) has an inversion:
+						</p>
+						<ul>
+							<li>Let \(i-j\) be an adjacent inversion (Obs. 4)</li>
+							<li>Exchanging \(i, j\) decreases the number of inversions by 1, and does not increase max lateness (lemma)</li>
+							<li>This contradicts the fewest inversion condition on \(S*\), as we can exchange all the way to no inversions and be (more) optimal - which is the schedule generated by EDF. </li>
+						</ul>
+						$$\tag*{$\Box$}$$
+					</div>
+				</div>
+
+				
+			</div>
+
+			<h3 id="greedy4">Strategies to Analyse Greedy Algorithms</h3>
+
+				<div class="cornell">
+					<div></div>
+					<div>
+						<p>Three strategies were explored for analysing and proving the optimality of greedy algorithms.</p>
+					</div>
+					
+					<div>
+						<p>Greedy Stays Ahead</p>
+					</div>
+					<div>
+						<p>
+							Demonstrating that after each incremental step, the greedy algorithm solution is at least as good as any other solution. This incremental building was employed in the proof of Interval Scheduling.
+						</p>
+					</div>
+
+					<div>
+						<p>Structural Bound</p>
+					</div>
+					<div>
+						<p>
+							Discover a simple bound / principle on the structure of the problem, which gives the lowest (most optimal) bound on possible solutions, and show that the greedy algorithm always reaches that bound. This was employed in Interval Partitioning with the depth bound.
+						</p>
+					</div>
+
+					<div>
+						<p>Exchange Argument</p>
+					</div>
+					<div>
+						<p>
+							By gradually transforming a hypothetical optimal solution (which is not the greedy algorithm one) into the greedy algorithm solution without hurting its quality. This was employed by swapping inversions in Minimising Lateness.
+						</p>
+					</div>
+				</div>
+
 		</div>
 
 		<footer>

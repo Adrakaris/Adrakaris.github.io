@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="100.97041mm"
+   height="43.005882mm"
+   viewBox="0 0 100.97041 43.005882"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (1:1.1+202109281949+c3084ef5ed)"
+   sodipodi:docname="classrooms.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.8116735"
+     inkscape:cx="179.66814"
+     inkscape:cy="104.04745"
+     inkscape:window-width="1920"
+     inkscape:window-height="1135"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     inkscape:object-paths="false"
+     fit-margin-top="3"
+     fit-margin-left="3"
+     fit-margin-right="3"
+     fit-margin-bottom="3"
+     lock-margins="true" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mend"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.4,0,0,-0.4,-4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1081" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Mstart"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Mstart"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(0.4,0,0,0.4,4,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1078" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-12.983118,-13.219073)">
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow1Mstart);marker-end:url(#Arrow1Mend)"
+       d="M 21.36217,20.358326 V 47.908517 H 110.4313"
+       id="path1070"
+       sodipodi:nodetypes="ccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.25;font-family:'Noto Sans CJK SC';-inkscape-font-specification:'Noto Sans CJK SC';stroke-width:0.264583"
+       x="111.89214"
+       y="49.540237"
+       id="text4950"><tspan
+         sodipodi:role="line"
+         id="tspan4948"
+         style="stroke-width:0.264583"
+         x="111.89214"
+         y="49.540237" /></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.25;font-family:manrope;-inkscape-font-specification:manrope;stroke-width:0.264583"
+       x="20.095064"
+       y="-16.046618"
+       id="text10368"
+       transform="rotate(90)"><tspan
+         sodipodi:role="line"
+         id="tspan10366"
+         style="stroke-width:0.264583"
+         x="20.095064"
+         y="-16.046618">Classrooms</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.25;font-family:manrope;-inkscape-font-specification:manrope;stroke-width:0.264583"
+       x="100.29467"
+       y="53.161457"
+       id="text26350"><tspan
+         sodipodi:role="line"
+         id="tspan26348"
+         style="stroke-width:0.264583"
+         x="100.29467"
+         y="53.161457">Time</tspan></text>
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30197"
+       width="19.905336"
+       height="4.5032506"
+       x="24.386374"
+       y="24.237514" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.364317;stroke-opacity:1"
+       id="rect30197-7"
+       width="37.62188"
+       height="4.5032506"
+       x="24.386374"
+       y="32.384041" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30197-5"
+       width="19.905336"
+       height="4.5032506"
+       x="24.386374"
+       y="40.372635" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30424"
+       width="16.186323"
+       height="4.5032506"
+       x="52.330605"
+       y="24.237514" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30426"
+       width="20.174997"
+       height="4.5032506"
+       x="86.702438"
+       y="24.237514" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30428"
+       width="32.058002"
+       height="4.5032506"
+       x="74.686119"
+       y="32.384041" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30430"
+       width="23.60099"
+       height="4.5032506"
+       x="59.524464"
+       y="40.372635" />
+    <rect
+       style="fill:#2c5aa0;fill-opacity:1;stroke:none;stroke-width:0.264999;stroke-opacity:1"
+       id="rect30432"
+       width="18.886097"
+       height="4.5032506"
+       x="87.900696"
+       y="40.372635" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.565;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 29.077594,20.386655 V 50.438247"
+       id="path30787" />
+    <text
+       xml:space="preserve"
+       style="font-size:4.23333px;line-height:1.25;font-family:manrope;-inkscape-font-specification:manrope;stroke-width:0.264583"
+       x="28.077463"
+       y="19.33057"
+       id="text34589"><tspan
+         sodipodi:role="line"
+         id="tspan34587"
+         style="stroke-width:0.264583"
+         x="28.077463"
+         y="19.33057">3 Concurrent  = Depth 3</tspan></text>
+  </g>
+</svg>
