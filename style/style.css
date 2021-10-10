@@ -640,5 +640,15 @@ hr {
         display: grid;
         grid-template-columns: 1fr;
     }
+
+    .codediv {
+        font-family: JBMono;
+        border-width: thin;
+        border-style: solid;
+        border-color: var(--blue);
+        border-spacing: 10px 10px;
+        padding: 10px;
+        white-space: pre-wrap;
+    }
 }
 

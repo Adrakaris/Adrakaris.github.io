@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS255</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS255</h1>
+                    <p class="subheading">Artificial Intelligence</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Introduction</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#rational-agents">Rational Agents</a></li>
+			</ol>
+
+			<h3>Introduction to Artificial Intelligence</h3>
+
+			<p>
+				A defintion of artificial intelligence can fall under 4 categories:
+			</p>
+
+			<table >
+				<tr>
+					<td>Thinking humanly</td>
+					<td>Thinking rationally</td>
+				</tr>
+				<tr>
+					<td>Thinking rationally&emsp13;</td>
+					<td>Acting rationally</td>
+				</tr>
+			</table>
+
+			<button class="collapsible">Categories...</button>
+			<div class="ccontent">
+				<div class="cornell">
+
+					<div>
+						<p>Acting Humanly</p>
+					</div>
+					<div>
+						<p>
+							The <i>Turing Test</i> is a well known test for how well an AI performs. It suggests that if it is acting intelligently, it is thinking intelligently. 
+						</p>
+						<p>
+							It also suggests that an AI requires <b>knowledge</b>, <b>reasoning</b>, <b>learning</b> (and language).
+						</p>
+						<p>
+							However the general consensus is that the Turing Test is not great, as many counterexamples and exploits can be found for it. 
+						</p>
+						<p>
+							One such "counterexample" is <i><a href="https://plato.stanford.edu/entries/chinese-room/" class="text">Searle's Chinese Room</a></i>. 
+						</p>
+					</div>
+	
+					<div>
+						<p>Thinking Humanly</p>
+					</div>
+					<div>
+						<p>
+							There is a field of study called cognitive modelling, which is modelling human thinking in programs. (We will however ignore this)
+						</p>
+					</div>
+	
+					<div>
+						<p>Thinking rationally</p>
+					</div>
+					<div>
+						<p>Given a premise/some premises, an agent (the AI model) must derive or deduce the solution via logic. Rational deduction however has problems dealing with uncertainty.</p>
+					</div>
+	
+					<div>
+						<p>Acting Rationally</p>
+					</div>
+					<div>
+						<p>
+							Acting rationally can be summed up as "doing the right thing", which is to say, the action that <i>maximises</i> some achievement metric. However, thought or inference in these actions is not necessarily involved.
+						</p>
+	
+					</div>
+				</div>	
+			</div>
+
+			
+			<div class="cornell">
+				<div>
+					<p></p>
+				</div>
+				<div>
+					<p>
+						In actuality, the boundaries between these four categories are quite blurred.
+					</p>
+				</div>
+				<div>
+					<p>Specialised AI vs AGI</p>
+				</div>
+				<div>
+					The AI type that is employed everywhere is called <i>specialised</i> AI, AI built for a specific task. There is also the concept of Artificial General Intelligence (AGI), which is what sci-fi AI usually describes. 
+				</div>
+				<div>
+					<p>Rational Agents</p>
+				</div>
+				<div>
+					<p>Specifically, we look at <b>Rational Agents</b>.</p>
+					<p>
+						These agents can be modelled as a function \(f:P \longrightarrow A\), where P denotes <i>percept histories</i> and A denotes <i>actions</i>.
+					</p>
+					<p>
+						Agents are typically required to exhibit autonomy, and seek the best performance possible. (Perfect rationality may not always be the best as there is a trade off with computing resources)
+					</p>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="colourband">
+			<h2 id="rational-agents">Rational Agents</h2>
+
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+			
+			<ol>
+				<li><a href="#rat-1">Dimensions of Complexity</a></li>
+				<li><a href="#rat-2">Representations and Solutions</a></li>
+			</ol>
+
+			<div class="cornell">
+				<div>
+					<p>Agent Input Model</p>
+				</div>
+				<div>
+					<img src="./agent-input.svg" alt="An agent takes as inputs its Abilities, Goals, Prior Knowledge, Stimuli and Past Experiences from the environment, and acts on the environment.">
+					<p>
+						Above shows a diagram of what inputs an agent takes, and what it does.
+					</p>
+
+					<p style="display: none;">
+						Think of a self-driving car. What attributes would fit for each label? For abilites, we could have steer, break, accelerate, ...; for goals getting to destination, being safe; prior knowledge could be signs, road speeds, laws, ...; stimuli vision, GPS; and for prior experience internal streetmaps, etc.
+					</p>
+				</div>
+
+				<div>
+					<p>Rational Agents</p>
+				</div>
+				<div>
+					<p>The Goals of a rational agent can be specified by a <b>performance measure</b>, which is a numerical value.</p>
+					<p>A <b>rational action</b> is an action which aims to <i>maximise</i> the performance measure, given the percept history to date. </p>
+
+					<p>Note that an agent is <b><span class="sc">not</span></b> onmiscient, clairvoyant <i>(forseeing changes)</i>, nor always successful. The <i>expected</i> value, not the actual value, is considered - an action to maximise expected value which fails is <i>still</i> rational.</p> 
+				</div>
+			</div>
+
+			<h3 id="rat-1">Dimensions of Complexity</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Dimensions of Complexity</p>
+				</div>
+				<div>
+					<p>
+						The design space / considerations of an AI can be defined by a set of "dimensions of complexity".
+					</p>
+
+					<table>
+						<tr>
+							<th>Dimension</th>
+							<th>Values</th>
+						</tr>
+						<tr>
+							<td>Modularity</td>
+							<td>Flat, modular, heirarchical</td>
+						</tr>
+						<tr>
+							<td>Planning Horizon</td>
+							<td>Static/none, finite (stage), indefinite, infinite</td>
+						</tr>
+						<tr>
+							<td>Representation</td>
+							<td>Flat state, features, relations</td>
+						</tr>
+						<tr>
+							<td>Computational Limits</td>
+							<td>Perfect or bounded rationality</td>
+						</tr>
+						<tr>
+							<td>Learning</td>
+							<td>Knowledge given or learned</td>
+						</tr>
+						<tr>
+							<td>Sensing Uncertainty</td>
+							<td>Fully or partially obervable</td>
+						</tr>
+						<tr>
+							<td>Effect Uncertainty</td>
+							<td>Deterministic, stochastic</td>
+						</tr>
+						<tr>
+							<td>Preference</td>
+							<td>Goals, complex preferences</td>
+						</tr>
+						<tr>
+							<td>Number of Agents</td>
+							<td>Single, multiple</td>
+						</tr>
+						<tr>
+							<td>Interaction</td>
+							<td>Offline, online</td>
+						</tr>
+					</table>
+					<hr>
+				</div>
+			</div>
+
+			
+			<div class="cornell">
+				
+				<div>
+					<p>Modularity</p>
+				</div>
+				<div>
+					<p>
+						<b>Modularity</b> concerns the structure and abstraction.
+						<ul>
+							<li><b>Flat</b> where the agent only has 1 level of abstraction</li>
+							<li><b>Modular</b> where the agent has interacting modules that can be separately understood</li>
+							<li><b>Hierarchical</b> where the agent has modules that (recursively) decompose into others</li>
+						</ul>
+						Flat representations are good for simple systems, whereas complex systems will be heirarchical. The former can be continuous or discrete, whilst the latter is generally a hybrid.
+					</p>
+				</div>
+
+				<div>
+					<p>Planning Horizon</p>
+				</div>
+				<div>
+					<p>
+						<b>Planning Horizon</b> concerns how the world is, and how far forward does the agent plan to.
+						<ul>
+							<li><b>Static</b>, where the world does not change</li>
+							<li><b>Finite Stage</b>, where the agent reasons for a fixed number of timesteps</li>
+							<li><b>Indefinite State</b>, agent reasons about a finite, not predetermined number of steps</li>
+							<li><b>Infinite Stage</b>, agent plans for going forever (process oriented)</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Representation</p>
+				</div>
+				<div>
+					<p>
+						Finding compact <b>Representations</b> and exploiting them for computational gains. An AI can reason in
+						<ul>
+							<li><b>Explicit States</b>, where a state describes everything about a world</li>
+							<li><b>Features/Propositions</b>, which are descriptors of states. A few features can lead to a <i>lot</i> of states.</li>
+							<li><b>Individuals</b> and their <b>relations</b>, a feature for each relationship on each tuple of individuals. Thus an agent can reason without knowing the individuals or if there are infinite individuals.</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Computational Limits</p>
+				</div>
+				<div>
+					<p>
+						<b>Computational Limits</b>:
+						<ul>
+							<li><b>Perfect rationality</b> is ideal, but does not take into account computing resources</li>
+							<li><b>Bounded rationality</b> is what we hope to achieve, good descisions made accounting for perceptual and computing limitations</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Learning from Experience</p>
+				</div>
+				<div>
+					<p>
+						<b>Learning from Experience</b>:
+						<ul>
+							<li>Where knowledge is <b>given</b></li>
+							<li>Or knowledge is <b>learned</b> from data or past experience</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Uncertainty</p>
+				</div>
+				<div>
+					<p>
+						<b>Uncertainty</b> has two dimensions: <i>sensing</i> and <i>effect</i>. In each, an agent can have:
+						<ul>
+							<li>
+								<b>No</b> (uncertainty), agent knows what is true
+							</li>
+							<li>
+								<b>Disjunctive</b>, a set of states are possible
+							</li>
+							<li>
+								<b>Probabilistic</b>, there is a probability distribution between states
+							</li>
+						</ul>
+
+						(On probability) Agents need to act even if they are uncertain, thus predictions are needed to decide what to do, which can be <i>definitive</i> (this <span class="sc">will</span> happen), <i>disjunctions</i> (do event A <span class="sc">else</span> B will happen), or <i>point probabilities</i> (Probability of the outcome is 0.01 if you do A or 0.8 if otherwise).
+					</p>
+				</div>
+
+				<div>
+					<p>Sensing Uncertainty</p>
+				</div>
+				<div>
+					<p>
+						<b>Sensing Uncertainty</b> is about what the agent can sense about state, the state can be
+						<ul>
+							<li><b>Fully observable</b></li>
+							<li><b>Partially observable</b> (possible number of states from obs.)</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Effect Uncertainty</p>
+				</div>
+				<div>
+					<p>
+						<b>Effect Uncertainty</b> concerns whether an agent could predict an outcome from a state and an action.
+						<ul>
+							<li><b>Deterministic</b> environments say yes</li>
+							<li><b>Stochastic</b> environments say no (have uncertainty).</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Preferences</p>
+				</div>
+				<div>
+					<p>
+						<b>Preferences</b> concerns what an agent tries to achieve.
+						<ul>
+							<li>
+								<b>Achievement goal</b> is a single goal to achieve - can be a (complex) logical formula
+							</li>
+							<li>
+								<b>Complex preferences</b> involve tradeoffs between various desires, with priorities. These are further split into <i>Ordinal</i> (order priority matters) and <i>Cardinal</i> (specific absolute values also matter).
+							</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Number of Agents</p>
+				</div>
+				<div>
+					<p>
+						Crucially, <b>Number of <i>reasoning</i> agents</b>.
+						<ul>
+							<li>
+								<b>Single Agent</b> reasoning relegates every other agent as environment and not really considered, whilst
+							</li>
+							<li>
+								<b>Multiple Agent</b> reasoning involves an agent reasoning strategically about other agents.
+							</li>
+						</ul>
+						Agents have their own goals, which can be competetive, cooperative, or independent.
+					</p>
+				</div>
+
+				<div>
+					<p>Interaction</p>
+				</div>
+				<div>
+					<p>
+						<b>Interaction</b> talks about when the agent reasons relating to its action
+						<ul>
+							<li><b>Reason offline</b>, before acting</li>
+							<li><b>Reason online</b>, whilst interacting with environment</li>
+						</ul>
+					</p>
+					<hr>
+				</div>
+				
+			</div>
+
+			<div class="cornell">
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p>
+						Some examples of the dimensions of different agents
+					</p>
+					<button class="collapsible">Example: State-space search</button>
+					<div class="ccontent">
+						<table>
+							<tr>
+								<th>Dimension</th>
+								<th>Values</th>
+							</tr>
+							<tr>
+								<td>Modularity</td>
+								<td>Flat</td>
+							</tr>
+							<tr>
+								<td>Planning Horizon</td>
+								<td>indefinite</td>
+							</tr>
+							<tr>
+								<td>Representation</td>
+								<td>Flat state</td>
+							</tr>
+							<tr>
+								<td>Computational Limits</td>
+								<td>Perfect rationality</td>
+							</tr>
+							<tr>
+								<td>Learning</td>
+								<td>Knowledge given</td>
+							</tr>
+							<tr>
+								<td>Sensing Uncertainty</td>
+								<td>Fully obervable</td>
+							</tr>
+							<tr>
+								<td>Effect Uncertainty</td>
+								<td>Deterministic</td>
+							</tr>
+							<tr>
+								<td>Preference</td>
+								<td>Goals</td>
+							</tr>
+							<tr>
+								<td>Number of Agents</td>
+								<td>Single</td>
+							</tr>
+							<tr>
+								<td>Interaction</td>
+								<td>Offline</td>
+							</tr>
+						</table>
+					</div>
+
+					<button class="collapsible">Example: Reinforcement Learning</button>
+					<div class="ccontent">
+						<table>
+							<tr>
+								<th>Dimension</th>
+								<th>Values</th>
+							</tr>
+							<tr>
+								<td>Modularity</td>
+								<td>Flat</td>
+							</tr>
+							<tr>
+								<td>Planning Horizon</td>
+								<td>indefinite, infinite</td>
+							</tr>
+							<tr>
+								<td>Representation</td>
+								<td>features</td>
+							</tr>
+							<tr>
+								<td>Computational Limits</td>
+								<td>Perfect rationality</td>
+							</tr>
+							<tr>
+								<td>Learning</td>
+								<td>Knowledge learned</td>
+							</tr>
+							<tr>
+								<td>Sensing Uncertainty</td>
+								<td>Fully obervable</td>
+							</tr>
+							<tr>
+								<td>Effect Uncertainty</td>
+								<td>Stochastic</td>
+							</tr>
+							<tr>
+								<td>Preference</td>
+								<td>complex preferences</td>
+							</tr>
+							<tr>
+								<td>Number of Agents</td>
+								<td>Single</td>
+							</tr>
+							<tr>
+								<td>Interaction</td>
+								<td>online</td>
+							</tr>
+						</table>
+					</div>
+
+					<button class="collapsible">Example: Humans</button>
+					<div class="ccontent">
+						<table>
+							<tr>
+								<th>Dimension</th>
+								<th>Values</th>
+							</tr>
+							<tr>
+								<td>Modularity</td>
+								<td>heirarchical</td>
+							</tr>
+							<tr>
+								<td>Planning Horizon</td>
+								<td>indefinite, infinite</td>
+							</tr>
+							<tr>
+								<td>Representation</td>
+								<td>relations</td>
+							</tr>
+							<tr>
+								<td>Computational Limits</td>
+								<td>bounded rationality</td>
+							</tr>
+							<tr>
+								<td>Learning</td>
+								<td>Knowledge learned</td>
+							</tr>
+							<tr>
+								<td>Sensing Uncertainty</td>
+								<td>partially obervable</td>
+							</tr>
+							<tr>
+								<td>Effect Uncertainty</td>
+								<td>stochastic</td>
+							</tr>
+							<tr>
+								<td>Preference</td>
+								<td>complex preferences</td>
+							</tr>
+							<tr>
+								<td>Number of Agents</td>
+								<td>multiple</td>
+							</tr>
+							<tr>
+								<td>Interaction</td>
+								<td>online</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div>
+					<p>Complex interaction</p>
+				</div>
+				<div>
+					<p>
+						Dimensions intract and combine in complex ways. Partial observability makes multi-agent and indefinite stage more complex, and with modularity you can have fully or partially observcable modules. Heirarchical reasoning, Individuals and relations, and bounded rationality make reasoning simpler.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="rat-2">Representations and Solutions</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Representations</p>
+				</div>
+				<div>
+					<p>
+						<img src="./representations.svg" alt="" style="max-width: 500px; width: 100%;">
+					</p>
+					<p>
+						A task can be represented in a formal way, from which we can make formal deductions and interpret them to get our solution.
+					</p>
+					<p>
+						We want a representation complex enough to solve the problem, to be as close to the problem as possible, but also compact, natural, and maintainable. 
+					</p>
+					<p>
+						We want it to be amenable to computation, thus <br>
+						(1) Can express features which can be exploited for computational gain <br>
+						(1) Can tradeoff between accuracy and time/space complexity
+						
+					</p>
+					<p>
+						And able to acquire data from people, datasets, and past experiences.
+					</p>
+
+				</div>
+
+				<div>
+					<p>Defining a Solution</p>
+				</div>
+				<div>
+					<p>
+						Given informal description of problem, what is the solution? Much is usually unspecified, but they cannot be arbitrarily filled.
+					</p>
+					<p>
+						Much work in AI is for <b>common-sense reasoning</b>, the agent needs to make common sense deductions about unstated assumptions.
+					</p>
+				</div>
+
+				<div>
+					<p>Quality of Solutions</p>
+				</div>
+				<div>
+					<p>
+						Solutions can be split into classes of quality
+						<ul>
+							<li><b>Optimal solution</b>: the best solution (for the quality measure)</li>
+							<li><b>Satisficing solution</b>: a good-enough solution (that meets good-enough criteria)</li>
+							<li><b>Approximately optimal solution</b>: close but not quite to best in theory</li>
+							<li><b>Probable solution</b>: unproved, but likely to be good enough</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Descisions and Outcomes</p>
+				</div>
+				<div>
+					<p>
+						Good descisions can have bad outcomes (and vice versa). Information can lead to better descisions, known as <b>value of information</b>.
+					</p>
+					<p>
+						We can often tradeoff computation time and complexity: an <b>anytime algorithm</b> can provide a solution at any time, but more time can lead to better answer.
+					</p>
+					<p>
+						An agent is also concerned with acquiring appropriate information, timely computation, besides finding the right answer.
+					</p>
+					<p>
+						We can often use a quality over time graph with a time discount to represent this.
+					</p>
+					<img src="./time-discount.svg" alt="An increasing time discount is applied to measure the solution quality for the time taken" style="max-width: 500px; width: 100%;">
+				</div>
+
+				<div>
+					<p>Choosing a Representation</p>
+				</div>
+				<div>
+					<p>
+						Problem \(\longrightarrow\) specificiation of problem \(\longrightarrow\) appropriate computation.
+					</p>
+					<p>
+						We need to choose a representation, this can be done as a high level formal/natural specificaiton, down to programming languages, assembly, etc, etc. 
+					</p>
+					
+				</div>
+				<div>
+					<p>Physical Symbol Hypothesis</p>
+				</div>
+				<div>
+					<p>
+						We define a <b>Symbol</b> as a meaninigful physical pattern that can be manipulated (like logic symbols)
+					</p>
+					<p>
+						A <b>Symbol system</b> creates, copies, modifies, and deletes symbols.
+					</p>
+					<p>
+						The <b>Physical symbol hypothesis</b> states that a physical symb. system is necessary and sufficient for general intelligent action
+					</p>
+				</div>
+
+				<div>
+					<p>Knowledge and Symbol Levels</p>
+				</div>
+				<div>
+					<p>
+						Two levels of abstraction common amongst systems:
+						<ul>
+							<li>
+								The <b>knowledge level</b>, what an agent knows, its goals.
+							</li>
+							<li>
+								The <b>symbol level</b>, a description of agent in terms of its reasoning (internal symbolic reasoning).
+							</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Mapping problem to representation</p>
+				</div>
+				<div>
+					<p>
+						We have a few questions to ask
+						<ul>
+							<li>What level of abstraction to use?</li>
+							<li>What individuals and relations to represent?</li>
+							<li>How can knowledge be represented s.t. natural, modular, and maintainable?</li>
+							<li>How can agent acquire information from data, sensing, experience, etc?</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Choosing Level of Abstraction</p>
+				</div>
+				<div>
+					<p>
+						A high level description is easier for human understanding. A lower level abstraction however can be more accurate, predictive, however are harder to reason, specify, understand. One may not know all details for a low level description. Many cases lead to multipe levels of abstraction.
+					</p>
+				</div>
+
+				<div>
+					<p>Reasoning and Acting</p>
+				</div>
+				<div>
+					<p>
+						Reasoning is computation required to determine what action to do.
+						<ul>
+							<li>
+								<b>Design time</b> reasoning is where computation is done by designer beforehand.
+								<b>Offline</b> and <b>Online</b>, similar to the complex dimension, is either deciding before starting to act (using knowledge from the <i>knowledge base</i>) or deciding between receiving information and acting respectively. 
+							</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+		</div>
+
+			
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>

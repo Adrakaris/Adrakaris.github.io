@@ -17,6 +17,22 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2021, 10, 10)),
+        "link": "blog-cs/cs255/",
+        "title": "CS255的记录",
+        "desc": "CS255：人工智能的记录。这些是学完而写，会慢慢添加。无翻译。</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
+        "date": new Date(Date.UTC(2021, 10, 10)),
+        "link": "blog-cs/cs260/",
+        "title": "CS260的记录",
+        "desc": "CS260：算法的记录。这些是学完而写，会慢慢添加。无翻译。</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2021, 7, 10)),
         "link": "blog-misc/guqin/index-zh.html",
         "title": "古琴减字谱",

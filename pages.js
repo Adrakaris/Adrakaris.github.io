@@ -17,6 +17,22 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2021, 10, 10)),
+        "link": "blog-cs/cs255/",
+        "title": "Notes on CS255",
+        "desc": "Notes on CS255: AI. These are made throughout the year and will be updated as and when needed.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
+        "date": new Date(Date.UTC(2021, 10, 10)),
+        "link": "blog-cs/cs260/",
+        "title": "Notes on CS260",
+        "desc": "Notes on CS260: Algorithms. These are made throughout the year and will be updated as and when needed.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2021, 7, 10)),
         "link": "blog-misc/guqin/",
         "title": "Guqin Notation",
