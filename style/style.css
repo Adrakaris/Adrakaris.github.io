@@ -33,6 +33,7 @@ html, body {
     background-color: var(--bg-col);
     color: var(--txt-col);
     font-family: "Manrope", sans-serif;
+    font-variant-ligatures: contextual; 
     height: 100%;   
     margin: 0;
     padding: 0;

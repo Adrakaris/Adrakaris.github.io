@@ -17,6 +17,22 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2021, 10, 14)),
+        "link": "blog-cs/cs241/",
+        "title": "Notes on CS241",
+        "desc": "Notes on CS241: Operating Systems and Networking. These are made throughout the year and will be updated as and when needed.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
+        "date": new Date(Date.UTC(2021, 10, 14)),
+        "link": "blog-cs/cs258/",
+        "title": "Notes on CS258",
+        "desc": "Notes on CS258: Database Systems. These are made throughout the year and will be updated as and when needed.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2021, 10, 10)),
         "link": "blog-cs/cs255/",
         "title": "Notes on CS255",
