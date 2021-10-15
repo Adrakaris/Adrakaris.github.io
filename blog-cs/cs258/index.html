@@ -44,18 +44,409 @@
 		</header>
 
 		<div class="cbox">
-			
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#rel-db">Relational Databases and Constraints</a></li>
+			</ol>
+
+			<h3>Introduction</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Introduction</p>
+				</div>
+				<div>
+					<p>
+						Most of human activity is data driven or generating. This data comes in two main types: structured (tabulated, nice to process) and unstructured (hard to tabulate, like images, letters, web pages). There is also semi-structured, such as XML/JSON based data. 
+					</p>
+					<p>
+						Traditional databases are structured and alphanumeric. Newer techologies can handle unstructured data, but often in a tabular "wrapping".
+					</p>
+
+				</div>
+
+				<div>
+					<p>Data modelling</p>
+				</div>
+				<div>
+					<p>
+						We need to consider
+						<ul>
+							<li>What data items do we care about (e.g. students)</li>
+							<li>What attributes of said data items (e.g. ID, Name, Year)</li>
+							<li>Relationships between data items and attributes of said relations</li>
+						</ul>
+						<b>Relational Databases</b> are table-centric, and contain "relationships" (linked attributes) between different tables to remove duplication difficulties one gets with a single table. 
+					</p>
+				</div>
+
+				<div>
+					<p>Principal functions of database systems</p>
+				</div>
+				<div>
+					<p>
+						<b>DB Management Systems</b> are software which manages data (as name implies). It lets us model the data; query, update, and store data; and secure and ensure the integrity and consistency of stored data. 
+					</p>
+					<p>
+						<b>Integrity is maintained</b> in cases of unauthorised access, as well as updates to the database (which may violate constraints), concurrent transactions, failure or natural disaster, etc, etc. 
+					</p>
+					<p class="small"><i>In cases of natural disaster, this is not as much guaranteed.</i></p>
+					<p>
+						The software <b>optimises data access</b>, by creating and using indexes, finding the best way to execute a set of operations, and the best order of <i>relational data operations</i> (SELECT, PROJECT, JOIN, etc).
+					</p>
+					<p>
+						The interface to a DBMS is often through a <b>declarative language</b> (like SQL), which lets one easily use database functions. 
+					</p>
+				</div>
+
+				<div>
+					<p>3-schema architecture</p>
+				</div>
+				<div>
+					<figure>
+						<img src="./3schema.svg" alt="3 Schema architecture">
+						<figcaption>Our main focus is on the <i>conceptual</i> layer</figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p>External views</p>
+				</div>
+				<div>
+					<p>
+						Different users may not want or need access to different parts of the database, so external views are different per user group. You could think of the difference between a customer's interface vs an employee's.
+					</p>
+				</div>
+
+				<div>
+					<p>Other definitions</p>
+				</div>
+				<div>
+					<p>
+						The <b>Schema</b> is the collection and relations between tables. 
+					</p>
+					<p>
+						<b>Normalisation</b> is a process of removing anomalies from tables.
+					</p>
+				</div>
+			</div>
 		</div>
 
 
 		<div class="colourband">
-			<h2 id="2"></h2>
+			<h2 id="rel-db">Relational Database Model and Constraints</h2>
 		</div>
 
 		<div class="cbox">
+			<h3>Contents</h3>
+			<ol>
+				<li><a href="#rel-1">The Relational Database</a></li>
+				<li><a href="#rel-2">Constraints</a></li>
+			</ol>
+
+			<h3 id="rel-1">The Relational Database</h3>
+			<div class="cornell">
+				<div>
+					<p>Informal Definition</p>
+				</div>
+				<div>
+					<p>
+						A <b>relation</b> is a <i>table</i> of values. It contains a set of <i>rows</i>, called <b>tuples</b>, and a set of <i>columns</i>. <br>
+						Elements in rows represent certain facts of an entity, and column headers denote the atrributes of interest we store. 
+					</p>
+
+					<p>
+						A <b>relational database</b> then is a database built out of relations, with known <i>table names</i> and attribute (name, type) pairs.
+					</p>
+
+					<p>
+						Formulating queries involves specifying the table and attribute name(s) of interest, and setting constraints <i>(predicates)</i> that need to be satisfied for interest.
+					</p>
+				</div>
+
+				<div>
+					<p>Formal definition</p>
+				</div>
+				<div>
+					<p>
+						The <b>Schema</b> (description) of a relation:
+						<ul>
+							<li>
+								Is denoted \(R(A_1, A_2, ..., A_n)\) where R is the name and \(A_i\) are attributes. <br>
+								<i>Ex. <code>Customer(id, name, address, phoneNo)</code></i>
+							</li>
+							<li>
+								Every attribute has a <b>domain</b>, a set of valid values.
+							</li>
+							<li>
+								A <b>tuple</b> is an <i>ordered*</i> set of values, enclosed in &lt;angle brackets&gt;. <br>
+								<i>A relation however is an unordered set of tuples.</i>
+							</li>
+							<li>
+								A <b>domain</b> is a logical definition in the real world <br>
+								<i>
+									Ex. <code>BritishPhoneNumbers</code> are all 11 digit phone numbers in the UK.
+								</i>
+							</li>
+							<li>
+								A domain also has a data format<br>
+								<i>
+									Ex. US phone numbers have <code>(ddd)dddd-ddd</code> format (d for digit)
+								</i>
+							</li>
+							<li>
+								Attribute name designates the "role played" - the same domain can apply to multiple attributes. The names of said attributes determine what they are.
+							</li>
+							<li>
+								The <b>relation state</b> is the set of all tuples in a relation (i.e. all the actual data in the relation at that time) <br>
+								<i>
+									A "subset of the cartesian product of all domains", 
+								</i>
+							</li>
+						</ul>
+					</p>
+
+					<p class="small">
+						* Technically attributes are unordered, but for human readability sake we make it ordered.
+					</p>
+
+					<p>
+						Given the schema \(R(A_1, A_2, ..., A_n)\),
+						<ul>
+							<li>
+								\(r(R)\) is a specific state <i>(instance)</i> of R.
+							</li>
+							<li>
+								\(r(R) = \{t_1, t_2, ..., t_m\} : t_j\) is an n-tuple (n attributes).
+							</li>
+							<li>
+								\(\therefore t_j = < v_1, v_2, ..., v_n> : v_j \in \textrm{domain}(A_j)\)
+							</li>
+							<li>
+								And \(r(R) \subset \textrm{domain}(A_1) \times \textrm{domain}(A_2) \times ... \times \textrm{domain}(A_n)\)
+							</li>
+						</ul>
+					</p>
+
+					<p>
+						The purpose of all this is to present a (relatively) human-understandable format, with the goal to simplify how to interrogate (query) and maintain the database.
+					</p>
+				</div>
+
+				<div>
+					<p>On schemas</p>
+				</div>
+				<div>
+					<p>
+						The <b>relation schema</b> is the relation name and attribute list (<code>Tea(name: string, manuf: string)</code> ) <br>
+						The <b>Database schema</b> is the set of relationship schemas.
+					</p>
+					<p>
+						The relation schema is defined during table creation, for example with creating a (tea) drinkers' table:
+					</p>
+					<pre><code class="lang-sql">CREATE TABLE Drinkers (
+	name CHAR(30) Primary Key,
+	addr CHAR(50) DEFAULT "0 Null Island",
+	phoneNo CHAR(16) NOT NULL
+);</code></pre>
+
+					<p>
+						<code>Primary Key</code> and <code>NOT NULL</code> are constraints.
+					</p>
+				</div>
+
+				<div>
+					<p>About the Relational Model</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							The order of tuples is <i>not important</i>
+						</li>
+						<li>The order of attributes is not important, but we do assume order</li>
+						<li>A collection of relationship schemas is the <i>database schema</i> - <b>intention</b></li>
+						<li>Corresponding relation states is a relational database - <b>extension</b></li>
+						<li>The metadata includes the schema and other key information about tables.</li>
+					</ul>
+				</div>
+
+				<div>
+					<p>Why do we use relational databases</p>
+				</div>
+				<div>
+					<p>It's a fairly simple abstract model, but also comes with declarative languages like SQL.</p>
+					<p>
+						Note that the abstract model is set based, but SQL itself is <i>bag</i>-based (bags are multisets, bags can have duplicate elements whilst sets cannot).
+					</p>
+				</div>
+			</div>
+
+			<h3 id="rel-2">Constraints</h3>
+
 			<p>
-				
+				Constraints exist to determine <b>permissible states</b>. 
 			</p>
+			<p>
+				We have <b>domain constraints</b> (values in attributes must be \(\in\) domain, or null if permitted); and 3 explicit <b>schema-based constraints</b>:
+				<ul>
+					<li>Key constraints</li>
+					<li>Entity integrity</li>
+					<li>Referential integrity</li>
+				</ul>
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Key constraints</p>
+				</div>
+				<div>
+					<p>
+						The <b>Superkey</b> of a relation R is the subset \(SK \subseteq R :\) in <i>any</i> valid \(r(R)\), for <i>any</i> different tuples \(t_1, t_2;\;\) \(t_1[SK] \neq t_2[SK] \). Superkeys are <b>unique</b>.
+					</p>
+					<p>
+						Ex. Take the relation <code>R(name, country, phone)</code>, the superkey <code>SK{country, phone}</code> means every row must have a unique <code>country, phone</code> combination.
+					</p>
+				</div>
+
+				<div>
+					<p>Minimal Key</p>
+				</div>
+				<div>
+					<p>
+						The <b>Candidate Superkey</b> of R is a <b>minimal</b> superkey. That is, if removing any attribute from the cand. key makes it not a key.
+					</p>
+					<p>
+						A relation may have several candidate keys, one can arbitrarily determine one to be the primary key. 
+					</p>
+				</div>
+				
+				<div>
+					<p>Entity integrity</p>
+				</div>
+				<div>
+					<p>
+						<b>Entity integrity</b> basically deals with nulls where they shouldn't be. 
+					</p>
+					<p>
+						Primary keys must <i>never</i> be null (they are identifiers), and other entries can be set to not null.
+					</p>
+				</div>
+
+				<div>
+					<p>Referential Integrity</p>
+				</div>
+				<div>
+					<p>
+						<b>Referential Integrity</b> deals with inter-table references. 
+					</p>
+					<p>
+						For example, we have a students table, which has student ID as a primary key. We also have a table of courses which students do, with student ID as foreign keys. If we delete a student, the foreign key for that student will be referening nothing, and this is an integrity violation.
+					</p>
+					<p>
+						A set of attributes \(FK\) from relation \(R_1\) is a <b>Foreign Key</b> that references \(R_2\) if the attributes of \(FK\) in \(R_1\) is the <i>same</i> as the Primary Key \(PK\) in \(R_2\). Foreign keys <i>must</i> either refer to the \(PK\) of \(R_2\), or be NULL.
+					</p>
+
+					<p>
+						Foreign keys are also defined during table creation.
+					</p>
+				</div>
+
+				<div>
+					<p>
+						Semantic attribution integrity
+					</p>
+				</div>
+				<div>
+					<p>
+						We also have <b>Semantic attribution integrity</b>, which in short comprise validation checks that the attributes make sense, such as Age > 0.
+					</p>
+				</div>
+
+				<div>
+					<p>Constraints and updates</p>
+				</div>
+				<div>
+					<p>
+						On an update operation, integrity constraints may be violated. The DB management system is there to ensure that these are caught, and corrected, rejected, or reported. <br>
+						Some possible violations that may occur:
+					</p>
+					<ul>
+						<li>
+							On INSERT:
+							<ul class="not">
+								<li>Domain: if attribute values are not in domain</li>
+								<li>Key: if key already exists</li>
+								<li>Foreign Key: if FK value references nonexistent PK</li>
+								<li>Entity Integ.: NULL when not null specified</li>
+							</ul>
+						</li>
+						<li>
+							On DELETE:
+							<ul class="not">
+								<li>Ref. Integ. (only): PK being deleted causes a FK to lose reference</li>
+							</ul>
+						</li>
+						<li>
+							on UPDATE:
+							<ul class="not">
+								<li>Domain and Entity integ. violations</li>
+								<li>Ref. Integ.: updatng PK or FK</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+
+				<div>
+					<p>Functional dependencies</p>
+				</div>
+				<div>
+					<p>
+						<b>Functional dependencies</b> (FDs) are useful, since they are formal statements which allow derivation of good database design.
+					</p>
+					<p>
+						Let X, Y, Z be sets of attributes, and A, B, C be single attributes, where \(ABC \implies \{A, B, C\}\).
+					</p>
+					<p>
+						\(X \longrightarrow Y \) is an assertion about relation R and 2 sets of attributes from R, which constrains all possible tuples in \(r(R)\). If \(X \longrightarrow Y\), values of Y <i>depend</i> on values of X. For any two tuples \(t_1, t_2 \in R\), 
+						\[t_1[X] = t_2[X] \implies t_1[Y] = t_2[Y]\]
+						(Injunctive function)
+					</p>
+				</div>
+
+				<div>
+					<p>FDs and Keys</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Claim.</i></b> if K is a superkey, then \(K \longrightarrow A\; \forall\) other subsets \(A \in R\)
+					</p>
+					<button class="collapsible">Proof.</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Assume \(K \longrightarrow A, K \longrightarrow B\) for some \(A, B \in R\). This violates key constraints, as keys must be unique for all tuples on R. \(\Box\)
+						</p>
+					</div>
+					<p>
+						The reverse is also true, making if and only if.
+					</p>
+				</div>
+
+				<div>
+					<p>Determining keys</p>
+				</div>
+				<div>
+					<p>
+						(1) We can assert a key. Say "this attribute will be the key." This makes it our only functional dependency by definition. 
+					</p>
+					<p>
+						(2) Assert functional dependencies. If we have a set of functional dependencies, then we have our key. 
+					</p>
+					<p>
+						FDs can come from keys or physical limits, e.g. <i>no two lectures can happen in the same room at the same time</i> \(\implies\) <code>{room, time}</code> as a viable key.
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<footer>

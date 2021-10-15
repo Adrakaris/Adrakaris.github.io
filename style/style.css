@@ -591,6 +591,14 @@ hr {
     color: var(--pink);
 }
 
+li {
+    margin-bottom: 8px;
+}
+
+:is(ul.not, ol.not) > li {
+    margin-bottom: 0px;
+}
+
 /*-----------------------------------------------------------------------*/
 
 @media (max-width: 800px) {
