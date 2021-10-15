@@ -557,6 +557,13 @@ figcaption {
     text-align: center;
 }
 
+figure > img {
+    margin: 0 auto; 
+    display: block; 
+    width: 100%; 
+    max-width: min-content;
+}
+
 input[type=text].search {
 	background-color: var(--band-txt);
 	font-family: Manrope, sans-serif;

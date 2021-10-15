@@ -209,6 +209,34 @@
                     <p>
                         <i>Mach OS (80s)</i> modularised the kernel via the use of a <b>microkernel</b>. This entails removing <i>all non-essential</i> kernel components and have those as simply user programs. 
                     </p>
+
+                   <figure>
+                       <img src="./micorkernel.svg" alt="Communication goes through the kernel">
+                       <figcaption>Communication goes <i>through</i> the microkernel</figcaption>
+                   </figure>
+
+                   <table>
+                       <tr>
+                           <td>Pros</td>
+                           <td>Entending the OS is easy, adds security and reliability (services in user space)</td>
+                       </tr>
+                       <tr>
+                           <td>Cons&emsp;</td>
+                           <td>Performance can suffer due to overhead of commiunication time.</td>
+                       </tr>
+                   </table>
+                </div>
+
+                <div>
+                    <p>Loadable kernel modules</p>
+                </div>
+                <div>
+                    <p>Modern OS design Involves
+                        <b>loadable kernel modules</b>. The kernel implements core services only, and others are <i>dynamically loaded</i> as required. 
+                    </p>
+                    <p>
+                        Each kernel section has a well-defined interface, but any module can call any other module. It's similar in concept to microkernel, but there is no message passing overhead back and forth from kernel space. 
+                    </p>
                 </div>
             </div>
 		</div>
