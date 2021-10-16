@@ -48,6 +48,7 @@
 
 			<ol>
 				<li><a href="#rational-agents">Rational Agents</a></li>
+				<li><a href="#uninformedsearch">Uninformed Search</a></li>
 			</ol>
 
 			<h3>Introduction to Artificial Intelligence</h3>
@@ -146,6 +147,8 @@
 					</p>
 				</div>
 			</div>
+
+			
 		</div>
 
 
@@ -429,7 +432,7 @@
 					<p>
 						Some examples of the dimensions of different agents
 					</p>
-					<button class="collapsible">Example: State-space search</button>
+					<button class="collapsible"  id="sss">Example: State-space search</button>
 					<div class="ccontent">
 						<table>
 							<tr>
@@ -749,7 +752,231 @@
 			</div>
 		</div>
 
+		<div class="colourband">
+			<h2 id="uninformedsearch">Uninformed Search</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#usea-1">Problem Solving</a></li>
+				<li><a href="=usea-2">Tree Searching</a></li>
+			</ol>
+
+			<h3 id="usea-1">Problem Solving</h3>	
+
+
+			<div class="cornell">
+				<div>
+					<p>Problem Solving</p>
+				</div>
+				<div>
+					<p>
+						Often we are only given the specification for a solution, and have to search for it. A typical situation is where we have an agent in one state, and have a set of deterministic actions with which it will go towards the goal state. 
+					</p>
+					<p>
+						Often this can be abstrated into finding the goal state in a directed graph of linked states. 
+					</p>
+				</div>
+
+				<div>
+					<p>Example</p>
+				</div>
+				<div>
+					<p>
+						Suppose you're in Coventry and want to get to London. How do you achieve this? <br>Using what transport do you get there? What routes do you go via? More importantly, which routes are <i>reasonable</i>?
+					</p>
+					<p>
+						Finding the actions that would get you from Coventry to London is problem solving.
+					</p>
+					<p>
+						A <b>problem-solving agent</b> is a <i>goal-based</i> agent that will determine sequences of actions leading to desirable states. It must in this process determine which states are <i>reasonable</i> to go through.
+					</p>
+				</div>
+
+				<div>
+					<p>Problem solving steps</p>
+				</div>
+				<div>
+					<p>
+						There are 4 steps：
+						<ul>
+							<li>
+								<b>Goal formulation</b>: identify goal given current situation.
+							</li>
+							<li>
+								<b>Problem formulation</b>: Identify permissible actions <i>(operators)</i> and states to consider
+							</li>
+							<li><b>Search</b>: Find the sequence of actions to achieve a goal</li>
+							<li><b>Execution</b>: Perform the actions in the solution</li>
+						</ul>
+						The two types of problem solving mentioned before are <b>offline</b> and <b>online</b>, the former acting with <i>complete knowledge</i> and the latter with <i>incomplete knowledge</i>. 
+					</p>
+
+					<p>
+						For our example from earlier:
+						<ul class="not">
+							<li>Formulate goal: be in London</li>
+							<li>Formulate problem:
+								<ul class="not">
+									<li><i>states</i>: (in which) towns and cities</li>
+									<li><i>operators</i>: drive between towns and cities</li>
+								</ul>
+							</li>
+							<li>Search: sequence of towns and cities</li>
+							<li>Execution: drive</li>
+						</ul>
+					</p>
+				</div>
+
+				
+
+				<div>
+					<p>Pseudocode agent</p>
+					
+				</div>
+				<div>
+					<p>
+						We can make a mockup of an offline reasoning agent in pseudocode. 
+					</p>
+					<div class="codediv">global Action[] s;  	 # action sequence, initially empty
+						
+global State state;  	 # current world state
+global Goal g;           # goal, initially null
+global Problem problem;  # problem to solve
+
+function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
+	state &lt;- updateState(state, p)
+	if s.empty():
+		g &lt;- formulateGoal(state)
+		problem &lt;- formulateProblem(state, p)
+		s &lt;- search(problem)
+	action &lt;- recommendation(state)
+	s &lt;- result(state)
+	return action</div>
+
+					<p>
+						Naturally all the functions mentioned are left as an excersise to the reader (i.e. assumed implemented). 
+						<code>formulateGoal</code> internally will use its current perceptions.
+					</p>
+				</div>
+
+				<div>
+					<p>Problem types</p>
+				</div>
+				<div>
+					<p>
+						Problems of course can come in many types.
+						<ul>
+							<li>
+								<b>Single state problem</b>: deterministic and fully observable. Sensors tell agent current state, it knows exactly what to do, can work out what state it will be in after.
+							</li>
+							<li>
+								<b>Multiple state problem</b>: deterministic and <i>partially</i> observable. Agent knows its actions, but has limited access to state. There may be a set of states the agent would end up in, agent must manipulate sets.
+							</li>
+							<li>
+								<b>Contingency problem</b>: <i>stochastic</i> and partially observable. Agent does not know current state so is unsure of result of action. Must use sensors during execution. Solution is a tree with contingency branches. Search and execution is often <i>interleaved</i>. 
+							</li>
+							<li>
+								<b>Exploration problem</b>: unknown state space. Agent does not know what it's actions will do, and has to explore and learn. This is an <b>online</b> problem.
+							</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Vacuum Cleaner World</p>
+				</div>
+				<div>
+					<p>
+						Let's use an example of a simple environment, a vacuum robot <code>V</code> and a world with two locations, <code>[  ][  ]</code>. Each location may also contain dirt (<code>[ d]</code> or <code>[Vd]</code> for vacuum and dirt). The vacuum can move left or right, and suck dirt.
+					</p>
+
+					<p>
+						<b><i>Single state.</i></b> Suppose we know we are in the state <code>[V][d]</code>. We then know our sequence of actions is just [right, suck]. 
+					</p>
+					<p>
+						<b><i>Multiple State.</i></b> (sensorless / conformant) Suppose we don't know which state we start in. We could have the states:
+						<table>
+							<tr>
+								<td>1. <code>[Vd][ d]</code></td>
+								<td>2. <code>[ d][Vd]</code></td>
+								<td>3. <code>[Vd][  ]</code></td>
+								<td>4. <code>[ d][V ]</code></td>
+							</tr>
+							<tr>
+								<td>5. <code>[V ][ d]</code></td>
+								<td>6. <code>[  ][Vd]</code></td>
+								<td>7. <code>[V ][  ]</code></td>
+								<td>8. <code>[  ][V ]</code></td>
+							</tr>
+						</table> 
+
+						If we start in any one of those states, and we move to the right, we will always end up in states {2, 3, 6, 8}. If we move left afterwards, we will guarantee vacuum ends up on the left. Thus we can do [right, suck, left, suck]. 
+					</p>
+
+					<p>
+						<b><i>Contingency.</i></b> Suppose we start in state <code>[V ][ d]</code>, but our vacuum has received a downgrade: if we suck a clean square, there is a chance that it may make that square <i>less</i> clean. So what do we do? 
+					</p>
+					<p>
+						What we can is sense whilst acting, thus: [right, <b>if</b> dirt <b>then</b> suck].
+					</p>
+				</div>
+
+				<div>
+					<p>State space problems</p>
+				</div>
+				<div>
+					<p>
+						A <b>State space problem</b> consists of a set of states; subsets of <b>start states, goal states</b>; a set of actions; an <b>action function</b> (f(state, action) -> new state); and a criterion that specifies the <i>quality</i> of an acceptable solution (depends on problem).
+					</p>
+					<p>
+						Since the real world is complex, state space may require <i>abstraction</i> for problem solving. States, operators, and solutions approximate the real world equivalent, though one must take care that their operations are still valid for the real world counterpart.
+					</p>
+				</div>
+
+				<div>
+					<p>8-puzzle</p>
+				</div>
+				<div>
+					<p>
+						A 3\(\times\)3 grid of tiles numbered 1 to 8, with a blank space for sliding. We want to get from some initial state to some goal state. 
+
+						<pre><code>283   123
+164   8_4
+7_5   765</code></pre>
+
+						On the left is an initial state, and on the right is the goal state.
+					</p>
+					<ul>
+						<li><i>States</i> can be coordinate locations of tiles</li>
+						<li><i>Operators</i> - we want the fewest possible - are moving the <i>blank square</i> up, down, left, or right</li>
+						<li>Our <i>goal test</i> would be the given goal state</li>
+						<li>The <i>path cost</i> we can set as 1 per operation</li>
+					</ul>
+				</div>
+
+				<div>
+					<p>State Space Graphs</p>
+				</div>
+				<div>
+					<p>
+						A general formultion for a problem is a <b>state space graph</b>. It is:
+						<ul>
+							<li>A <i>directed</i> graph consisting of a set N of <i>nodes</i>, set A of <i>arcs/edges</i>, which are ordered pairs of nodes.</li>
+							<li>Node \(n_2\) <i>neighbours</i> node \(n_1\) if there is an arc \(\langle n_1, n_2 \rangle\) (denoted with triangle brackets)</li>
+							<li>A <i>path</i> is a sequence of nodes \(\langle n_0, n_1, ..., n_k\rangle\) s.t. \(\langle n_{i-1}, n_i \rangle \in A\) (arcs between all nodes)</li>
+							<li>The <i>length</i> of a path from \(n_0\) to \(n_k\) is \(k\).</li>
+							<li>Given a set of <i>start nodes</i> and <i>goal nodes</i>, a <b>solution</b> is a path from a start node to a goal node.</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+
+			<h3 id="usea-2">Tree Searching</h3>
 			
+		</div>
 
 		<footer>
 			<div class="cbox">
