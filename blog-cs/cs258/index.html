@@ -48,6 +48,7 @@
 
 			<ol>
 				<li><a href="#rel-db">Relational Databases and Constraints</a></li>
+				<li><a href="#sql">SQL</a></li>
 			</ol>
 
 			<h3>Introduction</h3>
@@ -444,6 +445,198 @@
 					</p>
 					<p>
 						FDs can come from keys or physical limits, e.g. <i>no two lectures can happen in the same room at the same time</i> \(\implies\) <code>{room, time}</code> as a viable key.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="sql">Structured Query Language</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#sql-1">Declaring</a></li>
+			</ol>
+
+			<h3 id="sql-1">Declaring</h3>
+
+			<div class="cornell">
+				<div>
+					<p>SQL and declarative languages</p>
+				</div>
+				<div>
+					<p>
+						SQL is a <b>declarative</b> language - a very high level language that tells the system merely <i>what</i> to do instead of <i>how</i> to do it. 
+					</p>
+					<p>
+						Things like data manipulation that one would have to implement in a procedural language are implemented in the back-end by the DB management system, and it is the one responsible for finding the optimal way of carrying out an SQL command. 
+					</p>
+					<p>
+						SQL is both a <b>data definition language</b> (DDL) and a <b>data manipulation language</b> (DML). 
+					</p>
+				</div>
+
+				<div>
+					<p>SQL Terminology</p>
+				</div>
+				<div>
+					<p>
+						In SQL, relations are tables, tuples are rows, and attributes are columns.
+					</p>
+				</div>
+
+				<div>
+					<p>Standards</p>
+				</div>
+				<div>
+					<p>
+						Whilst SQL has an official standard - SQL 3 currently - different comapnies implement SQL differently and none have implemented the standard directly, thus different platforms have <i>slightly</i> different versions of the language.
+					</p>
+				</div>
+
+				<div>
+					<p>Databases, Schemas, and Catalogues</p>
+				</div>
+				<div>
+					<p>
+						A database contains 1 or more schemas, which contain one or more related tables. A schema can be created with the <code class="lang-sql">create schema</code> command, and schemas can (supposedly) be given an authorisation, <code class="lang-sql">create schema Company authorisation 'JSmith'</code>
+					</p>
+					<p>
+						If one does not create a schema before creating tables, those tables go in the default <code>public</code> schema.
+					</p>
+					<p>
+						<i>Virtual relations</i> can be created with <code class="lang-sql">create view</code>, which aren't actual tables but "virtual" tables spanning actual tables.
+					</p>
+					<p>
+						<i>Note that SQL is generally case insensitive.</i>
+					</p>
+
+					<p><span class="sc">now, syntax time</span></p>
+				</div>
+
+				<div>
+					<p>Tables</p>
+				</div>
+				<div>
+					<p>
+						Tables are created with 
+						<pre><code class="lang-sql">create table &lt;tableName&gt; (
+	&lt;name1&gt; &lt;type1&gt; &lt;constraint1&gt;,
+	&lt;name2&gt; &lt;type2&gt; &lt;constraint2&gt;,
+	[otherConstraint], [otherConstraint]
+);</code></pre>
+
+						There are a few essential data types, their PostgreSQL (pn. post-gres) equivalents are given. The ANSI names are omitted.
+
+						<table>
+							<tr>
+								<th>PostgreSQL type</th>
+								<th>Description</th>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">char(n)</code></td>
+								<td>Fixed length character string - string is padded with spaces </td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">varchar(n)</code></td>
+								<td>Variable limited length - like above but with no padding</td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">numberic(p, s)</code></td>
+								<td>Arbitrary precision numbers. \(p\) is precision and \(s\) is scale</td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">int, int4, int2</code></td>
+								<td>First two are 4 byte ints, <code class="lang-sql">int2</code> is a 2 byte int</td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">float4, float8</code></td>
+								<td>4 byte and 8 byte floating point numbers</td>
+							</tr>
+						</table>
+						Amongst others like <code class="lang-sql">blob, date, boolean, time</code>, etc.
+					</p>
+
+					<p>
+						Thus we can create an example table like so:
+						<pre><code class="lang-sql">create table students (
+	studentID int primary key,  -- this is a comment
+	studentName varchar(30),  -- char varying
+	courseID int
+);</code></pre>
+					</p>
+
+					<p>
+						Attributes can be set to have a default value, not null, and semantic checks
+						<pre><code class="lang-sql">accountBalance real not null default 0.0,
+age int not null check (age &gt; 0 and age &lt; 125)</code></pre>
+					</p>
+
+					<p>
+						One may also add a unique clause - this can specify alternate secondary keys, candidate keys. 
+						<pre><code class="lang-sql">dname varchar(15) unique</code></pre>
+					</p>
+					
+				</div>
+
+				<div>
+					<p>Foreign keys</p>
+				</div>
+				<div>
+					<p>
+						Constraints can be declared inline or at the after attributes. Below is an exmaple with foreign keys, where constraints are written at the end. 
+						<pre><code class="lang-sql">create table project (
+	Pname varchar(15) not null,
+	Pnumber int not null,
+	Plocation int,
+	Dnum int not null, 
+	primary key (Pnumber),
+	unique (Pname),
+	foreign key (Dnum) references department (Dnumber) 
+	-- department is another table
+);</code></pre>
+					</p>
+
+				</div>
+
+				<div>
+					<p>Constraints</p>
+				</div>
+				<div>
+					<p>
+						One can set actions for foreign keys, which would trigger when specific updates cause integrity violations. These actions are <code class="lang-sql">set null</code>, <code class="lang-sql">cascade</code> (propagate), <code class="lang-sql">set default</code>.
+					</p>
+					<p>
+						Different actions can happen for different queries, specified with <code class="lang-sql">on update</code> and <code class="lang-sql">on delete</code>. Thus,
+
+						<pre><code class="lang-sql">constraint superSSN_SSN
+    foreign key (superSSN) references employee (SSN)
+	on delete set null
+	on update cascade</code></pre>
+						
+						Where <code>superSSN_SSN</code> is the name of the constraint.
+					</p>
+
+					<p>
+						Constraints can also be set on fields inline, with the syntax <code class="lang-sql">constraint name details</code>
+						<pre><code class="lang-sql">studentID int constraint nonzero check (studentID > 0)</code></pre>
+					</p>
+
+				</div>
+
+				<div>
+					<p><code>rm -rf /</code></p>
+				</div>
+				<div>
+					<p>
+						SQL also has delete (DROP) commands, which <i>do not double check</i> and will delete your data. Use with caution. 
+					</p>
+					<p>
+						These are <code class="lang-sql">drop table</code> and <code class="lang-sql">drop schema</code>.
 					</p>
 				</div>
 			</div>
