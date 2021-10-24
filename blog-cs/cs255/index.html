@@ -761,7 +761,8 @@
 
 			<ol>
 				<li><a href="#usea-1">Problem Solving</a></li>
-				<li><a href="=usea-2">Tree Searching</a></li>
+				<li><a href="#usea-2">Tree Searching</a></li>
+				<li><a href="#usea-3">Graph Searching</a></li>
 			</ol>
 
 			<h3 id="usea-1">Problem Solving</h3>	
@@ -982,10 +983,187 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 				</div>
 				<div>
 					<p>
-						A tree search is a basic approach to problem solving. It is an <i>offline</i>, simulated exploration of the state space. Starting with a start state, we <i>expand</i>
+						A tree search is a basic approach to problem solving. It is an <i>offline</i>, simulated exploration of the state space. Starting with a start state, we <i>expand</i> an explored state by generating / exploring its successor branches, to build a search tree. 
+					</p>
+					<p>
+						We have a single start state, and repeatedly expand until we find a solution, or run out of valid candidates. 
+					</p>
+					<button class="collapsible">Example tree of 8 puzzle</button>
+					<div class="ccontent">
+						<img src="./8puzzle-search.png" alt="Some branches are omitted for simplicity." style="max-width: 400px;">
+					</div>
+				</div>
+
+				<div>
+					<p>Implementation details</p>
+				</div>
+				<div>
+					<p>
+						A <b>state</b> represents a physical configuration of a puzzle, and a <b>node</b> will be the data structure for one state of the tree.
+					</p>
+					<p>
+						A node stores the <b>state, parent, children, depth, path cost</b> - the last of these is usually denoted \(g\).
+					</p>
+					<img src="./tree-node.svg" alt="A typical tree node" style="max-width: 400px;">
+					<p>
+						Nodes (explored) but not yet expanded are called the <b>frontier</b>, and is generally represented as a queue.
+					</p>
+				</div>
+
+				<div>
+					<p>Search strategies</p>
+				</div>
+				<div>
+					<p>
+						The strategy of searching is defined by which order we expand nodes in. These strategies are evaluated over several criteria:
+						<ul>
+							<li><b>completeness</b>: will the strategy always find a solution, if it exists?</li>
+							<li><b>optimality</b>: will the best (least cost) solution be found?</li>
+							<li><b>time complexity</b>: The number of nodes expanded - this depends on the maximum <i>branching factor</i> \(b\), depth of best solution \(d\), and the maximum depth of the state space \(m\), which may be \(\infty\).</li>
+							<li><b>space complexity</b>, the maximum number of nodes stored in memory (also in terms of \(b, d, m\)) </li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Simple, uninformed strategies</p>
+				</div>
+				<div>
+					<p>
+						<b>Uninformed</b> search only uses information given in problem definiton - we have no measure of which nodes would be better to expand to, nor do we really check the nodes once we've explored them (i.e. not checking cycles).
+					</p>
+					<p>
+						Two of these algorithms are Breadth-first search BFS and Depth-first search DFS.
+					</p>
+				</div>
+
+				<div>
+					<p>Breadth first</p>
+				</div>
+				<div>
+					<p>
+						BFS expands the shallowest node: put recently expanded successors at the end of queue: FIFO.
+					</p>
+					<ul>
+						<li>
+							<b>Completeness</b>. BFS is complete because it will always find a solution, provided \(b\) finite.
+						</li>
+						<li>
+							<b>Time</b>. Since at every node we expand \(b\) branches, in total for a depth of \(d\) we will be expanding \(1 + b + b^2 + b^3 + ... + b^d = O(b^d)\) times. This becomes \(O(b^{d+1})\) if the check for goal state is done when that node is about to be expanded, instead of as part of expansion.
+						</li>
+						<li>
+							<b>Space</b>. Each leaf node is kept in memory, thus there are \(O(b^{d-1})\) explored nodes and \(O(b^{d})\) in the frontier, and overall space is dominated by frontier, \(O(b^d)\).
+						</li>
+						<li>
+							<b>Optimality</b>. BFS is optimal <i>only if</i> the cost function does not decrease. 
+						</li>
+					</ul>
+					<p>
+						The main problem for BFS is the space usage, which can balloon very very quickly (with \(b = 10\) and 1 KB per node, at depth 8 one needs around 1 TB of memory).
+					</p>
+				</div>
+
+				<div>
+					<p>Depth first</p>
+				</div>
+				<div>
+					<p>
+						DFS expands the deepest node: put most recently expanded successors at the start of the "queue" (stack): LIFO. 
+					</p>
+					<ul>
+						<li>
+							<b>Completeness.</b> DFS is <i>not</i> complete because it will fail in infinite depth and loop situations. If we avoid repeated paths and have or limit to a finite depth, then DFS <i>is</i> complete.
+						</li>
+						<li>
+							<b>Time.</b> \(O(b^m)\), which is O(horrible) if \(m > d\) significantly. Otherwise may be significantly faster than BFS.
+						</li>
+						<li>
+							<b>Space.</b> \(O(bm)\), i.e. linear space: store path from root to leaf and unexpanded siblings of nodes on path.
+						</li>
+						<li>
+							<b>Optimality.</b> Not guaranteed.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<h3 id="usea-3">Graph Searching</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Notes</p>
+				</div>
+				<div>
+					<p>
+						This section is <i>uninformed</i> search, and graph searches are similarly uninformed, so much so that the algorithms presented do not even check for cycles, despite common intuition.
+					</p>
+
+					<p>
+						The main difference is that in graph search we look at <i>paths</i>, rather than nodes. Expanding into a node would be adding it to the stored <i>path</i>.
+					</p>
+				</div>
+	
+				<div>
+					<p>Graphs</p>
+				</div>
+				<div>
+					<p>
+						With trees, if we have looped states these will just branch out to infinity. Graphs are a good way to take loops into account and are a practical representation of such spaces.
+					</p>
+					<p>
+						Similar to a tree, we incrementally explore, maintaining a frontier of explored paths. The frontier should expand into unexplored nodes until a goal node is encountered. 
+					</p>
+					<p>
+						The way nodes are selected is the <i>search strategy</i>, the <i>neighbours</i> of (all) nodes define a graph, and the <i>goal</i> defines the solution.
+					</p>
+					<p>
+						We can continue searching from the return call even if a solution has been found, if we want more or all possible solutions.
+					</p>
+				</div>
+
+				<div>
+					<p>BFS on Graphs</p>
+				</div>
+				<div>
+					<p>
+						All paths on the frontier \([p_1 .. p_r]\) are expanded one by one, and the neighbours of an explored path are added to the <i>end</i> of the frontier. 
+					</p>
+					<p>
+						The time complexity is instead written \(O(b^n)\), where \(n\) is the <i>path length</i> (instead of tree depth).
+					</p>
+				</div>
+
+				<div>
+					<p>DFS on Graphs</p>
+				</div>
+				<div>
+					<p>
+						DFS treats the frontier as a stack instead. The time complexity is \(O(b^k)\) where \(k\) is the maximum number of arcs a path can have (i.e. max depth). Space complexity is linear: \(O(k + (b-1))\).
+					</p>
+					<p>
+						Now, DFS is <i>said</i> to fail on both infinitely long graphs and graphs with cycles, although I'm not sure why you're adding already explored nodes to the frontier (cycle case). 
+					</p>
+				</div>
+
+				<div>
+					<p>Lowest cost first</p>
+				</div>
+				<div>
+					<p>
+						Sometimes, there are <i>costs</i>, or weights, associated with edges. The cost of a path is thus the sum of the cost of edges, and an optimal solution has the path with the smallest total cost. 
+					</p>
+					<p>
+						Lowest cost first is a fairly naive algorithm that simply selects the path on the frontier with the lowest cost. I.e., frontier paths are stored in a <i>priority queue</i> according to path length.
+					</p>
+					<p>
+						Lowest cost is <b>complete</b>.
 					</p>
 				</div>
 			</div>
+
+			<p>
+				Supposedly <i>none</i> of these algorithms will halt on a finite graph with cycles, but one has to be a particular type of person to program a graph search without cycle checking <i>/ not adding explored nodes to the unexplored frontier</i>.
+			</p>
 			
 		</div>
 
