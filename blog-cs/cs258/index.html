@@ -460,6 +460,7 @@
 
 			<ol>
 				<li><a href="#sql-1">Declaring</a></li>
+				<li><a href="#sql-2">Querying</a></li>
 			</ol>
 
 			<h3 id="sql-1">Declaring</h3>
@@ -637,6 +638,110 @@ age int not null check (age &gt; 0 and age &lt; 125)</code></pre>
 					</p>
 					<p>
 						These are <code class="lang-sql">drop table</code> and <code class="lang-sql">drop schema</code>.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-2">Querying</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Selecting</p>
+				</div>
+				<div>
+					<p>
+						SQL allows duplicate entries in the database - these are dealt with at point of query instead of point of insertion.
+					</p>
+					<p>
+						Generally, the terminology is that rows are <b>selected</b> whilst columns are <b>projected</b>.
+					</p>
+					<p>
+						The basic select command is like <code class="lang-sql">select attr1, attr2 from someTable where someCondition;</code>. 
+					</p>
+					<p>
+						The output is <i>also a table</i>, and we can manipulate said table.
+						<ul>
+							<li><code class="lang-sql">select distinct</code> removes duplicates</li>
+							<li><code class="lang-sql">where</code> sets conditions on which rows are selected, and use the boolean operations <code class="lang-sql">and or not</code>.</li>
+							<li><code class="lang-sql">*</code> is the wildcard "all" operator.</li>
+						</ul>
+					</p>
+					<p>
+						We can qualify names using a dot, if there are multiple tables that share a column name (whether through foreign keys or otherwise), by doing <code class="lang-sql">select students.studentID from students, courses;</code>.
+					</p>
+					<p>
+						If table names are too long or unweildy, they can be <b>aliased</b>, for example <code class="lang-sql">S.studentID from students S</code>.
+					</p>
+					<p>
+						Please note that strings in SQL are single quoted only.
+					</p>
+					<p>
+						We can order by a field by <code class="lang-sql">order by field asc</code> (or <code class="lang-sql">desc</code>)
+					</p>
+					<p>
+						Columns can be renamed using as, such as <code class="lang-sql">select name as teaName, manufacturer from</code>... 
+					</p>
+				</div>
+
+				<div>
+					<p>Operational semantics</p>
+				</div>
+				<div>
+					<p>
+						The general order of operations goes
+						<ul>
+							<li>Get relation in <code class="lang-sql">from</code> clause</li>
+							<li>Apply the <i>row selection</i> in <code class="lang-sql">where</code></li>
+							<li>Apply the <i>column projection</i> in <code class="lang-sql">select</code></li>
+						</ul>
+						When performing comparisons, linear search is used. 
+					</p>
+				</div>
+
+				<div>
+					<p>Comparisons</p>
+				</div>
+				<div>
+					<p>
+						Once can replace a column value with a constant value. For example, if we search from a database of tea drinkers for those with Earl Grey as favourite tea, we can do something like the following:
+						<pre><code class="lang-sql">select drinker, 'likes earl grey' as likesEarlGrey 
+	from likes
+	where tea = 'Earl Grey';</code></pre>
+	
+						There are several more string functions, but often these are implementation-specific. 
+					</p>
+					
+					<p>
+						Apostrophes have to be written using double quotes, so <code class="lang-sql">'Joe"s'</code> would mean Joe's.
+					</p>
+
+					<p>
+						String attributes can also be <b>pattern matched</b>, using the keywords <code class="lang-sql">like</code> and <code class="lang-sql">not like</code>. A pattern is a quoted string with special characters, like a simplified form of regex. <code class="lang-sql">_</code> means any one character, <code class="lang-sql">%</code> means any number of any characters.
+
+						<pre><code class="lang-sql">where phone like '%1926_______'</code></pre>
+					</p>
+				</div>
+				<div>
+					<p>Nulls</p>
+				</div>
+				<div>
+					<p>
+						Nulls are special in that they are <b>not real values</b>. They are useful for unknown/not applicable values.
+					</p>
+					<p>
+						Thus, nulls are <b>incomparable</b>: if A's phone number is NULL, B's is also NULL, A's phone number <b>does not equal</b> B's. 
+					</p>
+					<p>
+						SQL comparisons actually have <b>three boolean values</b>, those being <b>True, False, Unknown</b>. Comparing with NULL can yield unknown values. The process of three value logic is that if the value of unknown does not matter in an expression (e.g. \(F \land U = F\) and \(T \lor U = T\)). 
+					</p>
+
+					<button class="collapsible">Truth Tables...</button>
+					<div class="ccontent">
+						<img src="./3logictruth.png" alt="3 logic truth table">
+					</div>
+
+					<p>
+						To check nulls, use <i>is</i>: <code class="lang-sql">attr is null</code> or <code class="lang-sql">attr is not null</code>.
 					</p>
 				</div>
 			</div>
