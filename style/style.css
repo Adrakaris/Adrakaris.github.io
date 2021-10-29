@@ -596,6 +596,11 @@ li {
     margin-bottom: 8px;
 }
 
+table {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 :is(ul.not, ol.not) > li {
     margin-bottom: 0px;
 }

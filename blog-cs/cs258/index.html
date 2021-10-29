@@ -48,6 +48,7 @@
 
 			<ol>
 				<li><a href="#rel-db">Relational Databases and Constraints</a></li>
+				<li><a href="#sql">SQL</a></li>
 			</ol>
 
 			<h3>Introduction</h3>
@@ -444,6 +445,303 @@
 					</p>
 					<p>
 						FDs can come from keys or physical limits, e.g. <i>no two lectures can happen in the same room at the same time</i> \(\implies\) <code>{room, time}</code> as a viable key.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="sql">Structured Query Language</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#sql-1">Declaring</a></li>
+				<li><a href="#sql-2">Querying</a></li>
+			</ol>
+
+			<h3 id="sql-1">Declaring</h3>
+
+			<div class="cornell">
+				<div>
+					<p>SQL and declarative languages</p>
+				</div>
+				<div>
+					<p>
+						SQL is a <b>declarative</b> language - a very high level language that tells the system merely <i>what</i> to do instead of <i>how</i> to do it. 
+					</p>
+					<p>
+						Things like data manipulation that one would have to implement in a procedural language are implemented in the back-end by the DB management system, and it is the one responsible for finding the optimal way of carrying out an SQL command. 
+					</p>
+					<p>
+						SQL is both a <b>data definition language</b> (DDL) and a <b>data manipulation language</b> (DML). 
+					</p>
+				</div>
+
+				<div>
+					<p>SQL Terminology</p>
+				</div>
+				<div>
+					<p>
+						In SQL, relations are tables, tuples are rows, and attributes are columns.
+					</p>
+				</div>
+
+				<div>
+					<p>Standards</p>
+				</div>
+				<div>
+					<p>
+						Whilst SQL has an official standard - SQL 3 currently - different comapnies implement SQL differently and none have implemented the standard directly, thus different platforms have <i>slightly</i> different versions of the language.
+					</p>
+				</div>
+
+				<div>
+					<p>Databases, Schemas, and Catalogues</p>
+				</div>
+				<div>
+					<p>
+						A database contains 1 or more schemas, which contain one or more related tables. A schema can be created with the <code class="lang-sql">create schema</code> command, and schemas can (supposedly) be given an authorisation, <code class="lang-sql">create schema Company authorisation 'JSmith'</code>
+					</p>
+					<p>
+						If one does not create a schema before creating tables, those tables go in the default <code>public</code> schema.
+					</p>
+					<p>
+						<i>Virtual relations</i> can be created with <code class="lang-sql">create view</code>, which aren't actual tables but "virtual" tables spanning actual tables.
+					</p>
+					<p>
+						<i>Note that SQL is generally case insensitive.</i>
+					</p>
+
+					<p><span class="sc">now, syntax time</span></p>
+				</div>
+
+				<div>
+					<p>Tables</p>
+				</div>
+				<div>
+					<p>
+						Tables are created with 
+						<pre><code class="lang-sql">create table &lt;tableName&gt; (
+	&lt;name1&gt; &lt;type1&gt; &lt;constraint1&gt;,
+	&lt;name2&gt; &lt;type2&gt; &lt;constraint2&gt;,
+	[otherConstraint], [otherConstraint]
+);</code></pre>
+
+						There are a few essential data types, their PostgreSQL (pn. post-gres) equivalents are given. The ANSI names are omitted.
+
+						<table>
+							<tr>
+								<th>PostgreSQL type</th>
+								<th>Description</th>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">char(n)</code></td>
+								<td>Fixed length character string - string is padded with spaces </td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">varchar(n)</code></td>
+								<td>Variable limited length - like above but with no padding</td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">numberic(p, s)</code></td>
+								<td>Arbitrary precision numbers. \(p\) is precision and \(s\) is scale</td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">int, int4, int2</code></td>
+								<td>First two are 4 byte ints, <code class="lang-sql">int2</code> is a 2 byte int</td>
+							</tr>
+							<tr>
+								<td><code class="lang-sql">float4, float8</code></td>
+								<td>4 byte and 8 byte floating point numbers</td>
+							</tr>
+						</table>
+						Amongst others like <code class="lang-sql">blob, date, boolean, time</code>, etc.
+					</p>
+
+					<p>
+						Thus we can create an example table like so:
+						<pre><code class="lang-sql">create table students (
+	studentID int primary key,  -- this is a comment
+	studentName varchar(30),  -- char varying
+	courseID int
+);</code></pre>
+					</p>
+
+					<p>
+						Attributes can be set to have a default value, not null, and semantic checks
+						<pre><code class="lang-sql">accountBalance real not null default 0.0,
+age int not null check (age &gt; 0 and age &lt; 125)</code></pre>
+					</p>
+
+					<p>
+						One may also add a unique clause - this can specify alternate secondary keys, candidate keys. 
+						<pre><code class="lang-sql">dname varchar(15) unique</code></pre>
+					</p>
+					
+				</div>
+
+				<div>
+					<p>Foreign keys</p>
+				</div>
+				<div>
+					<p>
+						Constraints can be declared inline or at the after attributes. Below is an exmaple with foreign keys, where constraints are written at the end. 
+						<pre><code class="lang-sql">create table project (
+	Pname varchar(15) not null,
+	Pnumber int not null,
+	Plocation int,
+	Dnum int not null, 
+	primary key (Pnumber),
+	unique (Pname),
+	foreign key (Dnum) references department (Dnumber) 
+	-- department is another table
+);</code></pre>
+					</p>
+
+				</div>
+
+				<div>
+					<p>Constraints</p>
+				</div>
+				<div>
+					<p>
+						One can set actions for foreign keys, which would trigger when specific updates cause integrity violations. These actions are <code class="lang-sql">set null</code>, <code class="lang-sql">cascade</code> (propagate), <code class="lang-sql">set default</code>.
+					</p>
+					<p>
+						Different actions can happen for different queries, specified with <code class="lang-sql">on update</code> and <code class="lang-sql">on delete</code>. Thus,
+
+						<pre><code class="lang-sql">constraint superSSN_SSN
+    foreign key (superSSN) references employee (SSN)
+	on delete set null
+	on update cascade</code></pre>
+						
+						Where <code>superSSN_SSN</code> is the name of the constraint.
+					</p>
+
+					<p>
+						Constraints can also be set on fields inline, with the syntax <code class="lang-sql">constraint name details</code>
+						<pre><code class="lang-sql">studentID int constraint nonzero check (studentID > 0)</code></pre>
+					</p>
+
+				</div>
+
+				<div>
+					<p><code>rm -rf /</code></p>
+				</div>
+				<div>
+					<p>
+						SQL also has delete (DROP) commands, which <i>do not double check</i> and will delete your data. Use with caution. 
+					</p>
+					<p>
+						These are <code class="lang-sql">drop table</code> and <code class="lang-sql">drop schema</code>.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-2">Querying</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Selecting</p>
+				</div>
+				<div>
+					<p>
+						SQL allows duplicate entries in the database - these are dealt with at point of query instead of point of insertion.
+					</p>
+					<p>
+						Generally, the terminology is that rows are <b>selected</b> whilst columns are <b>projected</b>.
+					</p>
+					<p>
+						The basic select command is like <code class="lang-sql">select attr1, attr2 from someTable where someCondition;</code>. 
+					</p>
+					<p>
+						The output is <i>also a table</i>, and we can manipulate said table.
+						<ul>
+							<li><code class="lang-sql">select distinct</code> removes duplicates</li>
+							<li><code class="lang-sql">where</code> sets conditions on which rows are selected, and use the boolean operations <code class="lang-sql">and or not</code>.</li>
+							<li><code class="lang-sql">*</code> is the wildcard "all" operator.</li>
+						</ul>
+					</p>
+					<p>
+						We can qualify names using a dot, if there are multiple tables that share a column name (whether through foreign keys or otherwise), by doing <code class="lang-sql">select students.studentID from students, courses;</code>.
+					</p>
+					<p>
+						If table names are too long or unweildy, they can be <b>aliased</b>, for example <code class="lang-sql">S.studentID from students S</code>.
+					</p>
+					<p>
+						Please note that strings in SQL are single quoted only.
+					</p>
+					<p>
+						We can order by a field by <code class="lang-sql">order by field asc</code> (or <code class="lang-sql">desc</code>)
+					</p>
+					<p>
+						Columns can be renamed using as, such as <code class="lang-sql">select name as teaName, manufacturer from</code>... 
+					</p>
+				</div>
+
+				<div>
+					<p>Operational semantics</p>
+				</div>
+				<div>
+					<p>
+						The general order of operations goes
+						<ul>
+							<li>Get relation in <code class="lang-sql">from</code> clause</li>
+							<li>Apply the <i>row selection</i> in <code class="lang-sql">where</code></li>
+							<li>Apply the <i>column projection</i> in <code class="lang-sql">select</code></li>
+						</ul>
+						When performing comparisons, linear search is used. 
+					</p>
+				</div>
+
+				<div>
+					<p>Comparisons</p>
+				</div>
+				<div>
+					<p>
+						Once can replace a column value with a constant value. For example, if we search from a database of tea drinkers for those with Earl Grey as favourite tea, we can do something like the following:
+						<pre><code class="lang-sql">select drinker, 'likes earl grey' as likesEarlGrey 
+	from likes
+	where tea = 'Earl Grey';</code></pre>
+	
+						There are several more string functions, but often these are implementation-specific. 
+					</p>
+					
+					<p>
+						Apostrophes have to be written using double quotes, so <code class="lang-sql">'Joe"s'</code> would mean Joe's.
+					</p>
+
+					<p>
+						String attributes can also be <b>pattern matched</b>, using the keywords <code class="lang-sql">like</code> and <code class="lang-sql">not like</code>. A pattern is a quoted string with special characters, like a simplified form of regex. <code class="lang-sql">_</code> means any one character, <code class="lang-sql">%</code> means any number of any characters.
+
+						<pre><code class="lang-sql">where phone like '%1926_______'</code></pre>
+					</p>
+				</div>
+				<div>
+					<p>Nulls</p>
+				</div>
+				<div>
+					<p>
+						Nulls are special in that they are <b>not real values</b>. They are useful for unknown/not applicable values.
+					</p>
+					<p>
+						Thus, nulls are <b>incomparable</b>: if A's phone number is NULL, B's is also NULL, A's phone number <b>does not equal</b> B's. 
+					</p>
+					<p>
+						SQL comparisons actually have <b>three boolean values</b>, those being <b>True, False, Unknown</b>. Comparing with NULL can yield unknown values. The process of three value logic is that if the value of unknown does not matter in an expression (e.g. \(F \land U = F\) and \(T \lor U = T\)). 
+					</p>
+
+					<button class="collapsible">Truth Tables...</button>
+					<div class="ccontent">
+						<img src="./3logictruth.png" alt="3 logic truth table">
+					</div>
+
+					<p>
+						To check nulls, use <i>is</i>: <code class="lang-sql">attr is null</code> or <code class="lang-sql">attr is not null</code>.
 					</p>
 				</div>
 			</div>

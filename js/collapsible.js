@@ -5,6 +5,7 @@ for (i = 0; i < col.length; i++) {
     col[i].addEventListener("click", function() {
         this.classList.toggle("active");
         var content = this.nextElementSibling;
+        // console.log(content)
         if (content.style.display == "grid") {
             content.style.display = "none";
         } else {

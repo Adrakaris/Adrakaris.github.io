@@ -48,6 +48,7 @@
 
 			<ol>
 				<li><a href="#rational-agents">Rational Agents</a></li>
+				<li><a href="#uninformedsearch">Uninformed Search</a></li>
 			</ol>
 
 			<h3>Introduction to Artificial Intelligence</h3>
@@ -146,6 +147,8 @@
 					</p>
 				</div>
 			</div>
+
+			
 		</div>
 
 
@@ -429,7 +432,7 @@
 					<p>
 						Some examples of the dimensions of different agents
 					</p>
-					<button class="collapsible">Example: State-space search</button>
+					<button class="collapsible"  id="sss">Example: State-space search</button>
 					<div class="ccontent">
 						<table>
 							<tr>
@@ -749,7 +752,420 @@
 			</div>
 		</div>
 
+		<div class="colourband">
+			<h2 id="uninformedsearch">Uninformed Search</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#usea-1">Problem Solving</a></li>
+				<li><a href="#usea-2">Tree Searching</a></li>
+				<li><a href="#usea-3">Graph Searching</a></li>
+			</ol>
+
+			<h3 id="usea-1">Problem Solving</h3>	
+
+
+			<div class="cornell">
+				<div>
+					<p>Problem Solving</p>
+				</div>
+				<div>
+					<p>
+						Often we are only given the specification for a solution, and have to search for it. A typical situation is where we have an agent in one state, and have a set of deterministic actions with which it will go towards the goal state. 
+					</p>
+					<p>
+						Often this can be abstrated into finding the goal state in a directed graph of linked states. 
+					</p>
+				</div>
+
+				<div>
+					<p>Example</p>
+				</div>
+				<div>
+					<p>
+						Suppose you're in Coventry and want to get to London. How do you achieve this? <br>Using what transport do you get there? What routes do you go via? More importantly, which routes are <i>reasonable</i>?
+					</p>
+					<p>
+						Finding the actions that would get you from Coventry to London is problem solving.
+					</p>
+					<p>
+						A <b>problem-solving agent</b> is a <i>goal-based</i> agent that will determine sequences of actions leading to desirable states. It must in this process determine which states are <i>reasonable</i> to go through.
+					</p>
+				</div>
+
+				<div>
+					<p>Problem solving steps</p>
+				</div>
+				<div>
+					<p>
+						There are 4 steps：
+						<ul>
+							<li>
+								<b>Goal formulation</b>: identify goal given current situation.
+							</li>
+							<li>
+								<b>Problem formulation</b>: Identify permissible actions <i>(operators)</i> and states to consider
+							</li>
+							<li><b>Search</b>: Find the sequence of actions to achieve a goal</li>
+							<li><b>Execution</b>: Perform the actions in the solution</li>
+						</ul>
+						The two types of problem solving mentioned before are <b>offline</b> and <b>online</b>, the former acting with <i>complete knowledge</i> and the latter with <i>incomplete knowledge</i>. 
+					</p>
+
+					<p>
+						For our example from earlier:
+						<ul class="not">
+							<li>Formulate goal: be in London</li>
+							<li>Formulate problem:
+								<ul class="not">
+									<li><i>states</i>: (in which) towns and cities</li>
+									<li><i>operators</i>: drive between towns and cities</li>
+								</ul>
+							</li>
+							<li>Search: sequence of towns and cities</li>
+							<li>Execution: drive</li>
+						</ul>
+					</p>
+				</div>
+
+				
+
+				<div>
+					<p>Pseudocode agent</p>
+					
+				</div>
+				<div>
+					<p>
+						We can make a mockup of an offline reasoning agent in pseudocode. 
+					</p>
+					<div class="codediv">global Action[] s;  	 # action sequence, initially empty
+						
+global State state;  	 # current world state
+global Goal g;           # goal, initially null
+global Problem problem;  # problem to solve
+
+function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
+	state &lt;- updateState(state, p)
+	if s.empty():
+		g &lt;- formulateGoal(state)
+		problem &lt;- formulateProblem(state, p)
+		s &lt;- search(problem)
+	action &lt;- recommendation(state)
+	s &lt;- result(state)
+	return action</div>
+
+					<p>
+						Naturally all the functions mentioned are left as an excersise to the reader (i.e. assumed implemented). 
+						<code>formulateGoal</code> internally will use its current perceptions.
+					</p>
+				</div>
+
+				<div>
+					<p>Problem types</p>
+				</div>
+				<div>
+					<p>
+						Problems of course can come in many types.
+						<ul>
+							<li>
+								<b>Single state problem</b>: deterministic and fully observable. Sensors tell agent current state, it knows exactly what to do, can work out what state it will be in after.
+							</li>
+							<li>
+								<b>Multiple state problem</b>: deterministic and <i>partially</i> observable. Agent knows its actions, but has limited access to state. There may be a set of states the agent would end up in, agent must manipulate sets.
+							</li>
+							<li>
+								<b>Contingency problem</b>: <i>stochastic</i> and partially observable. Agent does not know current state so is unsure of result of action. Must use sensors during execution. Solution is a tree with contingency branches. Search and execution is often <i>interleaved</i>. 
+							</li>
+							<li>
+								<b>Exploration problem</b>: unknown state space. Agent does not know what it's actions will do, and has to explore and learn. This is an <b>online</b> problem.
+							</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Vacuum Cleaner World</p>
+				</div>
+				<div>
+					<p>
+						Let's use an example of a simple environment, a vacuum robot <code>V</code> and a world with two locations, <code>[  ][  ]</code>. Each location may also contain dirt (<code>[ d]</code> or <code>[Vd]</code> for vacuum and dirt). The vacuum can move left or right, and suck dirt.
+					</p>
+
+					<p>
+						<b><i>Single state.</i></b> Suppose we know we are in the state <code>[V][d]</code>. We then know our sequence of actions is just [right, suck]. 
+					</p>
+					<p>
+						<b><i>Multiple State.</i></b> (sensorless / conformant) Suppose we don't know which state we start in. We could have the states:
+						<table>
+							<tr>
+								<td>1. <code>[Vd][ d]</code></td>
+								<td>2. <code>[ d][Vd]</code></td>
+								<td>3. <code>[Vd][  ]</code></td>
+								<td>4. <code>[ d][V ]</code></td>
+							</tr>
+							<tr>
+								<td>5. <code>[V ][ d]</code></td>
+								<td>6. <code>[  ][Vd]</code></td>
+								<td>7. <code>[V ][  ]</code></td>
+								<td>8. <code>[  ][V ]</code></td>
+							</tr>
+						</table> 
+
+						If we start in any one of those states, and we move to the right, we will always end up in states {2, 3, 6, 8}. If we move left afterwards, we will guarantee vacuum ends up on the left. Thus we can do [right, suck, left, suck]. 
+					</p>
+
+					<p>
+						<b><i>Contingency.</i></b> Suppose we start in state <code>[V ][ d]</code>, but our vacuum has received a downgrade: if we suck a clean square, there is a chance that it may make that square <i>less</i> clean. So what do we do? 
+					</p>
+					<p>
+						What we can is sense whilst acting, thus: [right, <b>if</b> dirt <b>then</b> suck].
+					</p>
+				</div>
+
+				<div>
+					<p>State space problems</p>
+				</div>
+				<div>
+					<p>
+						A <b>State space problem</b> consists of a set of states; subsets of <b>start states, goal states</b>; a set of actions; an <b>action function</b> (f(state, action) -> new state); and a criterion that specifies the <i>quality</i> of an acceptable solution (depends on problem).
+					</p>
+					<p>
+						Since the real world is complex, state space may require <i>abstraction</i> for problem solving. States, operators, and solutions approximate the real world equivalent, though one must take care that their operations are still valid for the real world counterpart.
+					</p>
+				</div>
+
+				<div>
+					<p>8-puzzle</p>
+				</div>
+				<div>
+					<p>
+						A 3\(\times\)3 grid of tiles numbered 1 to 8, with a blank space for sliding. We want to get from some initial state to some goal state. 
+
+						<pre><code>283   123
+164   8_4
+7_5   765</code></pre>
+
+						On the left is an initial state, and on the right is the goal state.
+					</p>
+					<ul>
+						<li><i>States</i> can be coordinate locations of tiles</li>
+						<li><i>Operators</i> - we want the fewest possible - are moving the <i>blank square</i> up, down, left, or right</li>
+						<li>Our <i>goal test</i> would be the given goal state</li>
+						<li>The <i>path cost</i> we can set as 1 per operation</li>
+					</ul>
+				</div>
+
+				<div>
+					<p>State Space Graphs</p>
+				</div>
+				<div>
+					<p>
+						A general formultion for a problem is a <b>state space graph</b>. It is:
+						<ul>
+							<li>A <i>directed</i> graph consisting of a set N of <i>nodes</i>, set A of <i>arcs/edges</i>, which are ordered pairs of nodes.</li>
+							<li>Node \(n_2\) <i>neighbours</i> node \(n_1\) if there is an arc \(\langle n_1, n_2 \rangle\) (denoted with triangle brackets)</li>
+							<li>A <i>path</i> is a sequence of nodes \(\langle n_0, n_1, ..., n_k\rangle\) s.t. \(\langle n_{i-1}, n_i \rangle \in A\) (arcs between all nodes)</li>
+							<li>The <i>length</i> of a path from \(n_0\) to \(n_k\) is \(k\).</li>
+							<li>Given a set of <i>start nodes</i> and <i>goal nodes</i>, a <b>solution</b> is a path from a start node to a goal node.</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+
+			<h3 id="usea-2">Tree Searching</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Tree searching algorithms</p>
+				</div>
+				<div>
+					<p>
+						A tree search is a basic approach to problem solving. It is an <i>offline</i>, simulated exploration of the state space. Starting with a start state, we <i>expand</i> an explored state by generating / exploring its successor branches, to build a search tree. 
+					</p>
+					<p>
+						We have a single start state, and repeatedly expand until we find a solution, or run out of valid candidates. 
+					</p>
+					<button class="collapsible">Example tree of 8 puzzle</button>
+					<div class="ccontent">
+						<img src="./8puzzle-search.png" alt="Some branches are omitted for simplicity." style="max-width: 400px;">
+					</div>
+				</div>
+
+				<div>
+					<p>Implementation details</p>
+				</div>
+				<div>
+					<p>
+						A <b>state</b> represents a physical configuration of a puzzle, and a <b>node</b> will be the data structure for one state of the tree.
+					</p>
+					<p>
+						A node stores the <b>state, parent, children, depth, path cost</b> - the last of these is usually denoted \(g\).
+					</p>
+					<img src="./tree-node.svg" alt="A typical tree node" style="max-width: 400px;">
+					<p>
+						Nodes (explored) but not yet expanded are called the <b>frontier</b>, and is generally represented as a queue.
+					</p>
+				</div>
+
+				<div>
+					<p>Search strategies</p>
+				</div>
+				<div>
+					<p>
+						The strategy of searching is defined by which order we expand nodes in. These strategies are evaluated over several criteria:
+						<ul>
+							<li><b>completeness</b>: will the strategy always find a solution, if it exists?</li>
+							<li><b>optimality</b>: will the best (least cost) solution be found?</li>
+							<li><b>time complexity</b>: The number of nodes expanded - this depends on the maximum <i>branching factor</i> \(b\), depth of best solution \(d\), and the maximum depth of the state space \(m\), which may be \(\infty\).</li>
+							<li><b>space complexity</b>, the maximum number of nodes stored in memory (also in terms of \(b, d, m\)) </li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Simple, uninformed strategies</p>
+				</div>
+				<div>
+					<p>
+						<b>Uninformed</b> search only uses information given in problem definiton - we have no measure of which nodes would be better to expand to, nor do we really check the nodes once we've explored them (i.e. not checking cycles).
+					</p>
+					<p>
+						Two of these algorithms are Breadth-first search BFS and Depth-first search DFS.
+					</p>
+				</div>
+
+				<div>
+					<p>Breadth first</p>
+				</div>
+				<div>
+					<p>
+						BFS expands the shallowest node: put recently expanded successors at the end of queue: FIFO.
+					</p>
+					<ul>
+						<li>
+							<b>Completeness</b>. BFS is complete because it will always find a solution, provided \(b\) finite.
+						</li>
+						<li>
+							<b>Time</b>. Since at every node we expand \(b\) branches, in total for a depth of \(d\) we will be expanding \(1 + b + b^2 + b^3 + ... + b^d = O(b^d)\) times. This becomes \(O(b^{d+1})\) if the check for goal state is done when that node is about to be expanded, instead of as part of expansion.
+						</li>
+						<li>
+							<b>Space</b>. Each leaf node is kept in memory, thus there are \(O(b^{d-1})\) explored nodes and \(O(b^{d})\) in the frontier, and overall space is dominated by frontier, \(O(b^d)\).
+						</li>
+						<li>
+							<b>Optimality</b>. BFS is optimal <i>only if</i> the cost function does not decrease. 
+						</li>
+					</ul>
+					<p>
+						The main problem for BFS is the space usage, which can balloon very very quickly (with \(b = 10\) and 1 KB per node, at depth 8 one needs around 1 TB of memory).
+					</p>
+				</div>
+
+				<div>
+					<p>Depth first</p>
+				</div>
+				<div>
+					<p>
+						DFS expands the deepest node: put most recently expanded successors at the start of the "queue" (stack): LIFO. 
+					</p>
+					<ul>
+						<li>
+							<b>Completeness.</b> DFS is <i>not</i> complete because it will fail in infinite depth and loop situations. If we avoid repeated paths and have or limit to a finite depth, then DFS <i>is</i> complete.
+						</li>
+						<li>
+							<b>Time.</b> \(O(b^m)\), which is O(horrible) if \(m > d\) significantly. Otherwise may be significantly faster than BFS.
+						</li>
+						<li>
+							<b>Space.</b> \(O(bm)\), i.e. linear space: store path from root to leaf and unexpanded siblings of nodes on path.
+						</li>
+						<li>
+							<b>Optimality.</b> Not guaranteed.
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<h3 id="usea-3">Graph Searching</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Notes</p>
+				</div>
+				<div>
+					<p>
+						This section is <i>uninformed</i> search, and graph searches are similarly uninformed, so much so that the algorithms presented do not even check for cycles, despite common intuition.
+					</p>
+
+					<p>
+						The main difference is that in graph search we look at <i>paths</i>, rather than nodes. Expanding into a node would be adding it to the stored <i>path</i>.
+					</p>
+				</div>
+	
+				<div>
+					<p>Graphs</p>
+				</div>
+				<div>
+					<p>
+						With trees, if we have looped states these will just branch out to infinity. Graphs are a good way to take loops into account and are a practical representation of such spaces.
+					</p>
+					<p>
+						Similar to a tree, we incrementally explore, maintaining a frontier of explored paths. The frontier should expand into unexplored nodes until a goal node is encountered. 
+					</p>
+					<p>
+						The way nodes are selected is the <i>search strategy</i>, the <i>neighbours</i> of (all) nodes define a graph, and the <i>goal</i> defines the solution.
+					</p>
+					<p>
+						We can continue searching from the return call even if a solution has been found, if we want more or all possible solutions.
+					</p>
+				</div>
+
+				<div>
+					<p>BFS on Graphs</p>
+				</div>
+				<div>
+					<p>
+						All paths on the frontier \([p_1 .. p_r]\) are expanded one by one, and the neighbours of an explored path are added to the <i>end</i> of the frontier. 
+					</p>
+					<p>
+						The time complexity is instead written \(O(b^n)\), where \(n\) is the <i>path length</i> (instead of tree depth).
+					</p>
+				</div>
+
+				<div>
+					<p>DFS on Graphs</p>
+				</div>
+				<div>
+					<p>
+						DFS treats the frontier as a stack instead. The time complexity is \(O(b^k)\) where \(k\) is the maximum number of arcs a path can have (i.e. max depth). Space complexity is linear: \(O(k + (b-1))\).
+					</p>
+					<p>
+						Now, DFS is <i>said</i> to fail on both infinitely long graphs and graphs with cycles, although I'm not sure why you're adding already explored nodes to the frontier (cycle case). 
+					</p>
+				</div>
+
+				<div>
+					<p>Lowest cost first</p>
+				</div>
+				<div>
+					<p>
+						Sometimes, there are <i>costs</i>, or weights, associated with edges. The cost of a path is thus the sum of the cost of edges, and an optimal solution has the path with the smallest total cost. 
+					</p>
+					<p>
+						Lowest cost first is a fairly naive algorithm that simply selects the path on the frontier with the lowest cost. I.e., frontier paths are stored in a <i>priority queue</i> according to path length.
+					</p>
+					<p>
+						Lowest cost is <b>complete</b>.
+					</p>
+				</div>
+			</div>
+
+			<p>
+				Supposedly <i>none</i> of these algorithms will halt on a finite graph with cycles, but one has to be a particular type of person to program a graph search without cycle checking <i>/ not adding explored nodes to the unexplored frontier</i>.
+			</p>
 			
+		</div>
 
 		<footer>
 			<div class="cbox">
