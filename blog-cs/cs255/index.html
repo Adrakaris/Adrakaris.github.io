@@ -49,6 +49,7 @@
 			<ol>
 				<li><a href="#rational-agents">Rational Agents</a></li>
 				<li><a href="#uninformedsearch">Uninformed Search</a></li>
+				<li><a href="#informed">Informed Search</a></li>
 			</ol>
 
 			<h3>Introduction to Artificial Intelligence</h3>
@@ -1165,6 +1166,94 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 				Supposedly <i>none</i> of these algorithms will halt on a finite graph with cycles, but one has to be a particular type of person to program a graph search without cycle checking <i>/ not adding explored nodes to the unexplored frontier</i>.
 			</p>
 			
+		</div>
+
+		<div class="colourband">
+			<h2 id="informed">Informed Search</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol></ol>
+
+			<div class="cornell">
+				<div>
+					<p>Overview</p>
+				</div>
+				<div>
+					<p>
+						Uninformed search is inefficient, especially when we have extra information we can exploit. By using <i>problem-specific</i> knowledge, we can improve our searching - this is <b>informed search</b>.
+					</p>
+					<p>
+						Still offline.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="inf-1">Heuristic Search</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Overview</p>
+				</div>
+				<div>
+					<p>
+						If you know where the goal is, when selecting paths do not ignore it. 
+					</p>
+					<p>
+						Employ the use of an extra <b>heuristic</b> measurement \(h(n)\) - an <i>estimate</i> of the remaining cost to the goal. 
+					</p>
+					<p>
+						This heuristic should be <b>efficient</b> to compute, and always be an <b>underestimate</b> (no path to goal strictly less than \(h(n)\)). If a heuristic meets these criteria, then it is <b>admissible</b>.
+					</p>
+				</div>
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p>
+						If one is on a euclidean plane finding the shortest path, \(h(n)\) can be the straight-line distance to the goal. If the cost is time, \(h(n)\) can be straight-line distance divided by max speed. 
+					</p>
+					<p>
+						We can think of this as reducing the constraints in the problem to an easier representation that we can quickly calculate an answer for. The straight-line distance does not count obstacles, for example. 
+					</p>	
+				</div>
+
+				<div>
+					<p>Best First Search</p>
+				</div>
+				<div>
+					<p>
+						When we choose nodes to expand in a frontier, the heuristic can determine the <i>order</i> / rank of the frontier structure. 
+					</p>
+					<p>
+						<b>Heuristic DFS</b> is where we select a neighbour such that the <i>best neighbour</i> is selected first. 
+					</p>
+					<p>
+						If by best we mean closest (by some metric) distance to the goal, then we have <b>Greedy Best First Search</b> (BFS).
+					</p>
+					<p>
+						The frontier is a priority queue ordered by \(h(n)\).
+					</p>
+				</div>
+
+				<div>
+					<p>Problems</p>
+				</div>
+				<div>
+					<p>
+						Some graphs are very much not good for BFS. Especially if we do not track cycles.
+
+						<figure>
+							<img src="./bad-best-first.svg" alt="A bad graph for best-first search" >
+							<figcaption><i>A bad graph for best first search - it will loop forever because the bottom path is closer as the crow flies.</i></figcaption>
+						</figure>
+
+						
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<footer>
