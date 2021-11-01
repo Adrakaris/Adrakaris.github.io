@@ -73,7 +73,7 @@ function getResults(tag) {
     return results;
 }
 
-
+/*
 function merge(a, b) {
     // taken shamelessly from online somewhere
     const c = []
@@ -98,6 +98,9 @@ function merge(a, b) {
 // after functions run on load
 
 var mergedPages = merge(pages, fanPages)
+*/
+
+var mergedPages = fanPages
 
 mergedPages.forEach((block) => {
     block["link"] = "../" + block["link"];
