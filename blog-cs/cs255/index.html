@@ -1175,7 +1175,11 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 		<div class="cbox">
 			<h3>Introduction</h3>
 
-			<ol></ol>
+			<ol>
+				<li><a href="#inf-1">Heuristic Search</a></li>
+				<li><a href="#inf-2">A* Search</a></li>
+				<li><a href="#inf-3">Pruning, Cycle Checking, and Restrictions</a></li>
+			</ol>
 
 			<div class="cornell">
 				<div>
@@ -1253,7 +1257,97 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 						
 					</p>
 				</div>
+
+				<div>
+					<p>Analysis</p>
+				</div>
+				<div>
+					<p>
+						BFS has an exponential space complexity, of \(O(b^n\) where \(b\) is the branching factor and \(n\) is the number of nodes. TIme complexity is also \(O(b^n)\).
+					</p>
+					<p>
+						It is not guaranteed to find the solution, even if one exists, and may not necessarily find the shortest path (but will go in its general direction).
+					</p>
+				</div>
 			</div>
+
+			<h3 id="inf-2">A* Search</h3>
+
+			<div class="cornell">
+				<div>
+					<p>A* Search</p>
+				</div>
+				<div>
+					<p>
+						A* considers both path cost and heuristic values. We denote the cost of a path \(p\) by \(g(p)\) or \(cost(p)\), and the <i>estimate</i> of remaining path to goal is \(h(p)\).
+					</p>
+
+					<p>
+						Let \(f(p) = cost(p) + h(p)\), at some node on the path \(p\). \(f(p)\) is thus the overall estimate cost of \(p\). A* searches using this estimate value.
+					</p>
+
+					<p>
+						Thus A* can be considered as a mix of lowest-cost and best-first, and its frontier is a priority queue ordered by the metric \(f\).
+					</p>
+				</div>
+
+				<div>
+					<p>Admissibility</p>
+				</div>
+				<div>
+					<p>
+						A* <b>is admissible</b> if
+						<ul>
+							<li>The branching factor is <i>finite</i></li>
+							<li>Arc costs are bounded above some positive number (cannot just be \(>0\) because we'd get  <a href="https://artint.info/2e/html/ArtInt2e.Ch3.S5.SS4.html">Zeno's Paradox</a> )</li>
+							<li>\(h(n)\) is non-negative and an <b>underestimate</b></li>
+						</ul>
+					</p>
+
+					<p>
+						<b><i>Justification.</i></b> A path \(p\) is selected by A*. Suppose another path \(p'\) ends on the frontier. Since \(p\) is chosen before \(p'\), by definition 
+						\[cost(p) \leq cost(p') + h(p')\]
+						And since \(h\) is an underestimate \(cost(p') + h(p') \leq cost(p'_C)\), where \(p'_C\) is a complete path extending \(p'\) and reaching the goal. By definition of the algorithm, we must have for any other unpicked path \(p'_C\)
+						\[cost(p) \leq cost(p'_C).\]
+					</p>
+
+					<p>
+						A* can always find a solution if there is one.
+					</p>
+					<p>
+						The frontier always contains part of a path to the goal, and A* will halt as the costs of the paths increase beyond any finite number. 
+					</p>
+					<p>
+						However, this doesn't mean A* won't pick unoptimal nodes, just that its final result is always the optiumal path (even if we have cycles in our graph).
+					</p>
+				</div>
+
+				<div>
+					<p>Heuristics are not equal</p>
+				</div>
+				<div>
+					<p>
+						Some heuristics are better than others. The closer a heuristic is to the true value <i>(without overestimating)</i>, the more efficient A* is. 
+					</p>
+					<p>
+						For some optimal cost \(c\), A* will explore all paths \(p:cost(p) + h(p) < c\). A* will explore some paths \(q:cost(q) + h(q) = c\) (until it finds the solution), and will not explore overestimates. 
+					</p>
+					<p>
+						Thus the closer the underestimate, the less paths there are where \(cost(p) + h(p) < c\). Additionally, if the number of paths where \(cost(p) + h(p) = c\) is large, then there may be much variability in space and time of A*.
+					</p>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						A* is <b>exponential</b> time in \(h\)-error \(\times\) path length to solution. A* is also <b>exponential</b> space, since it stores all nodes in memory. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="inf-3">Pruning, Cycle Checking, and Restrictions</h3>
 		</div>
 
 		<footer>
