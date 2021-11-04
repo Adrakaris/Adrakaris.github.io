@@ -968,7 +968,7 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 						<ul>
 							<li>A <i>directed</i> graph consisting of a set N of <i>nodes</i>, set A of <i>arcs/edges</i>, which are ordered pairs of nodes.</li>
 							<li>Node \(n_2\) <i>neighbours</i> node \(n_1\) if there is an arc \(\langle n_1, n_2 \rangle\) (denoted with triangle brackets)</li>
-							<li>A <i>path</i> is a sequence of nodes \(\langle n_0, n_1, ..., n_k\rangle\) s.t. \(\langle n_{i-1}, n_i \rangle \in A\) (arcs between all nodes)</li>
+							<li>A <i>path</i> is a sequence of nodes \(\langle n_0, n_1, \cdots, n_k\rangle\) s.t. \(\langle n_{i-1}, n_i \rangle \in A\) (arcs between all nodes)</li>
 							<li>The <i>length</i> of a path from \(n_0\) to \(n_k\) is \(k\).</li>
 							<li>Given a set of <i>start nodes</i> and <i>goal nodes</i>, a <b>solution</b> is a path from a start node to a goal node.</li>
 						</ul>
@@ -1050,7 +1050,7 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 							<b>Completeness</b>. BFS is complete because it will always find a solution, provided \(b\) finite.
 						</li>
 						<li>
-							<b>Time</b>. Since at every node we expand \(b\) branches, in total for a depth of \(d\) we will be expanding \(1 + b + b^2 + b^3 + ... + b^d = O(b^d)\) times. This becomes \(O(b^{d+1})\) if the check for goal state is done when that node is about to be expanded, instead of as part of expansion.
+							<b>Time</b>. Since at every node we expand \(b\) branches, in total for a depth of \(d\) we will be expanding \(1 + b + b^2 + b^3 + \cdots + b^d = O(b^d)\) times. This becomes \(O(b^{d+1})\) if the check for goal state is done when that node is about to be expanded, instead of as part of expansion.
 						</li>
 						<li>
 							<b>Space</b>. Each leaf node is kept in memory, thus there are \(O(b^{d-1})\) explored nodes and \(O(b^{d})\) in the frontier, and overall space is dominated by frontier, \(O(b^d)\).
@@ -1179,6 +1179,7 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 				<li><a href="#inf-1">Heuristic Search</a></li>
 				<li><a href="#inf-2">A* Search</a></li>
 				<li><a href="#inf-3">Pruning, Cycle Checking, and Restrictions</a></li>
+				<li><a href="#inf-4">Changing Directions</a></li>
 			</ol>
 
 			<div class="cornell">
@@ -1348,6 +1349,211 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 			</div>
 
 			<h3 id="inf-3">Pruning, Cycle Checking, and Restrictions</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Cycle Checking</p>
+				</div>
+
+				<div>
+					<p>
+						Before, we have not dealt with the cases where a search algorithm hits an already visited node (i.e. go in a cycle). If this is so, we can "prune" a path that leads into a cycle, removing all unnecessary nodes from consideration.
+					</p>
+					<p>
+						In depth-first methods, cycle checking can be done in \(O(1)\) with things like hash functions. In most other algoirthms though this is often \(O(n)\).
+					</p>
+				</div>
+
+				<div>
+					<p>Multiple Path Pruning</p>
+				</div>
+				<div>
+					<p>
+						Similarly, this pruning can apply when we have two paths to the same node. We can prune the path to said node and keep just the existing path.
+					</p>
+					<p>
+						THis can be implemented via a set of explored nodes at the <i>end</i> of explored paths, the <b>closed list</b>. 
+					</p>
+					<p>
+						When a path \(\langle n_0 \cdots n_k \rangle\) is selected, if \(n_k \in\) closed list, then discard path, otherwise add \(n_k\) to list and proceed on.
+					</p>
+				</div>
+
+				<div>
+					<p>On optimal solutions</p>
+				</div>
+				<div>
+					<p>
+						How do we make sure we do not prune a path whcih is better than the already found one?
+					</p>
+					<p>
+						The most straightforward answer is to make sure that you always select the best path first, though this may be hard. We could remove all paths which use the longer route, but those paths may extend further (past the node which the better route reaches), and that's a lot of work wasted.
+					</p>
+					<p>
+						Otherwise we can simply replace the longer path: given a path \(p = \langle s \cdots n \cdots m \rangle\) if \(p' = \langle s \cdots n \rangle\) is found which is shorter than the corresponding part in \(p\), replace that specific segment.  
+					</p>
+				</div>
+
+				<div>
+					<p>Path Pruning and A*</p>
+				</div>
+				<div>
+					<p>
+						A* selects a path \(p'\) to node \(n'\). Suppose there's a shorter path to \(n'\), via a path \(p\), which currently ends at the fronter node \(n\) (so \(len(p') > len(p) + len(\langle n \cdots n' \rangle )\)).
+					</p>
+					<p>
+						Since \(p'\) was selected before \(p\), \(f(p') \leq f(p)\), thus \(cost(p') + h(p') \leq cost(p) + h(p)\). Let \(cost(n, n')\) be the real length of a path \(\langle n \cdots n' \rangle\). Since \(p\) is lower cost than \(p'\), \(cost(p) + cost(n, n') &lt; cost(p')\).
+
+						\begin{align}
+							\implies cost(p') - cost(p) &\leq h(p) - h(p') \\
+							\textrm{and } cost(n, n') & &lt; cost(p') - cost(p) \\
+							h(p) - h(p') &= h(n) - h(n') \\
+							\implies cost(n, n') & &lt; h(n) - h(n')
+
+						\end{align}
+
+						If we make sure \(|h(n) - h(n')| \leq cost(n, n')\) then this situation will never happen (always select the best path first option).
+					</p>
+				</div>
+
+				<div>
+					<p>Monotone Restriction</p>
+				</div>
+				<div>
+					<p>
+						A heuristic \(h\) satisfies <b>monotone restriction</b> if \(|h(m) - h(n)| \leq cost(m, n) \; \forall \textrm{arcs } \langle m, n \rangle\). It is then termed <b>consistent</b>. 
+					</p>
+					<p>
+						A* with a consistent heuristic and path pruning always finds the shortest path.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="inf-4">Changing Directions</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Direction of Search</p>
+				</div>
+				<div>
+					<p>
+						In graph/tree searches, the direction we search doesn't really matter. We can go from goal to start nodes.
+
+					</p>
+					<p>
+						Whilst the forward branching factor is the number of arcs out of a node, the <b>backwards branching factor</b> is the number of arcs going into a node. 
+					</p>
+					<p>
+						If the forward factor is larger than backwards factor, our \(O(b^n)\) algorithm would do much better searching backwards.
+					</p>
+					<p>
+						Of course, a backwards graph isn't always available. 
+					</p>
+				</div>
+
+				<div>
+					<p>Bidirectional Search</p>
+				</div>
+				<div>
+					<p>
+						We have a \(O(b^k)\) (\(k\) depth of goal) algorithm. We can get it to be less horrible by searching from <i>both sides simultaneously</i>. \(2b^{\frac{k}{2}} < b^k\) after all.
+					</p>
+					<p>
+						The main problem with this is making sure both sides meet. 
+					</p>
+					<p>
+						Oftentimes, BFS is used from the goal for a full set of locations that leads to goal, whilst another method is used from the start to link up the path.
+					</p>
+				</div>
+
+				<div>
+					<p>Island Hopping</p>
+				</div>
+				<div>
+					<p>
+						An <b>island driven search</b> is like an extension of the bidirectional search - we have a series of "islands": useful nodes that can link a start and a finish, 
+						\[s \longrightarrow i_1 \longrightarrow i_2 \longrightarrow \cdots \longrightarrow i_m \longrightarrow t\]
+						Now, we have \(m\) subproblems to solve, which can improve efficiency to \(mb^{\frac{k}{m}} \).
+					</p>
+					<p>
+						The difficult is then in identifying the correct islands, and it's hard to guarantee optimality with such an approach. 
+					</p>
+				</div>
+
+				<div>
+					<p>Dynamic Programming</p>
+				</div>
+				<div>
+					<p>
+						<b>Dynamic programming</b> is a fancy way of saying have an array of values you update and retrieve from as you go along. This is explained more in depth in CS260. <!--TODO: Link to CS260 dynam programming when available-->
+					</p>
+					<p>
+						We build a table \(D: D_n = \) the distance of shortest path from \(n\) to the goal. Then, apply the following strategy:
+						\[D_n = \begin{cases} &0 &\textrm{if isGoal}(n) \\ &\min_{\forall \langle m, n \rangle} (|\langle m, n \rangle| + D_m) &\textrm{otherwise}\end{cases}\]
+					</p>
+				</div>
+
+				<div>
+					<p>Bounded DFS</p>
+				</div>
+				<div>
+					<p>
+						A bounded DFS does normal DFS, but has a cost/depth bound at which it will stop exploring. Only part of the search graph is explored. 
+					</p>
+					<p>
+						We do this because DFS uses linear space and if space is tight it's appropriate. 
+					</p>
+				</div>
+
+				<div>
+					<p>Iterative Deepening</p>
+				</div>
+				<div>
+					<p>
+						If we bounded-DFS over an ever increasing bound, we have <b>iterative deepening</b>. Starting with a bound \(b = 0\), do DFS, and either return the solution or increase the bound. 
+					</p>
+					<p>
+						This finds the first solution BFS does, but uses linear space. There is an overhead of \(\frac{b}{b-1} \times\) the cost of expanding a node at depth \(k\) with BFS; i.e. bounded DFS will do \(\frac{b}{b-1} \times\) more work than DFS at the same \(b\) depth. As \(b\) increases, overhead decreases.
+					</p>
+				</div>
+
+				<div>
+					<p>Depth-First Branch & Bound</p>
+				</div>
+				<div>
+					<p>
+						<b>Depth first branch and bound</b> Combines DFS with heuristic info, and so will find an optimal solution. More useful if multiple solutions, and still has the space complexity of DFS. 
+					</p>
+
+					<p>
+						We want to find a single optimal solution. Suppose \(b\) is the cost of the shortest path to goal so far. 
+					</p>
+					<p>
+						What if we then encounter a path \(p : cost(p) + h(p) \geq b\)? \(p\) can be pruned. If we instead communicate a path \(q : q\) is better, then \(q\)'s cost can be \(b\) and the path \(q\) remembered.
+					</p>
+					<p>
+						This is linear space (since DFS) and we can guarantee an optimal solution when it completes. 
+					</p>
+				</div>
+
+				<div>
+					<p>Initalising Bound</p>
+				</div>
+				<div>
+					<p>
+						We can initialise the bound \(b\) to \(\infty\). We can also set it to an estimate of the minimum path cost. 
+					</p>
+					<p>
+						After DFS terminates, either (1) a solution found, (2) no solution found, no path pruned, (3) no solution found, path pruned.
+					</p>
+					<p>
+						Can be combined with iterative deepening to increase the bound until a solution is found. 
+					</p>
+					<p>
+						Cycle pruning works well, but multiple path pruning does not, since storing extra paths defeats the point of saving space with DFS. 
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<footer>
