@@ -1216,7 +1216,7 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 				<div>
 					<p>Examples</p>
 				</div>
-				<div>
+				<div class="side">
 					<p>
 						If one is on a euclidean plane finding the shortest path, \(h(n)\) can be the straight-line distance to the goal. If the cost is time, \(h(n)\) can be straight-line distance divided by max speed. 
 					</p>
@@ -1551,6 +1551,55 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 					</p>
 					<p>
 						Cycle pruning works well, but multiple path pruning does not, since storing extra paths defeats the point of saving space with DFS. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="inf-5">Admissible Heuristics</h3>
+
+			<div class="cornell">
+				<div>
+					<p>The 8-puzzle example</p>
+				</div>
+				<div class="side">
+					<p>
+						The branching factor is roughly 3, and a typical solution is 20 steps. Thus, an exhaustive search is \(3^20\) states, and there are \(9!\) non-repeating states. It would be nice to have a heuristic to search with. 
+					</p>
+
+					<p>
+						We could:
+						<ul>
+							<li>
+								\(h_1(n)\) the number of misplaced tiles - admissible since each misplaced tile must be moved at least once
+							</li>
+							<li>
+								\(h_2(n)\) the Manhattan (city block) distance of each tile - admissible since a single move can only move one step orthogonally. 
+							</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Characterising Heuristics</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Definition.</i></b> If A* search expands \(N\) nodes and solution is depth \(d\), then the <b>effective branching factor</b> \(b* \) is the factor a uniform tree of depth \(d\) must have to have \(N\) nodes. 
+						\[N = 1 + b* + (b*)^2 + \dots + (b*)^d\]
+						Ex. depth 5 and 52 nodes: \(b* = 1.91\).
+					</p>
+					<p>
+						As \(b* \longrightarrow 1\), the larger the problem that can be solved (efficiently).
+					</p>
+
+					<p>
+						Whilst solving for \(b* \) may be difficult, we can estimate it experimentally, over small instances. 
+					</p>
+					<p>
+						On the prior example, an experiment determined that \(h_2\) is better than \(h_1\) (lower EBF). 
+					</p>
+					<p>
+						<b><i>Definition.</i></b> If some \(h_2(n) \geq h_1(n) \; \forall n\) then \(h_2\) <b>dominates</b> \(h_1\).
 					</p>
 				</div>
 			</div>
