@@ -1583,7 +1583,7 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 					<p>Characterising Heuristics</p>
 				</div>
 				<div>
-					<p>
+					<p class="blue">
 						<b><i>Definition.</i></b> If A* search expands \(N\) nodes and solution is depth \(d\), then the <b>effective branching factor</b> \(b* \) is the factor a uniform tree of depth \(d\) must have to have \(N\) nodes. 
 						\[N = 1 + b* + (b*)^2 + \dots + (b*)^d\]
 						Ex. depth 5 and 52 nodes: \(b* = 1.91\).
@@ -1598,8 +1598,93 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 					<p>
 						On the prior example, an experiment determined that \(h_2\) is better than \(h_1\) (lower EBF). 
 					</p>
-					<p>
+					<p class="blue">
 						<b><i>Definition.</i></b> If some \(h_2(n) \geq h_1(n) \; \forall n\) then \(h_2\) <b>dominates</b> \(h_1\).
+					</p>
+
+					<p>
+						Note that whilst an (admissible) heuristic which is closer to the true cost is better, we must make sure the heuristic still remains cheap to calculate. 
+					</p>
+				</div>
+				<div>
+					<p>Deriving Heuristics - Relaxed problems</p>
+				</div>
+				<div>
+					<p>
+						Admissible heuristics can be the exact solutions of problems with certain conditions relaxed. 
+					</p>
+					<p>
+						If the problem is defined in formal language this is easier. 
+					</p>
+					<p>
+						We may generate several different relaxed problems, and thus may have several admissible heuristics. If one dominates, use that. Else, if you have \(h_1, h_2, \dots, h_n\) admissible heuristics which do not dominate each other, just use \(h = \max(h_1, h_2, \dots, h_n)\). 
+					</p>					
+					<p>
+						Because all options are admissible, the aggregate \(h\) is admissible - and dominates each constituent individually. 
+					</p>
+				</div>
+				<div>
+					<p>Example</p>
+				</div>
+				<div class="side">
+					<p>
+						If we describe the 8-puzzle as "A tile can move from square A to B if A is adjacent to B, and B is blank", then we can generate some relaxed problems:
+						<ul>
+							<li>A tile can move from A to B if A adjacent to B</li>
+							<li>A tile can move from A to B if B is blank</li>
+							<li>A tile can move from A to B</li>
+						</ul>
+						All of which give a heuristic. 
+					</p>
+				</div>
+				<div>
+					<p>Subproblems</p>
+				</div>
+				<div>
+					<p>
+						We can derive a heuristic from a subproblem.
+					</p>
+					<p>
+						For the 8 puzzle, we can only solve the problem for 4 squares (ignoring 5-8), and use that as a heuristic. Of course, the subproblem should be pretty easy to solve. 
+					</p>
+				</div>
+
+				<div>
+					<p>Pattern Databases</p>
+				</div>
+				<div>
+					<p>
+						We can then store the possible solution costs for each instance of a subproblem in a data structure for easy lookup. Then the heuristic is the looked-up cost of the corresponding subproblem. 
+					</p>
+					<p>
+						Different pattern databases can also be combined to get a maximum of them all. 
+					</p>
+				</div>
+
+				<div>
+					<p>Disjoint Pattern Databases</p>
+				</div>
+				<div>
+					<p>
+						If we have multiple <b>independent</b> subproblems, we can store them in different databases and <b>add</b> them together.
+					</p>
+					<p>
+						These databases form <b>disjoint pattern databases</b>. 
+					</p>
+				</div>
+
+				<div>
+					<p>Other approaches</p>
+				</div>
+				<div>
+					<p>
+						We can run searches over smaller training problems, and use the statistical results as a heuristic. 
+					</p>
+					<p>
+						Say we have a base heuristic \(\eta\). If in 95% our training sets, \(\eta = 14\) when the real cost is 18, we can just use \(h = 18\) as our statistical heuristic.
+					</p>
+					<p>
+						Now this is <b>not admissible</b>, but can often be better.
 					</p>
 				</div>
 			</div>
