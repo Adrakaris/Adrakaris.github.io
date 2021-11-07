@@ -1705,6 +1705,7 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 				<li><a href="#csp-1">Varialbes, Constraints, and Worlds</a></li>
 				<li><a href="#csp-2">Constraint Satisfaction</a></li>
 				<li><a href="#csp-3">Consistency Algorithms</a></li>
+				<li><a href="#csp-4">Domain Splitting</a></li>
 			</ol>
 
 			<h3 id="csp-1">Variables, Constraints, and Worlds</h3>
@@ -2045,6 +2046,43 @@ gac2(vars \(V\), domains \(dom\), constraints \(C\), paths \(toDo\)):
 					</p>
 					<p>
 						Higher order techniques like path consistency can consider \(k\)-tuples of vars at once - this may deal with the "arc consistent but no solution" problem but is often less efficient. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="csp-4">Domain Splitting</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Splitting domains</p>
+				</div>
+				<div>
+					<p>
+						Another method of simplifying a network is to split a problem into disjoint cases, then unioning together the solutions. 
+					</p>
+					<p>
+						We can split a problem into several disjoint subproblems through splitting the domain of a variable, having multiple "worlds" in a sense where the variable is assigned different things.
+					</p>
+					<p>
+						Suppose \(X : D_X = \{T, F\} \). We can find solutions for where \(X = T\) and \(X = F\) separately. 
+					</p>
+					<p>
+						The idea is that this reduces the problem into smaller subproblems which are easier and faster to solve. Also, if we just want <i>any</i> solution, we can look in one subproblem, and <i>only if no solution</i> we move onto the other.
+					</p>
+					<p>
+						We have multiple strategies of splitting if the domain is larger than 2. For \(X:D_X = \{1,2,3,4\} \), we could either split into 4 "worlds" of \(X=1,2,3,4\) respectively, or 2 "worlds" where \(X=\{1,2\} \) and \(X = \{3,4\} \), for example. The former makes <i>more progress</i> per split, whilst the latter can do <i>more pruning</i> with <i>fewer steps</i>.
+					</p>
+					<p class="grey">
+						Note that recursively splitting domains into units (and recognising impossible configurations) is literally how the backtrack search works. 
+					</p>
+				</div>
+
+				<div>
+					<p>Interleaving </p>
+				</div>
+				<div>
+					<p>
+						It is more efficient to <b>interleave</b> arc consistency with searching/splitting. We can alternate between arc consistency, and domain splitting. 
 					</p>
 				</div>
 			</div>

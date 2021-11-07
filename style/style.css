@@ -451,6 +451,10 @@ p.small {
     font-size: 8pt;
 }
 
+p.grey {
+    color: gray;
+}
+
 p.rj {
     text-align: right;
 }
