@@ -50,6 +50,10 @@
 				<li><a href="#rational-agents">Rational Agents</a></li>
 				<li><a href="#uninformedsearch">Uninformed Search</a></li>
 				<li><a href="#informed">Informed Search</a></li>
+				<li><a href="#csp">Constraint Satisfaction Problems</a></li>
+				<li><a href="#localsearch">Local Search</a></li>
+				<li><a href="#adversarialsearch">Adversarial Search</a></li>
+				<li><a href="#uncertainty">Planning with Uncertainty</a></li>
 			</ol>
 
 			<h3>Introduction to Artificial Intelligence</h3>
@@ -1684,10 +1688,378 @@ function simpleProblemSolvingAgent(p: Percept) -&gt; Action:
 						Say we have a base heuristic \(\eta\). If in 95% our training sets, \(\eta = 14\) when the real cost is 18, we can just use \(h = 18\) as our statistical heuristic.
 					</p>
 					<p>
-						Now this is <b>not admissible</b>, but can often be better.
+						Now this is <b>not admissible</b>, but can often be quite efficient (and good enough).
 					</p>
 				</div>
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="csp">Constraint Satisfaction Problems</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#csp-1">Varialbes, Constraints, and Worlds</a></li>
+				<li><a href="#csp-2">Constraint Satisfaction</a></li>
+				<li><a href="#csp-3">Consistency Algorithms</a></li>
+			</ol>
+
+			<h3 id="csp-1">Variables, Constraints, and Worlds</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Varibles</p>
+				</div>
+				<div>
+					<p>
+						Constraint Satisfaction Problems (CSPs) are described with regards to <i>variables</i> and configurations of variables <i>(worlds)</i>. 
+					</p>
+					<p >
+						<b>Algebraic Variables</b> are <i>symbols</i> used to describe features. Often denoted with capital letters, like \(X\), which have a corresponding domain of possible values, \(D_X\) or \(dom(X)\). 
+					</p>
+					<p style="color: gray;"><i>
+						Symbols internally are just labels - they only have meaning to the user. The meaning associated to a variable should follow the <b>clarity principle</b>, that an omniscient agent can determine values knowing meaning of the variables.
+					</i></p>
+					<p>
+						<b>Discrete Variables</b> has a finite or countably infinite domain - a special type of discrete variable with domain size 2 is a <i>binary</i> variable, most often seen as boolean variables. 
+					</p>
+					<p>
+						<b>Continuous Variables</b> have uncountably infinite domain, e.g. \(\mathbb{R}\)
+					</p>
+				</div>
+				<div>
+					<p>Assignments and Worlds</p>
+				</div>
+				<div>
+					<p>
+						Given a set of variables, an <b>assignment</b> is a function \(: \textrm{vars} \rightarrow \textrm{dom(vars)}\). Variables \(\{X_1, X_2, \dots, X_n\} \) would have an assignment \(\{X_1 = v_1, X_2 = v_2, \dots, X_n = v_n\} : v_i \in D_{X_i} \).
+					</p>
+					<p>
+						A <b>total assignment</b> assigns all variables, since assignments can be partial.
+					</p>
+					<p>
+						A <b>possible world</b> is a total assignment. If \(X_i\) has value \(v_i\) in the assignment of a world \(w\), then we say <i>"variable \(X_i\) has value \(v_i\) in world \(w\)</i>.
+					</p>
+					<p>
+						The number of worlds is product of all domains: \(|W| = \prod^n_{i=1} |D_{X_i}|\)
+					</p>
+					<p>
+						The advantage of using variables over pure discrete states is that a few variables can describe many states. 
+					</p>
+				</div>
+				
+				<div>
+					<p>Constraints</p>
+				</div>
+				<div>
+					<p>
+						A <b>(hard) constraint</b> specificies legal combinations of some variables. 
+					</p>
+					<p>
+						A <b>scope</b> is a set of (relevant) variables, a constraint \(C\) is just a relation on that scopt \(C : S \longrightarrow \{T, F\}\), which involves each variable in scope. 
+					</p>
+					<p>
+						An assignment \(A\) on the full set of variables \(S'\) (i.e. the superset of the scope / \(S \subseteq S'\)) <b>satisfies</b> a constraint on \(S\) if everything maps to <b>true</b>. Else, the constraint is <b>violated</b>. 
+					</p>
+					<p>
+						Constraints can be defined by <b>inten<i>s</i>ion</b> and <b>extension</b>. Intension is "define by rule", where formulae are used. Extension is "define by enumeration", where the valid combinations are listed out. 
+					</p>
+					<p>
+						A <b>unary</b> constraint is on 1 variable, a <b>binary</b> on two, etc.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="csp-2">Constraint Satisfaction</h2>
+
+			<div class="cornell">
+				<div>
+					<p>CSPs</p>
+				</div>
+				<div>
+					<p>
+						A CSP consists of a set of variables, a domain per variable, and a set of constraints. The goal is to make true (satisfy) all constraints.
+					</p>
+					<p>
+						A <b>finite CSP</b> has a finite set of variables, with finite domains. We will usually be dealing with these. <i>Note that some algorithms which work for one type of CSP may not work for others.</i>
+					</p>
+					
+					<button class="collapsible">Example 1...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> A delivery robot must carry out activities \(a,b,c,d,e\). Those activities happen at any time 1, 2, 3, 4. Let \(A\) be variable of activity \(a\). The domains of all variables are thus \(\{1,2,3,4\}\). The following must be satisfied:
+
+							\[\{ B \neq 3, C \neq 2, A \neq B, B \neq C, C &lt; D, A = D, E &lt; A, E &lt; B, E &lt; C, E &lt; D, B \neq D\} \]
+						</p>
+					</div>
+
+					<p>
+						When we have a CSP, a number of tasks are helpful for it:
+						<ul>
+							<li>Determine if there is a solution</li>
+							<li>Find the solution model</li>
+							<li>Count the number of models / enumerate them</li>
+							<li>Find the best model (given some metric)</li>
+							<li>Determine if some assertion holds</li>
+						</ul>
+						One can think of each variable in a CSP as a "dimension" - since CSPs can have lots of dimensions, they are often difficult to solve, we can exploit a few structural properties. 
+					</p>
+				</div>
+
+				<div>
+					<p>Generate and Test</p>
+				</div>
+				<div>
+					<p>
+						Obviously the simplest way to solve a CSP is via a <b>generate-and-test</b> (G&T) algorithm - <i>to solve via exhaustion</i>. 
+					</p>
+					<p>
+						Let \(D\) be the <i>"assignment space"</i> (set of total assignments), G&T will generate a random assignment, and save it.
+					</p>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						G&T is an \(O(\textrm{horrible})\) algorithm. 
+					</p>
+					<p>
+						For \(n\) variables each with domain size \(d\), and \(e\) constraints, the total number of constraints tested is \(O(ed^n)\). It's fine for small problems but can quickly spiral out of control. 
+					</p>
+					<p>
+						G&T assigns values to all variables regardless, but some constraints are unary, so some values can be ruled out even before generating. 
+					</p>
+				</div>
+
+				<div>
+					<p>Backtracking Search</p>
+				</div>
+				<div>
+					<p>
+						<b>Backtracking</b> is about tree-searching a tree constructed from incremental assignments of variables in a CSP. 
+					</p>
+					<p>
+						We define the search space as thus:
+						<ul>
+							<li>Nodes are assignments of values</li>
+							<li>Neighbours of a node \(n\) are gotten by selecting some var \(Y \neq n\) and assigning a value, then checking constraints</li>
+						</ul>
+
+					</p>
+
+					<button class="collapsible">Example 2...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Let us have a CSP with variables \(A, B, C\) each with domain \(\{1,2,3,4\} \), with constraints \((A < B), (B < C)\). A search tree can be drawn:
+
+							<figure>
+								<img src="./csp-backtrack.png" alt="Backtracking tree for the CSP">
+								<caption><i>Backtracking tree for the CSP</i></caption>
+							</figure>
+							
+							The node here represents it and all assignments towards it from the root. Anything with a cross means that assignment violates the constraint, and that branch is pruned. Anything with a tick means that is a valid total assingment. 
+						</p>
+					</div>
+
+					<p>
+						Since all goals are at depth \(n\) (\(n\) vars), we use DFS to save space. The branching factor \(b = (n-l)d\) for a depth \(l\) and domain size \(d\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p>
+						We can implement backtracking as the following:
+					</p>
+					<div class="codediv">backtrackCSP(CSP):
+	return backtrack_r(\(\{\}\), CSP)
+
+backtrack_r(assignment, CSP):
+	if assignment complete: 
+		return assignment
+	\(X \longrightarrow\) unassigned variable in CSP.vars
+	for each \(v \in\) CSP.domain(\(X\)):
+		if \(v\) consistent with assignment given CSP.constraints:
+			assignment.add(\(X = v\))
+			result \(\longrightarrow\) backtrack_r(assignment, CSP)
+			if result \(\neq\) fail: 
+				return result
+			assignment.remove(\(X = v\))
+		return fail</div>
+				</div>
+
+				<div>
+					<p>Selection heuristic</p>
+				</div>
+				<div>
+					<p>
+						How do we select a variable? How do we assign a value? We use heuristics (which can be combined) to determine which to select. 
+						<ul>
+							<li><b>MRV &middot; Minimum Remaining Values</b>: select the <i>variable</i> with fewest possible values.</li>
+							<li><b>Most Degrees</b>: <i>variable</i> with the most constraints - often used as a tiebreaker to MRV.</li>
+							<li><b>LCV &middot; Least Constraining Value</b>: assign a <i>value</i> which rules out the least other values.</li>
+						</ul>
+					</p>
+				</div>
+			</div>
+
+			<h3 id="csp-3">Consistency Algorithms</h3>
+
+			<div class="cornell">
+				<div>
+					<p>
+						Introduction
+					</p>
+				</div>
+				<div>
+					<p>
+						Though DFS is an improvement on G&T, it still isn't that <i>good</i>. 
+					</p>
+					<p>
+						In example 2, the DFS searched through all possible alignments in a domain, even if they were clearly contradictory with one or more other variables. 
+					</p>
+					<p>
+						We could interleave an algorithm that removes all impossible values given the current assigned domains and the constraints. 
+					</p>
+				</div>
+				<div>
+					<p>Consistency Algorithms</p>
+				</div>
+				<div>
+					<p>
+						Consistency algorithms operate on a <b>network</b> of constraints: 
+					</p>
+					<p style="padding-left: 2em;">
+						Each node is a <b>variable</b>, which is annotated with its <b>domain</b>. 
+						Each arc between nodes is a <b>constraint</b> over those variables, and annotated with the rule of said constraint. 
+					</p>
+					<p>
+						We say that for a variable \(X\), \(D_X\) will now be the set of possible values (which initially is its domain). For every constraint \(c,\; \forall X\) in scope of \( c ,\; \exists \textrm{ arc } \langle X, c \rangle\).
+					</p>
+					<p style="color: gray;">
+						Another way is to represent variables as <b>round</b> nodes and constraints as <b>rectangular</b> ones, with an arc between a varaible and a constraint meaning that variable is in scope of that constraint. 
+					</p>
+				</div>
+				<div>
+					<p>Arc Consistency</p>
+				</div>
+				<div>
+					<p>
+						In the simplest case, the constraint is unary. The variable is then <b>domain consistent</b> if all values satisfy the constraint. 
+					</p>
+					<p>
+						Then, let constraint \(c\) have the scope \(\{X_1, Y_1, \dots, Y_k\} \). Arc \(\langle X, c \rangle\) is <b>arc consistent</b> if \(\forall x \in D_x\), \(\exists y_1 \dots y_k : y_i \in D_{Y_i} : c(X=x, Y_1=y_1, \dots, Y_k = y_k)\) is satisfied. I.e. every value for X has some compatible assignments for all other variables. 
+					</p>
+					<p>
+						A <i>network</i> is arc consistent if <i>all</i> arcs are consistent. 
+					</p>
+					<p>
+						If an arc is not consistent, then \(\exists x \in D_X\) which is incompatible with some other variables in the constraint. We can <b>delete</b> values to make an arc consistent. 
+					</p>
+					<p>
+						Though deleting a value from one \(D_X\), it may make other constraint arcs with \(X\) inconsistent again, so these need to be redone. We compile all of this into an algorithm like so:
+					</p>
+					
+				</div>
+				<div></div>
+				<div>
+					<div class="codediv">generic_arc_consistency(vars \(V\), domains \(dom\), constraints \(C\)):
+	return gac2(\(V\), \(dom\), \(\{\langle X, c \rangle : c \in C, x \in scope(C)\} \))
+
+gac2(vars \(V\), domains \(dom\), constraints \(C\), paths \(toDo\)):
+	while \(toDo \neq \varnothing\):
+		remove and select \(\langle X, c \rangle\) from \(toDo\)
+		\(\{Y_1, \dots, Y_k\} \longrightarrow scope(C) \setminus \{X\}\)
+		\(ND \longleftarrow \begin{align} \{X &: 
+			x \in dom[x] \land \exists y_1, \dots, y_k \in dom[Y_1], \dots, dom[Y_k] 
+			\\ &: c(X=x, Y_1=y_1, \dots, Y_k=y_k) \textrm{ true}\} \end{align}\)
+		if \(ND \neq dom[x]\):
+			\(toDo \longleftarrow toDo \cup \{\langle Z, c' \rangle 
+				: \{X, Z\} \subseteq scope(c'), c' \neq c, Z \neq X\}\)
+			\(dom[x] \longleftarrow ND\)
+		return \(dom\)</div>
+				</div>
+				<div>
+					<p>Algorithm Description</p>
+				</div>
+				<div>
+					<ul>
+						<li>GAC keeps track of a (toDo) list of unconsidered arcs, which are initially all arcs in the graph. </li>
+						<li>Until the to do list is expended, we pick and remove an arc every time, and making it consistent with regards to the constraint (\(c\)). If we make any changes, this may adversely affect all other constraints including (X).</li>
+						<li>Thus, for all other constraints (\(c'\)), we need to add the arcs for all <i>other</i> variables in those constraints (\(Z \neq X\)) to the to do list to reconsider again.</li>
+					</ul>
+
+					<p>
+						<b>Regardless</b> of arc selection order, the algorithm will terminate with the same arc-consistent graph and set of domains. Three cases will happen:
+						<ol>
+							<li>A domain becomes \(\varnothing \implies\) no solution to CSP</li>
+							<li>Each domain has 1 value \(\implies\) unique solution</li>
+							<li>All or some domains have multiple values \(\implies\) we do not know the solution and will have to use another method to find it</li>
+						</ol>
+					</p>
+					<p>
+						<span class="sc">Note Well:</span> <b>Arc consistent algorithms can still have no solutions</b>. Example: Take a CSP with variables \(A, B, C\) all with domain \(\{1,2,3\} \), and constraints \(A = B, B = C, C \neq A\). The graph is arc consistent - but as we can clearly see there are no possible solutions. 
+					</p>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						Assume we have only binary constraints.
+					</p>
+					<p>
+						Suppose there are \(c\) many constraints, and the domain of each variable is size \(d\). There are thus \(2c\) arcs. Checking the arc \(\langle X, c = r(X, Y) \rangle\)* is at the <i>worst case</i> iterating through each domain value in \(Y\) for each in \(X\), thus making \(O(d^2)\).
+					</p>
+					
+					<p class="small">
+						*As mentioned previously \(c\) is a relation, \(c = r(X,Y)\) is just denoting that it's over the variables X and Y.
+					</p>
+					<p>
+						The arc may need to be checked once for each element in \(dom(Y)\), which is \(O(cd)\).
+					</p>
+					<p>
+						Thus <b>time complexity</b> of GAC on binary constraints is order \(O(cd^3)\), which is linear on \(c\). 
+					</p>
+					<p>
+						The <b>space complexity</b> of GAC is \(O(nd)\) for \(n\) variables. 
+					</p>
+				</div>
+				<div>
+					<p>Extensions</p>
+				</div>
+				<div>
+					<p>
+						The domain need not be finite - and many be specified through intensions.
+					</p>
+					<p>
+						If constraints defined extensionally, when we prune a value from X, we can prune that value from all other constraints including X.
+					</p>
+					<p>
+						Higher order techniques like path consistency can consider \(k\)-tuples of vars at once - this may deal with the "arc consistent but no solution" problem but is often less efficient. 
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="localsearch">Local Search</h2>
+		</div>
+
+		<div class="colourband">
+			<h2 id="adversarialsearch">Adversarial Search</h2>
+		</div>
+
+		<div class="colourband">
+			<h2 id="uncertainty">Planning with Uncertainty</h2>
 		</div>
 
 		<footer>
