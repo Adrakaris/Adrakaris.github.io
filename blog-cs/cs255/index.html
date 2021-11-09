@@ -2085,6 +2085,31 @@ gac2(vars \(V\), domains \(dom\), constraints \(C\), paths \(toDo\)):
 						It is more efficient to <b>interleave</b> arc consistency with searching/splitting. We can alternate between arc consistency, and domain splitting. 
 					</p>
 				</div>
+
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<div class="codediv">
+cspSolver(vars \(V\), domains \(dom\), constr's \(C\)):
+	return csp2(\(V, dom, C, \{\langle X, c \rangle : c \in C \land x \in scope(c)\}\))
+
+csp2(\(V, dom, C\), paths \(toDo\)):
+	\(dom_0 \longleftarrow\) gac2(\(V, dom, C, toDo\))  # gac alg from above
+	if \(\exists X \in V : X = \varnothing\):
+		return false
+	else if \(\forall X \in V,\; |dom_0[x]| = 1\):
+		return solution where \(X\) set to value in \(dom_0[x]\)
+	else:
+		select \(X \in V : |dom_0[x]| > 1\)
+		partition \(dom_0[x]\) into \(D_1, D_2\)
+		\(dom_1 \longleftarrow\) copy(\(dom_0\)); \(dom_1[x] \longleftarrow D_1\)
+		\(dom_2 \longleftarrow\) copy(\(dom_0\)); \(dom_2[x] \longleftarrow D_2\)
+		\(toDo \longleftarrow \{(Z, c') : \{X, Z\} \subseteq scope(c') \land Z \neq X\}\)
+		return csp2(\(V, dom_1, C, toDo\)) 
+			or if false return csp2(\(V, dom_2, C, toDo\))
+					</div>
+				</div>
 			</div>
 		</div>
 
