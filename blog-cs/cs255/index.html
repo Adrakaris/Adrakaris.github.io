@@ -2231,6 +2231,39 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 		\(R_1 \longleftarrow \bowtie\)join(\(\forall t \in C_X\))
 		\(R' \longleftarrow R\) projected onto everything except \(X\)
 		\(S \longleftarrow\) ve_csp(\(V', (C \setminus C_X) \cup \{R'\}\))</div>
+
+					
+				</div>
+				<div>
+					<p>Efficiency</p>
+				</div>
+				<div>
+					<p>
+						Efficiency depends on how \(X\) is selected. The intermediate structure depends only on the graph of the constraint network.
+					</p>
+					<p>
+						Variable Elimination is only effective if the network is <b>sparse</b>.
+					</p>
+					<p>
+						The <b>Treewidth</b> is the number of variables in the largest relation. The <b>graph treewidth</b> is the minimum treewidth of any ordering. 
+					</p>
+					<p>
+						VE is <b>exponential</b> in treewidth, and linear in variables, whereas searching is exponential in variables.
+					</p>
+				</div>
+
+				<div>
+					<p>Heuristic</p>
+				</div>
+				<div>
+					<p>
+						We have some heurisics to detrmine what variable to eliminate. 
+						<ul>
+							<li><b>Min-factor</b>: select var which results in smallest relation</li>
+							<li><b>Min-deficiency</b> select var which adds the fewest arcs to the remaining network. The <b>deficiency</b> of a variable \(X = \) number of pairs in the relation with \(X\) that are <i>not</i> in a relation with each other -- "It is ok to remove a variable and create a large relation if it doesn't make the network more complicated"</li>
+						</ul>
+						Generally min-deficiency is better, but it is harder to compute. 
+					</p>
 				</div>
 			</div>
 
