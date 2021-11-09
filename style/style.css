@@ -394,6 +394,10 @@ button.nul {
     transition: max-height 0.2s ease-out;
 }
 
+.ccontent.inv {
+    display: block;
+}
+
 .cnul {
     border: none;
     border-spacing: 0px 0px;
@@ -560,6 +564,10 @@ blockquote {
 
 figcaption {
     text-align: center;
+}
+
+figcaption.i {
+    font-style: italic;
 }
 
 figure > img {
