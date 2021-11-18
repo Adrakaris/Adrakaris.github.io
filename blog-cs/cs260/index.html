@@ -766,6 +766,79 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 							Every point checks against up to 7 others, and the minimum distance found is kept track of as the boundary points are iterated through. This actually will reduce our combine step down to <b>linear time</b>: \(O(n)\). 
 						</p>
 					</div>
+
+					<div>
+						<p>Why 7!?</p>
+					</div>
+					<div>
+						<p>
+							To prove this, first <b>let</b> all boundary points be sorted by y coordinate, and numbered in increasing order, \(s_1, s_2, \dots, s_n\).  \(s_i\) is the point with the \(i\)<sup>th</sup> largest y value. 
+						</p>
+						<p>
+							<b><i>Proposition.</i></b> If \(|i-j| \geq 7\), the distance between \(s_i, s_j\) is <b>at least \(\delta\)</b>.
+						</p>
+						<button class="collapsible">Proof...</button>
+						<div class="ccontent inv">
+							<p>
+								Let us take any point \(s_i\) with some \(y\) coordinate. Consider a rectangle \(\delta\) tall and \(2\delta\) wide, spanning the boundary region with its bottom being the \(y\) coord of \(s_i\). Split this rectangle into 8 squares, \((0.5\delta)^2\).
+							</p>
+							<img src="./7-rectangles.png" alt="rectangle split into 8 squares" style="max-width: 200px;">
+							<img src="./7-furthest-points.png" alt="furthest away points in one square are delta over root 2 apart" style="max-width: 300px;">
+							<p>
+								The furthest away two points could be in one single square is at opposite diagonals, \(\frac{\delta}{2}\) away. \(\frac{\delta}{2 } < \delta\) - this means that <b>this is an impossible configuration</b>: both points would be on the same side, with the distance between less than \(\delta\), which is <i>defined</i> to be the shortest distance from both sides. 
+							</p>
+							<p>
+								Thus, there can only be <b>one point per square</b>. At most 7 other points <i>may</i> be valid options (have distances closer than \(\delta\)), so we need only check 7. 
+							</p>
+							$$\tag*{$\Box$}$$
+						</div>
+					</div>
+
+					<div>
+						<p>Implementation</p>
+					</div>
+					<div>
+						<p></p>
+						<div class="codediv">closestPair(points \(p_1, p_2, \dots, p_n\)):
+	computer vertical line \(L\) such that half the points are on either side  # (1)
+	\(\delta_1 \longleftarrow\) closestPair(left half)  
+	\(\delta_2 \longleftarrow\) closestPair(right half)  # (2)
+	\(\delta \longleftarrow \min(\delta_1, \delta_2)\)
+	delete all points further than \(\delta\) from \(L\)  # (3)
+	sort remaining points by \(y\) coordinate  # (4)
+	for \(p \in \) remaining points:  # (5)
+		work out the distances up to the next 7 points 
+		if the smallest of those \(\leq \delta\):
+			\(\delta \longleftarrow \) that distance 
+	return \(\delta\)</div>
+					</div>
+
+					<div>
+						<p>Running time</p>
+					</div>
+					<div>
+						<p>
+							The labelled sections are as follows: (1) is \(O(n)\), (2) is \(2T(\frac{n}{2})\), (3) is \(O(n)\), (4) is \(O(n \log n)\), and 5 is \(O(n)\).
+						</p>
+						<p>
+							As to \(T(n)\), knowing the running time of dividing and combining steps we can get the recurrence 
+
+							\[ T(n) = \begin{cases} \Theta(1) & n = 1 \\ T(\left\lfloor{\frac{n}{2}}\right\rfloor )  + T(\left\lceil{\frac{n}{2}}\right\rceil ) + \Theta(n \log n) & \textrm{otherwise} \end{cases} \]
+						</p>
+						<p>
+							This resolves down to a running time of \(\Theta(n \log^2 n)\).
+						</p>
+					</div>
+
+					<div>
+						<p>Improvements on running time</p>
+					</div>
+					<div>
+						<p>
+							Later work has been done to push the algorithm down to \(O(n \log n\). This involves techniques such as preserving sorting of delta strip, returning lists of points sorted by x and y, and sorting points by merely doing one merge, which is linear time. 
+						</p>
+					</div>
+				</div>
 			</div>
 		</div>
 
