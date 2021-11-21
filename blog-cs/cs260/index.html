@@ -3,9 +3,9 @@
 <head>
 	<title>CS260</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">
 	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
-	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<meta name="viewport" content="width=device-width" initial-scale=1.0> 
 	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -845,13 +845,162 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 
 				<div class="cornell">
 					<div>
-						<p>Masther theorem</p>
+						<p>Premise</p>
 					</div>
 					<div>
-						<p class="blue">
-							The <b><i>Master Theorem</i></b> is a single method to solve all common recurrences of the form
-							\[T(n) = aT(\frac{n}{b}) + f(n)\]
-							Where \(a, b \in \mathbb{Z}^+\), \(b \geq 2\), and with \(T(0) = 0, \; T(1) = \Theta(1)\).
+						<p >
+							The <b>master theorem</b> is a single method to solve all common recurrences of the form
+							<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + f(n)\]</span>
+							
+							Where \(a, b \in \mathbb{Z}^+\), \(b \geq 2\), and with \(T(0) = 0, \; T(1) = \Theta(1)\). 
+						</p>
+						<p>
+							An input of size \(n\) makes \(a\) recursive calls of size <span style="border-spacing: 0px 0px;">\(\frac{b}{n}\)</span>. We also assume that \(f(n) \geq 0\). 
+						</p>
+					</div>
+
+					<div>
+						<p>Deriving via recursion trees</p>
+					</div>
+					<div>
+						<p></p>
+						<button class="collapsible">Expand... </button>
+						<div class="ccontent">
+							<p>
+								We can solve such recurrences with a recursion tree. (We assume that \(n\) is a power of \(b\).)
+								<ul>
+									<li>Let  \(a=\) branching factor</li>
+									<li>\(a^i = \) number of subproblems at layer \(i\)</li>
+									<li>\(1+\log_b n\) levels</li>
+									<li>\(\frac{n}{b^i} =\) size of subproblems at layer \(i\).</li>
+								</ul>
+							</p>
+	
+							<p>
+								Suppose \(T(n)\) satisfies \(T(n) = aT(\frac{n}{b}) + n^c\) for some c: i.e. \(f(n)\) is a polynomial. 
+							</p>
+							<p>
+								Then at we have \(n^c\) work at layer 0, \(a(\frac{n}{b})^c\) at 1, \(a^2 \frac{n}{b^2}^c\) at 2, ..., \(a^i \frac{n}{b^i}^c\) at level \(i\), for a total of \(\log_b (n) \) levels. 
+							</p>
+							<p>
+								The last \(\log_b n\)<sup>th</sup> level has \(a^i = a^{\log_b n} = n^{\log_b a}\):
+								\[a^{\log_b n} = (b^{\log_b a})^{\log_b n} = b^{\log_b a \cdot \log_b n} = (b^{\log_b n})^{\log_b a} \]
+							</p>
+
+							<p>
+								At level \(i\), the work is \(a^i (\frac{n}{b^i})^c = a^i \frac{n^c}{b^{ic}} = n^c \frac{a^i}{b^{ic}} = n^c (\frac{a}{b^c})^i\).
+							</p>
+
+							<p>
+								Thus we can say \(T(n) = n^c \sum_{i=0}^{\log_b n} r^i\) where \(r = \frac{a}{b^c}\) (which is a constant).
+							</p>
+
+							<p>
+								Looking at this sum, we can get that 
+								\[
+								T(n) = n^c \sum^{\log_b n}_{i=0} r^i = \begin{cases} 
+								    \Theta(n^c) &\textrm{if }r&lt;1 &c &gt; \log_b a\\
+									\Theta(n^c \log n) &\textrm{if } r = 1 &c = \log_b a \\
+									\Theta(n^{\log_b a}) &\textrm{if } r &gt; &c &lt; \log_b a 1
+								\end{cases}
+								\]
+								Since it is a gemetric series thus follows geometric series rules. 
+							</p>
+						</div>
+
+						
+					</div>
+					<div>
+						<p>Master Theorem</p>
+					</div>
+					<div class="blue">
+						<p >
+							<b><i>Theorem.</i></b> Let \(a \geq 1, b \geq 2, c &gt; 0.\) Let \(T(n)\) be a function on \(\mathbb{Z}_{\geq 0} \) that satisfies the recurrence
+							<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + \Theta(n^c)\]</span> 
+							With \(T(0) = 0, T(1) = \Theta(1),\) and <span style="border-spacing: 0px 0px;">\(\frac{n}{b}\) is either \(\left\lceil{\frac{n}{b}}\right\rceil \) or \(\left\lfloor{\frac{n}{b}}\right\rfloor \).</span>   Then the following cases apply:
+							<ol>
+								<li>\(c &lt; \log_b a \implies T(n) = \Theta(n^{\log_b a})\) - recurring part dominates</li>
+								<li>\(c = \log_b a \implies T(n) = \Theta(n^c \log n)\) - balances</li>
+								<li>\(c &gt; \log_b a \implies T(n) = \Theta(n^c)\) - processing part dominates</li>
+							</ol>
+						</p>
+					</div>
+
+					<div>
+						<p>Overview of proof</p>
+					</div>
+					<div>
+						<ul>
+							<li>
+								Prove theorem when \(b \in \mathbb{Z}\) and \(n\) is a power of \(b\)
+							</li>
+							<li>
+								Extend the domains of reasoning to rationals or reals
+							</li>
+							<li>
+								Deal with floor and ceil for <i>at most 2 levels</i>, e.g. 
+								\begin{align}
+									\left\lceil{\frac{\left\lceil{\frac{\left\lceil{\frac{n}{b}}\right\rceil }{b}}\right\rceil }{b}}\right\rceil & &lt; \frac{n}{b^3} + (\frac{1}{b^2} + \frac{1}{b} + 1) \\
+									&\leq \frac{n}{b^3} + 2 \;\; (\because b \geq 2)
+								\end{align}
+							</li>
+						</ul>
+					</div>
+
+					<div>
+						<p>Theorem extension</p>
+					</div>
+					<div>
+						<p>
+							We can replace \(\Theta\) with \(O, \Omega\) with no problem. 
+						</p>
+						<p>
+							We can replace the initial conditions with \(T(n) = \Theta(1)\) for all \(n \leq n_0\) (which is a constant) and only require the recurrence holds for \(n > n_0\). 
+						</p>
+					</div>
+
+					<div>
+						<p>Examples</p>
+					</div>
+					<div>
+						<p>
+							\(T(n) = 3T(\left\lfloor{\frac{n}{2}}\right\rfloor + 5n\)
+						</p>
+						<button class="collapsible">Expand... </button>
+						<div class="ccontent">
+							<p>
+								\(a = 3, b = 2\) (and ignore floor). \(c = 1, 5n = O(n)\). \(\log_b a = \log_2 3 \approx 1.58\)
+							</p>
+							<p>
+								Case 1 of 3, thus \(T(n) = \Theta(n^{\log_2 3} )\)
+							</p>
+						</div>
+						<p>
+							\(T(n) = T(\left\lfloor{\frac{n}{2}}\right\rfloor) + T(\left\lceil{\frac{n}{2}}\right\rceil ) + 17n \)
+						</p>
+						<button class="collapsible">Expand... </button>
+						<div class="ccontent">
+							<p>
+								Can "merge" the floors and ceils, thus \(a=2, b=2, c=1\). 
+							</p>
+							<p>
+								\(T(n) = O(n \log n)\)
+							</p>
+						</div>
+					</div>
+
+					<div>
+						<p>Gaps in master theorem</p>
+					</div>
+					<div>
+						<p>
+							Master theroem will not work if the number of branches is not constant: \(T(n) = nT(\frac{n}{2 }) + n^2 \),
+						</p>
+						<p>
+							The number of subproblem branches is less than 1: \(T(n) = \frac{1}{2} T(\frac{n}{2}) + n^2\),
+						</p>
+						<p>
+							And cannot directly work if work done by subproblem is not \(\Theta(n^c)\): \(T(n) = 2T(\frac{n}{2 }) + n \log n\).
 						</p>
 					</div>
 				</div>
