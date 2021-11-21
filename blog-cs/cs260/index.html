@@ -488,6 +488,7 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 				<li><a href="#div-1">Merge Sort</a></li>
 				<li><a href="#div-2">Closest pair of points</a></li>
 				<li><a href="#div-3"><b>Master Theorem</b></a></li>
+				<li><a href="#div-4">Integer Multiplication</a></li>
 			</ol>
 
 			<div class="cornell">
@@ -704,103 +705,103 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 			<h2 id="div-2">Closest Pair of Points</h2>
 
 			<div class="cornell">
-					<div>
-						<p>Problem </p>
-					</div>
-					<div>
+				<div>
+					<p>Problem </p>
+				</div>
+				<div>
+					<p>
+						Given \(n\) points in a euclidean plane, find the closest pair of points. 
+					</p>
+				</div>
+				<div>
+					<p>Possible non-divide and conquer solutions</p>
+				</div>
+				<div>
+					<p>
+						Listed are some non-divide and conquer solutions, for interest. 
+					</p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
 						<p>
-							Given \(n\) points in a euclidean plane, find the closest pair of points. 
+							<b>Brute force</b>: the "naive" algorithm, I think you can guess what this does. Solves in \(\Theta(n^2)\) but we can do better. 
 						</p>
-					</div>
-					<div>
-						<p>Possible non-divide and conquer solutions</p>
-					</div>
-					<div>
 						<p>
-							Listed are some non-divide and conquer solutions, for interest. 
+							<b>Dimension collapsing</b>: we can consider only 1 dimension (say, x), sort the points and find the closest. This can be done in \(\Theta(n \log n)\) by sorting points, and comparing only consecutive ones. The only problem is it has counterexamples and may not always work depending on your configuration of points.
 						</p>
-						<button class="collapsible">Expand... </button>
-						<div class="ccontent">
-							<p>
-								<b>Brute force</b>: the "naive" algorithm, I think you can guess what this does. Solves in \(\Theta(n^2)\) but we can do better. 
-							</p>
-							<p>
-								<b>Dimension collapsing</b>: we can consider only 1 dimension (say, x), sort the points and find the closest. This can be done in \(\Theta(n \log n)\) by sorting points, and comparing only consecutive ones. The only problem is it has counterexamples and may not always work depending on your configuration of points.
-							</p>
-							<p>
-								This relies on an assumption of <i>non-degeneracy</i> (see later).
-							</p>
-							<p>
-								We can extend this idea to doing dimension collapsing for 2D by repeating the process for both x and y, finding the points which are closest together on those two axes.
-							</p>
-							<p>
-								However this is also flawed and has counterexamples. 
-							</p>
+						<p>
+							This relies on an assumption of <i>non-degeneracy</i> (see later).
+						</p>
+						<p>
+							We can extend this idea to doing dimension collapsing for 2D by repeating the process for both x and y, finding the points which are closest together on those two axes.
+						</p>
+						<p>
+							However this is also flawed and has counterexamples. 
+						</p>
 
-							<p>
-								<b>Division:</b> We can try a technique more akin to divide and conquer - dividing the space up into halves or quadrants, then considering each quadrant separately, then the boundaries of quadrants. Ideally we'd want all quadrants to have an equal number of dots, but this is hard to guarantee. 
-							</p>
-						</div>
-						
+						<p>
+							<b>Division:</b> We can try a technique more akin to divide and conquer - dividing the space up into halves or quadrants, then considering each quadrant separately, then the boundaries of quadrants. Ideally we'd want all quadrants to have an equal number of dots, but this is hard to guarantee. 
+						</p>
 					</div>
+					
+				</div>
 
-					<div>
-						<p>The divide and conquer algorithm</p>
-					</div>
-					<div>
-						<p>
-							<b><i>Definition.</i></b> the <b>non-degeneracy</b> assumption asserts that each point should have a unique \(x\) coordinate. 
-						</p>
-						<p>
-							We <b>divide</b> by drawing a vertical line \(L : \frac{n}{2}\) points on each side. We <b>conquer</b> by recursively finding the closest point in each "half". We <b>combine</b> by checking if there's a closer pair that lies across the boundary. 
-						</p>
-						<p>
-							It seems initially hard to do this more efficiently than the brute force \(n^2 \), but there are a few tricks we can employ. 
-						</p>
-						<p>
-							Take the minimum distance from the pairs on either side, let it be \(\delta\). Say our two halves find closest points with length 12 and 21, \(\delta = \min(12, 21)\). It is the sufficient to <b>only check points within \(\delta\) distance from L</b>.
-						</p>
-						<p>
-							We need only sort the boundary points by their \(y\) coordinate, then compute the closest points in \(y\). This much may be quite easy to understand, but that still leaves us with quadratic time if we have to compute distances to all other points, but in fact, we only need to compute <b>7</b>.
-						</p>
-						<p>
-							Every point checks against up to 7 others, and the minimum distance found is kept track of as the boundary points are iterated through. This actually will reduce our combine step down to <b>linear time</b>: \(O(n)\). 
-						</p>
-					</div>
+				<div>
+					<p>The divide and conquer algorithm</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Definition.</i></b> the <b>non-degeneracy</b> assumption asserts that each point should have a unique \(x\) coordinate. 
+					</p>
+					<p>
+						We <b>divide</b> by drawing a vertical line \(L : \frac{n}{2}\) points on each side. We <b>conquer</b> by recursively finding the closest point in each "half". We <b>combine</b> by checking if there's a closer pair that lies across the boundary. 
+					</p>
+					<p>
+						It seems initially hard to do this more efficiently than the brute force \(n^2 \), but there are a few tricks we can employ. 
+					</p>
+					<p>
+						Take the minimum distance from the pairs on either side, let it be \(\delta\). Say our two halves find closest points with length 12 and 21, \(\delta = \min(12, 21)\). It is the sufficient to <b>only check points within \(\delta\) distance from L</b>.
+					</p>
+					<p>
+						We need only sort the boundary points by their \(y\) coordinate, then compute the closest points in \(y\). This much may be quite easy to understand, but that still leaves us with quadratic time if we have to compute distances to all other points, but in fact, we only need to compute <b>7</b>.
+					</p>
+					<p>
+						Every point checks against up to 7 others, and the minimum distance found is kept track of as the boundary points are iterated through. This actually will reduce our combine step down to <b>linear time</b>: \(O(n)\). 
+					</p>
+				</div>
 
-					<div>
-						<p>Why 7!?</p>
-					</div>
-					<div>
+				<div>
+					<p>Why 7!?</p>
+				</div>
+				<div>
+					<p>
+						To prove this, first <b>let</b> all boundary points be sorted by y coordinate, and numbered in increasing order, \(s_1, s_2, \dots, s_n\).  \(s_i\) is the point with the \(i\)<sup>th</sup> largest y value. 
+					</p>
+					<p>
+						<b><i>Proposition.</i></b> If \(|i-j| \geq 7\), the distance between \(s_i, s_j\) is <b>at least \(\delta\)</b>.
+					</p>
+					<button class="collapsible">Proof...</button>
+					<div class="ccontent inv">
 						<p>
-							To prove this, first <b>let</b> all boundary points be sorted by y coordinate, and numbered in increasing order, \(s_1, s_2, \dots, s_n\).  \(s_i\) is the point with the \(i\)<sup>th</sup> largest y value. 
+							Let us take any point \(s_i\) with some \(y\) coordinate. Consider a rectangle \(\delta\) tall and \(2\delta\) wide, spanning the boundary region with its bottom being the \(y\) coord of \(s_i\). Split this rectangle into 8 squares, \((0.5\delta)^2\).
+						</p>
+						<img src="./7-rectangles.png" alt="rectangle split into 8 squares" style="max-width: 200px;">
+						<img src="./7-furthest-points.png" alt="furthest away points in one square are delta over root 2 apart" style="max-width: 300px;">
+						<p>
+							The furthest away two points could be in one single square is at opposite diagonals, \(\frac{\delta}{2}\) away. \(\frac{\delta}{2 } < \delta\) - this means that <b>this is an impossible configuration</b>: both points would be on the same side, with the distance between less than \(\delta\), which is <i>defined</i> to be the shortest distance from both sides. 
 						</p>
 						<p>
-							<b><i>Proposition.</i></b> If \(|i-j| \geq 7\), the distance between \(s_i, s_j\) is <b>at least \(\delta\)</b>.
+							Thus, there can only be <b>one point per square</b>. At most 7 other points <i>may</i> be valid options (have distances closer than \(\delta\)), so we need only check 7. 
 						</p>
-						<button class="collapsible">Proof...</button>
-						<div class="ccontent inv">
-							<p>
-								Let us take any point \(s_i\) with some \(y\) coordinate. Consider a rectangle \(\delta\) tall and \(2\delta\) wide, spanning the boundary region with its bottom being the \(y\) coord of \(s_i\). Split this rectangle into 8 squares, \((0.5\delta)^2\).
-							</p>
-							<img src="./7-rectangles.png" alt="rectangle split into 8 squares" style="max-width: 200px;">
-							<img src="./7-furthest-points.png" alt="furthest away points in one square are delta over root 2 apart" style="max-width: 300px;">
-							<p>
-								The furthest away two points could be in one single square is at opposite diagonals, \(\frac{\delta}{2}\) away. \(\frac{\delta}{2 } < \delta\) - this means that <b>this is an impossible configuration</b>: both points would be on the same side, with the distance between less than \(\delta\), which is <i>defined</i> to be the shortest distance from both sides. 
-							</p>
-							<p>
-								Thus, there can only be <b>one point per square</b>. At most 7 other points <i>may</i> be valid options (have distances closer than \(\delta\)), so we need only check 7. 
-							</p>
-							$$\tag*{$\Box$}$$
-						</div>
+						$$\tag*{$\Box$}$$
 					</div>
+				</div>
 
-					<div>
-						<p>Implementation</p>
-					</div>
-					<div>
-						<p></p>
-						<div class="codediv">closestPair(points \(p_1, p_2, \dots, p_n\)):
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">closestPair(points \(p_1, p_2, \dots, p_n\)):
 	computer vertical line \(L\) such that half the points are on either side  # (1)
 	\(\delta_1 \longleftarrow\) closestPair(left half)  
 	\(\delta_2 \longleftarrow\) closestPair(right half)  # (2)
@@ -812,207 +813,213 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 		if the smallest of those \(\leq \delta\):
 			\(\delta \longleftarrow \) that distance 
 	return \(\delta\)</div>
-					</div>
-
-					<div>
-						<p>Running time</p>
-					</div>
-					<div>
-						<p>
-							The labelled sections are as follows: (1) is \(O(n)\), (2) is \(2T(\frac{n}{2})\), (3) is \(O(n)\), (4) is \(O(n \log n)\), and 5 is \(O(n)\).
-						</p>
-						<p>
-							As to \(T(n)\), knowing the running time of dividing and combining steps we can get the recurrence 
-
-							\[ T(n) = \begin{cases} \Theta(1) & n = 1 \\ T(\left\lfloor{\frac{n}{2}}\right\rfloor )  + T(\left\lceil{\frac{n}{2}}\right\rceil ) + \Theta(n \log n) & \textrm{otherwise} \end{cases} \]
-						</p>
-						<p>
-							This resolves down to a running time of \(\Theta(n \log^2 n)\).
-						</p>
-					</div>
-
-					<div>
-						<p>Improvements on running time</p>
-					</div>
-					<div>
-						<p>
-							Later work has been done to push the algorithm down to \(O(n \log n\). This involves techniques such as preserving sorting of delta strip, returning lists of points sorted by x and y, and sorting points by merely doing one merge, which is linear time. 
-						</p>
-					</div>
 				</div>
 
-				<h2 id="div-3">Master Theorem</h2>
+				<div>
+					<p>Running time</p>
+				</div>
+				<div>
+					<p>
+						The labelled sections are as follows: (1) is \(O(n)\), (2) is \(2T(\frac{n}{2})\), (3) is \(O(n)\), (4) is \(O(n \log n)\), and 5 is \(O(n)\).
+					</p>
+					<p>
+						As to \(T(n)\), knowing the running time of dividing and combining steps we can get the recurrence 
 
-				<div class="cornell">
-					<div>
-						<p>Premise</p>
-					</div>
-					<div>
-						<p >
-							The <b>master theorem</b> is a single method to solve all common recurrences of the form
-							<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + f(n)\]</span>
-							
-							Where \(a, b \in \mathbb{Z}^+\), \(b \geq 2\), and with \(T(0) = 0, \; T(1) = \Theta(1)\). 
-						</p>
-						<p>
-							An input of size \(n\) makes \(a\) recursive calls of size <span style="border-spacing: 0px 0px;">\(\frac{b}{n}\)</span>. We also assume that \(f(n) \geq 0\). 
-						</p>
-					</div>
+						\[ T(n) = \begin{cases} \Theta(1) & n = 1 \\ T(\left\lfloor{\frac{n}{2}}\right\rfloor )  + T(\left\lceil{\frac{n}{2}}\right\rceil ) + \Theta(n \log n) & \textrm{otherwise} \end{cases} \]
+					</p>
+					<p>
+						This resolves down to a running time of \(\Theta(n \log^2 n)\).
+					</p>
+				</div>
 
-					<div>
-						<p>Deriving via recursion trees</p>
-					</div>
-					<div>
-						<p></p>
-						<button class="collapsible">Expand... </button>
-						<div class="ccontent">
-							<p>
-								We can solve such recurrences with a recursion tree. (We assume that \(n\) is a power of \(b\).)
-								<ul>
-									<li>Let  \(a=\) branching factor</li>
-									<li>\(a^i = \) number of subproblems at layer \(i\)</li>
-									<li>\(1+\log_b n\) levels</li>
-									<li>\(\frac{n}{b^i} =\) size of subproblems at layer \(i\).</li>
-								</ul>
-							</p>
-	
-							<p>
-								Suppose \(T(n)\) satisfies \(T(n) = aT(\frac{n}{b}) + n^c\) for some c: i.e. \(f(n)\) is a polynomial. 
-							</p>
-							<p>
-								Then at we have \(n^c\) work at layer 0, \(a(\frac{n}{b})^c\) at 1, \(a^2 \frac{n}{b^2}^c\) at 2, ..., \(a^i \frac{n}{b^i}^c\) at level \(i\), for a total of \(\log_b (n) \) levels. 
-							</p>
-							<p>
-								The last \(\log_b n\)<sup>th</sup> level has \(a^i = a^{\log_b n} = n^{\log_b a}\):
-								\[a^{\log_b n} = (b^{\log_b a})^{\log_b n} = b^{\log_b a \cdot \log_b n} = (b^{\log_b n})^{\log_b a} \]
-							</p>
+				<div>
+					<p>Improvements on running time</p>
+				</div>
+				<div>
+					<p>
+						Later work has been done to push the algorithm down to \(O(n \log n\). This involves techniques such as preserving sorting of delta strip, returning lists of points sorted by x and y, and sorting points by merely doing one merge, which is linear time. 
+					</p>
+				</div>
+			</div>
 
-							<p>
-								At level \(i\), the work is \(a^i (\frac{n}{b^i})^c = a^i \frac{n^c}{b^{ic}} = n^c \frac{a^i}{b^{ic}} = n^c (\frac{a}{b^c})^i\).
-							</p>
+			<h2 id="div-3">Master Theorem</h2>
 
-							<p>
-								Thus we can say \(T(n) = n^c \sum_{i=0}^{\log_b n} r^i\) where \(r = \frac{a}{b^c}\) (which is a constant).
-							</p>
-
-							<p>
-								Looking at this sum, we can get that 
-								\[
-								T(n) = n^c \sum^{\log_b n}_{i=0} r^i = \begin{cases} 
-								    \Theta(n^c) &\textrm{if }r&lt;1 &c &gt; \log_b a\\
-									\Theta(n^c \log n) &\textrm{if } r = 1 &c = \log_b a \\
-									\Theta(n^{\log_b a}) &\textrm{if } r &gt; &c &lt; \log_b a 1
-								\end{cases}
-								\]
-								Since it is a gemetric series thus follows geometric series rules. 
-							</p>
-						</div>
-
+			<div class="cornell">
+				<div>
+					<p>Premise</p>
+				</div>
+				<div>
+					<p >
+						The <b>master theorem</b> is a single method to solve all common recurrences of the form
+						<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + f(n)\]</span>
 						
-					</div>
-					<div>
-						<p>Master Theorem</p>
-					</div>
-					<div class="blue">
-						<p >
-							<b><i>Theorem.</i></b> Let \(a \geq 1, b \geq 2, c &gt; 0.\) Let \(T(n)\) be a function on \(\mathbb{Z}_{\geq 0} \) that satisfies the recurrence
-							<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + \Theta(n^c)\]</span> 
-							With \(T(0) = 0, T(1) = \Theta(1),\) and <span style="border-spacing: 0px 0px;">\(\frac{n}{b}\) is either \(\left\lceil{\frac{n}{b}}\right\rceil \) or \(\left\lfloor{\frac{n}{b}}\right\rfloor \).</span>   Then the following cases apply:
-							<ol>
-								<li>\(c &lt; \log_b a \implies T(n) = \Theta(n^{\log_b a})\) - recurring part dominates</li>
-								<li>\(c = \log_b a \implies T(n) = \Theta(n^c \log n)\) - balances</li>
-								<li>\(c &gt; \log_b a \implies T(n) = \Theta(n^c)\) - processing part dominates</li>
-							</ol>
+						Where \(a, b \in \mathbb{Z}^+\), \(b \geq 2\), and with \(T(0) = 0, \; T(1) = \Theta(1)\). 
+					</p>
+					<p>
+						An input of size \(n\) makes \(a\) recursive calls of size <span style="border-spacing: 0px 0px;">\(\frac{b}{n}\)</span>. We also assume that \(f(n) \geq 0\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Deriving via recursion trees</p>
+				</div>
+				<div>
+					<p></p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
+						<p>
+							We can solve such recurrences with a recursion tree. (We assume that \(n\) is a power of \(b\).)
+							<ul>
+								<li>Let  \(a=\) branching factor</li>
+								<li>\(a^i = \) number of subproblems at layer \(i\)</li>
+								<li>\(1+\log_b n\) levels</li>
+								<li>\(\frac{n}{b^i} =\) size of subproblems at layer \(i\).</li>
+							</ul>
+						</p>
+
+						<p>
+							Suppose \(T(n)\) satisfies \(T(n) = aT(\frac{n}{b}) + n^c\) for some c: i.e. \(f(n)\) is a polynomial. 
+						</p>
+						<p>
+							Then at we have \(n^c\) work at layer 0, \(a(\frac{n}{b})^c\) at 1, \(a^2 \frac{n}{b^2}^c\) at 2, ..., \(a^i \frac{n}{b^i}^c\) at level \(i\), for a total of \(\log_b (n) \) levels. 
+						</p>
+						<p>
+							The last \(\log_b n\)<sup>th</sup> level has \(a^i = a^{\log_b n} = n^{\log_b a}\):
+							\[a^{\log_b n} = (b^{\log_b a})^{\log_b n} = b^{\log_b a \cdot \log_b n} = (b^{\log_b n})^{\log_b a} \]
+						</p>
+
+						<p>
+							At level \(i\), the work is \(a^i (\frac{n}{b^i})^c = a^i \frac{n^c}{b^{ic}} = n^c \frac{a^i}{b^{ic}} = n^c (\frac{a}{b^c})^i\).
+						</p>
+
+						<p>
+							Thus we can say \(T(n) = n^c \sum_{i=0}^{\log_b n} r^i\) where \(r = \frac{a}{b^c}\) (which is a constant).
+						</p>
+
+						<p>
+							Looking at this sum, we can get that 
+							\[
+							T(n) = n^c \sum^{\log_b n}_{i=0} r^i = \begin{cases} 
+								\Theta(n^c) &\textrm{if }r&lt;1 &c &gt; \log_b a\\
+								\Theta(n^c \log n) &\textrm{if } r = 1 &c = \log_b a \\
+								\Theta(n^{\log_b a}) &\textrm{if } r &gt; &c &lt; \log_b a 1
+							\end{cases}
+							\]
+							Since it is a gemetric series thus follows geometric series rules. 
 						</p>
 					</div>
 
-					<div>
-						<p>Overview of proof</p>
-					</div>
-					<div>
-						<ul>
-							<li>
-								Prove theorem when \(b \in \mathbb{Z}\) and \(n\) is a power of \(b\)
-							</li>
-							<li>
-								Extend the domains of reasoning to rationals or reals
-							</li>
-							<li>
-								Deal with floor and ceil for <i>at most 2 levels</i>, e.g. 
-								\begin{align}
-									\left\lceil{\frac{\left\lceil{\frac{\left\lceil{\frac{n}{b}}\right\rceil }{b}}\right\rceil }{b}}\right\rceil & &lt; \frac{n}{b^3} + (\frac{1}{b^2} + \frac{1}{b} + 1) \\
-									&\leq \frac{n}{b^3} + 2 \;\; (\because b \geq 2)
-								\end{align}
-							</li>
-						</ul>
-					</div>
+					
+				</div>
+				<div>
+					<p>Master Theorem</p>
+				</div>
+				<div class="blue">
+					<p >
+						<b><i>Theorem.</i></b> Let \(a \geq 1, b \geq 2, c &gt; 0.\) Let \(T(n)\) be a function on \(\mathbb{Z}_{\geq 0} \) that satisfies the recurrence
+						<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + \Theta(n^c)\]</span> 
+						With \(T(0) = 0, T(1) = \Theta(1),\) and <span style="border-spacing: 0px 0px;">\(\frac{n}{b}\) is either \(\left\lceil{\frac{n}{b}}\right\rceil \) or \(\left\lfloor{\frac{n}{b}}\right\rfloor \).</span>   Then the following cases apply:
+						<ol>
+							<li>\(c &lt; \log_b a \implies T(n) = \Theta(n^{\log_b a})\) - recurring part dominates</li>
+							<li>\(c = \log_b a \implies T(n) = \Theta(n^c \log n)\) - balances</li>
+							<li>\(c &gt; \log_b a \implies T(n) = \Theta(n^c)\) - processing part dominates</li>
+						</ol>
+					</p>
+				</div>
 
-					<div>
-						<p>Theorem extension</p>
-					</div>
-					<div>
-						<p>
-							We can replace \(\Theta\) with \(O, \Omega\) with no problem. 
-						</p>
-						<p>
-							We can replace the initial conditions with \(T(n) = \Theta(1)\) for all \(n \leq n_0\) (which is a constant) and only require the recurrence holds for \(n > n_0\). 
-						</p>
-					</div>
+				<div>
+					<p>Overview of proof</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							Prove theorem when \(b \in \mathbb{Z}\) and \(n\) is a power of \(b\)
+						</li>
+						<li>
+							Extend the domains of reasoning to rationals or reals
+						</li>
+						<li>
+							Deal with floor and ceil for <i>at most 2 levels</i>, e.g. 
+							\begin{align}
+								\left\lceil{\frac{\left\lceil{\frac{\left\lceil{\frac{n}{b}}\right\rceil }{b}}\right\rceil }{b}}\right\rceil & &lt; \frac{n}{b^3} + (\frac{1}{b^2} + \frac{1}{b} + 1) \\
+								&\leq \frac{n}{b^3} + 2 \;\; (\because b \geq 2)
+							\end{align}
+						</li>
+					</ul>
+				</div>
 
-					<div>
-						<p>Examples</p>
-					</div>
-					<div>
-						<p>
-							\(T(n) = 3T(\left\lfloor{\frac{n}{2}}\right\rfloor + 5n\)
-						</p>
-						<button class="collapsible">Expand... </button>
-						<div class="ccontent">
-							<p>
-								\(a = 3, b = 2\) (and ignore floor). \(c = 1, 5n = O(n)\). \(\log_b a = \log_2 3 \approx 1.58\)
-							</p>
-							<p>
-								Case 1 of 3, thus \(T(n) = \Theta(n^{\log_2 3} )\)
-							</p>
-						</div>
-						<p>
-							\(T(n) = T(\left\lfloor{\frac{n}{2}}\right\rfloor) + T(\left\lceil{\frac{n}{2}}\right\rceil ) + 17n \)
-						</p>
-						<button class="collapsible">Expand... </button>
-						<div class="ccontent">
-							<p>
-								Can "merge" the floors and ceils, thus \(a=2, b=2, c=1\). 
-							</p>
-							<p>
-								\(T(n) = O(n \log n)\)
-							</p>
-						</div>
-					</div>
+				<div>
+					<p>Theorem extension</p>
+				</div>
+				<div>
+					<p>
+						We can replace \(\Theta\) with \(O, \Omega\) with no problem. 
+					</p>
+					<p>
+						We can replace the initial conditions with \(T(n) = \Theta(1)\) for all \(n \leq n_0\) (which is a constant) and only require the recurrence holds for \(n > n_0\). 
+					</p>
+				</div>
 
-					<div>
-						<p>Gaps in master theorem</p>
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p>
+						\(T(n) = 3T(\left\lfloor{\frac{n}{2}}\right\rfloor + 5n\)
+					</p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
+						<p>
+							\(a = 3, b = 2\) (and ignore floor). \(c = 1, 5n = O(n)\). \(\log_b a = \log_2 3 \approx 1.58\)
+						</p>
+						<p>
+							Case 1 of 3, thus \(T(n) = \Theta(n^{\log_2 3} )\)
+						</p>
 					</div>
-					<div>
+					<p>
+						\(T(n) = T(\left\lfloor{\frac{n}{2}}\right\rfloor) + T(\left\lceil{\frac{n}{2}}\right\rceil ) + 17n \)
+					</p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
 						<p>
-							Master theroem will not work if the number of branches is not constant: \(T(n) = nT(\frac{n}{2 }) + n^2 \),
+							Can "merge" the floors and ceils, thus \(a=2, b=2, c=1\). 
 						</p>
 						<p>
-							The number of subproblem branches is less than 1: \(T(n) = \frac{1}{2} T(\frac{n}{2}) + n^2\),
-						</p>
-						<p>
-							And cannot directly work if work done by subproblem is not \(\Theta(n^c)\): \(T(n) = 2T(\frac{n}{2 }) + n \log n\).
+							\(T(n) = O(n \log n)\)
 						</p>
 					</div>
 				</div>
+
+				<div>
+					<p>Gaps in master theorem</p>
+				</div>
+				<div>
+					<p>
+						Master theroem will not work if the number of branches is not constant: \(T(n) = nT(\frac{n}{2 }) + n^2 \),
+					</p>
+					<p>
+						The number of subproblem branches is less than 1: \(T(n) = \frac{1}{2} T(\frac{n}{2}) + n^2\),
+					</p>
+					<p>
+						And cannot directly work if work done by subproblem is not \(\Theta(n^c)\): \(T(n) = 2T(\frac{n}{2 }) + n \log n\).
+					</p>
+				</div>
 			</div>
 
-			<div class="colourband">
-				<h2 id="dynprogramming">Dynamic Programming</h2>
+			<h3 id="div-4">Integer Multiplication</h3>
+
+			<div class="cornell">
+
 			</div>
-	
-			<div class="colourband">
-				<h2 id="intractibility">Intractibility</h2>
-			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="dynprogramming">Dynamic Programming</h2>
+		</div>
+
+		<div class="colourband">
+			<h2 id="intractibility">Intractibility</h2>
+		</div>
 
 		</div>
 
