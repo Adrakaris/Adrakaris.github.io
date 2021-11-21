@@ -1009,7 +1009,157 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 			<h3 id="div-4">Integer Multiplication</h3>
 
 			<div class="cornell">
+				<div>
+					<p>Addition and Subtraction</p>
+				</div>
+				<div>
+					<p>
+						Numbers are stored and processed in computers at binary strings. This changes the considerations when doing basic arithmetic. 
+					</p>
+					<p>
+						Looking at addition and subtraction first, i.e. given 2 binary strings \(a, b\) compute \(a+b\) and \(a-b\). 
+					</p>
+					<p>
+						The addition and subtraction method one learns in primary school is the most efficient algorithm, at \(O(n)\) where \(n\) is the number of digits. 
+					</p>
+				</div>
+				<div>
+					<p>Multiplication</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given 2 \(n\) bit numbers, multiply them.
+					</p>
+					<p>
+						The "primary school algorithm" for binary multiplication, in short, is <i>for every digit in the 2<sup>nd</sup> number, write the corresponding shifted 1<sup>st</sup> number multiplied by that digit.</i> We can see that this performs \(\Theta(n^2)\) bit operations. 
+					</p>
+					<p>
+						The question is, is the so-called "primary school algorithm" most efficient for multiplication?
+					</p>
+					<p>
+						The answer is no: one can do some divide and conquer tricks to make an algorithm more efficeint than this. 
+					</p>
+				</div>
+			</div>
 
+			<button class="collapsible">Warmup... </button>
+			<div class="ccontent cnul">
+			<div class="cornell">
+				<div>
+					<p>A possible algorithm</p>
+				</div>
+				<div>
+					<p>
+						But can we do better? To multiply numbers \(x, y\), we could divide them in half into low and high order bits. 
+					</p>
+					<p>
+						Take \(x = 10001101\), if we have an \(m = \left\lceil{\frac{n}{2}}\right\rceil \) that is the number of bits to split at, \(x = 2^m a + b\) where \(a, b\) are the first half and second half of the bits respectively. 
+
+						\begin{align}
+							\textrm{let } &m = \left\lceil{\frac{n}{2}}\right\rceil \\
+							\textrm{then } &a = \left\lfloor{\frac{x}{2^m}}\right\rfloor & b = x \mod 2^m \\
+							&c = \left\lfloor{\frac{y}{2^m}}\right\rfloor & d = y \mod 2^m
+						\end{align}
+
+						Note that multiplying or dividing by a power of 2 is very easy (bit shifts). We know that 
+						\[xy = (2^m a + b)(2^m c + d) = 2^{2m} ac + 2^m(bc + cd) + bd\]
+						Which as we can see contains 4 smaller multiplications: \(ac, bc, cd, bd\). 
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p>
+						\(\textrm{The implementation is left as an exersise to the reader.}\)
+					</p>
+				</div>
+				<div>
+					<p>Running time</p>
+				</div>
+				<div>
+					<p>
+						This algorithm has the recurrence
+						\[
+						T(n) = \begin{cases} \Theta(1) & n=1 \\ 4T(\left\lceil{\frac{n}{2}}\right\rceil + \Theta(n) & n &gt; 1) \end{cases}
+						\] 
+
+						Which, with the master theorem, \(a = 4, b = 2, c = 1\), we get... \(\Theta(n^2)\). 
+					</p>
+					<p>
+						Ah.
+					</p>
+				</div>
+			</div>
+			</div>
+
+			<div class="cornell">
+				<div>
+					<p>Karatsuba algorithm</p>
+				</div>
+				<div>
+					<p>
+						An algorithm developed by Anatoly <b>Karatsuba</b> in 1960 allows us to do multiplication quicker than quadratic time.
+					</p>
+					<p>
+						Divide \(x, y\) into low and high bits as in warmup : 
+						\begin{align}
+							\textrm{let } &m = \left\lceil{\frac{n}{2}}\right\rceil 
+							&x = 2^m a + b, \; y = 2^m c + d \\
+							\textrm{then } &a = \left\lfloor{\frac{x}{2^m}}\right\rfloor & b = x \mod 2^m \\
+							&c = \left\lfloor{\frac{y}{2^m}}\right\rfloor & d = y \mod 2^m
+						\end{align}
+
+						\begin{align}
+							xy = (2^m a + b)(2^m c + d) &= 2^{2m} ac + 2^m(bc + ad) + bd \\
+							&=2^{2m} ac + 2^m(ac + bd - (a-b)(c-d)) + bd
+						\end{align}
+
+						We then have divided \(xy\) down into <i>three</i> (nontrivial) multiplication options.
+					</p>
+				</div>
+
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">karatsuba(\(x, y, n\)):
+	if \(n = 1\):
+		return \(xy\)
+	else:
+		calculate \(m, a, b, c, d\) as above
+		\(e \longleftarrow\) karatsuba(\(a, c, m\))
+		\(f \longleftarrow\) karatsuba(\(b, d, m\))
+		\(g \longleftarrow\) karatsuba(\(|a-b|, |c-d|, m\))
+		flip sign of \(g\) if needed 
+		return \(2^{2m}e + 2^m(e + f - g) + f\)</div>
+				</div>
+
+				<div>
+					<p>Running time</p>
+				</div>
+				<div>
+					<p>
+						We have the recurrence 
+
+						\[T(n) = \begin{cases} \Theta(1) & n=1 \\ 3T(\left\lceil{\frac{n}{2}}\right\rceil + \Theta(n) & n &gt; 1 \end{cases}\]
+
+						Via master theorem \(log_b a \approx 1.585 \), thus \(T(n) = O(n^1.585)\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Further comments</p>
+				</div>
+				<div>
+					<p>
+						Integer multiplication, as one would think, is the base of many algorithms. Note that multiply, divide, square, and sqrt all have the same complexity.
+					</p>
+					<p>
+						Karatsuba's algorithm is <i>still not optimal</i> - better has been done after. 
+					</p>
+				</div>
 			</div>
 		</div>
 
