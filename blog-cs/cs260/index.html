@@ -1167,23 +1167,218 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 			<h2 id="dynprogramming">Dynamic Programming</h2>
 		</div>
 
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#dyn-1">Weighted Interval Scheduling</a></li>
+			</ol>
+
+			<div class="cornell">
+				<div><p>Overview</p></div>
+				<div>
+					<p>
+						Dynamic programming involves breaking up a problem into smaller, <b>overlapping</b> supbroblems (of polynomial size), and then combine solutions to find an answer.
+					</p>
+					<p>
+						It's called dynamic programming for ... reasons, but a lot of dynamic programming solutions can be summed up with <i>"caching intermediate values to look up later"</i>. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-1">Weighted Interval Scheduling</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						A job \(j\)	starts and finishes at \(s_j, f_j\) respectively. It also has <i>weight</i> \(w_j\). Two jobs are compatible if there are no overlaps. We want the set of compatible jobs which <b>maximises weight</b>. 
+					</p>
+					<p class="small">
+						The original interval scheduling problem is a special case of this where all weights are equal. 
+					</p>
+					<p>
+						<b><i>Convention. </i></b>Jobs are given in ascending order of finishing time: \(f_1 \leq f_2 \leq \dots \leq f_n\). 
+					</p>
+					<p>
+						We define parameter \(p(j)\) to be the largest index \(i &lt; j\) such that job i is compatible with job j: the job that finishes closest to \(s_j\) without overlapping. Index \(i\) starts at 1, and if a job doesn't have a compatible job before it, \(p(j) = 0\).
+					</p>
+				</div>
+				<div>
+					<p>Bellman optimality equation</p>
+				</div>
+				<div>
+					<p>
+						We can find the best possible <i>value</i> by representing this dynamic programming problem as a binary choice.
+					</p>
+					<p>
+						Consider \(n\) subproblems of only jobs \(1, 2, \dots, j\), where \(j\) ranges from \(1 .. n\). 
+					</p>
+					<p>
+						<b><i>Define.</i></b> \(OPT(j)\) as the max weight of any subset of compatible jobs \(i .. j\). 
+					</p>
+					<p>
+						Our goal is thus to find \(OPT(n)\).
+					</p>
+					<p>
+						Consider how we find \(OPT(j)\), if we already know all OPT values before \(j\). 
+						<ol>
+							<li>
+								\(OPT(j)\) does <i>not</i> include job \(j\): \(OPT(j) = OPT(j-1)\), since removing job \(j\) does not affect optimality.
+							</li>
+							<li>
+								\(OPT(j)\) includes job \(j\): the total weight of OPT includes \(w_j\). The rest of the jobs that are compatible cannot overlap with \(s_j\), thus the latest possible previous job is \(p(j)\).
+								\[\implies OPT(j) = OPT(p(j)) + w_j\]
+							</li>
+						</ol>
+						Whichever one of these is higher, becomes our \(OPT(j)\). 
+					</p>
+					<div class="blue">
+						<p style="padding: 0px 0px;">
+							<b><i>Definition.</i></b> The <b>Bellman Optimality Equation</b> for this problem is defined as follows:
+							\[OPT(j) = \begin{cases} 0 & \textrm{if }j = 0 \\ \max(OPT(j-1), w_j + OPT(p(j))) & \textrm{if }j &gt; 0 \end{cases} \]
+						</p>
+					</div>
+					
+				</div>
+
+				<div>
+					<p>Brute-force implementation</p>
+				</div>
+				<div>
+					<p>
+						We can try program this in a recursive, "brute-force" way.
+					</p>
+					<div class="codediv">bruteForce(\(n, s_1 .. s_n, f_1 .. f_n\)):
+	sort jobs by finish time, relabel accordingly
+	compute \(p[1], p[2], \dots, p[n] \) via binary search 
+	return computeOpt(\(n, p\))
+
+computeOpt(\(j, p\)):
+	if \(j = 0\):
+		return 0
+	else:
+		return \(\max(\textrm{computeOpt}(j-1, p), w_j + \textrm{computeOpt}(p[j], p))\)</div>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						The important part of working out running time is <code>computeOpt</code>. It may be difficult to work out, but the running time of this algorith is actually \(O(\phi^n)\) - yes, <a href="https://en.wikipedia.org/wiki/Golden_ratio">that phi</a>.
+					</p>
+					<p>
+						The recursive approach is very slow, since the subproblems are <i>overlapping</i>, the number of recursive calls grows like the fibonacci system (which is why we get phi).
+					</p>
+					<p>
+						This is not very good.
+					</p>
+				</div>
+
+				<div>
+					<p>Memoisation</p>
+				</div>
+				<div>
+					<p>
+						"Top-down dynamic programming", or memoisation, a fancy way of saying having a global array that you store previous results of OPT so you don't need to spend time computing it over and over again.
+					</p>
+					<p>
+						Generally the global array is called \(M\), and can also store a special symbol (e.g. \(-1, \infty\)) to represent "uncalculated".
+					</p>
+				</div>
+				<div>
+					<p>Memoisation implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M[] \); global \(p[] \);
+
+memoise(\(n, s_1 .. s_n, f_1 .. f_n\)):
+	sort jobs by finish time, relabel accordingly
+	compute \(p[1], p[2], \dots, p[n] \) via binary search 
+	\(m[0] \longleftarrow 0\)  # base case
+	return mOpt(\(n\))
+
+mOpt(\(j\)):
+	if \(M[j]\) uninitialised:
+	    \(M[j] \longleftarrow \max(\textrm{mOpt}(j-1), w_j + \textrm{mOpt}(p[j]))\)
+	return \(M[j] \)</div>
+				</div>
+
+				<div>
+					<p>Complexity </p>
+				</div>
+				<div>
+					<p>
+						<b><i>Claim.</i></b> This algorithm has time complexity \(O(n \log n)\)
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> 
+							<ul>
+								<li>Sorting is \(O(n \log n)\)</li>
+								<li>Computing \(p[j] \; \forall j = O(n \log n)\)</li>
+								<li>Resolving <code>mOpt</code> is \(O(n)\), since:</li>
+							</ul>
+							For <code>mOpt</code>, invocation is \(O(1)\), then <i>either</i> \(M[j]\) is returned immediately (\(O(1)\)), <i>or</i> \(M[j]  \) is initialised after two recursive calls.
+						</p>
+						<p>
+							Let us have a <b>process measure</b> \(\phi =\) number of initialised entries in \(M\). Initially \(\phi = 0 \; \because \textrm{ only } M[0] = 0\), and throughout, \(\phi \leq n\). 
+						</p>
+						<p>
+							If <code>mOpt</code> performs the <i>or</i> operation (recursive calls), we initialise \(M[j] \) and increment \(\phi\). This can be done at most \(n\) times. Thus since every time <code>mOpt</code> recurses, it makes two calls, so we have at most \(2n\) recursive calls - <b>linear time</b>. 
+						</p>
+						<p>
+							\(\textrm{mOpt}(n) = O(n)\), thus overall memoisation is \(O(n \log n\). $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Finding the optimal schedule</p>
+				</div>
+				<div>
+					<p>
+						So far we have found the optimal <i>value</i>, but no actual solution. Luckily finding the solution can be done in linear time.
+					</p>
+
+					<div class="codediv">findSoln(j):
+	if \(j = 0\): return \(\varnothing\).
+	else if \(w_j + M[p[j]] &gt; M[j-1]\):
+		return \(\{j\} \cup \textrm{findSoln}(p[j])\)
+	else:
+		return \(\textrm{findSoln}(j-1)\)</div>
+						
+					<p>
+						Since there is only one recursive call, this is linear time. We can combine this with the above algorithm to find a proper optimal schedule in \(O(n \log n)\).
+					</p>
+				</div>
+			</div>
+
+			<h3 id="div-2">Knapsack Problem</h3>
+			
+
+		</div>
+
 		<div class="colourband">
 			<h2 id="intractibility">Intractibility</h2>
 		</div>
 
-		</div>
-
-		
-
-		<footer>
-			<div class="cbox">
-                <div class="columncontainer ctwo" id="fc2">
-                </div>
-                <script type="text/javascript" src="../../js/footerGen.js"></script>
-            </div>
-		</footer>
-
 	</div>
+
+	
+
+	<footer>
+		<div class="cbox">
+			<div class="columncontainer ctwo" id="fc2">
+			</div>
+			<script type="text/javascript" src="../../js/footerGen.js"></script>
+		</div>
+	</footer>
 
 	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
 	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>

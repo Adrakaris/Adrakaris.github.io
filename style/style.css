@@ -311,9 +311,16 @@ a {
     text-decoration: none;
 }
 
+a:hover {
+    color: var(--blue);
+    text-decoration: underline;
+}
+
+/*
 a.text {
     text-decoration: underline;
 }
+*/
 
 a.white {
     color: var(--band-txt);
