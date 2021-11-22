@@ -311,16 +311,14 @@ a {
     text-decoration: none;
 }
 
-a:hover {
-    color: var(--blue);
+a:hover:not(.nav) {
     text-decoration: underline;
 }
 
-/*
-a.text {
+a.text:hover {
+    color: var(--blue);
     text-decoration: underline;
 }
-*/
 
 a.white {
     color: var(--band-txt);
@@ -332,18 +330,22 @@ a.black {
 
 button.nav {
     font-family: Urbanist;
-    font-size: 8;
+    /* font-size: 8; */
     text-align: center;
     margin-top: -30px;
-    color: var(--band-txt);
-    font-size: 16px;
-    text-decoration: none;
-    letter-spacing: 2px;
+    
     border: none;
     background: none;
     margin: 0;
     padding: 0;
     transition: text-shadow 0.3s ease-in-out;
+}
+
+button.nav>a {
+    color: var(--band-txt);
+    font-size: 16px;
+    text-decoration: none;
+    letter-spacing: 2px;
 }
 
 button.nav:hover {
