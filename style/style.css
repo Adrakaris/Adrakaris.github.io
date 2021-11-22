@@ -290,6 +290,10 @@ footer.green {
     box-shadow: 0 50vh 0 50vh var(--green);
 }
 
+.active, .collapsible:hover {
+    background-color: var(--bg-active);
+}
+
 a.nav {
     font-family: Urbanist;
     text-align: center;
@@ -330,10 +334,12 @@ a.black {
 
 button.nav {
     font-family: Urbanist;
-    /* font-size: 8; */
     text-align: center;
     margin-top: -30px;
-    
+    color: var(--band-txt);
+    font-size: 16px;
+    text-decoration: none;
+    letter-spacing: 2px;
     border: none;
     background: none;
     margin: 0;
@@ -341,19 +347,12 @@ button.nav {
     transition: text-shadow 0.3s ease-in-out;
 }
 
-button.nav>a {
-    color: var(--band-txt);
-    font-size: 16px;
-    text-decoration: none;
-    letter-spacing: 2px;
-}
-
 button.nav:hover {
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
-.active, .collapsible:hover {
-    background-color: var(--bg-active);
+.buttonwrapper > a:hover {
+    text-decoration: none;
 }
 
 .collapsible:after {
