@@ -1172,6 +1172,9 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 
 			<ol>
 				<li><a href="#dyn-1">Weighted Interval Scheduling</a></li>
+				<li><a href="#dyn-2">Knapsack Problem</a></li>
+				<li><a href="#dyn-3">Edit Distance and Sequence Alignment</a></li>
+				<li><a href="#dyn-4">Shortest Path with Negative Weights</a></li>
 			</ol>
 
 			<div class="cornell">
@@ -1359,7 +1362,635 @@ mOpt(\(j\)):
 				</div>
 			</div>
 
-			<h3 id="div-2">Knapsack Problem</h3>
+			<h3 id="dyn-2">Knapsack Problem</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						There are \(n\) items. Item \(i\) has value \(v_i > 0\) and weights \(w_i > 0\). The value of a set of items is ìs the sum of their values. We also have a <b>knapsack</b>, which can hold a total of \(W\) weight. 
+					</p>
+					<p>
+						<b><i>Goal.</i></b> Given a set of items and a knapsack with a set weight, <i>maximise</i> the value of items that knapsack can carry. 
+					</p>
+					<p>
+						We assume weights and values are all integers.
+					</p>
+				</div>
+
+				<div>
+					<p>Dynamic programming subproblems</p>
+				</div>
+				<div>
+					<p>
+						We have two variables, \(i, w\), and so we need a dynamic progrmaming setup which allows us to split on both, and get a function \(OPT(i, w)\). 
+					</p>
+					<p>
+						<b><i>Define.</i></b> \(OPT(i, w)\) as optimal value of knapsack with items \(1..i\) subject to weight \(w\). 
+					</p>
+					<p>
+						Our goal is \(OPT(n, W)\).
+					</p>
+				</div>
+
+				<div>
+					<p>Bellman Equation</p>
+				</div>
+				<div>
+					<p>
+						When we reach item \(i\), we want to know if it's in OPT or not. So we have the following cases.
+						<ol>
+							<li>
+								\(OPT(i, w)\) does not include \(i \implies OPT(i, w\) selects best items from \(1, 2, \dots, i-1\).
+							</li>
+							<li>
+								\(OPT(i, w)\) includes \(i \implies\) we (a) collect value \(v_i\), (b) get a new weight limit \(w-w_i\), (c) OPT keeps on selecting according to new weight limit \(w-w_i\). 
+							</li>
+						</ol>
+
+						Thus we get the equation
+
+						\[
+						OPT(i, w) = \begin{cases} 
+						    0 & \textrm{if } i = 0 \\
+							OPT(i-1, w) & \textrm{if }w_i > w \\
+							\max(OPT(i-1, w), v_i + OPT(i-1, w-w_i)) & \textrm{otherwise}
+						\end{cases}
+						\]
+
+						Note that even if item \(i\) does not exceed the weight, it might not be in the optimal anyway. 
+					</p>
+				</div>
+
+				<div>
+					<p>Bottom-up programming</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M\)[][]  # 1st index items, 2nd index weights 
+
+knapsack(\(n, W, w_1 .. w_n, v_1 .. v_n\)):
+	for \(w = 0 .. W\):
+		\(M[0, w] \longleftarrow 0\)
+	for \(i = 1 .. n\):
+		for \(w = 0 .. W\):
+			if \(w_i > w\):
+				\(M[i][w] \longleftarrow M[i-1][w]\)
+			else:
+				\(M[i][w] \longleftarrow \max(M[i-1][w] , v_i = M[i-1][w-w_i])\)
+	return \(M[n][W] \)</div>
+					
+					<p>
+						Looking at the final table, we start from the bottom right <code>[n][W]</code> corner. If the value above is the same, then \(i\) for that row not chosen. If value above is less, \(i\) is chosen, take \(v_i\) away from current value and find first occurence of that in row above. 
+					</p>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						This algorithm has \(\Theta(nW)\) time and space complexity, which should be easy enough to see. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-3">Edit Distance and Sequence Alignment</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						Given two strings (like <code>occurrance</code> and <code>ocurrence</code>), we want to know how "similar" they are. However this is very vague. How could we measure difference? 
+					</p>
+					
+				</div>
+				<div>
+					<p>Possible solution considerations</p>
+				</div>
+				<div>
+					<p>
+						We could align strings from first letter: <br>
+						<code>occurrance</code><br>
+						<code>ocurrence</code><br>
+						This has 6 mismatches and 1 "gap" (where a letter matches onto an empty space). But what is the <i>best</i> alignment? 
+					</p>
+					<p>
+						Perhaps we want to minimise both gaps and mismatches: <br>
+						<code>occurrance</code><br>
+						<code>oc urrence</code><br>
+						This has one gap and one mismatch.
+					</p>
+					<p>
+						Perhaps however we think mismatches are much, much worse than gaps: <br>
+						<code>occurra nce</code><br>
+						<code>oc urr ence</code><br>
+						Now we have no mismatches, but three gaps.
+					</p>
+					<p>
+						What we decide for the gap/mismatch weighting on will change based on the context said problem is in.
+					</p>
+				</div>
+
+				<div>
+					<p>Edit distance</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Edit distance.</i></b> (Lehvenstein 1966) A measure of the "cost" of editing one string into another, with a gap penalty of \(\delta\), and a mismatch penalty for two letters \(pq\) to be \(\alpha_{pq}\). 
+					</p>
+					<p>
+						The cost is then \(\sum \delta + \sum \alpha_{pq} \). <br>
+						<code>CT GACCTACG</code><br>
+						<code>CTGGACGAACG</code><br>
+						has cost \(\delta + \alpha_{CG} + \alpha_{TA} \).
+					</p>
+				</div>
+
+				<div>
+					<p>Sequence alignment algorithm</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given 2 strings \(x_1 x_2 \dots x_n\) and \(y_1 y_2 \dots y_n\), minimise the edit distance.
+					</p>
+					<p>
+						<b><i>Define.</i></b> An <b>alignment</b> M is a set of ordered pairs \(x_i - y_j\) such that each character appears in at most 1 pair, and there are no crossings: <br>
+						\(x_i x_j\)
+					</p>
+					<p>
+						<b><i>Define.</i></b> the <b>cost of alignment</b> to be 
+						\[
+						cost(M) = \sum_{(x_i, y_j) \in M} \alpha_{x_i y_j} + \sum_{i : x_i \textrm{ unmatched}} + \sum_{i: y_i \textrm{ unmatched}}
+						\]
+						i.e. the mismatch penalty for two letters \(x_i y_j\) (may be 0), and the cost of all unmatched letters.
+					</p>
+				</div>
+
+				<div>
+					<p>Problem Structure</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Define.</i></b> \(OPT(i, j)\) as the min cost of aligning <i>prefix strings</i> \(x_1 x_2 \dots x_n\) and \(y_1 y_2 \dots y_n\). Our goal is thus \(OPT(m, n)\).
+					</p>
+					<p>
+						There are only three options for \(x_i, y_i\):
+						<ol>
+							<li>
+								\(OPT(i, j)\) matches \(x_i\) to \(y_j\). We pay the penalty (if any) \(\alpha_{x_i y_j} \) and the minimum possible cost of \(OPT(i-1, j-1)\).
+							</li>
+							<li>
+								\(OPT(i, j)\) leaves \(x_i\) unmatched. Then we pay gap penalty and min cost of \(OPT(i-1, j)\)
+							</li>
+							<li>
+								\(OPT(i, j)\) leaves \(y_j\) unmatched. Then we pay gap penalty plus min cost of \(OPT(i, j-1)\)
+							</li>
+							Thus our bellman equation goes as follows:
+
+							\[
+							OPT(i, j) = \begin{cases} 
+							    j \cdot \delta & i = 0 \\
+								i \cdot \delta & j = 0 \\
+								\min\begin{cases}
+								    \alpha_{x_i y_j} + OPT(i-1, j-1) \\
+									\delta + OPT(i-1, j) \\
+									\delta + OPT(i, j-1)
+								\end{cases} & \textrm{otherwise. }
+							\end{cases}
+							\]
+						</ol>
+					</p>
+				</div>
+
+				<div>
+					<p>Bottom up implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M\)[][]
+
+seqAlign(\(m, n, x_1\dots x_m, y_1 \dots y_n\)):
+	for \(i = 0 .. m \):
+		\(M[i][0] \longleftarrow i\delta\)
+	for \(j=0..m\):
+		\(M[0][j] \longleftarrow j\delta\)
+	for \(i = 1 .. m\):
+		for \(j = 1 .. n\):
+			\(M[i, j] \longleftarrow \min \begin{cases}
+				\alpha_{x_i y_j} + M[i-1][j-1]\\
+				\delta + M[i-1][j] \\
+				\delta + M[i][j-1]
+				\end{cases} \)
+    return \(M[m, n] \)</div>
+				</div>
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem.</i></b> The algorithm solves edit distance in \(\Theta(mn)\) time.
+					</p>
+					<p>
+						The proof is trivial and left as an exercise to the reader.
+					</p>
+					<p>
+						We can backtrace the algorithm to find the optimal alignment itself. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-4">Shortest Paths with Negative Weights</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given a directed graph \(G=(V,E)\) with <b>arbitrary</b> edge lengths \(\ell_{vw} \), find the shortest path from some vertex \(s\) to \(t\), assuming said path exists.
+					</p>
+				</div>
+
+				<div>
+					<p>Djikstra fails</p>
+				</div>
+				<div>
+					<p>
+						Base djikstra does not work on these types of graphs. Even adding an equal constant to all edges to teporarily remove negatives, then doing Djikstra, does not work. 
+					</p>
+					<figure>
+						<img src="./djikstra-fails.png" alt="Counterexamples to djikstra on negative and negative with positive weight">
+						<figcaption>
+							<i>Djikstra does not work in either case.</i> <br> In the first example, s->t is calculated as 2, but s->v->w->t is actually lower at 1. In the second example, s->t is still 2 (12 with weight), yet s->v->w->t with weight 25 becomes 1 after reweighting. 
+						</figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p>On negative cycles</p>
+				</div>
+				<div>
+					<p class="blue">
+						<b><i>Definition.</i></b> <b>Negative cyces</b> are directed cycles where the sum of weights is less than 0. 
+					</p>
+					<p>
+						Negative cycles makes this problem somewhat difficult. 
+					</p>
+					<p class="side">
+						<b><i>Lemma 1.</i></b> If there exists a path \(v \leadsto t\) which contains any part of a negative cycle, the shortest path \(v \leadsto t\) does <b>not</b> exist.
+					</p>
+					<button class="collapsible">Proof 1...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> \(v \leadsto t\) is on the negative cycle \(W\). When we reach the part of the path on the negative cycle, we can loop round and round the cycle until our path weight spirals to \(-\infty\), so we have <i>no minimum weight</i>. $$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Lemma 2.</i></b> If there are no negative cycles, \(\exists\) shortest path \(v \leadsto t\; \forall v, t\) that is <b>simple</b> (no repeat vertices).
+					</p>
+					<button class="collapsible">Proof 2...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Let us assume we have a shortest path with fewest edges. If that path contains a directed cycle \(W\), we can remove it without increasing the path length (since there are no negative cycles). $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Formal problems</p>
+				</div>
+				<div>
+					<p>
+						We can formulate some formal problems:
+					</p>
+					<p>
+						<b><i>Single Destination Shortest Path.</i></b> Given a digraph \(G = (V, E)\) with edge weights \(\ell_{wv}\), no negative cycles, and a destination node \(t\), find the shortest \(v \leadsto t \; \forall v \in V\). 
+					</p>
+					<p>
+						<b><i>Negative Cycle.</i></b> Given a digraph \(G = (V, E)\) with weights \(\ell_{wv} \), find if a negative cycle exists.
+					</p>
+				</div>
+
+				<div>
+					<p>Dynamic programming for shortest path</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Define.</i></b> \(OPT(i, v)\) as the length of the shortest path \(v \leadsto t\) that uses \(\leq i\) edges. 
+					</p>
+					<p>
+						Our goal is thus \(OPT(n-1, v)\)
+					</p>
+					<p>
+						We have two cases:
+						<ol>
+							<li>
+								\(OPT(i, v)\), the shortest path, uses strictly \(&lt; i\) edges. 
+								\[OPT(i, v) = OPT(i-1, v)\]
+							</li>
+							<li>
+								The shortest path uses exactly \(i\) edges. Then let \((v, w)\) be the first edge on that path, with weight \(\ell{vw} \). This edge <i>has</i> to be optimal (because dynamic programming).
+								\[OPT(i, v) = \ell_{vw} + OPT(i-1, w)\]
+								(Find path \(w \leadsto t\))
+							</li>
+						</ol>	
+					</p>
+				</div>
+				<div>
+					<p>Bellman equation</p>
+				</div>
+				<div>
+					<p>
+						\[
+						OPT(i, v) = \begin{cases}
+						0 &i=0,v=t \\
+						\infty &i=0,v\neq t \\
+						\min \begin{cases} OPT(i-1, v) \\ \min_{\forall (v, w) \in E}(OPT(i-1, w) + \ell_{vw}) \end{cases} &i>0 
+						\end{cases}
+						\]
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M\)[][]
+
+shortestPath(\(V, E, \ell, t\)):
+	foreach node \(v \in V\):
+		\(M[0, v] \longleftarrow \infty\)
+	\(M[0, t] \longleftarrow 0\)
+	for \(i=1..n-1\):
+		foreach node \(v \in V\):
+			\(M[i, v] \longleftarrow M[i-1, v] \)
+			foreach edge \((v, w) \in E\):
+				\(M[i, v] \longleftarrow \min(M[i, v], M[i-1, w] + \ell_{vw} )\)</div>
+				</div>
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem 1.</i></b> Given a digraph with no negative cycles, we can get the length of the shortest path \(\forall v \in V\) in \(\Theta(mn)\) time and \(\Theta(n^2)\) space. 
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> The table is \(n \times n-1 = \Theta(n^2)\) for \(n\) verices. Each iteration of \(i\) examines all edges exactly once (\(m\) edges), for \(\Theta(n)\) iterations, thus we get \(\Theta(mn)\) time. 
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Finding paths</p>
+				</div>
+				<div>
+					<p>
+						This algorithm so far only finds optimal lengths. To find optimal paths, we could
+					</p>
+					<p>
+						(Either) Maintain an array <code>successor[(i, v)]</code> that points to the next node on the shortest path \(v \leadsto t\) using \(\leq i\) edges, when we are setting M.
+					</p>
+					<p>
+						(Or) After getting the optimal length \(M[i, v]\), consider only the edges such that \(M[i, v] = M[i-1, w] + \ell_{vw} \) Any path that satisfies this all the way to \(i=0\) that is satisfactory is shortest. 
+					</p>
+				</div>
+				<div>
+					<p>Bellman Ford Moore algorithm</p>
+				</div>
+				<div>
+					<p>
+						The <b>Bellman-Ford-Moore (BMF) algorithm</b> is an improvement on the shortest path algorithm. 
+						<ul>
+							<li>
+								<b>Space optimisation.</b> Maintain 2 1d arrays (for linear space): \(d:d[v] \) is the length of shortest path \(v \leadsto t\) found so far; and \(\textrm{succ}: \textrm{succ}(v)\) is the next node on said \(v \leadsto t\) path. 
+							</li>
+							<li>
+								<b>Performance optimisation.</b> If \(d[w] \) is not updated in iteration \(i-1\), there is no reason to consider other edges going into \(w\) in iteration \(i\).
+							</li>
+						</ul>
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">bellmanFordMoore(\(V, E, \ell, t\)):
+	foreach \(v \in V\):
+		\(d[v] \longleftarrow \infty\)
+		\(succ[v] \longleftarrow \textrm{null}\)
+	\(d[t] \longleftarrow 0\)
+	for \(i = 1 .. n-1\):
+		foreach \(w \in V\):
+			if \(d[w]\) updated previously:
+				forach edge \((v, w) \in E\):
+					if \(d[v] &gt; d[w] + \ell_{vw} \):
+						\(d[v] \longleftarrow d[w] + \ell_{vw} \)
+						\(succ[v] \longleftarrow w\)
+		if no value changed in prior loop:
+			return;</div>
+				</div>
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Lemma 3.</i></b> For each \(v \in V, \; d[v]\) is the length of some \(v \leadsto t\) path. 
+					</p>
+					<button class="collapsible">Proof 3...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Whenever we update \(d[v]\), it refers to an edge that goes to another vertex that will eventually go to \(t\). Domino.
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Lemma 4.</i></b> The value of \(d[v]\) cannot increase 
+					</p>
+					<button class="collapsible">Proof 4...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> It should be easy enough to see that in the algorithm we only ever try to minimise from infinity, not the other way round.
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Lemma 5.</i></b> After iteration \(i\), \(d[v] \leq\) length of the shortet path with \(\leq i\) edges. (Please note the inequality, versus the equality of the original algorithm).
+					</p>
+					<button class="collapsible">Proof 5...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Induction on \(i\): the base case \(i=0\) is just the set inital conditions.
+						</p>
+						<p>
+							Let \(P\) be a \(v \leadsto t\) path with \(\leq i+1\) edges. Consider P with the first edge extracted: \(v \longrightarrow w \leadsto t\). Let \(w \leadsto t\) be \(P'\). 
+						</p>
+						<p>
+							Note that \(P'\) has \(\leq i\) edges. <br>
+							Let \(d^i [v] =\) value of \(d[v] \) after iteration \(i\). 
+						</p>
+						<p>
+							Apply lemma to \(P'\) (i.e. applying inductive hypothesis): \(d^i [w] \leq \ell(P')\). <br>
+							We want \(d^{i+1} [v] \leq \ell(P) \; \forall P\).
+						</p>
+						<p>
+							Take \(d^{i+1} [v] \)
+							\begin{align}
+								d^{i+1} [v] &\leq d[v] \textrm{ by lemma 4} \\
+								&\leq \ell_{vw} + d [w] \textrm{ considering edge } vw \at \textrm{ iteration } i+1 \\
+								&\leq \ell_{vw} + d^i[w] \\
+								&\leq \ell_{vw} + \ell(P') \textrm{ inductive hyp.} \\
+								&\leq \ell(P)
+							\end{align}
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Theorem 2.</i></b> Assuming no negative cycles, BFM solves in \(O(mn)\)* time and \(\Theta(n)\) space. 
+					</p>
+					
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Use <i>lemma 2</i> (scroll up), then <i>lemma 5</i>, then <i>lemma 3</i>. 
+						</p>
+					</div>
+
+					<p>
+						* <b>Note:</b> \(O(mn)\) not \(\Theta(mn)\). BFM is typically faster than \(\Theta(mn)\). 
+					</p>
+					<p>
+						Edge \(\langle v, w \rangle\) is considered in pass \(i+1 \) <i>only if</i> \(d[w] \) is updated in pass \(i\). If the shortest path has \(k\) edges, the algorithm will find it after \(\leq k\) passes. 
+					</p>
+				</div>
+
+				<div>
+					<p>Getting the path</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Claim.</i></b> Throughout the BFM algorithm, following \(succ[v] \) pointers gives directed path from \(v \leadsto t\) of length \(d[v]\). 
+					</p>
+					<button class="collapsible">Counterexample... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Counterexample.</i></b> This is false - the length of \(succ[v]\) path may be <i>shorter</i> than \(d[v]\). 
+							<figure>
+								<img src="./bfm-counter-1.png" alt="Counterexample graph 1" style="max-width: 400px;">
+							</figure>
+							Consider the graph, with nodes \(t, 1, 2, 3\). The state of the graph is shown after the algorithm is ran on \(t, 1, 2\).
+						</p>
+						<p>
+							Now we consider 3, we scan incoming edges: edge from 1, \(d[1] = 10\), but \(\ell_{\langle 1, 3\rangle} = 1\), thus \(1 \leadsto t\) has a length of 2.
+						</p>
+						<p>
+							Update \(d[1] \longleftarrow 2, succ[1] \longleftarrow 3\). We are now done.
+						</p>
+						<p>
+							Look at node 2. \(d[2] = 20\) but the path \(\langle 2 1 3 t \rangle\) is of length 12, which is shorter than \(d\). 
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Successor graphs</p>
+				</div>
+				<div>
+					<p>
+						If the graph has negative cycles, BFM may produce a successor graph which has a cycle. 
+					</p>
+					<figure>
+						<img src="./bfm-neg-cycle.png" alt="negative cycle graph" style="max-width: 300px;">
+						<figcaption><i>This graph has a negative cycle</i></figcaption>
+					</figure>
+					<p>
+						Suppose we've considered nodes \(t, 1, 2, 3\), but not 4 (state shown). Consider the incoming edge \(\langle 1, 4 \rangle\). \(d[1] = 5\), but \(\ell_{\langle 1, 4\rangle} = -8, \; d[4] = 11, \; 11-8 &lt; 5\), so we update \(d[1] \longleftarrow 3, \; succ[1] \longleftarrow 4\). 
+					</p>
+					<p>
+						Now the successor edges form a cycle, and none will ever reach \(t\). 
+					</p>
+				</div>
+				<div>
+					<p>BFM and negative cycles</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Lemma 6.</i></b> Any directed cycle W in a successor graph produced by BFM is a negative cycle. 
+					</p>
+					<button class="collapsible">Proof 6...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> If \(succ[v] = w\), we must have \(d[v] \geq d[w] + \ell_{vw} \)
+						</p>
+						<p><i>
+							\(LHS = RHS\) when \(succ[v]\) is set to \(w\). \(d[w]\) however can later decrease, making RHS lower, whereas \(d[v]\) can only decrease if \(succ[v] \) is reset. 
+						</i></p>
+						<p>
+							Let \(\langle v_1, v_2, \dots, v_k, v_1 \rangle \) be the sequence of nodes in cycle W. Assume edge \(\langle v_k, v_1 \rangle\) be the last edge added in W. 
+						</p>
+						<p>
+							Just before this, we have
+							\begin{align}
+								d(v_1) &\geq d(v_2) + \ell_{v_1 v_2} \\
+								d(v_2) &\geq d(v_3) + \ell_{v_2 v_3} \\
+								&\dots \\
+								d(v_{k-1}) &\geq d(v_k) + \ell_{v_{k-1} v_k} \\
+								d(v_k) & &gt; d(v_1) + \ell_{v_k v_1} \textrm{ (strict inequality)}
+							\end{align}
+							Since this is <i>before</i> \(d(v_k)\) is updated. \(\sum LHS &gt; \sum RHS\) (because of the one strict inequality), thus \(\sum d(LHS) &gt; \sum d(RHS) + \ell_{RHS} \) - note that \(d[LHS], d[RHS]\) are the same vertices, thus
+							\begin{align}
+								& 0 &gt; \ell_{RHS} \\
+								\Longleftrightarrow & 0 &gt;\ell_{v_1 v_2} + \ell_{v_2 v_3} + \dots + \ell_{v_k v_1}
+							\end{align}
+							Thus we have a negative cycle. $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Correctness</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem 3.</i></b> If there are no negative cycles, BFM algorithm will find the shortest paths. 
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> If <i>(lemma 6)</i> successor graph has no cycles, we have a tree of shortest paths. 
+						</p>
+						<p>
+							Following successors from \(v\) gets a path to \(t\). 
+						</p>
+						<p>
+							Let \(P = \langle v= v_1, v_2, \dots, v_t=t \rangle\), i.e. the nodes along said path. 
+						</p>
+						<p>
+							On algorithm halt, \(succ[v] = w \implies d[v] = d[w] + \ell_{vw} \), since the LHS and RHS equal when this is set, and \(d[w]\) never updated again as the algorithm halts. Thus,
+							\begin{align}
+								d(v_1) &= d(v_2) + \ell_{v_1 v_2} \\
+								d(v_2) &= d(v_3) + \ell_{v_2 v_3} \\
+								&\dots \\
+								d(v_{t-1}) &= d(v_t) + \ell_{v_{t-1} + v_t} \;\; (d(v_t) = d(t) = 0)
+							\end{align}
+							\(\sum LHS = \sum RHS \implies d[v] = d[t] + \ell_{v_1 v_2} + \ell_{v_2 v_3} + \dots + \ell_{v_{t-1} v_t}\)
+						</p>
+						<p>
+							Which is the max length of any shortest path by Theorem 2 (somehow). $$\tag*{$\Box$}$$
+						</p>
+					</div>
+
+					<p class="small">
+						Better algorithms than BFM have been developed in more recent years. 
+					</p>
+				</div>
+			</div>
+
 
 
 		</div>
