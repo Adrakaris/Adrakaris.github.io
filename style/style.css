@@ -619,6 +619,26 @@ li {
 table {
     margin-top: 8px;
     margin-bottom: 8px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+table, th, td {
+    border-collapse: collapse;
+    border-top: 1px solid var(--pink);
+    border-bottom: 1px solid var(--pink);
+}
+
+th, td {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+table.noborder td, table.noborder th, table.noborder {
+    border-top: none;
+    border-bottom: none;
 }
 
 :is(ul.not, ol.not) > li {
