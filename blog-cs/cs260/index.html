@@ -3,9 +3,9 @@
 <head>
 	<title>CS260</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">
 	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
-	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<meta name="viewport" content="width=device-width" initial-scale=1.0> 
 	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
@@ -50,6 +50,9 @@
 
             <ol>
                 <li><a href="#greedy">Greedy Algorithms</a></li>
+				<li><a href="#divide">Divide and Conquer</a></li>
+				<li><a href="#dynprogramming">Dynamic Programming</a></li>
+				<li><a href="#intractibility">Intractbility</a></li>
             </ol>
 		</div>
 
@@ -474,15 +477,1539 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 
 		</div>
 
-		<footer>
-			<div class="cbox">
-                <div class="columncontainer ctwo" id="fc2">
-                </div>
-                <script type="text/javascript" src="../../js/footerGen.js"></script>
-            </div>
-		</footer>
+		<div class="colourband">
+			<h2 id="divide">Divide and Conquer</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#div-1">Merge Sort</a></li>
+				<li><a href="#div-2">Closest pair of points</a></li>
+				<li><a href="#div-3"><b>Master Theorem</b></a></li>
+				<li><a href="#div-4">Integer Multiplication</a></li>
+			</ol>
+
+			<div class="cornell">
+				<div>
+					<p>Divide and Conquer Paradigm</p>
+				</div>
+				<div>
+					<p>
+						Divide and conquer is a strategy for solving algorithms where the main problem is <b>divided</b> into <b>independent</b> subproblems, which are then solved (<b>conquered</b>) <b>recursively</b>.
+					</p>
+
+					<p>
+						In general, this goes as follows:
+						<ul>
+							<li>Divide a problem of size \(n\) into subgroups, e.g. 2 subproblems of size \(\frac{n}{2}\) - <i>typically \(O(n)\)</i></li>
+							<li>Solve the 2 subproblems recursively</li>
+							<li>Combine the subproblems into one - <i>typically \(O(n)\)</i></li>
+						</ul>
+						This can end up faster than "traditional" polynomial time methods. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="div-1">Merge Sort</h3>
+
+			<p>
+				Your classic divide and conquer sorting algorithm that you learned in GCSE. 
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Process</p>
+				</div>
+				<div>
+					<ul>
+						<li>For an input size (n), divide into a <i>left</i> half and a <i>right</i> half. - \(O(n)\)</li>
+						<li><b>Recursively</b> sort left and right halves (refer to above)</li>
+						<li>Combine two sorted halves, maintaining the order. - \(O(n)\)</li>
+					</ul>
+				</div>
+				<div>
+					<p>Combining halves</p>
+				</div>
+				<div>
+					<p>
+						Suppose we have two sorted halves A and B, with
+						\[A = [a_1, a_2, a_3], \; B = [b_1, b_2, b_3, b_4]\]
+						Maintain two pointers to the sorted arrays. Scan A and B, comparing \(a_i\) and \(b_j\). Append the <i>smaller</i> value to the output list, and increment that pointer only. Finally, append any left over values from one array if the other has reached the end. 
+					</p>
+					<p>
+						<i>Linear for scanning, constant for comparing, constant for appending.</i>
+					</p>
+					
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">mergesort(list L):
+	if L.length = 1:
+		return L
+	divide L into two halves, A and B
+	A \(\longleftarrow\) mergesort(A)
+	B \(\longleftarrow\) mergesort(B)
+	L \(\longleftarrow\) merge(A, B)  # implementation of this function 
+		# is left as an excersise to the reader
+	return L</div>
+
+					<p>
+						Let's say mergesort has a procesing time of \(T(n)\). Thus, every subproblem (\(A, B\)) takes \(T(\frac{n}{2})\) time. The <code>merge</code> portion as we know is linear, and is \(\Theta(n)\).
+					</p>
+					<p>
+						Thus we can conclude \(T(n)\) is bounded by \(\Theta(n) + 2T(\frac{n}{2})\).
+					</p>
+				</div>
+				<div>
+					<p>Useful recurrence relation</p>
+				</div>
+				<div>
+					<p>
+						The above gives rise to a useful recurrence relation. 
+					</p>
+					<p>
+						<b><i>Definition.</i></b> Let \(T(n)\) to be the number of comparisons mergesort makes proportional to list size \(n\). This satisfies the recurrence 
+						\[T(n) = \begin{cases} 0 & \textrm{if } n = 1 \\ T(\left \lfloor{\frac{n}{2}} \right \rfloor) + T(\left \lceil{\frac{n}{2}} \right \rceil) + n & \textrm{if } n > 1 \end{cases}\]
+					</p>
+				</div>
+				<div>
+					<p>Complexity of merge sort</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Claim.</i></b> For mergesort, \(T(n) = O(n \log n)\).
+					</p>
+					<p><i>
+						Assume \(n\) is a power of 2. This does not affect the integrity much but makes proving easier.
+					</i></p>
+					<p class="small">
+						The following proofs demonstrate important techniques so are <i>shown by default</i>. Clicking the drop-down bar (twice) will hide them. 
+					</p>
+				</div>
+				<div>
+					<p>Proof by tree</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Assertion 1.</i></b> \(T(n) = O(n \log n)\) if \(T(n)\) satisfies the following recurrence (given above assumption):
+
+						\[T(n) = \begin{cases} 0 & \textrm{if } n = 1 \\ 2T(\frac{n}{2}) + n & \textrm{if } n > 1 \end{cases}\]
+					</p>
+
+					<button class="collapsible">Proof by Tree... </button>
+					<div class="ccontent inv">
+						<p>
+							<b><i>Proof.</i></b> Represent the recurrence in tree form:
+							<figure>
+								<img src="./recurrence-tree.png" alt="recurrence tree">
+							</figure>
+							<ul>
+								<li>On level \(i\), there are \(2^i\) nodes. Each node has \(\frac{n}{2^i} \) items so does that amount of work. Thus each level does \(n\) work. </li>
+								<li>\(n = 2^k\) (is a power of 2), and we <i>halve</i> \(n\) every time, thus we do \(k\) halvings to get to \(2^0\): 1 item. Thus \(k\) = the number of levels = \(\log_2 n\).</li>
+							</ul>
+							\(\log_2 n\) times \(n\) work gets \(O(n \log n)\)
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Proof by induction</p>
+				</div>
+				<div>
+					<p>A proof method that may be easier to use (and certainly is easier to represent in HTML). We use the <b>same proposition</b> as above.</p>
+
+					<button class="collapsible">Proof by Induction...</button>
+					<div class="ccontent inv">
+						<p>
+							<b><i>Proof.</i></b> Induction on the size of \(n\).
+							<ul>
+								<li><b>Base case:</b> \(n=1\), thus \(T(1) = 0 = 1 \log_2 1\).</li>
+								<li><b>Hypothesis:</b> Assume \(T(n) = n \log_2 n\).</li>
+							</ul>
+						</p>
+						<p>
+							Let us look at \(T(2n)\).
+							\begin{align}
+								T(2n) &= 2T(n) + 2n\\
+								&= 2n \log_2 n + 2n \textrm{ by ind hyp.} \\
+								&= 2n (\log_2 n + 1) = 2n (\log_2 n + \log_2 2) \\
+								&= 2n \log_2(2n).
+							\end{align}
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Extending inductive proof</p>
+				</div>
+				<div>
+					<p>
+						So far we have been ignoring floors and ceilings. In fact, we can take as granted that <b>floor and ceil may be ignored</b> outright. However, here's an inductive proof for the assertion that uses floor and ceil. 
+					</p>
+					<p>
+						<b><i>Assertion 2.</i></b> \(T(n) \leq n \left \lceil{\log_2 n} \right \rceil\) if \(T(n)\) satisfies the following recurrence. \(n\) is not assumed to be a power of 2. 
+					</p>
+
+					<div style="display: none;">
+						\[ \require{enclose} \]	
+					</div>
+					
+
+					<button class="collapsible">Proof by Strong Induction... </button>
+					<div class="ccontent inv">
+						<p>
+							<b><i>Proof.</i></b> Strong induction on \(n\). Instead of just assuming the prior is true, we assume <i>all priors</i> are true. The base case is the same and is true. Please note \(\log\) means \(\log_2\). 
+						</p>
+						<p>
+							Let \(n_1 = \left \lfloor{n} \right \rfloor\) and \(n_2 = \left \lceil{n} \right \rceil\). <i>Note that \(n_1 + n_2 = n\)</i>. The <b>inductive hypothesis</b> is that the recurrence is satisifed for <b>all</b> values up to \(n-1\). 
+						</p>
+						<p>
+							Some easy-to-miss changes are circled. The circles are for emphasis and are otherwise meaningless.
+							\begin{align}
+								T(n) &\leq T(n_1) + T(n_2) + n \\
+								&\leq n_1 \left \lceil{\log n_1} \right \rceil + n_2 \left \lceil{\log n_2} \right \rceil + n \textrm{ by ind hyp.} \\
+								\because n_2 \geq n_1,\; T(n) &\leq n_1 \left \lceil{\log 
+									{\scriptstyle \enclose{circle}{\kern .06em n_2\kern .06em}}
+								} \right \rceil + n_2 \left \lceil{\log n_2} \right \rceil + n \\
+								&\leq (n_1 + n_2) \left \lceil{\log n_2} \right \rceil + n \\
+								& \leq n \left \lceil{\log n_2} \right \rceil + n \\
+								& \leq n (\left\lceil{\log  {\scriptstyle \enclose{circle}{\kern .06em n \kern .06em}} }\right\rceil + 1) + n \; *\\
+								& \leq n \left\lceil{\log n}\right\rceil .
+							\end{align}
+							$$\tag*{$\Box$}$$
+						</p>
+						<p>
+							The jump marked \(*\) is explained as follows:
+							\begin{align}
+								2^{\log n_2} = n_2 &= \left\lceil{\frac{n}{2}}\right\rceil \\
+								&\leq \left\lceil{\frac{2^\left\lceil{\log n}\right\rceil }{2}}\right\rceil \\
+								&\textrm{since } n = 2^{\log n} \textrm{, } 2^{\left\lceil{\log n}\right\rceil } \textrm{ must be not lower. } \\
+								&\leq \frac{2^{\left\lceil{\log n}\right\rceil }}{2} \textrm{ since RHS must } \in \mathbb{Z} \\
+								&\leq 2^{\left\lceil{\log n}\right\rceil -1} \\
+								\therefore \log n_2 = \log{2^{\log n_2}} &= \left\lceil{\log n}\right\rceil - 1.
+							\end{align}
+						</p>
+						<p class="small">
+							If you're curious, right click -> show math as tex commands, it's nasty to write, thank god for vscode snippets.
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<h2 id="div-2">Closest Pair of Points</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Problem </p>
+				</div>
+				<div>
+					<p>
+						Given \(n\) points in a euclidean plane, find the closest pair of points. 
+					</p>
+				</div>
+				<div>
+					<p>Possible non-divide and conquer solutions</p>
+				</div>
+				<div>
+					<p>
+						Listed are some non-divide and conquer solutions, for interest. 
+					</p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
+						<p>
+							<b>Brute force</b>: the "naive" algorithm, I think you can guess what this does. Solves in \(\Theta(n^2)\) but we can do better. 
+						</p>
+						<p>
+							<b>Dimension collapsing</b>: we can consider only 1 dimension (say, x), sort the points and find the closest. This can be done in \(\Theta(n \log n)\) by sorting points, and comparing only consecutive ones. The only problem is it has counterexamples and may not always work depending on your configuration of points.
+						</p>
+						<p>
+							This relies on an assumption of <i>non-degeneracy</i> (see later).
+						</p>
+						<p>
+							We can extend this idea to doing dimension collapsing for 2D by repeating the process for both x and y, finding the points which are closest together on those two axes.
+						</p>
+						<p>
+							However this is also flawed and has counterexamples. 
+						</p>
+
+						<p>
+							<b>Division:</b> We can try a technique more akin to divide and conquer - dividing the space up into halves or quadrants, then considering each quadrant separately, then the boundaries of quadrants. Ideally we'd want all quadrants to have an equal number of dots, but this is hard to guarantee. 
+						</p>
+					</div>
+					
+				</div>
+
+				<div>
+					<p>The divide and conquer algorithm</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Definition.</i></b> the <b>non-degeneracy</b> assumption asserts that each point should have a unique \(x\) coordinate. 
+					</p>
+					<p>
+						We <b>divide</b> by drawing a vertical line \(L : \frac{n}{2}\) points on each side. We <b>conquer</b> by recursively finding the closest point in each "half". We <b>combine</b> by checking if there's a closer pair that lies across the boundary. 
+					</p>
+					<p>
+						It seems initially hard to do this more efficiently than the brute force \(n^2 \), but there are a few tricks we can employ. 
+					</p>
+					<p>
+						Take the minimum distance from the pairs on either side, let it be \(\delta\). Say our two halves find closest points with length 12 and 21, \(\delta = \min(12, 21)\). It is the sufficient to <b>only check points within \(\delta\) distance from L</b>.
+					</p>
+					<p>
+						We need only sort the boundary points by their \(y\) coordinate, then compute the closest points in \(y\). This much may be quite easy to understand, but that still leaves us with quadratic time if we have to compute distances to all other points, but in fact, we only need to compute <b>7</b>.
+					</p>
+					<p>
+						Every point checks against up to 7 others, and the minimum distance found is kept track of as the boundary points are iterated through. This actually will reduce our combine step down to <b>linear time</b>: \(O(n)\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Why 7!?</p>
+				</div>
+				<div>
+					<p>
+						To prove this, first <b>let</b> all boundary points be sorted by y coordinate, and numbered in increasing order, \(s_1, s_2, \dots, s_n\).  \(s_i\) is the point with the \(i\)<sup>th</sup> largest y value. 
+					</p>
+					<p>
+						<b><i>Proposition.</i></b> If \(|i-j| \geq 7\), the distance between \(s_i, s_j\) is <b>at least \(\delta\)</b>.
+					</p>
+					<button class="collapsible">Proof...</button>
+					<div class="ccontent inv">
+						<p>
+							Let us take any point \(s_i\) with some \(y\) coordinate. Consider a rectangle \(\delta\) tall and \(2\delta\) wide, spanning the boundary region with its bottom being the \(y\) coord of \(s_i\). Split this rectangle into 8 squares, \((0.5\delta)^2\).
+						</p>
+						<img src="./7-rectangles.png" alt="rectangle split into 8 squares" style="max-width: 200px;">
+						<img src="./7-furthest-points.png" alt="furthest away points in one square are delta over root 2 apart" style="max-width: 300px;">
+						<p>
+							The furthest away two points could be in one single square is at opposite diagonals, \(\frac{\delta}{2}\) away. \(\frac{\delta}{2 } < \delta\) - this means that <b>this is an impossible configuration</b>: both points would be on the same side, with the distance between less than \(\delta\), which is <i>defined</i> to be the shortest distance from both sides. 
+						</p>
+						<p>
+							Thus, there can only be <b>one point per square</b>. At most 7 other points <i>may</i> be valid options (have distances closer than \(\delta\)), so we need only check 7. 
+						</p>
+						$$\tag*{$\Box$}$$
+					</div>
+				</div>
+
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">closestPair(points \(p_1, p_2, \dots, p_n\)):
+	computer vertical line \(L\) such that half the points are on either side  # (1)
+	\(\delta_1 \longleftarrow\) closestPair(left half)  
+	\(\delta_2 \longleftarrow\) closestPair(right half)  # (2)
+	\(\delta \longleftarrow \min(\delta_1, \delta_2)\)
+	delete all points further than \(\delta\) from \(L\)  # (3)
+	sort remaining points by \(y\) coordinate  # (4)
+	for \(p \in \) remaining points:  # (5)
+		work out the distances up to the next 7 points 
+		if the smallest of those \(\leq \delta\):
+			\(\delta \longleftarrow \) that distance 
+	return \(\delta\)</div>
+				</div>
+
+				<div>
+					<p>Running time</p>
+				</div>
+				<div>
+					<p>
+						The labelled sections are as follows: (1) is \(O(n)\), (2) is \(2T(\frac{n}{2})\), (3) is \(O(n)\), (4) is \(O(n \log n)\), and 5 is \(O(n)\).
+					</p>
+					<p>
+						As to \(T(n)\), knowing the running time of dividing and combining steps we can get the recurrence 
+
+						\[ T(n) = \begin{cases} \Theta(1) & n = 1 \\ T(\left\lfloor{\frac{n}{2}}\right\rfloor )  + T(\left\lceil{\frac{n}{2}}\right\rceil ) + \Theta(n \log n) & \textrm{otherwise} \end{cases} \]
+					</p>
+					<p>
+						This resolves down to a running time of \(\Theta(n \log^2 n)\).
+					</p>
+				</div>
+
+				<div>
+					<p>Improvements on running time</p>
+				</div>
+				<div>
+					<p>
+						Later work has been done to push the algorithm down to \(O(n \log n\). This involves techniques such as preserving sorting of delta strip, returning lists of points sorted by x and y, and sorting points by merely doing one merge, which is linear time. 
+					</p>
+				</div>
+			</div>
+
+			<h2 id="div-3">Master Theorem</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Premise</p>
+				</div>
+				<div>
+					<p >
+						The <b>master theorem</b> is a single method to solve all common recurrences of the form
+						<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + f(n)\]</span>
+						
+						Where \(a, b \in \mathbb{Z}^+\), \(b \geq 2\), and with \(T(0) = 0, \; T(1) = \Theta(1)\). 
+					</p>
+					<p>
+						An input of size \(n\) makes \(a\) recursive calls of size <span style="border-spacing: 0px 0px;">\(\frac{b}{n}\)</span>. We also assume that \(f(n) \geq 0\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Deriving via recursion trees</p>
+				</div>
+				<div>
+					<p></p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
+						<p>
+							We can solve such recurrences with a recursion tree. (We assume that \(n\) is a power of \(b\).)
+							<ul>
+								<li>Let  \(a=\) branching factor</li>
+								<li>\(a^i = \) number of subproblems at layer \(i\)</li>
+								<li>\(1+\log_b n\) levels</li>
+								<li>\(\frac{n}{b^i} =\) size of subproblems at layer \(i\).</li>
+							</ul>
+						</p>
+
+						<p>
+							Suppose \(T(n)\) satisfies \(T(n) = aT(\frac{n}{b}) + n^c\) for some c: i.e. \(f(n)\) is a polynomial. 
+						</p>
+						<p>
+							Then at we have \(n^c\) work at layer 0, \(a(\frac{n}{b})^c\) at 1, \(a^2 \frac{n}{b^2}^c\) at 2, ..., \(a^i \frac{n}{b^i}^c\) at level \(i\), for a total of \(\log_b (n) \) levels. 
+						</p>
+						<p>
+							The last \(\log_b n\)<sup>th</sup> level has \(a^i = a^{\log_b n} = n^{\log_b a}\):
+							\[a^{\log_b n} = (b^{\log_b a})^{\log_b n} = b^{\log_b a \cdot \log_b n} = (b^{\log_b n})^{\log_b a} \]
+						</p>
+
+						<p>
+							At level \(i\), the work is \(a^i (\frac{n}{b^i})^c = a^i \frac{n^c}{b^{ic}} = n^c \frac{a^i}{b^{ic}} = n^c (\frac{a}{b^c})^i\).
+						</p>
+
+						<p>
+							Thus we can say \(T(n) = n^c \sum_{i=0}^{\log_b n} r^i\) where \(r = \frac{a}{b^c}\) (which is a constant).
+						</p>
+
+						<p>
+							Looking at this sum, we can get that 
+							\[
+							T(n) = n^c \sum^{\log_b n}_{i=0} r^i = \begin{cases} 
+								\Theta(n^c) &\textrm{if }r&lt;1 &c &gt; \log_b a\\
+								\Theta(n^c \log n) &\textrm{if } r = 1 &c = \log_b a \\
+								\Theta(n^{\log_b a}) &\textrm{if } r &gt; &c &lt; \log_b a 1
+							\end{cases}
+							\]
+							Since it is a gemetric series thus follows geometric series rules. 
+						</p>
+					</div>
+
+					
+				</div>
+				<div>
+					<p>Master Theorem</p>
+				</div>
+				<div class="blue">
+					<p >
+						<b><i>Theorem.</i></b> Let \(a \geq 1, b \geq 2, c &gt; 0.\) Let \(T(n)\) be a function on \(\mathbb{Z}_{\geq 0} \) that satisfies the recurrence
+						<span style="border-spacing: 0px 0px;">\[T(n) = aT(\frac{n}{b}) + \Theta(n^c)\]</span> 
+						With \(T(0) = 0, T(1) = \Theta(1),\) and <span style="border-spacing: 0px 0px;">\(\frac{n}{b}\) is either \(\left\lceil{\frac{n}{b}}\right\rceil \) or \(\left\lfloor{\frac{n}{b}}\right\rfloor \).</span>   Then the following cases apply:
+						<ol>
+							<li>\(c &lt; \log_b a \implies T(n) = \Theta(n^{\log_b a})\) - recurring part dominates</li>
+							<li>\(c = \log_b a \implies T(n) = \Theta(n^c \log n)\) - balances</li>
+							<li>\(c &gt; \log_b a \implies T(n) = \Theta(n^c)\) - processing part dominates</li>
+						</ol>
+					</p>
+				</div>
+
+				<div>
+					<p>Overview of proof</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							Prove theorem when \(b \in \mathbb{Z}\) and \(n\) is a power of \(b\)
+						</li>
+						<li>
+							Extend the domains of reasoning to rationals or reals
+						</li>
+						<li>
+							Deal with floor and ceil for <i>at most 2 levels</i>, e.g. 
+							\begin{align}
+								\left\lceil{\frac{\left\lceil{\frac{\left\lceil{\frac{n}{b}}\right\rceil }{b}}\right\rceil }{b}}\right\rceil & &lt; \frac{n}{b^3} + (\frac{1}{b^2} + \frac{1}{b} + 1) \\
+								&\leq \frac{n}{b^3} + 2 \;\; (\because b \geq 2)
+							\end{align}
+						</li>
+					</ul>
+				</div>
+
+				<div>
+					<p>Theorem extension</p>
+				</div>
+				<div>
+					<p>
+						We can replace \(\Theta\) with \(O, \Omega\) with no problem. 
+					</p>
+					<p>
+						We can replace the initial conditions with \(T(n) = \Theta(1)\) for all \(n \leq n_0\) (which is a constant) and only require the recurrence holds for \(n > n_0\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p>
+						\(T(n) = 3T(\left\lfloor{\frac{n}{2}}\right\rfloor + 5n\)
+					</p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
+						<p>
+							\(a = 3, b = 2\) (and ignore floor). \(c = 1, 5n = O(n)\). \(\log_b a = \log_2 3 \approx 1.58\)
+						</p>
+						<p>
+							Case 1 of 3, thus \(T(n) = \Theta(n^{\log_2 3} )\)
+						</p>
+					</div>
+					<p>
+						\(T(n) = T(\left\lfloor{\frac{n}{2}}\right\rfloor) + T(\left\lceil{\frac{n}{2}}\right\rceil ) + 17n \)
+					</p>
+					<button class="collapsible">Expand... </button>
+					<div class="ccontent">
+						<p>
+							Can "merge" the floors and ceils, thus \(a=2, b=2, c=1\). 
+						</p>
+						<p>
+							\(T(n) = O(n \log n)\)
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Gaps in master theorem</p>
+				</div>
+				<div>
+					<p>
+						Master theroem will not work if the number of branches is not constant: \(T(n) = nT(\frac{n}{2 }) + n^2 \),
+					</p>
+					<p>
+						The number of subproblem branches is less than 1: \(T(n) = \frac{1}{2} T(\frac{n}{2}) + n^2\),
+					</p>
+					<p>
+						And cannot directly work if work done by subproblem is not \(\Theta(n^c)\): \(T(n) = 2T(\frac{n}{2 }) + n \log n\).
+					</p>
+				</div>
+			</div>
+
+			<h3 id="div-4">Integer Multiplication</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Addition and Subtraction</p>
+				</div>
+				<div>
+					<p>
+						Numbers are stored and processed in computers at binary strings. This changes the considerations when doing basic arithmetic. 
+					</p>
+					<p>
+						Looking at addition and subtraction first, i.e. given 2 binary strings \(a, b\) compute \(a+b\) and \(a-b\). 
+					</p>
+					<p>
+						The addition and subtraction method one learns in primary school is the most efficient algorithm, at \(O(n)\) where \(n\) is the number of digits. 
+					</p>
+				</div>
+				<div>
+					<p>Multiplication</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given 2 \(n\) bit numbers, multiply them.
+					</p>
+					<p>
+						The "primary school algorithm" for binary multiplication, in short, is <i>for every digit in the 2<sup>nd</sup> number, write the corresponding shifted 1<sup>st</sup> number multiplied by that digit.</i> We can see that this performs \(\Theta(n^2)\) bit operations. 
+					</p>
+					<p>
+						The question is, is the so-called "primary school algorithm" most efficient for multiplication?
+					</p>
+					<p>
+						The answer is no: one can do some divide and conquer tricks to make an algorithm more efficeint than this. 
+					</p>
+				</div>
+			</div>
+
+			<button class="collapsible">Warmup... </button>
+			<div class="ccontent cnul">
+			<div class="cornell">
+				<div>
+					<p>A possible algorithm</p>
+				</div>
+				<div>
+					<p>
+						But can we do better? To multiply numbers \(x, y\), we could divide them in half into low and high order bits. 
+					</p>
+					<p>
+						Take \(x = 10001101\), if we have an \(m = \left\lceil{\frac{n}{2}}\right\rceil \) that is the number of bits to split at, \(x = 2^m a + b\) where \(a, b\) are the first half and second half of the bits respectively. 
+
+						\begin{align}
+							\textrm{let } &m = \left\lceil{\frac{n}{2}}\right\rceil \\
+							\textrm{then } &a = \left\lfloor{\frac{x}{2^m}}\right\rfloor & b = x \mod 2^m \\
+							&c = \left\lfloor{\frac{y}{2^m}}\right\rfloor & d = y \mod 2^m
+						\end{align}
+
+						Note that multiplying or dividing by a power of 2 is very easy (bit shifts). We know that 
+						\[xy = (2^m a + b)(2^m c + d) = 2^{2m} ac + 2^m(bc + cd) + bd\]
+						Which as we can see contains 4 smaller multiplications: \(ac, bc, cd, bd\). 
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p>
+						\(\textrm{The implementation is left as an exersise to the reader.}\)
+					</p>
+				</div>
+				<div>
+					<p>Running time</p>
+				</div>
+				<div>
+					<p>
+						This algorithm has the recurrence
+						\[
+						T(n) = \begin{cases} \Theta(1) & n=1 \\ 4T(\left\lceil{\frac{n}{2}}\right\rceil + \Theta(n) & n &gt; 1) \end{cases}
+						\] 
+
+						Which, with the master theorem, \(a = 4, b = 2, c = 1\), we get... \(\Theta(n^2)\). 
+					</p>
+					<p>
+						Ah.
+					</p>
+				</div>
+			</div>
+			</div>
+
+			<div class="cornell">
+				<div>
+					<p>Karatsuba algorithm</p>
+				</div>
+				<div>
+					<p>
+						An algorithm developed by Anatoly <b>Karatsuba</b> in 1960 allows us to do multiplication quicker than quadratic time.
+					</p>
+					<p>
+						Divide \(x, y\) into low and high bits as in warmup : 
+						\begin{align}
+							\textrm{let } &m = \left\lceil{\frac{n}{2}}\right\rceil 
+							&x = 2^m a + b, \; y = 2^m c + d \\
+							\textrm{then } &a = \left\lfloor{\frac{x}{2^m}}\right\rfloor & b = x \mod 2^m \\
+							&c = \left\lfloor{\frac{y}{2^m}}\right\rfloor & d = y \mod 2^m
+						\end{align}
+
+						\begin{align}
+							xy = (2^m a + b)(2^m c + d) &= 2^{2m} ac + 2^m(bc + ad) + bd \\
+							&=2^{2m} ac + 2^m(ac + bd - (a-b)(c-d)) + bd
+						\end{align}
+
+						We then have divided \(xy\) down into <i>three</i> (nontrivial) multiplication options.
+					</p>
+				</div>
+
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">karatsuba(\(x, y, n\)):
+	if \(n = 1\):
+		return \(xy\)
+	else:
+		calculate \(m, a, b, c, d\) as above
+		\(e \longleftarrow\) karatsuba(\(a, c, m\))
+		\(f \longleftarrow\) karatsuba(\(b, d, m\))
+		\(g \longleftarrow\) karatsuba(\(|a-b|, |c-d|, m\))
+		flip sign of \(g\) if needed 
+		return \(2^{2m}e + 2^m(e + f - g) + f\)</div>
+				</div>
+
+				<div>
+					<p>Running time</p>
+				</div>
+				<div>
+					<p>
+						We have the recurrence 
+
+						\[T(n) = \begin{cases} \Theta(1) & n=1 \\ 3T(\left\lceil{\frac{n}{2}}\right\rceil + \Theta(n) & n &gt; 1 \end{cases}\]
+
+						Via master theorem \(log_b a \approx 1.585 \), thus \(T(n) = O(n^1.585)\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Further comments</p>
+				</div>
+				<div>
+					<p>
+						Integer multiplication, as one would think, is the base of many algorithms. Note that multiply, divide, square, and sqrt all have the same complexity.
+					</p>
+					<p>
+						Karatsuba's algorithm is <i>still not optimal</i> - better has been done after. 
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="dynprogramming">Dynamic Programming</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#dyn-1">Weighted Interval Scheduling</a></li>
+				<li><a href="#dyn-2">Knapsack Problem</a></li>
+				<li><a href="#dyn-3">Edit Distance and Sequence Alignment</a></li>
+				<li><a href="#dyn-4">Shortest Path with Negative Weights</a></li>
+			</ol>
+
+			<div class="cornell">
+				<div><p>Overview</p></div>
+				<div>
+					<p>
+						Dynamic programming involves breaking up a problem into smaller, <b>overlapping</b> supbroblems (of polynomial size), and then combine solutions to find an answer.
+					</p>
+					<p>
+						It's called dynamic programming for ... reasons, but a lot of dynamic programming solutions can be summed up with <i>"caching intermediate values to look up later"</i>. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-1">Weighted Interval Scheduling</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						A job \(j\)	starts and finishes at \(s_j, f_j\) respectively. It also has <i>weight</i> \(w_j\). Two jobs are compatible if there are no overlaps. We want the set of compatible jobs which <b>maximises weight</b>. 
+					</p>
+					<p class="small">
+						The original interval scheduling problem is a special case of this where all weights are equal. 
+					</p>
+					<p>
+						<b><i>Convention. </i></b>Jobs are given in ascending order of finishing time: \(f_1 \leq f_2 \leq \dots \leq f_n\). 
+					</p>
+					<p>
+						We define parameter \(p(j)\) to be the largest index \(i &lt; j\) such that job i is compatible with job j: the job that finishes closest to \(s_j\) without overlapping. Index \(i\) starts at 1, and if a job doesn't have a compatible job before it, \(p(j) = 0\).
+					</p>
+				</div>
+				<div>
+					<p>Bellman optimality equation</p>
+				</div>
+				<div>
+					<p>
+						We can find the best possible <i>value</i> by representing this dynamic programming problem as a binary choice.
+					</p>
+					<p>
+						Consider \(n\) subproblems of only jobs \(1, 2, \dots, j\), where \(j\) ranges from \(1 .. n\). 
+					</p>
+					<p>
+						<b><i>Define.</i></b> \(OPT(j)\) as the max weight of any subset of compatible jobs \(i .. j\). 
+					</p>
+					<p>
+						Our goal is thus to find \(OPT(n)\).
+					</p>
+					<p>
+						Consider how we find \(OPT(j)\), if we already know all OPT values before \(j\). 
+						<ol>
+							<li>
+								\(OPT(j)\) does <i>not</i> include job \(j\): \(OPT(j) = OPT(j-1)\), since removing job \(j\) does not affect optimality.
+							</li>
+							<li>
+								\(OPT(j)\) includes job \(j\): the total weight of OPT includes \(w_j\). The rest of the jobs that are compatible cannot overlap with \(s_j\), thus the latest possible previous job is \(p(j)\).
+								\[\implies OPT(j) = OPT(p(j)) + w_j\]
+							</li>
+						</ol>
+						Whichever one of these is higher, becomes our \(OPT(j)\). 
+					</p>
+					<div class="blue">
+						<p style="padding: 0px 0px;">
+							<b><i>Definition.</i></b> The <b>Bellman Optimality Equation</b> for this problem is defined as follows:
+							\[OPT(j) = \begin{cases} 0 & \textrm{if }j = 0 \\ \max(OPT(j-1), w_j + OPT(p(j))) & \textrm{if }j &gt; 0 \end{cases} \]
+						</p>
+					</div>
+					
+				</div>
+
+				<div>
+					<p>Brute-force implementation</p>
+				</div>
+				<div>
+					<p>
+						We can try program this in a recursive, "brute-force" way.
+					</p>
+					<div class="codediv">bruteForce(\(n, s_1 .. s_n, f_1 .. f_n\)):
+	sort jobs by finish time, relabel accordingly
+	compute \(p[1], p[2], \dots, p[n] \) via binary search 
+	return computeOpt(\(n, p\))
+
+computeOpt(\(j, p\)):
+	if \(j = 0\):
+		return 0
+	else:
+		return \(\max(\textrm{computeOpt}(j-1, p), w_j + \textrm{computeOpt}(p[j], p))\)</div>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						The important part of working out running time is <code>computeOpt</code>. It may be difficult to work out, but the running time of this algorith is actually \(O(\phi^n)\) - yes, <a class="text" href="https://en.wikipedia.org/wiki/Golden_ratio">that phi</a>.
+					</p>
+					<p>
+						The recursive approach is very slow, since the subproblems are <i>overlapping</i>, the number of recursive calls grows like the fibonacci system (which is why we get phi).
+					</p>
+					<p>
+						This is not very good.
+					</p>
+				</div>
+
+				<div>
+					<p>Memoisation</p>
+				</div>
+				<div>
+					<p>
+						"Top-down dynamic programming", or memoisation, a fancy way of saying having a global array that you store previous results of OPT so you don't need to spend time computing it over and over again.
+					</p>
+					<p>
+						Generally the global array is called \(M\), and can also store a special symbol (e.g. \(-1, \infty\)) to represent "uncalculated".
+					</p>
+				</div>
+				<div>
+					<p>Memoisation implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M[] \); global \(p[] \);
+
+memoise(\(n, s_1 .. s_n, f_1 .. f_n\)):
+	sort jobs by finish time, relabel accordingly
+	compute \(p[1], p[2], \dots, p[n] \) via binary search 
+	\(m[0] \longleftarrow 0\)  # base case
+	return mOpt(\(n\))
+
+mOpt(\(j\)):
+	if \(M[j]\) uninitialised:
+	    \(M[j] \longleftarrow \max(\textrm{mOpt}(j-1), w_j + \textrm{mOpt}(p[j]))\)
+	return \(M[j] \)</div>
+				</div>
+
+				<div>
+					<p>Complexity </p>
+				</div>
+				<div>
+					<p>
+						<b><i>Claim.</i></b> This algorithm has time complexity \(O(n \log n)\)
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> 
+							<ul>
+								<li>Sorting is \(O(n \log n)\)</li>
+								<li>Computing \(p[j] \; \forall j = O(n \log n)\)</li>
+								<li>Resolving <code>mOpt</code> is \(O(n)\), since:</li>
+							</ul>
+							For <code>mOpt</code>, invocation is \(O(1)\), then <i>either</i> \(M[j]\) is returned immediately (\(O(1)\)), <i>or</i> \(M[j]  \) is initialised after two recursive calls.
+						</p>
+						<p>
+							Let us have a <b>process measure</b> \(\phi =\) number of initialised entries in \(M\). Initially \(\phi = 0 \; \because \textrm{ only } M[0] = 0\), and throughout, \(\phi \leq n\). 
+						</p>
+						<p>
+							If <code>mOpt</code> performs the <i>or</i> operation (recursive calls), we initialise \(M[j] \) and increment \(\phi\). This can be done at most \(n\) times. Thus since every time <code>mOpt</code> recurses, it makes two calls, so we have at most \(2n\) recursive calls - <b>linear time</b>. 
+						</p>
+						<p>
+							\(\textrm{mOpt}(n) = O(n)\), thus overall memoisation is \(O(n \log n\). $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Finding the optimal schedule</p>
+				</div>
+				<div>
+					<p>
+						So far we have found the optimal <i>value</i>, but no actual solution. Luckily finding the solution can be done in linear time.
+					</p>
+
+					<div class="codediv">findSoln(j):
+	if \(j = 0\): return \(\varnothing\).
+	else if \(w_j + M[p[j]] &gt; M[j-1]\):
+		return \(\{j\} \cup \textrm{findSoln}(p[j])\)
+	else:
+		return \(\textrm{findSoln}(j-1)\)</div>
+						
+					<p>
+						Since there is only one recursive call, this is linear time. We can combine this with the above algorithm to find a proper optimal schedule in \(O(n \log n)\).
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-2">Knapsack Problem</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						There are \(n\) items. Item \(i\) has value \(v_i > 0\) and weights \(w_i > 0\). The value of a set of items is ìs the sum of their values. We also have a <b>knapsack</b>, which can hold a total of \(W\) weight. 
+					</p>
+					<p>
+						<b><i>Goal.</i></b> Given a set of items and a knapsack with a set weight, <i>maximise</i> the value of items that knapsack can carry. 
+					</p>
+					<p>
+						We assume weights and values are all integers.
+					</p>
+				</div>
+
+				<div>
+					<p>Dynamic programming subproblems</p>
+				</div>
+				<div>
+					<p>
+						We have two variables, \(i, w\), and so we need a dynamic progrmaming setup which allows us to split on both, and get a function \(OPT(i, w)\). 
+					</p>
+					<p>
+						<b><i>Define.</i></b> \(OPT(i, w)\) as optimal value of knapsack with items \(1..i\) subject to weight \(w\). 
+					</p>
+					<p>
+						Our goal is \(OPT(n, W)\).
+					</p>
+				</div>
+
+				<div>
+					<p>Bellman Equation</p>
+				</div>
+				<div>
+					<p>
+						When we reach item \(i\), we want to know if it's in OPT or not. So we have the following cases.
+						<ol>
+							<li>
+								\(OPT(i, w)\) does not include \(i \implies OPT(i, w\) selects best items from \(1, 2, \dots, i-1\).
+							</li>
+							<li>
+								\(OPT(i, w)\) includes \(i \implies\) we (a) collect value \(v_i\), (b) get a new weight limit \(w-w_i\), (c) OPT keeps on selecting according to new weight limit \(w-w_i\). 
+							</li>
+						</ol>
+
+						Thus we get the equation
+
+						\[
+						OPT(i, w) = \begin{cases} 
+						    0 & \textrm{if } i = 0 \\
+							OPT(i-1, w) & \textrm{if }w_i > w \\
+							\max(OPT(i-1, w), v_i + OPT(i-1, w-w_i)) & \textrm{otherwise}
+						\end{cases}
+						\]
+
+						Note that even if item \(i\) does not exceed the weight, it might not be in the optimal anyway. 
+					</p>
+				</div>
+
+				<div>
+					<p>Bottom-up programming</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M\)[][]  # 1st index items, 2nd index weights 
+
+knapsack(\(n, W, w_1 .. w_n, v_1 .. v_n\)):
+	for \(w = 0 .. W\):
+		\(M[0, w] \longleftarrow 0\)
+	for \(i = 1 .. n\):
+		for \(w = 0 .. W\):
+			if \(w_i > w\):
+				\(M[i][w] \longleftarrow M[i-1][w]\)
+			else:
+				\(M[i][w] \longleftarrow \max(M[i-1][w] , v_i = M[i-1][w-w_i])\)
+	return \(M[n][W] \)</div>
+					
+					<p>
+						Looking at the final table, we start from the bottom right <code>[n][W]</code> corner. If the value above is the same, then \(i\) for that row not chosen. If value above is less, \(i\) is chosen, take \(v_i\) away from current value and find first occurence of that in row above. 
+					</p>
+				</div>
+
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p>
+						This algorithm has \(\Theta(nW)\) time and space complexity, which should be easy enough to see. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-3">Edit Distance and Sequence Alignment</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						Given two strings (like <code>occurrance</code> and <code>ocurrence</code>), we want to know how "similar" they are. However this is very vague. How could we measure difference? 
+					</p>
+					
+				</div>
+				<div>
+					<p>Possible solution considerations</p>
+				</div>
+				<div>
+					<p>
+						We could align strings from first letter: <br>
+						<code>occurrance</code><br>
+						<code>ocurrence</code><br>
+						This has 6 mismatches and 1 "gap" (where a letter matches onto an empty space). But what is the <i>best</i> alignment? 
+					</p>
+					<p>
+						Perhaps we want to minimise both gaps and mismatches: <br>
+						<code>occurrance</code><br>
+						<code>oc urrence</code><br>
+						This has one gap and one mismatch.
+					</p>
+					<p>
+						Perhaps however we think mismatches are much, much worse than gaps: <br>
+						<code>occurra nce</code><br>
+						<code>oc urr ence</code><br>
+						Now we have no mismatches, but three gaps.
+					</p>
+					<p>
+						What we decide for the gap/mismatch weighting on will change based on the context said problem is in.
+					</p>
+				</div>
+
+				<div>
+					<p>Edit distance</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Edit distance.</i></b> (Lehvenstein 1966) A measure of the "cost" of editing one string into another, with a gap penalty of \(\delta\), and a mismatch penalty for two letters \(pq\) to be \(\alpha_{pq}\). 
+					</p>
+					<p>
+						The cost is then \(\sum \delta + \sum \alpha_{pq} \). <br>
+						<code>CT GACCTACG</code><br>
+						<code>CTGGACGAACG</code><br>
+						has cost \(\delta + \alpha_{CG} + \alpha_{TA} \).
+					</p>
+				</div>
+
+				<div>
+					<p>Sequence alignment algorithm</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given 2 strings \(x_1 x_2 \dots x_n\) and \(y_1 y_2 \dots y_n\), minimise the edit distance.
+					</p>
+					<p>
+						<b><i>Define.</i></b> An <b>alignment</b> M is a set of ordered pairs \(x_i - y_j\) such that each character appears in at most 1 pair, and there are no crossings: <br>
+						\(x_i x_j\)
+					</p>
+					<p>
+						<b><i>Define.</i></b> the <b>cost of alignment</b> to be 
+						\[
+						cost(M) = \sum_{(x_i, y_j) \in M} \alpha_{x_i y_j} + \sum_{i : x_i \textrm{ unmatched}} + \sum_{i: y_i \textrm{ unmatched}}
+						\]
+						i.e. the mismatch penalty for two letters \(x_i y_j\) (may be 0), and the cost of all unmatched letters.
+					</p>
+				</div>
+
+				<div>
+					<p>Problem Structure</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Define.</i></b> \(OPT(i, j)\) as the min cost of aligning <i>prefix strings</i> \(x_1 x_2 \dots x_n\) and \(y_1 y_2 \dots y_n\). Our goal is thus \(OPT(m, n)\).
+					</p>
+					<p>
+						There are only three options for \(x_i, y_i\):
+						<ol>
+							<li>
+								\(OPT(i, j)\) matches \(x_i\) to \(y_j\). We pay the penalty (if any) \(\alpha_{x_i y_j} \) and the minimum possible cost of \(OPT(i-1, j-1)\).
+							</li>
+							<li>
+								\(OPT(i, j)\) leaves \(x_i\) unmatched. Then we pay gap penalty and min cost of \(OPT(i-1, j)\)
+							</li>
+							<li>
+								\(OPT(i, j)\) leaves \(y_j\) unmatched. Then we pay gap penalty plus min cost of \(OPT(i, j-1)\)
+							</li>
+							Thus our bellman equation goes as follows:
+
+							\[
+							OPT(i, j) = \begin{cases} 
+							    j \cdot \delta & i = 0 \\
+								i \cdot \delta & j = 0 \\
+								\min\begin{cases}
+								    \alpha_{x_i y_j} + OPT(i-1, j-1) \\
+									\delta + OPT(i-1, j) \\
+									\delta + OPT(i, j-1)
+								\end{cases} & \textrm{otherwise. }
+							\end{cases}
+							\]
+						</ol>
+					</p>
+				</div>
+
+				<div>
+					<p>Bottom up implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M\)[][]
+
+seqAlign(\(m, n, x_1\dots x_m, y_1 \dots y_n\)):
+	for \(i = 0 .. m \):
+		\(M[i][0] \longleftarrow i\delta\)
+	for \(j=0..m\):
+		\(M[0][j] \longleftarrow j\delta\)
+	for \(i = 1 .. m\):
+		for \(j = 1 .. n\):
+			\(M[i, j] \longleftarrow \min \begin{cases}
+				\alpha_{x_i y_j} + M[i-1][j-1]\\
+				\delta + M[i-1][j] \\
+				\delta + M[i][j-1]
+				\end{cases} \)
+    return \(M[m, n] \)</div>
+				</div>
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem.</i></b> The algorithm solves edit distance in \(\Theta(mn)\) time.
+					</p>
+					<p>
+						The proof is trivial and left as an exercise to the reader.
+					</p>
+					<p>
+						We can backtrace the algorithm to find the optimal alignment itself. 
+					</p>
+				</div>
+			</div>
+
+			<h3 id="dyn-4">Shortest Paths with Negative Weights</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Problem</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given a directed graph \(G=(V,E)\) with <b>arbitrary</b> edge lengths \(\ell_{vw} \), find the shortest path from some vertex \(s\) to \(t\), assuming said path exists.
+					</p>
+				</div>
+
+				<div>
+					<p>Djikstra fails</p>
+				</div>
+				<div>
+					<p>
+						Base djikstra does not work on these types of graphs. Even adding an equal constant to all edges to teporarily remove negatives, then doing Djikstra, does not work. 
+					</p>
+					<figure>
+						<img src="./djikstra-fails.png" alt="Counterexamples to djikstra on negative and negative with positive weight">
+						<figcaption>
+							<i>Djikstra does not work in either case.</i> <br> In the first example, s->t is calculated as 2, but s->v->w->t is actually lower at 1. In the second example, s->t is still 2 (12 with weight), yet s->v->w->t with weight 25 becomes 1 after reweighting. 
+						</figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p>On negative cycles</p>
+				</div>
+				<div>
+					<p class="blue">
+						<b><i>Definition.</i></b> <b>Negative cyces</b> are directed cycles where the sum of weights is less than 0. 
+					</p>
+					<p>
+						Negative cycles makes this problem somewhat difficult. 
+					</p>
+					<p class="side">
+						<b><i>Lemma 1.</i></b> If there exists a path \(v \leadsto t\) which contains any part of a negative cycle, the shortest path \(v \leadsto t\) does <b>not</b> exist.
+					</p>
+					<button class="collapsible">Proof 1...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> \(v \leadsto t\) is on the negative cycle \(W\). When we reach the part of the path on the negative cycle, we can loop round and round the cycle until our path weight spirals to \(-\infty\), so we have <i>no minimum weight</i>. $$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Lemma 2.</i></b> If there are no negative cycles, \(\exists\) shortest path \(v \leadsto t\; \forall v, t\) that is <b>simple</b> (no repeat vertices).
+					</p>
+					<button class="collapsible">Proof 2...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Let us assume we have a shortest path with fewest edges. If that path contains a directed cycle \(W\), we can remove it without increasing the path length (since there are no negative cycles). $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Formal problems</p>
+				</div>
+				<div>
+					<p>
+						We can formulate some formal problems:
+					</p>
+					<p>
+						<b><i>Single Destination Shortest Path.</i></b> Given a digraph \(G = (V, E)\) with edge weights \(\ell_{wv}\), no negative cycles, and a destination node \(t\), find the shortest \(v \leadsto t \; \forall v \in V\). 
+					</p>
+					<p>
+						<b><i>Negative Cycle.</i></b> Given a digraph \(G = (V, E)\) with weights \(\ell_{wv} \), find if a negative cycle exists.
+					</p>
+				</div>
+
+				<div>
+					<p>Dynamic programming for shortest path</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Define.</i></b> \(OPT(i, v)\) as the length of the shortest path \(v \leadsto t\) that uses \(\leq i\) edges. 
+					</p>
+					<p>
+						Our goal is thus \(OPT(n-1, v)\)
+					</p>
+					<p>
+						We have two cases:
+						<ol>
+							<li>
+								\(OPT(i, v)\), the shortest path, uses strictly \(&lt; i\) edges. 
+								\[OPT(i, v) = OPT(i-1, v)\]
+							</li>
+							<li>
+								The shortest path uses exactly \(i\) edges. Then let \((v, w)\) be the first edge on that path, with weight \(\ell{vw} \). This edge <i>has</i> to be optimal (because dynamic programming).
+								\[OPT(i, v) = \ell_{vw} + OPT(i-1, w)\]
+								(Find path \(w \leadsto t\))
+							</li>
+						</ol>	
+					</p>
+				</div>
+				<div>
+					<p>Bellman equation</p>
+				</div>
+				<div>
+					<p>
+						\[
+						OPT(i, v) = \begin{cases}
+						0 &i=0,v=t \\
+						\infty &i=0,v\neq t \\
+						\min \begin{cases} OPT(i-1, v) \\ \min_{\forall (v, w) \in E}(OPT(i-1, w) + \ell_{vw}) \end{cases} &i>0 
+						\end{cases}
+						\]
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">global \(M\)[][]
+
+shortestPath(\(V, E, \ell, t\)):
+	foreach node \(v \in V\):
+		\(M[0, v] \longleftarrow \infty\)
+	\(M[0, t] \longleftarrow 0\)
+	for \(i=1..n-1\):
+		foreach node \(v \in V\):
+			\(M[i, v] \longleftarrow M[i-1, v] \)
+			foreach edge \((v, w) \in E\):
+				\(M[i, v] \longleftarrow \min(M[i, v], M[i-1, w] + \ell_{vw} )\)</div>
+				</div>
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem 1.</i></b> Given a digraph with no negative cycles, we can get the length of the shortest path \(\forall v \in V\) in \(\Theta(mn)\) time and \(\Theta(n^2)\) space. 
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> The table is \(n \times n-1 = \Theta(n^2)\) for \(n\) verices. Each iteration of \(i\) examines all edges exactly once (\(m\) edges), for \(\Theta(n)\) iterations, thus we get \(\Theta(mn)\) time. 
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Finding paths</p>
+				</div>
+				<div>
+					<p>
+						This algorithm so far only finds optimal lengths. To find optimal paths, we could
+					</p>
+					<p>
+						(Either) Maintain an array <code>successor[(i, v)]</code> that points to the next node on the shortest path \(v \leadsto t\) using \(\leq i\) edges, when we are setting M.
+					</p>
+					<p>
+						(Or) After getting the optimal length \(M[i, v]\), consider only the edges such that \(M[i, v] = M[i-1, w] + \ell_{vw} \) Any path that satisfies this all the way to \(i=0\) that is satisfactory is shortest. 
+					</p>
+				</div>
+				<div>
+					<p>Bellman Ford Moore algorithm</p>
+				</div>
+				<div>
+					<p>
+						The <b>Bellman-Ford-Moore (BMF) algorithm</b> is an improvement on the shortest path algorithm. 
+						<ul>
+							<li>
+								<b>Space optimisation.</b> Maintain 2 1d arrays (for linear space): \(d:d[v] \) is the length of shortest path \(v \leadsto t\) found so far; and \(\textrm{succ}: \textrm{succ}(v)\) is the next node on said \(v \leadsto t\) path. 
+							</li>
+							<li>
+								<b>Performance optimisation.</b> If \(d[w] \) is not updated in iteration \(i-1\), there is no reason to consider other edges going into \(w\) in iteration \(i\).
+							</li>
+						</ul>
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">bellmanFordMoore(\(V, E, \ell, t\)):
+	foreach \(v \in V\):
+		\(d[v] \longleftarrow \infty\)
+		\(succ[v] \longleftarrow \textrm{null}\)
+	\(d[t] \longleftarrow 0\)
+	for \(i = 1 .. n-1\):
+		foreach \(w \in V\):
+			if \(d[w]\) updated previously:
+				forach edge \((v, w) \in E\):
+					if \(d[v] &gt; d[w] + \ell_{vw} \):
+						\(d[v] \longleftarrow d[w] + \ell_{vw} \)
+						\(succ[v] \longleftarrow w\)
+		if no value changed in prior loop:
+			return;</div>
+				</div>
+				<div>
+					<p>Complexity</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Lemma 3.</i></b> For each \(v \in V, \; d[v]\) is the length of some \(v \leadsto t\) path. 
+					</p>
+					<button class="collapsible">Proof 3...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Whenever we update \(d[v]\), it refers to an edge that goes to another vertex that will eventually go to \(t\). Domino.
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Lemma 4.</i></b> The value of \(d[v]\) cannot increase 
+					</p>
+					<button class="collapsible">Proof 4...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> It should be easy enough to see that in the algorithm we only ever try to minimise from infinity, not the other way round.
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Lemma 5.</i></b> After iteration \(i\), \(d[v] \leq\) length of the shortet path with \(\leq i\) edges. (Please note the inequality, versus the equality of the original algorithm).
+					</p>
+					<button class="collapsible">Proof 5...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Induction on \(i\): the base case \(i=0\) is just the set inital conditions.
+						</p>
+						<p>
+							Let \(P\) be a \(v \leadsto t\) path with \(\leq i+1\) edges. Consider P with the first edge extracted: \(v \longrightarrow w \leadsto t\). Let \(w \leadsto t\) be \(P'\). 
+						</p>
+						<p>
+							Note that \(P'\) has \(\leq i\) edges. <br>
+							Let \(d^i [v] =\) value of \(d[v] \) after iteration \(i\). 
+						</p>
+						<p>
+							Apply lemma to \(P'\) (i.e. applying inductive hypothesis): \(d^i [w] \leq \ell(P')\). <br>
+							We want \(d^{i+1} [v] \leq \ell(P) \; \forall P\).
+						</p>
+						<p>
+							Take \(d^{i+1} [v] \)
+							\begin{align}
+								d^{i+1} [v] &\leq d[v] \textrm{ by lemma 4} \\
+								&\leq \ell_{vw} + d [w] \textrm{ considering edge } vw \at \textrm{ iteration } i+1 \\
+								&\leq \ell_{vw} + d^i[w] \\
+								&\leq \ell_{vw} + \ell(P') \textrm{ inductive hyp.} \\
+								&\leq \ell(P)
+							\end{align}
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+					<p class="side">
+						<b><i>Theorem 2.</i></b> Assuming no negative cycles, BFM solves in \(O(mn)\)* time and \(\Theta(n)\) space. 
+					</p>
+					
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Use <i>lemma 2</i> (scroll up), then <i>lemma 5</i>, then <i>lemma 3</i>. 
+						</p>
+					</div>
+
+					<p>
+						* <b>Note:</b> \(O(mn)\) not \(\Theta(mn)\). BFM is typically faster than \(\Theta(mn)\). 
+					</p>
+					<p>
+						Edge \(\langle v, w \rangle\) is considered in pass \(i+1 \) <i>only if</i> \(d[w] \) is updated in pass \(i\). If the shortest path has \(k\) edges, the algorithm will find it after \(\leq k\) passes. 
+					</p>
+				</div>
+
+				<div>
+					<p>Getting the path</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Claim.</i></b> Throughout the BFM algorithm, following \(succ[v] \) pointers gives directed path from \(v \leadsto t\) of length \(d[v]\). 
+					</p>
+					<button class="collapsible">Counterexample... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Counterexample.</i></b> This is false - the length of \(succ[v]\) path may be <i>shorter</i> than \(d[v]\). 
+							<figure>
+								<img src="./bfm-counter-1.png" alt="Counterexample graph 1" style="max-width: 400px;">
+							</figure>
+							Consider the graph, with nodes \(t, 1, 2, 3\). The state of the graph is shown after the algorithm is ran on \(t, 1, 2\).
+						</p>
+						<p>
+							Now we consider 3, we scan incoming edges: edge from 1, \(d[1] = 10\), but \(\ell_{\langle 1, 3\rangle} = 1\), thus \(1 \leadsto t\) has a length of 2.
+						</p>
+						<p>
+							Update \(d[1] \longleftarrow 2, succ[1] \longleftarrow 3\). We are now done.
+						</p>
+						<p>
+							Look at node 2. \(d[2] = 20\) but the path \(\langle 2 1 3 t \rangle\) is of length 12, which is shorter than \(d\). 
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Successor graphs</p>
+				</div>
+				<div>
+					<p>
+						If the graph has negative cycles, BFM may produce a successor graph which has a cycle. 
+					</p>
+					<figure>
+						<img src="./bfm-neg-cycle.png" alt="negative cycle graph" style="max-width: 300px;">
+						<figcaption><i>This graph has a negative cycle</i></figcaption>
+					</figure>
+					<p>
+						Suppose we've considered nodes \(t, 1, 2, 3\), but not 4 (state shown). Consider the incoming edge \(\langle 1, 4 \rangle\). \(d[1] = 5\), but \(\ell_{\langle 1, 4\rangle} = -8, \; d[4] = 11, \; 11-8 &lt; 5\), so we update \(d[1] \longleftarrow 3, \; succ[1] \longleftarrow 4\). 
+					</p>
+					<p>
+						Now the successor edges form a cycle, and none will ever reach \(t\). 
+					</p>
+				</div>
+				<div>
+					<p>BFM and negative cycles</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Lemma 6.</i></b> Any directed cycle W in a successor graph produced by BFM is a negative cycle. 
+					</p>
+					<button class="collapsible">Proof 6...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> If \(succ[v] = w\), we must have \(d[v] \geq d[w] + \ell_{vw} \)
+						</p>
+						<p><i>
+							\(LHS = RHS\) when \(succ[v]\) is set to \(w\). \(d[w]\) however can later decrease, making RHS lower, whereas \(d[v]\) can only decrease if \(succ[v] \) is reset. 
+						</i></p>
+						<p>
+							Let \(\langle v_1, v_2, \dots, v_k, v_1 \rangle \) be the sequence of nodes in cycle W. Assume edge \(\langle v_k, v_1 \rangle\) be the last edge added in W. 
+						</p>
+						<p>
+							Just before this, we have
+							\begin{align}
+								d(v_1) &\geq d(v_2) + \ell_{v_1 v_2} \\
+								d(v_2) &\geq d(v_3) + \ell_{v_2 v_3} \\
+								&\dots \\
+								d(v_{k-1}) &\geq d(v_k) + \ell_{v_{k-1} v_k} \\
+								d(v_k) & &gt; d(v_1) + \ell_{v_k v_1} \textrm{ (strict inequality)}
+							\end{align}
+							Since this is <i>before</i> \(d(v_k)\) is updated. \(\sum LHS &gt; \sum RHS\) (because of the one strict inequality), thus \(\sum d(LHS) &gt; \sum d(RHS) + \ell_{RHS} \) - note that \(d[LHS], d[RHS]\) are the same vertices, thus
+							\begin{align}
+								& 0 &gt; \ell_{RHS} \\
+								\Longleftrightarrow & 0 &gt;\ell_{v_1 v_2} + \ell_{v_2 v_3} + \dots + \ell_{v_k v_1}
+							\end{align}
+							Thus we have a negative cycle. $$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Correctness</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem 3.</i></b> If there are no negative cycles, BFM algorithm will find the shortest paths. 
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> If <i>(lemma 6)</i> successor graph has no cycles, we have a tree of shortest paths. 
+						</p>
+						<p>
+							Following successors from \(v\) gets a path to \(t\). 
+						</p>
+						<p>
+							Let \(P = \langle v= v_1, v_2, \dots, v_t=t \rangle\), i.e. the nodes along said path. 
+						</p>
+						<p>
+							On algorithm halt, \(succ[v] = w \implies d[v] = d[w] + \ell_{vw} \), since the LHS and RHS equal when this is set, and \(d[w]\) never updated again as the algorithm halts. Thus,
+							\begin{align}
+								d(v_1) &= d(v_2) + \ell_{v_1 v_2} \\
+								d(v_2) &= d(v_3) + \ell_{v_2 v_3} \\
+								&\dots \\
+								d(v_{t-1}) &= d(v_t) + \ell_{v_{t-1} + v_t} \;\; (d(v_t) = d(t) = 0)
+							\end{align}
+							\(\sum LHS = \sum RHS \implies d[v] = d[t] + \ell_{v_1 v_2} + \ell_{v_2 v_3} + \dots + \ell_{v_{t-1} v_t}\)
+						</p>
+						<p>
+							Which is the max length of any shortest path by Theorem 2 (somehow). $$\tag*{$\Box$}$$
+						</p>
+					</div>
+
+					<p class="small">
+						Better algorithms than BFM have been developed in more recent years. 
+					</p>
+				</div>
+			</div>
+
+
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="intractibility">Intractibility</h2>
+		</div>
 
 	</div>
+
+	
+
+	<footer>
+		<div class="cbox">
+			<div class="columncontainer ctwo" id="fc2">
+			</div>
+			<script type="text/javascript" src="../../js/footerGen.js"></script>
+		</div>
+	</footer>
 
 	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
 	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>

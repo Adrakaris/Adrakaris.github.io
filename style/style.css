@@ -290,6 +290,10 @@ footer.green {
     box-shadow: 0 50vh 0 50vh var(--green);
 }
 
+.active, .collapsible:hover {
+    background-color: var(--bg-active);
+}
+
 a.nav {
     font-family: Urbanist;
     text-align: center;
@@ -311,7 +315,12 @@ a {
     text-decoration: none;
 }
 
-a.text {
+a:hover:not(.nav) {
+    text-decoration: underline;
+}
+
+a.text:hover {
+    color: var(--blue);
     text-decoration: underline;
 }
 
@@ -325,7 +334,6 @@ a.black {
 
 button.nav {
     font-family: Urbanist;
-    font-size: 8;
     text-align: center;
     margin-top: -30px;
     color: var(--band-txt);
@@ -343,8 +351,8 @@ button.nav:hover {
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
 }
 
-.active, .collapsible:hover {
-    background-color: var(--bg-active);
+.buttonwrapper > a:hover {
+    text-decoration: none;
 }
 
 .collapsible:after {
@@ -392,6 +400,10 @@ button.nul {
     overflow: hidden;
     display: none;
     transition: max-height 0.2s ease-out;
+}
+
+.ccontent.inv {
+    display: block;
 }
 
 .cnul {
@@ -449,6 +461,10 @@ p.subheading {
 
 p.small {
     font-size: 8pt;
+}
+
+p.grey {
+    color: gray;
 }
 
 p.rj {
@@ -556,6 +572,10 @@ blockquote {
 
 figcaption {
     text-align: center;
+}
+
+figcaption.i {
+    font-style: italic;
 }
 
 figure > img {

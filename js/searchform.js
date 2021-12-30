@@ -28,7 +28,8 @@ function createDiv(block) {
 
     var title = document.createElement("h2");
     var title_a = document.createElement("a");
-    title_a.setAttribute("class", "text"); title_a.setAttribute("href", block["link"]);
+    // title_a.setAttribute("class", "text"); 
+    title_a.setAttribute("href", block["link"]);
     title_a.appendChild(document.createTextNode(block["title"]));
     title.appendChild(title_a);
     div.appendChild(title);

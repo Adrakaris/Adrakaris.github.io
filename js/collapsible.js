@@ -6,10 +6,10 @@ for (i = 0; i < col.length; i++) {
         this.classList.toggle("active");
         var content = this.nextElementSibling;
         // console.log(content)
-        if (content.style.display == "grid") {
+        if (content.style.display == "block") {
             content.style.display = "none";
         } else {
-            content.style.display = "grid";
+            content.style.display = "block";
         }
     });
 }
