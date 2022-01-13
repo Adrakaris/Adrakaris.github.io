@@ -50,6 +50,7 @@
 
             <ol>
                 <li><a href="#greedy">Greedy Algorithms</a></li>
+				<li><a href="#paths">Greedy Algorithms and Shortest Paths</a></li>
 				<li><a href="#divide">Divide and Conquer</a></li>
 				<li><a href="#dynprogramming">Dynamic Programming</a></li>
 				<li><a href="#intractibility">Intractbility</a></li>
@@ -475,6 +476,258 @@ earliest_deadline_first(\(n\), \(t_{1..n} \), \(d_{1..n} \)):
 					</div>
 				</div>
 
+		</div>
+
+		<div class="colourband">
+			<h2 id="paths">Greedy Algorithms and Shortest Paths</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#path-1">Djikstra's Algorithm</a></li>
+				<li><a href="#path-2">Minimum Spanning Trees</a></li>
+			</ol>
+
+			<h3 id="path-1">Djikstra's Algorithm</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Single pair shortest paths</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Problem.</i></b> Given a digraph \(G = (V, E)\), with edge lengths \(\ell_e \geq 0\), a source \(s \in V\) and a destination \(t \in V\), find the shortest directed path from s to t. 
+					</p>
+					<p>
+						Called single pair because there is one source and one destination.
+					</p>
+				</div>
+
+				<div>
+					<p>Variations</p>
+				</div>
+				<div>
+					<p>
+						We can also have just single source shortest path, where from a source we have to find the path to ALL other vertices (i.e. tree rooted at S). 
+					</p>
+				</div>
+				<div>
+					<p>Djikstra's Algorithm</p>
+				</div>
+				<div>
+					<p>
+						Djikstra's is a well known algorithm for single source shortest path. It is a greedy algorithm, and works on graphs with <b>non-negative weights</b> only. 
+					</p>
+					<ul>
+						<li>
+							Maintain a set of explored nodes S and an array \(d : d_u =\) length of shortest path \(s \leadsto u\). 
+						</li>
+						<li>
+							Initially set \(S \longleftarrow \{s\};\; d_s \longleftarrow 0\).
+						</li>
+						<li>
+							Repeatedly choose new \(v \not \in S\) which minimises the "path value" of \(v: \pi(v)\). 
+							\[\pi(v) = \min_{e = \langle u, v \rangle : u \in S}(d_u + \ell_e)\]
+							i.e. pick the edge leading out from any node \(u\) in the explored set which has the smallest \(d_u + \ell_e\) value. 
+						</li>
+						<li>
+							Add that \(v\) to S, and set \(d_v \longleftarrow \pi(v)\). If we need to recover the path later, store also the edge that lead to \(v\). 
+						</li>
+					</ul>
+				</div>
+				<div>
+					<p>Proof of correctness</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Assertion.</i></b> For all nodes \(u \in S, \; d_u\) is the length of the shortest path.
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> Do induction on \(|S|\), the explored set. 	
+						</p>
+						<p>
+							Base case: \(|S| = 1,\; S = \{s\},\; d_s = 0\), which is trivially true.
+						</p>
+						<p>
+							Induction: Assume true for some \(|S| = n \geq 1\). 
+						</p>
+						<ul>
+							<li>
+								Let \(v\) be the next node added to S. \((u, v)\) is that final edge.
+							</li>
+							<li>
+								A shortest path \(s \leadsto u + (u, v)\) has path length \(\pi(v)\). 
+							</li>
+							<li>
+								Consider any other \(s \leadsto v\) path P (we want to prove that P is no shorter than \(\pi(v)\)).
+								<figure>
+									<img src="./djikstra-proof.png" alt="Another path s to v" style="max-width: 200px;">
+									<figcaption>Green path in figure</figcaption>
+								</figure>
+							</li>
+							<li>
+								The path must have an edge where it leaves S. Let the first edge that does this be \(e = (x, y)\) for some nodes \(x, y\). 
+							</li>
+							<li>
+								Since Djikstra, by definition, picks the node outside of S that is <i>closest</i> to \(s\), \(P \geq \pi(v)\) as soon as \(y\) is reached, since \(v\) was picked before \(y\). 
+							</li>
+							<li>
+								Formally, this can be written as 
+								\[\ell(P) = \ell(P') + \ell_{(x,y)} = d_x + \ell_e = \pi(y) \geq \pi(v)\]
+								$$\tag*{$\Box$}$$
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div>
+					<p>An efficient implementation - optimisations</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Optimisation 1.</i></b> For all unexplored nodes \(v \not \in S\), explicitly maintain \(\pi(v)\) instead of computing from definition each time. Initialise it to \(\infty\) when we don't have a value. 
+					</p>
+					<p>
+						\(\pi(v)\) can only decrease, since S increases and we allow more nodes into the minimisation formula. Suppose we do get a \(u\) added to S, with an edge \(e = \langle u, v \rangle\), it is sufficient to compute just 
+						\[\pi(v) = \min(\pi(v), \pi(u) + \ell_e)\]
+					</p>
+					<p>
+						<b><i>Optimisation 2.</i></b> Use a min-oriented priority queue to choose unexplored node \(v\) as efficiently as possible, sorting by the value \(\pi(v)\). 
+					</p>
+				</div>
+
+				<div>
+					<p>Implementation pseudocode</p>
+				</div>
+				<div>
+					<p></p>
+					<div class="codediv">djikstra(\(V, E, \ell, s\)):
+	for each \(v \not \in S\):
+		\(\pi[v] \longleftarrow \infty\)
+		\(pred[v] \longleftarrow \textrm{NULL}\)
+	\(\pi(s) \longleftarrow 0\)
+	pq \(\longleftarrow\) new PriorityQueue
+	for each \(v \in V\):
+		pq.insert(\(\pi[v], v\))
+	while not pq.empty:
+		\(u \longleftarrow\) pq.del_min()
+		for each edge \(e = \langle u, v \rangle \in E\):
+			if \(\pi[v] &gt; \pi[u] + \ell_e\):
+				pq.decrease_key(\(v, \pi[u] + \ell_e\))
+				\(\pi[v] \longleftarrow \pi[u] + \ell_e\)
+				\(pred[v] \longleftarrow e\)</div>
+				</div>
+
+				<div>
+					<p>Time complexity</p>
+
+				</div>
+				<div>
+					<p>
+						The running time is dominated by the number of priority queue operaions. We insert, delete minimum, and decrease key a total of \(O(n)\) times. Our implementation of the priority queue thus determines our running time. 
+					</p>
+					<p>
+						Note that \(m\) is used for the number of edges, which is \(\Theta(n)\) on sparse graphs and \(\Theta(n^2)\) on dense graphs.
+					</p>
+					<table>
+						<tr>
+							<th>PQ</th> <th>Insert</th> <th>Delete-min</th> <th>Decrease-key</th> <th>Total</th>
+						</tr>
+						<tr>
+							<td>Node indexed array: \(A[i] =\) priority of \(i\)</td>
+							<td>\(O(1)\)</td> <td>\(O(n)\)</td> <td>\(O(1)\)</td> <td>\(O(n^2)\)</td>
+						</tr>
+						<tr>
+							<td>Binary Heap</td> <td>\(O(\log n)\)</td> <td>\(O(\log n)\)</td> <td>\(O(\log n)\)</td> <td>\(O(m \log n)\)</td>
+						</tr>
+						<tr>
+							<td>"D-way Heap"</td> <td>\(O(d \log_d n)\)</td> <td>\(O(d \log_d n)\)</td> <td>\(O(\log_d n)\)</td> <td>\(O(m \log_{\frac{m}{n}} n)\)</td>
+						</tr>
+						<tr>
+							<td>Fibonacci Heap</td> <td>\(O(1)\)</td> <td>\(O(\log n)\) amortised</td> <td>\(O(1)\) amortised</td> <td>\(O(m + n \log n\)</td>
+						</tr>
+						<tr>
+							<td>Integer PQ</td> <td>\(O(1)\)</td> <td>\(O(\log \log n)\)</td> <td>\(O(1)\)</td> <td>\(O(m + n \log \log n)\)</td>
+						</tr>
+					</table>
+					<p>
+						For dense graphs, a node-indexed array is best, whilst for sparse graphs, a binary heap is best. 
+					</p>
+				</div>
+			</div>
+			
+			<h3 id="path-2">Minimum Spanning Trees</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Cutsets</p>
+				</div>
+				<div>
+					<p class="blue">
+						<b><i>Definition.</i></b> A <b>cut</b> is an arbitrary partition of nodes into two non-empty sets: \(S, V \setminus S \;(\textrm{or } V - S)\).
+					</p>
+
+					<p class="blue">
+						<b><i>Definition.</i></b> A <b>cutset</b> of cut S is the set of edges : each edge has exactly one endpoint in S. 
+					</p>
+
+					<figure>
+						<img src="./cutset.png" alt="Cutset and cut" style="max-width: 400px;">
+						<figcaption><i>A cut (pink) and a cutset (blue edges)</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p>Cycle-cut intersetion</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Proposition.</i></b> An (arbitrary) cycle intersects a cutset on an <b>even</b> number of edges. 
+					</p>
+					<button class="collapsible">Proof... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Proof.</i></b> by picture:
+							<figure>
+								<img src="./cutset-cycle-even-edges.png" alt="" style="max-width: 400px;">
+							</figure>
+							In short, if a cycle and cut don't intersect, we're all OK. If a cycle starts in the cut and leaves the cut, it must eventually return, so leaving and returning matches, making pairs.
+							$$\tag*{$\Box$}$$
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Spanning and Minimum Spanning Trees</p>
+				</div>
+				<div>
+					<p>
+						A <b>spanning tree</b> is a subgraph that is acyclic and connected. <a href="../cs130/#tre-1">See here for notes on spanning trees</a>.
+					</p>
+					<p>
+						Given an undirected, connected graph with weights, the <b>minimum spanning tree</b> is the spanning tree with minimum edge cost. 
+					</p>
+					<p class="side">
+						<b><i>Theorem.</i></b> <b>Cayley's Theorem.</b> A complete graph \(k_n\) has \(n^{n-2} \) spanning trees. 
+					</p>
+					<p>
+						This theorem means though that brute-forcing spanning trees is a no-no.
+					</p>
+				</div>
+
+				<div>
+					<p>Fundamental cycle</p>
+				</div>
+				<div>
+					<p>
+						<b><i>Define.</i></b> Let \(H=(V, T)\) be spanning tree of \(G = (V, E)\). For any non-tree edge \(e \in E, \; T \cup \{e\}\) contains a unique cycle C (maximal acylcic). 
+					</p>
+				</div>
+			</div>
 		</div>
 
 		<div class="colourband">
