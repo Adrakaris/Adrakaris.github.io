@@ -66,10 +66,12 @@ toggle.addEventListener("click", function() {
     if (indicator == "dark") {
         indicator = "light";
         localStorage.setItem("theme", "light");
+        toggle.innerText = "Dark Mode";
         setTheme(light);
     } else {
         indicator = "dark";
         localStorage.setItem("theme", "dark");
+        toggle.innerText = "Light Mode";
         setTheme(dark);
     }
 });
