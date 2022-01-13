@@ -2276,7 +2276,12 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 		<div class="cbox">
 			<h3>Contents</h3>
 
-			<h3>Iterative Improvement</h3>
+			<ol>
+				<li><a href="#loc-1">Iterative Improvement</a></li>
+				<li><a href="#loc-2">Stochasticity</a></li>
+			</ol>
+
+			<h3 id="loc-1">Iterative Improvement</h3>
 	
 			<div class="cornell">
 				<div>
@@ -2290,10 +2295,309 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 						<b>Local search</b> is an approach which only cares about the current state, and surrounding states it can move to. 
 					</p>
 					<p>
-						Whilst local search is not systematic, it is efficient for memory and can often find reasonable solutions, and is usefol for many optimisation problems, where there is some objective cost/"goodness" function.
+						Whilst local search is not systematic, it is efficient for memory and can often find reasonable solutions, and is useful for many optimisation problems, where there is some objective cost/"goodness" function.
+					</p>
+					<p>
+						We define the <b>state space</b> as all possible configurations (states) of a world, and the <b>goal</b> as the state we want to end up in. Usually this is optimal by some heuristic metric. 
 					</p>
 				</div>
+				<div>
+					<p>
+						Iterative Improvement Algorithms
+					</p>
+				</div>
+				<div>
+					<p>
+						Iterative improvements describe algorithms that only consider the current state, and all states it can move to. The idea is to move to a state which gives the greatest increase in "quality" (metric based)
+					</p>
+					<p>
+						Since we only track current state, these algorithms are usually <b>constant space</b> (though time is <i>eugheheheh?</i>). 
+					</p>
+				</div>
+				<div>
+					<p>Common Problems</p>
+				</div>
+				<div>
+					<p>
+						One common problem in computer science is called the <i>N-Queens Problem</i>, where, given an \(n \times n\) chessboard, fit \(n\) queens on it so that none can take another in one move. 
+					</p>
+					<p>
+						Another, more general problem, is an abstraction of many problems. Imagine you have two values for a state, and a cost metric. The highest optimal costs form "peaks" in a landscape, and the goal is to travel to the highest possible peak. 
+					</p>
+					<figure>
+						<img src="./hillclimb.png" alt="Sorry for the low quality" style="max-width: 200px;">
+						<figcaption><i>Visualised hill climbing, one is liable to get stuck at local maxima</i></figcaption>
+					</figure>
+				</div>
+				<div>
+					<p>Hill Climbing</p>
+				</div>
+				<div>
+					<p>
+						<b>Hill Climbing</b>, or <b>Greedy Local Search</b>, is the most basic of iterative improvement algorithms, and always tries to improve state (by reducing or increasing a cost function depending on the situation).
+					</p>
+					<p>
+						There is no search tree, and if there are several equally good values, they are chosen at random. 
+					</p>
+				</div>
+				<div>
+					<p>Implementation</p>
+				</div>
+				<div>
+					<div class="codediv">static Node current
+static Node next
+
+hillClimbing(Problem problem):
+	current \(\longleftarrow\) makeNode(problem.initialState)
+	forever:
+		next \(\longleftarrow\) highest valued successor of current
+		if next.value < current.value:  # reached a peak
+			return current 
+		current \(\longleftarrow\) next</div>
+				</div>
+
+				<div>
+					<p>Problems</p>
+				</div>
+				<div>
+					<p>
+						<b>Local maxima</b>: naive hill climbing is very supceptible to finding local maxima: states that are surrounded by worse states, but not being the best state overall in the state space. Thus, the algorithm will halt sub-optimally. We will talk about ways to solve this later. 
+					</p>
+					<p>
+						<b>Ridges</b>: whilst not as big of a problem, if we have a ridge with very steep sides, the search algorithm may oscillate around the ridge, thus making very slow uphill progress. 
+					</p>
+					<figure>
+						<img src="./ridgeclimb.png" alt="Oscillation around a ridge" style="max-width: 300px;">
+						<figcaption><i>Oscillation around a ridge</i></figcaption>
+					</figure>
+					<p>
+						<b>Plateaus</b>: A large flat expanse will cause a random walk. This may be a local maximum plateau, or a "shoulder plateau" (where one edge leads to higher ground, whilst the others lower). We need to allow sidways motion to try get off a plateau if it's a shoulder, but this must be limited, else we would walk infinitely.
+					</p>
+				</div>
+
+				<div>
+					<p>Greedy descent for CSPs</p>
+				</div>
+				<div>
+					<p>
+						<b>Greedy Descent</b> is a hill climbing algorithm for CSPs.
+					</p>
+					<p>
+						The idea is to maintain an assignment of variables to values (initialised randomly). Select a variable to change, and select a new value for said variable, repeat until a satisfying arrangement is found. 
+					</p>
+					<p>
+						When we assign values randomly to variables, we can break constraints. Each broken constraint is one <b>conflict</b>, and our goal is to get an assignment with zero conflicts. So we can use the number of conflicts as our heuristic measurement. 
+					</p>
+				</div>
+				<div>
+					<p>Selecting variables</p>
+				</div>
+				<div>
+					<p>We want to find the variable-value pair that minimises the number of conflicts. There are multiple strategies to select:</p>
+					<ul>
+						<li>Select variable that participates in most conflicts, and a value that minimises those conflicts</li>
+						<li>Select a variable that appears in any conflict, and a value that minimises that number</li>
+						<li>Select a variable at random and (same as above)</li>
+						<li>Select a variable <i>and</i> value at random, and accept if it doesn't increase the number of conflicts</li>
+					</ul>
+				</div>
+				<div>
+					<p>More Complex Domains</p>
+				</div>
+				<div>
+					<p>
+						When domains are small / unordered, the neighbours of one state can be equivalent to choosing another value for a variable. When domains are large / ordered, the neighbours can be considered as <i>adjacent</i> values. 
+					</p>
+					<p>
+						If the domains are continuous (imagine a function) we use a process called gradient descent, which changes a variable proportional to its heuristic (cost) function. i.e. We find the gradient at that point (via differentiation), and then go in the opposite direction by a certain step size \(\eta\), to "descend" down to minimise cost.  
+						\[X_i : v_i \longrightarrow v_i - \eta \frac{\partial h}{\partial X_i}\]
+						Which is saying, variable \(X_i\) goes from value \(v_i\) to a value one gradient step away (the \(\del\) thing is the derivative).
+					</p>
+					
+				</div>
 			</div>	
+
+			<h2 id="loc-2">Stochasticity</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Randomised Greedy Descent</p>
+				</div>
+				<div>
+					<p>
+						<b>Stochasticity</b> is a fancy word for randomness. The idea in general is to introduce some randomness into our choices, so we don't beeline it for the local maxima, and gives the algorithm a chance to find the actual maximum. 
+					</p>
+					<p>
+						There are two main methods of randomising greedy descent. <b>Random Steps</b>, where we sometimes move to a random neighbour instead of the best one, and <b>Random restart</b>, where we start again somewhere else, and take the best out of all runs. 
+					</p>
+					<p>
+						If the space has jagged, small local minima, then random steps can take us closer to the true minima, but random restart alone would get start. Conversely, if the space is wide with tall peaks, random restart can be quite quick, but random steps wouldn't get out of a minima well at all. 
+					</p>
+				</div>
+				<div>
+					<p>Stochastic Local Search</p>
+				</div>
+				<div>
+					<p>
+						Stochastic local search is greedy descent with a mix of both random steps and random restart. 
+					</p>
+				</div>
+				<div>
+					<p>Randomly Walking</p>
+				</div>
+				<div>
+					<p>
+						When doing a search step, have a fixed percentage where you choose another variable (or value). 
+					</p>
+					<p>
+						Perhaps choose the variable that is in most conficts, perhaps choose any in-conflict variable, or just any variable altogether. 
+					</p>
+					<p>
+						Sometimes choose the best value, but sometimes choose a random value instead. 
+					</p>
+				</div>
+				<div>
+					<p>Comparing Stochastic Algorithms</p>
+				</div>
+				<div>
+					<p>
+						Stochastic algorithms are inherently random, and so how do we measure how good they are? It depends on how much <b>time</b> you have, and how <b>reliable</b> the algorithm is at halting. 
+					</p>
+					<p>
+						You run tests on three algorithms, A, B, and C. A is very quick (say, 0.4s) at solving 30% of a problem set, but doesn't halt for the other 70%. B is 60% at reasonable speed (1m), but doesn't halt for anything else, and C is 100% of problems, but takes ages (like 20m) for each one. 
+					</p>
+					<figure>
+						<img src="./stochastic-comparison.png" alt="Graph of comparisons" style="max-width: 300px;">
+						<figcaption><i>Runtime against number of problems solved</i></figcaption>
+					</figure>
+					<p>
+						By plotting a graph like shown, we can then determine which algorithm is best for our needs. If our problem is <b>solution critical</b>, then we would go for C, since it always finds a solution. If we need <b>time critical</b>, then A, ran multiple times (with a 30% chance of success each time) might be more preferable. 
+					</p>
+				</div>
+			</div>
+
+			<h3>Variants on Stochastic Algorithms</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Simulated Annealing</p>
+				</div>
+				<div>
+					<p>
+						<b>Annealing</b> is a process in metallurgy that heat-treats a metal to change its properties. We take the vague concepts from this example and apply it to a CSP by "heat treating" the variables.  
+					</p>
+					<p>
+						We have a temperature parameter, \(T\), which slowly decreases over time. 
+					</p>
+					<p>
+						Now, we pick a variable, and a value at random. If it is an improvement, we always adopt it. If it's not better, with probability based on \(T\), we adopt it anyway.  
+					</p>
+					<p class="grey">
+						Note: the actual probability is based on the heuristic \(h()\) of the two values. If we have a current value of \(n\) and a new value of \(n'\), the probability we adopt it is \( e^{\frac{h(n')-h(n)}{T}} \).
+					</p>
+					<p>
+						And as we do more iterations, this probablity \(T\) goes down, representing us "honing in" on a target. 
+					</p>
+				</div>
+				<div>
+					<p>"Tabu" Lists</p>
+				</div>
+				<div>
+					<p>
+						Sometimes our search space has cycles, and we do not want that. A <b>Tabu List</b> (not "taboo"?) is a list of the last \(k\) explored states, that we do not allow moving into. 
+					</p>
+					<p>
+						This is like keeping track of all states, but much less memory and work intensive (depending on the size of \(k\)).
+					</p>
+				</div>
+
+				<div>
+					<p>Parallel Search</p>
+				</div>
+				<div>
+					<p>
+						Similar to random restart, a <b>parallel search</b> does the same thing ... but in parallel. One total assignment is called an <b>individual</b>, and we have \(k\) individuals, all run at once, all updated every step, and get the solutions of all those \(k\) searches. 
+					</p>
+					<p>
+						The first solution to return (i.e. the quickest), or the best solution out of all solved, is taken as the final solution. You could probably multithread this.
+					</p>
+				</div>
+
+				<div>
+					<p>Beam Search</p>
+				</div>
+				<div>
+					<p>
+						A <b>beam search</b> is like parallel search, where we have a number of individuals. Every update, however, instead of each individual picking one best neighbour, they pick \(k\) best neighbours, which then pick \(k\) best neighbours, and so on.
+					</p>
+					<p>
+						When \(k = 1\), we have greedy descent, and when \(k = \infty\), we have breadth-first search. Being able to pick \(k\) allows us to limit the amount of space and parallelism we use. 
+					</p>
+				</div>
+
+				<div>
+					<p>Stochastic Beam Search</p>
+				</div>
+				<div>
+					<p>
+						Expanding on from beam search, a <b>stochastic beam search</b> picks not the best \(k\) individuals, but rather \(k\) individuals based on probability weighted by their heuristic scores (best heuristics are more likely to be picked).
+					</p>
+					<p>
+						This maintains diversity and allows some beams to find different local maxima / the global maxima. We can think of this as akin to asexual reproduction. 
+					</p>
+				</div>
+
+				<div>
+					<p>Genetic Algorithms</p>
+				</div>
+				<div>
+					<p>
+						A <b>Generic Algoritm</b> (GA) is a self-improvement algorithm based off Darwin's theory of evolution (and is kinda like AI Eugenics). It is often used for training neural networks, but can also be used for CSPs. 
+					</p>
+					<p>
+						We have a <i>population</i> of \(k\) randomly generated <i>individuals</i> (states). Each individual is represented as a <b>string</b> describing the state, to facilitate computation. 
+					</p>
+					<p>
+						Successor states are generated based on two "parent" states, like sexual reproduction. 
+					</p>
+					<p>
+						Individuals can be evaluated by a <b>fitness function</b>, which should return higher values for better states. The fitness of an individual is related to the probability that individual is allowed to "reproduce". All individuals not chosen / below the threshold are <i>culled</i> (discarded)
+					</p>
+				</div>
+
+				<div>
+					<p>"Reproduction"</p>
+				</div>
+				<div>
+					<p>
+						For each chosen pair from a GA, a random "crossover point" is chosen. Two offspring are generated by swapping the parent strings after the crossover point. 
+					</p>
+					<p>
+						Parents <code>"123|41234"</code> and <code>"567|85678"</code>, and a crossover point of <code>3</code> (shown in parent), generate the children <code>"12385678"</code> and <code>"56741234"</code>.
+					</p>
+					<p>
+						Finally, each children is subject to a random <i>mutation</i> with a small probability, changing maybe one letter. 
+					</p>
+					<p>
+						Please note an individual can be chosen <b>more than once</b> to reproduce (though obviously not with itself)
+					</p>
+				</div>
+
+				<div>
+					<p>Running style</p>
+				</div>
+				<div>
+					<p>
+						If parents are quite different, their children will be quite different from both parents. 
+					</p>
+					<p>
+						Thus a GA takes very large steps at the beginning, and slow down as the population begins to converge around some optimal states. This is useful for optimisation problems.
+					</p>
+					<p>
+						The <b>choice of represenation is fundamental</b> - a representation needs to be a <i>meaningful</i> description for a GA to work properly. 
+					</p>
+				</div>
+			</div>
 		</div>
 
 		
