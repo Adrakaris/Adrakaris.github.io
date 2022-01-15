@@ -2606,6 +2606,260 @@ hillClimbing(Problem problem):
 			<h2 id="adversarialsearch">Adversarial Search</h2>
 		</div>
 
+		<div class="cbox">
+			<h2>Introduction</h2>
+
+			<ol>
+				<li><a href="#adv-1">Perfect Decisions</a></li>
+				<li><a href="#adv-2">Alpha-Beta Pruning</a></li>
+				<li><a href="#adv-3">Imperfect Decisions</a></li>
+				<li><a href="#adv-4">Monte-Carlo Tree Search</a></li>
+			</ol>
+
+			<div class="cornell">
+				<div>
+					<p>Adversarial Search</p>
+				</div>
+				<div>
+					<p>
+						Consider a multi-agent environment, where agents are in direct conflict with each other. These type of <b>games</b> give rise to <b>adversarial search</b>.
+					</p>
+					<p>
+						<b>Opponents</b> to an agent creates <b>uncertainty</b>, which the agent must deal with by considering <b>contingencies</b>. 
+					</p>
+					<p>
+						These games are often complex, and time is usually important and limited, thus the agent may have to "best guess" based on experience and what it can calculate to be the best in the time allowed. 
+					</p>
+					<p>
+						Uncertainty may not only arise from opponent moves, but also from other factors, like randomness of dice, or time being limited as to not allow perfect decision making. 
+					</p>
+					<p>
+						This uncertainty makes games interesting, and a better representation of the real world. 
+						<ol>
+							<li>A decision must be made even if optimal cannot be made</li>
+							<li>Inefficiency is penalised - a slow program loses!</li>
+						</ol>
+					</p>
+				</div>
+			</div>
+
+			<h2 id="adv-1">Perfect Decisions</h2>
+
+			<p>Let's first consider games which are small enough that we <i>can</i> make a perfect decision.</p>
+
+			<div class="cornell">
+				<div>
+					<p>Games, formally</p>
+				</div>
+				<div>
+					<p>
+						For a given game, we have:
+						<ul>
+							<li>An <b>initial state</b> which we start in</li>
+							<li>A set of <b>operators</b> or "successor functions" - this defines all legal moves and their resulting states</li>
+							<li>A <b>terminal test</b>, which determines if the agent is in a <b>terminal state</b>, i.e. when the game is over</li>
+							<li>A <b>utility function</b> (aka payoff function), which assigns a numerical value to terminal states describing how good they are - +1 win, 0 draw, -1 lose for example. </li>
+						</ul>
+						Using this, we can build a <b>game tree</b>, with the root being the initial state, and then every branch being states we can reach using our operators. Thus, we map out our search space. 
+					</p>
+				</div>
+				<div>
+					<p>Noughts and Crosses</p>
+				</div>
+				<div class="side">
+					<p>
+						Let's consider the game Noughts and Crosses. It's sufficiently small and simple that we can build a tree for it. 
+					</p>
+					<p>
+						In the game we can win, draw or lose. These terminal states can be given the utility 1, 0, -1 respectively. 
+					</p>
+					<figure>
+						<img src="https://lh3.googleusercontent.com/3CUmunUO9kLwvdJ88zLR0LYZciO8IubNc7JbL-LwZrcuEewA6pc7lFj7lJidkuJOcEXPC2gMZxyNyRKFIk3lH-bv0DikugkKyZpfte70q5LlSBokn3j_Rp4C1cRHXpXq8xmTFiYA" alt="Noughts and crosses game tree">
+						<figcaption><i><a href="https://intellipaat.com/community/2630/tic-tac-toe-ai-how-to-make-the-tree">Game tree for noughts and crosses</a></i></figcaption>
+					</figure>
+					<p>
+						Let's call our players Min and Max. Max goes first, and Min goes second. When points are awarded, if Max wins the points are positive, and if Max loses, the points are negative. 
+					</p>
+					<p>
+						Max wants to maximise the score, Min wants to minimise it, and so every turn after Max plays, Min will try to prevent Max from winning and getting positive score. Max thus needs a <b>strategy</b> to prevent Min from stopping him, or worse, winning. 
+					</p>
+					<p>
+						Obviously as Max we don't know what Min will do, so we have to plan for <i>every possible</i> move Min can do. 
+					</p>
+				</div>
+
+				<div>
+					<p>Perfect decisions</p>
+				</div>
+				<div>
+					<p>
+						If we have such a formal, deterministic game (such as noughts and crosses, draughts, chess, etc), we can consider <b>perfect decisions</b>: making the best decision considering <i>every</i> eventuality. 
+					</p>
+					<p>
+						Course for some games (like chess) there are too many options to realistically consider, perfect decision making is not practical, but a computer could perfectly play noughts and crosses. 
+					</p>
+				</div>
+
+				<div>
+					<p>Two ply game trees</p>
+				</div>
+				<div>
+					<p>
+						Let's step back and consider a generic two player game. Each <b>move</b> of the game is when all players have played, and since there are two players, the game tree is called <b>two-ply</b>.
+					</p>
+
+					<figure>
+						<img src="./twoply-gametree.png" alt="One move deep game tree" style="max-width: 300px;">
+						<figcaption><i>A one-move deep two-ply game tree</i></figcaption>
+					</figure>
+
+					<p>
+						We denote Max's moves with an up arrow \(\Delta\), and Min's moves with a down arrow \(\nabla\), as their names would suggest.
+					</p>
+					<p>
+						Max has three of nine possible moves to make against Min, depending on what move Min makes. When we represent a game as a tree like this, we can use this to make an algorithm for an optimal move for Max.
+					</p>
+				</div>
+
+				<div>
+					<p>Minimax</p>
+				</div>
+				<div>
+					<p>
+						Assuming both players are perfectly rational players, <b>minimax</b> is an algorithm that gives the <b>optimal strategy for Max</b>. 
+					</p>
+					<p>
+						Given a state of the game, pick the move that has the <b>largest minimax value</b> &mdash; describing the best possible outcome for Max <i>against the best possible opponent</i>:
+
+						\[
+						\textrm{minimaxValue}(n) = \begin{cases} 
+							\textrm{utility}(n) & n \textrm{ is a terminal state} \\
+							\max_{s \in \textrm{successor}(n)}(\textrm{minimaxValue}(s)) & n \textrm{ is a node for Max} \\
+							\min_{s \in \textrm{successor}(n)}(\textrm{minimaxValue}(s)) & n \textrm{ is a node for Min}
+						\end{cases}
+						\]
+					</p>
+				</div>
+
+				<div>
+					<p>Process</p>
+				</div>
+				<div>
+					<p><ul>
+						<li>Generate a complete game tree</li>
+						<li>Use the utility function to value the terminal states</li>
+						<li>Use these values to assign values to one level up</li>
+						<li>Repeat until the root state</li>
+						<li>Pick node with highest utility from the children</li>
+					</ul></p>
+
+					<figure>
+						<img src="./minimaxing.png" alt="Minimax tree" style="max-width: 400px;">
+						<figcaption>Terminal nodes are rated (black) <br>
+						Min nodes are rated using the lowest of its children (magenta) <br>
+						Max nodes are rated using the highest of its children (blue) <br>
+						Max picks the left move.</figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p>Completeness</p>
+				</div>
+				<div>
+					<p>
+						Minimax is <b>complete</b> ... should the tree be finite. It is also <b>optimal</b> ... given your opponent is too. 
+					</p>
+					<p>
+						Minimax takes \(O(bd)\) (b branching, d depth) since it is DFS and requires \(O(b^d)\), which is really \(O(\textrm{horrible})\) for complex games. 
+					</p>
+					<p>
+						This is because minimax requires a <i>complete search tree</i>, which, if you have too many combinations, is a no-go. 
+					</p>
+				</div>
+
+				<div>
+					<p>Multiplayer Minimax!?</p>
+				</div>
+				<div>
+					<p>
+						Instead of storing utility as a single value, we can store a vector for every player playing. Thus, we can minimax for three or more-ply games. 
+					</p>
+					<p>
+						Then, with some math magic relevant to the game structure, we can max everyone for their own utility against everyone else.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="adv-2">Alpha-Beta Pruning</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Overview</p>
+				</div>
+				<div>
+					<p>
+						\(\alpha \beta\)-pruning is based on <b>minimax</b>, and gets its name from the utilities on the min-max tree. 
+				<ul>
+					<li>
+						\(\alpha\) is the best choice along the path for <b>Max</b>
+					</li><li>
+						\(\beta\) is the best choice along the path for <b>Min</b>
+					</li>
+				</ul>
+						These are stored as tracking variables for the best path choice. 
+					</p>
+
+					<p>
+						The pruning part comes from when we search through the search tree. In short, if we discover a node which makes a path <b>objectively worse</b> than any other already found, we don't bother to search more on that path, and prune it out entirely - terminate the recursive call.
+					</p>
+
+					<button class="collapsible">Example...</button>
+					<div class="ccontent inv">
+						<p>
+							<b><i>Example.</i></b> Take the game state shown earlier.
+						</p>
+
+						<figure>
+							<img src="./ab-pruning.png" alt="The middle path is not searched after 2 is found" style="max-width: 400px;">
+						</figure>
+
+						<p>
+							We run minimax from left to right, so the A path is searched for Max. We find that the value we get is 3. 
+						</p>
+						<p>
+							The B path is searched, and we immediately come across a terminal node with value 2. Since Min will always try to minimise score, it will <i>never pick anything above 2</i> for that branch, thus A will <b>always</b> be better. We stop searching B and prune it.
+						</p>
+						<p>
+							Finally, we search C. The 2 value is only found in the last child, and so everything is searched anyway. 
+						</p>
+						<p>
+							Finally, Max plays A.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Effectiveness</p>
+				</div>
+				<div>
+					<p>
+						The effectiveness of ab-pruning depends on the order we search in. For example above, the second branch was pruned very quicky but the third was fully searched. 
+					</p>
+					<p>
+						To fix this we could examine the best successors first, reducing minimax from \(O(b^d)\) to \(O(b^{\frac{d}{2 }})\) - a significant improvement.
+					</p>
+					<p>
+						Looking at successors randomly is roughly \(O(b^{\frac{3}{4}d})\), which is still better than nothing. 
+					</p>
+					<p>
+						In practice, always looking at the best successor is very difficult, but even a simple ordering function gives a significant speedup. A ✨heuristic✨ of sorts. 
+					</p>
+				</div>
+			</div>
+
+			<h2 id="adv-3">Imperfect Decisions</h2>
+		</div>
+
 		<div class="colourband">
 			<h2 id="uncertainty">Planning with Uncertainty</h2>
 		</div>
