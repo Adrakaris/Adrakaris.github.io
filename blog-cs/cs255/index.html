@@ -2613,7 +2613,7 @@ hillClimbing(Problem problem):
 				<li><a href="#adv-1">Perfect Decisions</a></li>
 				<li><a href="#adv-2">Alpha-Beta Pruning</a></li>
 				<li><a href="#adv-3">Imperfect Decisions</a></li>
-				<li><a href="#adv-4">Monte-Carlo Tree Search</a></li>
+				<li><a href="#adv-4">Games with Chances</a></li>
 			</ol>
 
 			<div class="cornell">
@@ -2858,6 +2858,108 @@ hillClimbing(Problem problem):
 			</div>
 
 			<h2 id="adv-3">Imperfect Decisions</h2>
+
+			<p>
+				Minimax needs to search the complete game tree, which ab-pruning improves somewhat by not searching everything. However, ab-pruning still needs quite a few terminal nodes to begin the pruning, which is impractical when the game is complex and time is limited. 
+			</p>
+			<p>
+				Thus we reach the problem of imperfect decisions. 
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Limiting the search tree</p>
+				</div>
+				<div>
+					<p>
+						Before, we used utility values. These are assigned, definite values for a terminal state. Here, we use an <b>evaluation function</b>, which give <b>heuristic</b> values that are estimates of the eventual value of a state.
+					</p>
+					<p>
+						We also have a <b>cutoff test</b>, which determines when we stop exploring a tree further. 
+					</p>
+					<p>
+						Thus the general overview is to cut off a search tree after a set depth, then rate the nodes using their <b>estimate of expected utility</b>, gotten from the evalation function. 
+					</p>
+					<p>
+						We cannot avoid uncertainty, and may not always make the best decision, but we can make a good enough one in a reasonable time. 
+					</p>
+				</div>
+				<div>
+					<p>Evaluation functions</p>
+				</div>
+				<div>
+					<p>
+						Many evaluation functions are based off <b>features</b> of a state. In chess, this may consist of the number and type of pieces remaining/taken for each player, the number threatened, etc. Note that each feature is represented numerically.
+					</p>
+					<p>
+						These features can be used to determine the probabiliy of the game resulting in a win, draw or lose.
+					</p>
+					<p>
+						If these features are <b>independent</b>, then we can use a <i>weighted linear function</i> to scale these features according to how important they are:
+						\[\textrm{eval}(n) = w_1 f_1 + w_2 f_2 + \cdots + w_n f_n\]
+						Each w is a different weight, applied to a different feature. 
+					</p>
+				</div>
+
+				<div>
+					<p>Cutoff methods</p>
+				</div>
+				<div>
+					<p>
+						The simplest cutoff method is to set a depth \(d\) and stop searching when \(d\) is reached. 
+					</p>
+					<p>
+						A better approach however is to use iterative deepening, where we continue as much as we can until we run out of time, and return the best move found so far.
+					</p>
+					<p>
+						None of these are perfectly reliable however, due to us approximating value, which may be wildly off from actual utility.
+					</p>
+				</div>
+
+				<div>
+					<p>Quiescentness</p>
+				</div>
+				<div>
+					<p>
+						We can only apply evaluation to <b>quiescent</b> states &mdash; those that are <b>unlikely to change</b> in the near future, by some sort of metric.
+					</p>
+					<p>
+						Non-quiescent states are expanded until quiescent ones are found. 
+					</p>
+					<p>
+						This <b>quiescent search</b> is an extra search on top of the fixed depth one, and should only be restricted to certain moves, like a capture in chess, which can <b>quickly resolve uncertainty</b>, otherwise we many never stop.
+					</p>
+					
+				</div>
+				<div>
+					<p>Horizon Problem</p>
+				</div>
+				<div>
+					<p>
+						This does however lead to the <b>horizon problem</b>, where if we are faced with an unavoidable damaging move, a fixed-depth quiescent search will view stalling for time as actually avoiding said move, when sometimes it's not the case. 
+					</p>
+				</div>
+
+				<div>
+					<p>Mitigating said problem</p>
+				</div>
+				<div>
+					<p>
+						We can perform a <b>singular extension search</b>, to avoid the horizon problem. 
+					</p>
+					<p>
+						The aim is to search for a move that is <b>clearly better for the opponent</b> (can they move a pawn to 8th row and get a queen?), and prevent that, taking a hit somewhere else. 
+					</p>
+					<p>
+						We can also do <b>forward pruning</b>, immediately pruning some nodes without further consideration, and not trying to play them out to their entirety, as real life humans do when they don't consider some moves and only the ones they think are important. 
+					</p>
+					<p>
+						Note that this is really only safe in certain cases: if two nodes are symmetric or equivalent, it is sufficient to consider one. If we are <i>really</i> deep in the tree, the probability that the opponent plays just the right moves for that path decreases, and we can be safe to not be as detailed in consideration.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="adv-4">Games with Chance</h2>
 		</div>
 
 		<div class="colourband">
