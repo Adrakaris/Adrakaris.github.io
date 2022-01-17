@@ -2612,8 +2612,9 @@ hillClimbing(Problem problem):
 			<ol>
 				<li><a href="#adv-1">Perfect Decisions</a></li>
 				<li><a href="#adv-2">Alpha-Beta Pruning</a></li>
+				<li><a href="#adv-4">Games with Chance</a></li>
 				<li><a href="#adv-3">Imperfect Decisions</a></li>
-				<li><a href="#adv-4">Games with Chances</a></li>
+				<li><a href="#adv-5">Monte Carlo Tree Search</a></li>
 			</ol>
 
 			<div class="cornell">
@@ -2790,6 +2791,8 @@ hillClimbing(Problem problem):
 				</div>
 			</div>
 
+			
+
 			<h2 id="adv-2">Alpha-Beta Pruning</h2>
 
 			<div class="cornell">
@@ -2853,6 +2856,52 @@ hillClimbing(Problem problem):
 					</p>
 					<p>
 						In practice, always looking at the best successor is very difficult, but even a simple ordering function gives a significant speedup. A ✨heuristic✨ of sorts. 
+					</p>
+				</div>
+			</div>
+
+			<h2 id="adv-4">Games with Chance</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Chance nodes</p>
+				</div>
+				<div>
+					<p>
+						So far we have only looked at perfectly deterministic games - those where the only "uncertainty" comes from opponent moves. 
+					</p>
+					<p>
+						However, a lot of games contain elements of chance, moves being dependent on the roll of a dice. 
+					</p>
+					<p>
+						We thus have to include <b>chance nodes</b>, labelled with the <b>value</b>, and the <b>chance</b> of obtaining that value. We can then calculate an <b>expected</b> value talking into account the probabilities. 
+					</p>
+					<figure>
+						<img src="./chancenode.png" alt="">
+						<figcaption><i>Chance nodes between Min and Max nodes - the labels show 2 6-sided dice</i></figcaption>
+					</figure>
+				</div>
+
+				<div>
+					<p>Expected minimiax</p>
+				</div>
+				<div>
+					<p>
+						We can expand the minimax value function further by taking into account expected values:
+
+						\[
+						\textrm{expMinMax}(n) = \begin{cases} 
+							\textrm{utility}(n) & n \textrm{ is terminal node} \\
+							\max_{s \in \textrm{successor}(n)}(\textrm{expMinMax}(s)) & n \textrm{ is node for Max} \\
+							\min_{s \in \textrm{successor}(n)}(\textrm{expMinMax}(s)) & n \textrm{ is node for Min} \\
+							\sum_{s \in \textrm{successor}(n)}(P(s) \cdot \textrm{expMinMax}(s)) & n \textrm{ is chance node}
+						\end{cases}
+						\]
+
+						Since this considers <b>all</b> outcomes, it has a big O of horrible at \(O(b^m n^m)\) where \(n\) is the number of unique chance outcomes.
+					</p>
+					<p>
+						We can however forward-prune chance nodes if we put bounds on our utility function. Although a chance node is an average, we would know what bounds it lies in.
 					</p>
 				</div>
 			</div>
@@ -2959,7 +3008,92 @@ hillClimbing(Problem problem):
 				</div>
 			</div>
 
-			<h2 id="adv-4">Games with Chance</h2>
+			<h2 id="adv-5">Monte Carlo Tree Search</h2>
+
+			<p>
+				Monte Carlo tree search is an improvement on \(\alpha \beta\)-pruning which addesses some of the latter's limitations, namely
+
+				<ul>
+					<li>High branching factors reducing depth of search</li>
+					<li>difficulty defining an evaluation function</li>
+				</ul>
+
+				Monte Carlo addresses these via numerical methods: 
+			</p>
+			<p>
+				<b>Estimate the value of a state from the average utility of many simulated games (playouts) from the start state.</b> 
+			</p>
+			<p>
+				By playing games against itself Monte Carlo can learn which states often lead to which outcomes, rather than the programmer having to come up with some function.
+			</p>
+			<p>
+				The <i>way</i> moves are made during playouts is called <b>playout policy</b>, and can vary depending on games. For some games the algorithm can play against itself, and learn via neural network in unguided play, whereas for others game-specific heurisitics can be used. 
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Pure MCTS</p>
+				</div>
+				<div>
+					<p>
+						Perform N simulations from the current state, track which moves from current position has highest win %. 
+					</p>
+					<p>
+						As N increases, this converges to optimal play. 
+					</p>
+				</div>
+				<div>
+					<p>Selection policy</p>
+				</div>
+				<div>
+					<p>
+						A pure MTCS is usually infeasible, given the large amount of processing power needed to run. Thus, a <b>selection policy</b> is applied to focus simulation on important parts of the game tree.
+					</p>
+					<p>
+						To balance <b>exploration</b> (simulating from states with few playouts) and <b>exploitation</b> (simulating from known good states to increase accuracy of estimate).s
+					</p>
+				</div>
+
+				<div>
+					<p>Steps</p>
+				</div>
+				<div>
+					<p>
+						MTCS maintains a search tree, and grows it at each iteration, via
+					</p>
+					<ul>
+						<li><b>Selection</b>: starting at the root, choosing a move via policy, and repeat moving to a leaf</li>
+						<li><b>Expansion</b>: grow tree by generating successor</li>
+						<li><b>Simulation</b>: Performing a playout from the newly generated successor node (determine the outcome, do not record moves)</li>
+						<li><b>Backpropagation</b>: Use the result to update values going back up to the root.</li>
+					</ul>
+					<p>
+						Repeat for either a fixed no. of iterations, or until we are out of time, and return the move with the <b>highest number</b> of playouts. 
+					</p>
+					<p>
+						The last point is based on the motivation that 65/100 is much better than 2/3 because the former is more certain.
+					</p>
+				</div>
+
+				<div>
+					<p>Upper confidence selection policy</p>
+				</div>
+				<div>
+					<p>
+						<b>Upper confidence</b> is a selection policy based off the <b>upper confidence bound</b> formula UCB1:
+
+						\[
+						UCB1(n) = \frac{U(n)}{N(n)} + C \sqrt{\frac{\log (N \cdot \textrm{parent}(n))}{N(n}}
+						\]
+
+						\(U(n)\) is the <b>total utility</b> of all playouts with \(n\) as the starting node (from n), \(N(n)\) as the <b>number</b> of playouts from n, parent is self explanatory, and \(C\) is a set constant, which is used to balance exploration with exploitation.
+					</p>
+					<p>
+						The computation time of a playout is linear in depth of tree.
+					</p>
+				</div>
+			</div>
+
 		</div>
 
 		<div class="colourband">
