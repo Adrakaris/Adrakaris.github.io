@@ -266,6 +266,12 @@ header {
     /*text-align: center;*/
 }
 
+pre { 
+    overflow: auto;
+    word-wrap: normal;
+    white-space: pre;
+}
+
 header.green {
     background-color: var(--green);
     color: var(--band-txt);

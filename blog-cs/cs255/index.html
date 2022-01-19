@@ -53,6 +53,8 @@
 				<li><a href="#csp">Constraint Satisfaction Problems</a></li>
 				<li><a href="#localsearch">Local Search</a></li>
 				<li><a href="#adversarialsearch">Adversarial Search</a></li>
+				<li><a href="#knowledgerep">Knowledge Representation</a></li>
+				<li><a href="#certainty">Planning with Certainty</a></li>
 				<li><a href="#uncertainty">Planning with Uncertainty</a></li>
 			</ol>
 
@@ -3097,7 +3099,185 @@ hillClimbing(Problem problem):
 		</div>
 
 		<div class="colourband">
+			<h2 id="knowledgerep">Knowledge Representation</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Contents</h2>
+
+			<ol>
+				<li><a href="#kno-1">Representing Knowledge</a></li>
+				<li><a href="#kno-2">Expert Systems</a></li>
+			</ol>
+
+			<h2 id="kno-1">Representing Knowledge</h2>
+
+			<p>
+				Intelligent behaviour is <i>conditioned on knowledge</i>, our actions are based on knowledge.
+			</p>
+			<p>
+				<i>Thinking</i> is the process of retrieving relevant knowledge, and <b>reasoning</b> with said knowledge. 
+			</p>
+			<p>
+				We can formally represent knowledge through the use of <b>symbol-based structures</b> and reason computationally with those structures.
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Knowledge</p>
+				</div>
+				<div>
+					<p>
+						Knowledge is usually described using statement sentences, <b>propositions</b>, which can be true or false (recall CS130).
+					</p>
+					<p>
+						We call the store of all knowledge (the set of all propositions) for a system the <b>knowledge base</b> (KB).
+					</p>
+				</div>
+				<div>
+					<p>Reasoning</p>
+				</div>
+				<div>
+					<p>
+						Reasoning is extrapolating from given knowledge, through logcical processes. 
+					</p>
+					<p>
+						We say that a new proposition \(\alpha\) is logically <b>entailed</b> by our knowledge base, \(KB \models \alpha\), if \(\alpha\) is true when <b>every</b> proposition in KB is true: KB implies \(\alpha\).
+					</p>
+				</div>
+
+				<div>
+					<p>Representation Languages</p>
+				</div>
+				<div>
+					<p>
+						Langauges used to represent knowledge must have "entailment" well defined, and the overall expressiveness of the language directly impacts computational complexity.
+					</p>
+					<p>
+						A language is <b>logically complete</b> if we can compute (reason out) <b>all</b> propositions the KB entails.
+					</p>
+					<p>
+						A language is <b>logically sound</b> if we can guarantee that anything we reason to be true, is indeed true. 
+					</p>
+				</div>
+
+				<!-- <div>
+					<p>Expressiveness example</p>
+				</div>
+				<div>
+					<p>
+						The following is an example in <i>prolog</i> of what is expressive, and what is clunky. Don't look if you have something better to do.
+					</p>
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>Which is more knowledge based and expressive? A:</p>
+						<pre><code class="lang-prolog">printColour(X) :- colour(X, Y), !, write("it is"), write(Y), write(.) 
+	printColour(X) :- write("Beats mse.").
+colour(snow, white) colour(sky, blue) colour(X, Y) :- madeOf(X, Z), colour(Z, Y).
+madeof(grass, vegetation) colour(grass, green).</code></pre>
+						<p>or B:</p>
+						<pre><code class="lang-prolog">printColour(snow) :- !, write("it is white").
+printColour(grass) :- !, write("it is green").
+printColour(sky) :- !, write("it is blue").
+printColour(X) :- write("Beats Me")</code></pre>
+					</div>
+				</div> -->
+
+				<div>
+					<p>Knowledge Representation Hypothesis</p>
+				</div>
+				<div>
+					<p>
+						Any intelligent, mechanical process will contain a <b>collection of propositions</b> of the world, that it believes to be true, and is able to <b>formally reason</b> with those propositions during operation.
+					</p>
+				</div>
+
+				<div>
+					<p>Propositional Logic</p>
+				</div>
+				<div>
+					<p>
+						One language we can use to represent knowledge is propositional logic (recall CS130).
+					</p>
+					<p>
+						Because it is boolean and has nice rules, we can reason with it easily. 
+					</p>
+				</div>
+
+				<div>
+					<p>Semantics</p>
+				</div>
+				<div>
+					<p>
+						When we build a knowledge base, we must choose the variables to build our propositions. These should have <b>meaning to the designer</b> - to the machine they are just symbols to manipulate with fixed rules. 
+					</p>
+					<p>
+						The <b>definite clause</b> is the form of proposition we will store knowledge in, given as \(\textrm{head} \impliedby \textrm{body}\).
+					</p>
+					<p>
+						The head is a single <b>variable</b>, and implied by the body, which is a whole <b>formula</b>
+					</p>
+				</div>
+
+				<div>
+					<p>User view of semantics</p>
+				</div>
+				<div>
+					<p>
+						The user must decide the <b>intended interpretation</b> (domain) of the system, and there should be a variable for each atomic proposition the user wants to represent.
+					</p>
+					<p>
+						The user needs to tell the system what is true - <b>axiomatising the domain</b>. If the \(KB \models \alpha\), then \(\alpha\) must also be true in the intended interpretation (i.e. you can't have true things implying something is true when it's not).
+					</p>
+					<p>
+						The system is only responsible for calculation, the user must interpret what it spits out using their set interpretation.
+					</p>
+				</div>
+				<div>
+					<p>System view of semantics</p>
+				</div>
+				<div>
+					<p>
+						The system can see a series of symbols and formulas that it can churn through - this is the knowledge base. 
+					</p>
+					<p>
+						The system can also determine if a formula / variable is a logical consequence of the KB (entailment), but the system won't have any idea what they mean - that's up to the user.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="kno-2">Expert Systems</h2>
+
+			<p>
+				Expert systems are not used much any more, but were all the rage in AI back in the 90s.
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Overview</p>
+				</div>
+				<div>
+					<p>
+						An <b>expert system</b> is a program that <b>represents and reasons</b> with knowledge from some speciality, in order to provide advice. 
+					</p>
+					<p>
+						There is a real life expert, providing knowledge to its <b>knowledge base</b>. That can then be run through an <b>inference engine</b> (which reasons with the KB), and respond to user requests.
+					</p>
+					<p>
+						An expert has deep knowledge of a domain, can solve problems, but crucially can <b>explain answers</b>.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
 			<h2 id="uncertainty">Planning with Uncertainty</h2>
+		</div>
+
+		
+
+		<div class="colourband">
+			<h2 id="certainty">Planning with Certainty</h2>
 		</div>
 
 		<footer>
