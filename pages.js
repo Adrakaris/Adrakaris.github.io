@@ -36,7 +36,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 10)),
         "link": "blog-cs/cs255/",
         "title": "Notes on CS255",
-        "desc": "Notes on CS255: AI. These are made throughout the year and will be updated as and when needed.</p>",
+        "desc": "Notes on CS255: AI. These are made throughout the year and will be updated as and when needed. Please note that this is an <i>extremely long</i> module.</p>",
         "picture": "",
         "tags": ["cs"]
     },

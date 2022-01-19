@@ -3108,6 +3108,7 @@ hillClimbing(Problem problem):
 			<ol>
 				<li><a href="#kno-1">Representing Knowledge</a></li>
 				<li><a href="#kno-2">Expert Systems</a></li>
+				<li><a href="#kno-3">Knowledge as Rules</a></li>
 			</ol>
 
 			<h2 id="kno-1">Representing Knowledge</h2>
@@ -3249,7 +3250,7 @@ printColour(X) :- write("Beats Me")</code></pre>
 			<h2 id="kno-2">Expert Systems</h2>
 
 			<p>
-				Expert systems are not used much any more, but were all the rage in AI back in the 90s.
+				Expert systems are not used much any more, but were all the rage in AI back in, like, the 80s and earlier.
 			</p>
 
 			<div class="cornell">
@@ -3265,6 +3266,107 @@ printColour(X) :- write("Beats Me")</code></pre>
 					</p>
 					<p>
 						An expert has deep knowledge of a domain, can solve problems, but crucially can <b>explain answers</b>.
+					</p>
+				</div>
+			</div>
+
+			<div class="cornell">
+				<div>
+					<p>MYCIN</p>
+				</div>
+				<div>
+					<p>
+						MYCIN (I can't find what it stands for) was one of the first expert systems created at Stanford in the 1970s. It was designed to be used in medicine to generate diagnositc hypotheses and weight them based on evidence provided.
+					</p>
+					<p>
+						I'm going to put it all in a big collapsible because you just need to get an idea of these systems and move on, not actually know them well.
+					</p>
+					<p>
+						The crucial thing is that these systems are able to <b>explain</b> why they got a result - essentially showing a trace of all the clauses it reasoned through.
+					</p>
+				</div>
+			</div>
+			<button class="collapsible">MYCIN System... </button>
+				<div class="ccontent">
+					<p>
+						The problem we have is we want to figure out how to treat blood infections. We have a variety of drugs that treat a variety of bacteria (but not all), and want a system to reason what drugs to use, based on test data we feed in. This is the <i>problem domain</i>.
+					</p>
+					<p>
+						The process is to identify the organism type (via test results), and choose the most appropriate drug(s).
+					</p>
+					<figure>
+						<img src="./mycin-system.png" alt="" style="max-width: 500px;">
+						<figcaption><i>The MYCIN system diagram</i></figcaption>
+					</figure>
+					<p>
+						The way the system works is that an expert in infectious diseases uses a program to input true statements into the system's knowledge base, with support from patient data. 
+					</p>
+					<p>
+						The user, the physician in charge of the patient, inputs which test results and data through the user-facing interface, and the system will run its inference engine to come up with a result, which is displayed to the user.
+					</p>
+					<p>
+						Crucially, the user can ask the system "why", and it will justify its reasonings based on its knowledge base. 
+					</p>
+					<p>
+						Its knowledge base has a set of rules, and its thought process is: <i>"If condition \(c_1, c_2, \dots\) hold, then draw with tally \(t\) conclusions \(n_1 \dots n_n\)"</i> where the tally is like the probability that those conclusions are true, given the conditions (this is set by the expert).
+					</p>
+					<p>
+						And the final certainty is combined from the certainties of the separate conditions and the rule tally probability itself.
+					</p>
+					<p>
+						Also information on different morphologies, types, etc of bacteria are stored there for good measure.	
+					</p>
+					<p>
+						Patient data is stored in a tree structure, with branches leading to tests, procedures, and operations they found out, and children nodes being the findings, such as what species of bacteria is causing the illness.
+					</p>
+					<p>
+						MYCIN does its search through a "goal tree", with its top level goals being broken down into sub goals, children, which are broken all the way down into leaves, which are effectively true or false atomic predicates. 
+					</p>
+					<p>
+						It's called an <b>and/or</b> tree, where an arc is drawn between branches leading to children to show that all children must be true for the parent to be true, otherwise at least one of the children must be true for the parent to be.
+					</p>
+					<p>
+						Even though it was good, MYCIN was incomplete, and more importantly hospitals could not afford the computing power for the system (in the 1970s) to actually run it in the first place. 
+					</p>
+				</div>
+			
+			<h2 id="kno-3">Knowledge as Rules</h2>
+			
+			<div class="cornell">
+				<div>
+					<p>Intelligent Behaviour</p>
+				</div>
+				<div>
+					<p>
+						People tend to see regular behaviour as intelligent behaviour. Regular behaviour is often described by a set of (written or unwritten) <b>rules</b>.
+					</p>
+					<p>
+						Formally, for AI systems they can be called <b>production rules</b> or <b>condition-action rules</b>
+					</p>
+				</div>
+				<div>
+					<p>Canonical systems</p>
+				</div>
+				<div>
+					<p>
+						Canonical systems are a formal language system based on an <b>alphabet</b> \(A\) of symbols, some <b>"axiomatic strings"</b>, and a series of <b>production rules</b>.
+					</p>
+					<p>
+						These rules act like regular expression replacements. Note that <code>$</code> will be used as a wildcard any input type character.
+					</p>
+				</div>
+				<div>
+					<p>Example language</p>
+				</div>
+				<div>
+					<p>
+						Let \(A = \{a, b, c\} \) and our axioms be \(a, b, c, aa, bb, cc\). Our production rules are 
+						<ul>
+							<li>\(\$ \longrightarrow a$a \)</li>
+							<li>\($ \longrightarrow b$b \)</li>
+							<li>\($ \longrightarrow c$c \)</li>
+						</ul>
+						With these rules, we create a language which is made up of all palindromes consisting of the letters \(a, b, c\).
 					</p>
 				</div>
 			</div>
