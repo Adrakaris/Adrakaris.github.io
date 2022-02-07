@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2022,02,07)),
+        "link": "blog-cs/cs262/",
+        "title": "Notes on CS262",
+        "desc": "Notes on CS262: Logic and Verification. For a quick cheat sheet for the class test, click <a href='blog-cs/cs262/cheat.html'>here</a>.</p>",
+        "picture": "",
+        "tags": []
+    },
+    {
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs241/",
         "title": "Notes on CS241",

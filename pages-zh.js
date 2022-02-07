@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2022,02,07)),
+        "link": "blog-cs/cs262/",
+        "title": "CS262的记录",
+        "desc": "CS262：逻辑与求正。要看小抄页，点<a href='blog-cs/cs262/cheat.html'>这里</a>。</p>",
+        "picture": "",
+        "tags": []
+    },
+    {
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs241/",
         "title": "CS241的记录",
