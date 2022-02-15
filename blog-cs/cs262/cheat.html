@@ -115,6 +115,10 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 			<h3>Reduction to CNF</h3>
 
 			<p>
+				From a truth table, look at rows with <b>False</b> as output. Write the "inverse or", i.e. if a row is \(x=T, y=T, z=F \longrightarrow F\), then the clause for that row is \([\lnot x, \lnot y, z] \). Put all of these clauses together in a conjunction.
+			</p>
+
+			<p>
 				For a formula \(X\), start by writing \(\langle [X] \rangle\), then reduce via algorithm.
 			</p>
 
@@ -145,7 +149,12 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 			<h3>Reduction to DNF</h3>
 
 			<p>
-				Start with \([\langle X \rangle] \). The algorithm is identical, except the role of the \(\alpha\) and \(\beta\) is swapped.
+				From a truth table, look at the rows with <b>True</b> as output. Write the and of the literals, i.e. if a row is \(x=T, y=F, z=T \longrightarrow T\), write the dual clause \(\langle x, \lnot y, x \rangle\). Put all of these together in a disjunction.
+
+			</p>
+
+			<p>
+				For a formula start with \([\langle X \rangle] \). The algorithm is identical, except the role of the \(\alpha\) and \(\beta\) is swapped.
 				\[
 				\begin{array} {|r|r|}\hline \lnot \top &  & \lnot \bot &  & \lnot \lnot Z &  & \beta &  &  & \alpha \\ \hline \bot &  & \top &  & Z &  & \beta_1 & \beta_2 &  & \alpha_1 \\ \hline  &  &  &  &  &  &  &  &  & \alpha_2 \\ \hline  \end{array}
 				\]
@@ -231,6 +240,83 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 			</ul>
 			<p>
 				Denote these proofs as \(S \vdash_t X\) and \(S \vdash_r X\).
+			</p>
+
+			<h3>Natural Deduction</h3>
+
+			<p class="grey">
+				Note: all boxes here are done horizontally for easy formatting. They should be vertical in reality.
+			</p>
+
+			<p>
+				Two techniques to prove a formula: start with the antiformula, or work backwards (e.g. for \(x \implies y\) we must assume \(x\) and logically conclude \(y\)).
+			</p>
+			<p>
+				In proving only active formulas not in closed boxes can be used.
+			</p>
+
+			<h4>Assumptions and Premises</h4>
+
+			<p>
+				Assumptions <b>start</b> a box: \([x \cdots\). Premises are formulas S-introduced when proving consequence, and <b>do not</b> start a box. 
+			</p>
+
+			<h4>Standard Rules</h4>
+
+			<p class="grey">A double arrow is used for implies, a single arrow is used for "produces"</p>
+
+			<ul>
+				<li>
+					Constant rule: \(\bot \longrightarrow X\) (from false can introduce any X)
+				</li>
+				<li>
+					Constant rule: \(\longrightarrow \top\) (anthing can introduce true)
+				</li>
+				<li>
+					Negation rule: \(X, \lnot X \longrightarrow \bot\)
+				</li>
+				<li>
+					Negation rule: \([X \cdots \bot] \lnot X\) or \([\lnot X \cdots \bot] X\)
+				</li>
+				<li>
+					Alpha elim: \(\alpha \longrightarrow \alpha_1\) or \(\alpha \longrightarrow \alpha_2\)
+				</li>
+				<li>
+					Alpha introduction: \(\alpha_1, \alpha_2 \longrightarrow \alpha\)
+				</li>
+				<li>
+					Beta elim: \(\lnot \beta_1, \beta \longrightarrow \beta_2\) or \(\lnot \beta_2, \beta \longrightarrow \beta_1\)
+				</li>
+				<li>
+					Beta introduction: \([\lnot \beta_1 \cdots \beta] \beta_2\) or \([\lnot \beta_2 \cdots \beta] \beta_1\)
+				</li>
+			</ul>
+
+			<h4>Derived rules</h4>
+
+			<ul>
+				<li>
+					Double negation: \(\lnot \lnot X \longrightarrow X\) or \(X \longrightarrow \lnot \lnot X\)
+				</li>
+				<li>
+					Copy: \(X \longrightarrow X\)
+				</li>
+				<li>
+					Implication: \([X \cdots Y] (X \implies Y)\)
+				</li>
+				<li>
+					Excluded middle: \(\top \longrightarrow X \lor \lnot X\)
+				</li>
+				<li>
+					Modus ponens: \(X, X \implies Y \longrightarrow Y\)
+				</li>
+				<li>
+					Modus tollens: \(\lnot Y, X \implies Y \longrightarrow \lnot X\)
+				</li>
+			</ul>
+
+			<p>
+				Write as \(S \vdash_d X\) if S entails X has a deduction proof.
 			</p>
 		</div>
 
