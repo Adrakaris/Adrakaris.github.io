@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@460;750&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap');
+
+:root {
+    --green: #3a6342;
+    --greener: #348544;
+    --yellowish: #f1f2e9;
+}
+
+html, body {
+    background-color: #dddddd;
+    color: #222222;
+    font-family: Manrope, 'Noto Serif TC', sans-serif;
+    font-size: 12pt;
+}
+
+/* MAIN */
+
+.cbox, #cfixed {
+    display: block;
+    width: 90%;
+    max-width: 840px;/*1200px;*/
+    padding: 5px;
+    /*padding-top: -5px;*/
+    margin-left: 180px;
+    margin-right: auto;
+}
+
+/* classical chinese mode */
+.clscont {
+    margin: 0 auto;
+    display: block;
+
+    writing-mode: vertical-rl;
+    font-size: 16pt;
+    font-family: 'Noto Serif TC', serif;
+    letter-spacing: 5pt;
+    overflow-x: scroll;
+    direction: rtl;
+
+    max-height: 400px;
+    /* width: 600px; */
+    max-width: inherit;
+    text-align: left;
+}
+
+
+/* PARAGRAPHS */
+
+p.subheading {
+    font-family: Urbanist;
+    text-align: center;
+    letter-spacing: 2px;
+    margin-top: -30px;
+}
+
+p.small {
+    font-size: 8pt;
+}
+
+p.r-a {
+    text-align: right;
+}
+
+/* HEADERS */
+
+h1 {
+    font-family: Urbanist;
+    font-size: 36pt;
+    /* text-align: center; */
+    letter-spacing: 2px;
+    padding: 5px 5px 5px 10px;
+    border-left: 10px solid var(--green);
+
+}
+
+h2 {
+    font-family: Urbanist;
+    font-size: 24pt;
+    letter-spacing: 2px;
+    /*padding: 5px;*/
+}
+
+h3 {
+    font-family: Urbanist;
+    font-size: 20pt;
+    letter-spacing: 2px;
+    /*padding: 3px;*/
+}
+
+h4 {
+    font-family: Urbanist;
+    font-size: 14pt;
+    letter-spacing: 2px;
+}
+
+/* TABLES */
+
+table {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table, th, td {
+    border-collapse: collapse;
+    border-top: 1px solid #222;
+    border-bottom: 1px solid #222;
+}
+
+th, td {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+table.noborder td, table.noborder th, table.noborder {
+    border-top: none;
+    border-bottom: none;
+}
+
+/* A LINKS */
+
+a.nav {
+    /* font-family: Urbanist; */
+    /* text-align: center; */
+    color: var(--yellowish);
+    /* font-size: 8; */
+    text-decoration: none;
+    letter-spacing: 2px;
+    transition: text-shadow 0.3s ease-in-out;
+}
+
+a.nav:hover {
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+a {
+    color: var(--green);
+    text-decoration: none;
+}
+
+a:hover:not(.nav) {
+    color: crimson;
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.white {
+    color: var(--yellowish);
+}
+
+a.black {
+    color: #222;
+}
+
+a:visited {
+    color: darkslategray;
+}
+
+/* COLLAPSIBLE */
+
+
+
+.collapsible:after {
+    content: '+';
+    font-style: normal;
+    font-size: 12pt;
+    font-family: Manrope, sans-serif;
+    float: right;
+    margin-left: 5px;
+}
+
+button.collapsible {
+    font-family: Manrope, sans-serif;
+    background: none;
+    border: none;
+    padding-left: 10px;
+    margin-left: -10px;
+    font-size: 12pt;
+    width: 100%;
+    text-align: left;
+    /* font-weight: bold; */
+    /* font-style: italic; */
+    font-variant: small-caps;
+}
+
+.active, .collapsible:hover {
+    background-color: var(--yellowish);
+}
+
+.active.collapsible:after {
+    content: '-';
+}
+
+button.nul {
+    border: none;
+    border-spacing: 0px 0px;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+.ccontent {
+    /* border-left: 1px solid var(--pink); */
+    /* border-spacing: 10px 0px;
+    padding-left: 10px;
+    margin-left: -10px; */
+    border-bottom: 1px solid var(--green);
+    border-spacing: 0px 10px;
+    overflow: hidden;
+    display: none;
+    transition: max-height 0.2s ease-out;
+}
+
+.ccontent.indented {
+    padding-left: 1em;
+}
+
+
+/* SIDEBAR */
+
+
+
+.sidebar {
+    height: 100%; /* Full-height: remove this if you want "auto" height */
+    width: 160px; /* Set the width of the sidebar */
+    position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: var(--green); /* Black */
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 20px;
+}
+
+/* Navingation collapsibles */
+
+.sidebar .active, .sidebar .collapsible:hover {
+    background-color: var(--greener);
+}
+
+.sidebar .collapsible:after {
+    font-family: Urbanist, sans-serif;
+}
+
+.sidebar button.collapsible {
+    font-family: Urbanist, sans-serif;
+    padding: 6px 8px 6px 16px;
+    font-variant: small-caps;
+    color: var(--yellowish);
+}
+
+/* The navigation menu links */
+.sidebar a {
+    font-family: Urbanist, sans-serif;
+    padding: 6px 8px 6px 16px;
+    color: var(--yellowish);
+    /* font-size: 8; */
+    text-decoration: none;
+    /* letter-spacing: 2px; */
+    transition: text-shadow 0.3s ease-in-out;
+    display: block;
+}
+
+.sidebar a:hover {
+    color: var(--yellowish);
+    text-decoration: underline;
+}
+
+/* BUTTONWRAPPER */
+
+.buttonwrapper {
+    padding: 5px;
+    background-color: var(--green);
+    color: var(--yellowish);
+    text-align: center;
+    margin: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.buttonwrapper:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.buttonwrapper a {
+    color: var(--yellowish);
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+}
+
+.buttonwrapper.beside {
+    float: left; 
+    margin-left: 20px; 
+    margin-top: 20px;
+}
+
+.buttonwrapper > a:hover {
+    text-decoration: none;
+    color: var(--yellowish);
+}
+
