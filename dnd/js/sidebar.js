@@ -11,7 +11,8 @@ const repo = [
     {
         "name": "Lore Related",
         "links": [
-            ["Main lore page", "./lore-main.html"]
+            ["Main lore page", "./lore-main.html"],
+            ["Map (East Aseron)", "./assets/ancient-empire.jpg"]
         ]
     }
 ]
