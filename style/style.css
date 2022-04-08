@@ -441,6 +441,12 @@ h3 {
     /*padding: 3px;*/
 }
 
+h4 {
+    font-family: Urbanist;
+    font-size: 16pt;
+    letter-spacing: 2px;
+}
+
 h3.c {
     font-family: Urbanist;
     font-size: 20pt;
@@ -649,6 +655,13 @@ table.noborder td, table.noborder th, table.noborder {
 
 :is(ul.not, ol.not) > li {
     margin-bottom: 0px;
+}
+
+ol.side {
+    border-left: 1px solid var(--pink);
+    border-spacing: 24px 0px;
+    padding-left: 24px;
+    margin-left: -24px;
 }
 
 /*-----------------------------------------------------------------------*/

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CS255</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+		<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+		<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+		<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="./index.html" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="./blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="./about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS255 Abridged</h1>
+                    <p class="subheading">Artificial Intelligence</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Introduction</h1>
+			</div>
+		</header>
+
+		<!-- <div class="buttonwrapper beside" >
+			<a href="./index-zh.html">简体中文</a>
+		</div> -->
+		<!-- REMEMBER TO DO! -->
+
+		<div class="cbox">
+			<p>
+				AI is a massive module, filled with a lot of important things and redundant fluff. My aim here is to rewrite my notes for the module to remove all of the fluff, which not only makes the task easier for me, but also means there's less filler content. <b>This page assumes some inherent knowledge from AI and its keywords</b>, as well as knowledge of logic from CS131 or CS262 -- it will not do to read it from scratch.
+			</p>
+
+			<p>
+				Looking through the past exam papers, there are 7 overall topics that are included, some more than others, being
+			</p>
+
+			<ul>
+				<li><b>Conditional Probability and Bayes' Theorem</b>
+				</li>
+				<li>
+					<b>CSPs</b>
+				</li>
+				<li>
+					<b>Graph Searching and Heuristics</b>
+				</li>
+				<li>
+					Reinforcement (Q-) Learning 
+				</li>
+				<li>
+					Knowledge Bases 
+				</li>
+				<li>
+					Partial Order Planning and Rule systems
+				</li>
+			</ul>
+
+			<h2>Contents</h2>
+
+			<ul>
+				<li><a href="#search">Search</a></li>
+			</ul>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="search">Search</h2>
+		</div>
+
+		<div class="cbox">
+			<p>
+				<b>Search</b> is one of the most essential forms of problem solving. It entails making moves along a problem space (usually nodes in a graph) in order to try get to a goal. 
+			</p>
+			
+			<p>
+				There are two main methods of searching: <i>Informed</i> and <i>Uninformed</i>.
+			</p>
+
+			<p>
+				In all cases, assume we have reduced the problem down to a graph of nodes, where searching algorithms is at home. Specifically, often we want to talk about a tree graph. Trees have a root node and some goal nodes further down.
+			</p>
+
+			<p>
+				Graph searching is pretty much no different from tree searching, except that we use \(\langle x, y, z \rangle\) to represent paths.
+			</p>
+
+			<h3>Uninformed Search</h3>
+
+			<p>
+				Uninformed does not use information from the question - it is a brute force method.
+			</p>
+
+			<h4>Generic Tree Search</h4>
+
+			<p>
+				In the general case, a search, starting from the root node of a tree (or from a given node in a graph) can be described as follows:
+			</p>
+
+			<ol class="side">
+				<li>
+					While there are still nodes yet to be expored (candidates for expansion):
+					<ol type="a">
+						<li>
+							Expand a node according to your searching strategy
+						</li>
+						<li>
+							Is it a goal? If so, return success. Else, carry on.
+						</li>
+					</ol>
+				</li>
+				<li>
+					Return failure
+				</li>
+			</ol>
+
+			<p>
+				The unexpanded nodes that we can immediately expand to are called the <b>frontier</b>, and are stored in a <b>queue</b> structure -- our search strategy determines how this queue is ordered.
+			</p>
+
+			<h4>Breadth First Search</h4>
+
+			<p>
+				In short: expand the <b>shallowest</b> node first. 
+			</p>
+			<p>
+				Frontier queue is ordered by distance from the origin/root. Successor nodes are added to the <b>end</b> of the queue.
+			</p>
+
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Breadth-First-Search-Algorithm.gif" alt="" style="max-width: 300px;">
+				<figcaption>Process of BFS (Wikimedia Commons)</figcaption>
+			</figure>
+
+			<p>
+				For a branching factor \(b\) and the <i>depth of least cost solution</i> \(d\) the <b>time</b> complexity is \(O(b^d)\)... i.e. \(O(n)\) in number of nodes. The <b>space</b> complexity is the <b>same</b> - which can be a big problem if there are lots of nodes.
+			</p>
+			<p>
+				BFS will always find a solution if \(b\) is finite (complete).
+			</p>
+
+			<h4>Depth First Search</h4>
+
+			<p>
+				In short: expand the <b>deepest</b> node first.
+			</p>
+			<p>
+				Frontier queue is a stack, put successors at the start. 
+			</p>
+
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Depth-First-Search.gif" alt="" style="max-width: 300px;">
+				<figcaption>Process of DFS (Wikimedia Commons)</figcaption>
+			</figure>
+
+			<p>
+				DFS has a time complexity of \(O(b^m)\), where \(m\) is the <i>maximum</i> depth, rather than that of the nearest solution. This can be bad if \(m\) is large. However, DFS's main advantage is its <b>space</b> complexity -- \(O(bm)\) -- only one path needs to be stored, making DFS better where memory is tighter.
+			</p>
+
+			<p>
+				DFS is <b>incomplete</b> -- if \(d\) is infinite (or graph has loops) then DFS may never terminate. 
+			</p>
+
+			<h4>Lowest Cost First Search</h4>
+
+			<p>
+				As the name implies, select a node on the <b>path with the lowest cost</b> first. 
+			</p>
+			<p>
+				The path cost is the sum of all the arcs from the origin to the newly expanded node: \(cost(\langle n_0 \dots n_k \rangle) = \sum_{i=1}^k cost(\langle n_{i-1}, n_i \rangle \).
+			</p>
+			<p>
+				Frontier is priority queue ordered by cost. The first path to a goal found is the least cost goal. Note this reduces to breadth first when all arcs are of equal cost.
+			</p>
+
+			<h3>Informed Search</h3>
+
+			<p>
+				Informed search uses "problem specific knowledge", such as the location of the goal, an estimate of distance, etc., to help inform its search choices. They are usually much better than brute force uninformed search.
+			</p>
+
+			<p>
+				
+			</p>
+
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>
