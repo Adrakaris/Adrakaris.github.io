@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@460;750&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC&display=swap');
 
 :root {
@@ -11,7 +12,7 @@
 html, body {
     background-color: #dddddd;
     color: #222222;
-    font-family: Manrope, 'Noto Serif TC', sans-serif;
+    font-family: Manrope, 'Noto Serif TC', 'Noto Serif SC', sans-serif;
     font-size: 12pt;
 }
 
@@ -43,6 +44,10 @@ html, body {
     /* width: 600px; */
     max-width: inherit;
     text-align: left;
+}
+
+.thin {
+    max-width: 240px;
 }
 
 

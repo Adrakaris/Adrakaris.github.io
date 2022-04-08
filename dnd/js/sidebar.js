@@ -4,7 +4,8 @@ const repo = [
     {
         "name": "DnD Related",
         "links": [
-            ["Main DnD page", "./dnd-main.html"]
+            ["Main DnD page", "./dnd-main.html"],
+            ["Mechanics Ref", "./dnd-default-ref.html"]
         ]
     },
     {

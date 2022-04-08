@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="icon" type="image/png" href="./style/DragonIconGreen.png">
+
+    <title>DnD Mechanics References</title>
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar">
+        <a href="./"><img src="./style/DragonIconGreen.png" alt="" style="display: inline; width: 12pt; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);">  <b>HOME</b></a>
+    </div>
+    <script src="./js/sidebar.js"></script>
+
+
+    <div class="cbox">
+        <h1>Vanilla Unchanged Mechanics (For Reference)</h1>
+
+        <div class="thin">
+            <div class="buttonwrapper"><a href="./dnd-main.html">Main Page</a></div>
+        </div>
+
+        <h2>Contents</h2>
+
+        <ol>
+            <li><a href="#stat">Stat Reference</a></li>
+            <li><a href="#exhaus">Exhaustion</a></li>
+        </ol>
+    </div>
+
+    <div class="cbox">
+
+        <h2 id="stat">Stat Reference</h2>
+
+        <p>
+            For reference, here's a list of stats and modifiers. The formula is <b>modifier = (stat - 10) / 2 rounded down</b>.
+        </p>
+
+        <table>
+            <tr>
+                <td>6-7</td>
+                <td>8-9</td>
+                <td>10-11</td>
+                <td>12-13</td>
+                <td>14-15</td>
+                <td>16-17</td>
+                <td>18-19</td>
+                <td>20-21</td>
+            </tr>
+            <tr>
+                <td>-2</td>
+                <td>-1</td>
+                <td>0</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="cbox" id="exhaus">
+        <h2>Exhaustion</h2>
+
+        <p>
+            Some Special Abilities and environmental Hazards, such as starvation and the long-term Effects of freezing or scorching temperatures, can lead to a Special condition called <b>exhaustion</b>. Exhaustion is measured in six levels.
+        </p>
+
+        <table>
+            <tr>
+                <th>Level</th>
+                <th>Effect</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Disadvantage on all ability checks</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Speed halved</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Disadvantage on attack rolls, saving throws</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Max HP halved</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Speed reduced to 0</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Death</td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="./js/collapsible.js"></script>
+</body>
+</html>
