@@ -12,7 +12,9 @@ const repo = [
         "name": "Lore Related",
         "links": [
             ["Main lore page", "./lore-main.html"],
+            ["Notes on the Twilight", "./twilight.html"],
             ["Map (East Aseron)", "./assets/ancient-empire.jpg"]
+            
         ]
     }
 ]
