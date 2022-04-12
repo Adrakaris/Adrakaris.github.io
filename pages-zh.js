@@ -42,7 +42,7 @@ var pages = [
     },
     {
         "date": new Date(Date.UTC(2021, 10, 10)),
-        "link": "blog-cs/cs255/",
+        "link": "blog-cs/cs255/short.html",
         "title": "CS255的记录",
         "desc": "CS255：人工智能的记录。这些是学完而写，会慢慢添加。无翻译。请注意这页非常长。</p>",
         "picture": "",

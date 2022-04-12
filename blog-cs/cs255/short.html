@@ -19,11 +19,11 @@
 						<a href="./index.html" class="nav">Home</a>
 					</div>
 					<div class="column tinycolumn">
-						<a href="./blog.html" class="nav">Blog</a>
+						<a href="../../blog.html" class="nav">Blog</a>
 					</div>
 					<div class="column tinycolumn">
 						
-						<a href="./about.html" class="nav">About</a>
+						<a href="../../about.html" class="nav">About</a>
 					</div>
 					<div></div>
 					<div class="column">
@@ -81,6 +81,7 @@
 
 			<ul>
 				<li><a href="#search">Search</a></li>
+				<li><a href="#probability">Conditional Probability and Bayes</a></li>
 			</ul>
 		</div>
 
@@ -200,10 +201,142 @@
 				Informed search uses "problem specific knowledge", such as the location of the goal, an estimate of distance, etc., to help inform its search choices. They are usually much better than brute force uninformed search.
 			</p>
 
+			<h4>Best First Search</h4>
+
 			<p>
-				
+				Best first search uses a <b>heuristic</b> - some estimate of the final distance for each path to determine the choice of exploration. Heuristics come up <b>a lot</b>, since AI is all about "good enough". There are two variants:
 			</p>
 
+			<p class="side">
+				<b>Heuristic DFS</b> picks the <i>node</i> with the best possible heuristic estimate.
+			</p>
+			<p class="side">
+				<b>Greedy Best First Search</b> picks the <i>path</i> with the best possible heuristic.
+			</p>
+			<p>
+				And what is the heurisitc? Well, it depends on the situation, but say you're in a maze, and the nodes are intersections / turns. Perhaps the heuristic is the euclidean (i.e. straight diagonal distance) between that corner and the goal square. 
+			</p>
+			<p>
+				However, you might quickly notice that for a maze, the closest "as the crow flies" might be a massive dead end. This is the problem with BFS, where the heuristic <i>may</i> just lead to the wrong path, and if the algorithm is not programmed well enough, forever looping.
+			</p>
+			<p class="blue">
+				The crucial thing is that <b>heuristics are underestimates</b>.
+			</p>
+
+			<p>
+				There seems to not be much difference between the two apart from naming, so just default to "Greedy BFS I guess".
+			</p>
+
+			<p>
+				Greedy BFS has a time and space complexity of \(b^n\) for a <b>branching factor</b> \(b\) and a <b>path length</b> \(n\). It may not ever find a solution, and thus is <b>incomplete</b>.
+			</p>
+
+			<h4>A* Search</h4>
+
+			<p>
+				<b>The very important significant one</b>. A* takes into account both path cost and remaining heuristic when it does its searching. 
+			</p>
+			<p class="blue">
+				Let \(g(p)\) or \(cost(p)\) be the cost of the current path \(p\), and the heuristic from the end of p to the goal as \(h(p)\).
+				<br><br>
+				Let \(f(p) = h(p) + g(p)\), the total estimate of a path's cost from start to finish, so to say. This is our final <b>evaluation function</b>
+			</p>
+			<p>
+				A* orders the frontier by \(f(p)\), and picks like that. In this way, it is a mix of Lowest-cost first and Best-first, and is actually pretty damn good.
+			</p>
+
+			<p class="blue">
+				An algorithm is <b>ADMISSIBLE</b> if a solution existing \(\implies\) the <b>optimal solution</b> is found.
+			</p>
+			<p>
+				A* is an <b>admissible algorithm</b>.
+			</p>
+
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/9/98/AstarExampleEn.gif" alt="" style="max-width: 50%;">
+				<figcaption>A* Search example (wikipedia)</figcaption>
+			</figure>
+
+			<p>
+				A good heuristic is better, an overestimate can be really bad but too far of an underestimate is also bad - A* explores every path with an estimate less than the optimal cost, so if there are a lot of paths here, A* can still take a while.
+			</p>
+			<p>
+				A* thus has a time complexity relative to \(\textrm{error of }h(p) \cdot \textrm{length of solution}\) - which is pretty good, the only problem is that A* is <b>exponential in space</b>, because it needs all nodes in memory. 
+			</p>
+
+			<h3>Cycle Checking and Path Pruning</h3>
+
+			<p>
+				This is how you stop algorithms which may not halt from not halting.
+			</p>
+			<p>
+				<b>Pruning</b> a path means removing it from consideration entirely, which saves memory holding unnecessary paths.
+			</p>
+			<p>
+				<b>Cycle Checking:</b> If your explored path reaches an already explored node in memory, for example if you went <code>a -> b -> c -> d -> b</code>, you can prune the <code>d -> c -> b</code> bit without losing an optimal path solution, since it forms a closed cycle. 
+			</p>
+			<p>
+				<b>Path pruning:</b> If you have a path in memory that goes like <code>s -> b -> x -> y -> z -> u -> h -> m -> p</code>, and later on in searching you find a different path <code>s -> i -> m -> p</code> through a new node <code>i</code>, then you can prune away the first path, since you can use the second one to get to the same destination.
+			</p>
+			<p>
+				<b>Note</b> though how I didn't say <i>longer</i> and <i>shorter</i> - that's because it's not, it's recency. <b>This is why you have underestimate heuristics</b> - otherwise you won't necessarily get the most optimal solution.
+			</p>
+			<p class="blue">
+				A <b>Monotone Heuristic</b> is where the heuristic is an underestimate for all arcs across a graph. These heuristics are also called <b>consistent</b>, and will never overestimate. 
+			</p>
+			<p>
+				A* Search with a consistent heuristic is needed to find an optimal path.
+			</p>
+
+			<h3>More Searching</h3>
+
+			<p>
+				Searching backwards from the goal is effectively the same as searching forward from the start. 
+			</p>
+			<p>
+				Of course if the <i>backwards</i> branching factor is much different from the <i>forwards</i> one, the efficiency of one direction vs another may be vastly different. Sometimes, even, one direction is not available, if the graph is being constructed dynamically.
+			</p>
+			<p>
+				Provided not, we can get <b>bidirectional search</b>: search from both start and end simultaneously. \(2b^{\frac{k}{2}} < b^k\) after all (b branch. factor, k depth of goal). Of course, the frontiers must somehow meet, so one side is usually a BFS.
+			</p>
+			<p>
+				Extend to <b>island-driven search</b>, where we pick \(M\) "interesting locations/checkpoints" and search simultanously from all of those. \(Mb^{\frac{k}{M}}\) is faster still -- the problem is choosing said "interesting locations".
+			</p>
+
+			<h4>Iterative Deepening and Depth First Branch and Bound</h4>
+
+			<p>
+				We like DFS because low memory, but DFS might follow its own tail into the abyss, so how do we prevent that? We can limit how deep DFS will go - making <b>bounded DFS</b>.
+			</p>
+			<p>
+				But what if the bound is too shallow? Then, we gradually increase the bound, and rerun DFS, until we get to the goal. This is now <b>Iterative Deepening</b> of the bound. 
+			</p>
+			<p>
+				But this is still a dumb algorithm. What if we add h e u r i s t i c s to find an optimal solution? Suppose we already have a path to the goal. Let's set a bound \(p\) as its cost. If we have a path where the cost + heuristic \(&gt; p\), then clearly, it will never be shorter, and thus is immediately pruned. 
+			</p>
+			<p>
+				Rinse and repeat until we have no more shorter paths than our \(p\). That is our optimal solution, and this is <b>Depth First Branch and Bound</b>.
+			</p>
+
+			<h3>Finding Heuristics</h3>
+
+			<p>
+				Heuristics are underestimates, but the closer the underestimate the better. A heuristic of 0 is no better than a dumb search. Finding heuristics however is difficult, good ones even more so, but there are a few approaches:
+			</p>
+			<p>
+				<b>Relax the problem</b>: try a less restrictive version of the problem. If it's a maze, imagine there's no walls and you can fly. If it's a 15-tile game, imagine you can move tiles through others. 
+			</p>
+			<p>
+				<b>Combine heuristics</b>: If you have several different admissible heuristics, combine them and use the best one out of them for each individual state as your final value.
+			</p>
+			<p>
+				<b>Statistics</b>: Actually run simulations to try get data estimates. This is however <b>NOT ADMISSIBLE</b>, but can be good enough.
+			</p>
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="probability">Conditional Probability and Bayes</h2>
 		</div>
 		
 
