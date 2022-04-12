@@ -19,8 +19,8 @@ html, body {
 /* MAIN */
 
 .cbox, #cfixed {
-    display: flex;
-    flex-direction: column;
+    display: block;
+    /* flex-direction: column; */
     width: 90%;
     max-width: 840px;/*1200px;*/
     padding: 5px;
@@ -53,6 +53,10 @@ html, body {
 
 
 /* PARAGRAPHS */
+
+/* p {
+    margin-top: 0;
+} */
 
 p.subheading {
     font-family: Urbanist;
