@@ -50,7 +50,10 @@
 
 		<div class="cbox">
 			<p>
-				AI is a massive module, filled with a lot of important things and redundant fluff. My aim here is to rewrite my notes for the module to remove all of the fluff, which not only makes the task easier for me, but also means there's less filler content. <b>This page assumes some inherent knowledge from AI and its keywords</b>, as well as knowledge of logic from CS131 or CS262 -- it will not do to read it from scratch.
+				AI is a massive module, filled with a lot of important things and redundant fluff. My aim here is to rewrite my notes for the module to remove all of the fluff, which not only makes the task easier for me, but also means there's less filler content. <b>This page assumes some inherent knowledge from AI and its keywords</b>, as well as knowledge of logic from CS130 or CS262 -- it will not do to read it from scratch.
+			</p>
+			<p>
+				The old long one can be found <a href="./">here</a>.
 			</p>
 
 			<p>
@@ -337,6 +340,334 @@
 
 		<div class="colourband">
 			<h2 id="probability">Conditional Probability and Bayes</h2>
+
+			
+		</div>
+
+		<div class="cbox">
+			<ul>
+				<li><a href="#pro-1">Probability and Bayes</a></li>
+				<li><a href="#pro-2">Decision Making</a></li>
+			</ul>
+
+			<h2 id="pro-1">Probability</h2>
+
+			<p>
+				First of all, see <a href="../cs130#probability">Probability</a> from CS130 since this needs probability spaces \(\Omega\) annd expected values of random vars \(E[X] = \sum_{s_i \in \Omega} P(s_i) X[s_i] \).
+			</p>
+			<p>
+				Recall that for conditional probability: \(P(A|B) = \frac{P(A \land B)}{P(B)}\). If \(P(A|B) = P(A)\) and \(P(B|A) = P(B)\) then they're independent.
+			</p>
+
+			<p class="blue">
+				<span class="nopad">
+				From which we get <b>Bayes' Theorem</b> \(P(A|B) = \frac{P(B|A)P(A)}{P(B)}\) (provided neither \(P(A), P(B) = 0\)). <br>
+				Where \(P(B) = P(B|A)P(A) + P(B|\lnot A)P(\lnot A)\) -- the possibility of B given all occurences of A.
+				</span>
+			</p>
+		
+			<p>
+				If A is instead split into <i>mutually exclusive, exhaustive</i> states \(a_1 \cdots a_n\) rather than a true and false, then we can extend the equation for \(P(B)\) to be a sum \(\sum_{i=1}^{n} P(B|a_i) P(a_i)\)
+			</p>
+			<p class="blue">
+				Note also the chain rule:
+				\[P(a_1 \land a_2 \land \dots \land a_i) = P(a_1) \times P(a_2|a_1) \times P(a_3|a_1 \land a_2) \times \cdots \times P(a_i|a_1 \land a_2 \land \cdots \land a_{i-1} )\]
+			</p>
+			<p class="blue">
+					The <b>joint probability distribution</b> \(P(A,B)\) is a probability dist over A, which has \(n\) states, and B, which has \(m\) states. Thus, for every A state \(a_i\), we have \(m\) entries in the prob. dist for every possible B state (i.e. it's \(A \land B\)). 
+			</p>
+
+			<p>
+				To work out \(p(a_i)\) from \(p(A, B)\) do \(p(a_i) = \sum_{j=1}^{m} p(a_i, b_j)\). This is referred to as <b>marginalising</b> B out of \(P(A,B)\)
+			</p>
+
+			<p>
+				Naturally this is difficult for continuous probabilities. In that case, we have to use integration (that I doubt will <i>actually</i> come up).
+			</p>
+
+			<p class="blue">
+				Note that <b>conditional independence</b> for some \(X, Y\) given \(Z\) means that \(P(X, Y|Z) = P(X|Z) \cdot P(Y|Z)\).
+			</p>
+
+			<h3>Inference</h3>
+
+			<p>
+				<b>Probabilistic inference</b> is about computing <i>values</i> for queried <i>propositions</i> given observed <i>evidence</i>.
+			</p>
+
+			<ul class="side">
+				<li>
+					Let \(X\) be our query variable, and \(E\) be our evidence variables with observed values \(e\).
+				</li>
+				<li>
+					Let \(Y\) be other, unobserved variables, with some values \(y\)
+				</li>
+				<li class="nopad">
+					<!-- <span class="nopad"> -->
+					We want \(p(X|e)\):
+					\[p(X|e) =\frac{p(X, e)}{p(e)} = \alpha \sum_{y}p(X, e, y)\]
+					Where the \(\frac{1}{p(e)}\) multiplier is called the <b>normalisation constant</b> (sometimes written \(\alpha\)), \(p(e)_= \sum_{x, y} p(x, e, y)\).
+					<!-- </span> -->
+				</li>
+			</ul>
+			<p>
+				Now, this is probably meaningless when just presented in theory, so below is an example.	
+			</p>
+
+			<button class="collapsible active">Simple Example... </button>
+			<div class="ccontent" style="display: block;"><span class="nopad">
+				<p>
+					<b><i>Example.</i></b> Given the following table, we want to calculate P(cavity|toothache).
+				</p>
+				<table>
+					<tr>
+						<th></th>
+						<th colspan="2">Toothache</th>
+						<th colspan="2">¬Toothache</th>
+					</tr>
+					<tr>
+						<th></th>
+						<th>catch</th>
+						<th>¬catch</th>
+						<th>catch</th>
+						<th>¬catch</th>
+					</tr>
+					<tr>
+						<th>cavity</th>
+						<td>0.108</td>
+						<td>0.012</td>
+						<td>0.072</td>
+						<td>0.008</td>
+					</tr>
+					<tr>
+						<th>¬cavity</th>
+						<td>0.016</td>
+						<td>0.064</td>
+						<td>0.144</td>
+						<td>0.576</td>
+					</tr>
+				</table>
+
+				<p>
+					Note we have an "unobserved" (irrelevant variable) catch. Then, to work everything out:
+				</p>
+				<ul>
+					<li>p(cavity \(\land\) toothache) = 0.108 + 0.012 = 0.12 (marginalising catch)</li>
+					<li>p(cavity \(\land\) ¬toothache) = 0.008 + 0.072 = 0.08</li>
+					<li>Then p(cavity) = 0.108 + 0.012 + 0.016 + 0.064 = 0.2</li>
+					<li>p(toothache) = 0.108 + 0.012 + 0.016 + 0.064 = 0.2</li>
+					<li>Thus p(cavity|toothache) = \(\frac{0.12}{0.2}\) = 0.6.</li>
+				</ul>
+			</span>
+			</div>
+
+			<p>
+				For more complex examples, this type of enumeration may become incredibly difficult - thus we need some sort of <i>graphical method</i> to represent and take advantage of conditional independence.
+			</p>
+			<p>
+				<img src="./infer-tree.png" alt="" align="right" style="size: 100px;">
+				Since often events lead to other events which lead further in a chain, we can represent this graphically. 
+			</p>
+			<p>
+				We want an acyclic graph, where each node corresponds to one variable in our probability distribution. 
+			</p>
+			<p>
+				This graph should then satisfy the <b>markov condition</b>:
+			</p>
+			<p class="blue">
+				<b>Markov Condition:</b> For all variables \(V\), \(V\) is <b>conditionally independent</b> of all its <b>non</b>descendants, given its parents: \(P(B,C|H) = P(B|H) \cdot P(C|H)\) because C does not descend from B.
+			</p>
+			<p>
+				This reduces vastly the number of conditional probabilities we need to work out, and simplifies the ones we do -- only the conditional probabilities \(P(X|PA_X)\) (given the parents of X) need to be calculated.
+			</p>
+			<p>
+				This type of graph is a <b>Bayesian Belief Network</b> -- directed, acyclic, showing influence, and in total representing a full joint prob. dist.
+			</p>
+
+			<p>
+				When building a BBN, order of nodes matters (different order = different complexity) -- we really only want a node to depend on only those before it. Then, we can use chain rule principles and only the parents function \(PA_X\) to define the joint probability:
+				\[P(X_1, X_2, \dots, X_n) = \prod_{i=1}^n P(X_i | PA_{X_i})\]
+			</p>
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/SimpleBayesNet.svg/400px-SimpleBayesNet.svg.png" alt="">
+				<FIGCaption>Bayesian Belief Network example (Wikiepdia)</FIGCaption>
+			</figure>
+
+			<h3>Noisy OR</h3>
+
+			<p>
+				Even still, local probability distributions tend to grow very quickly (\(O(2^n)\)) -- simplify using "canonical interaction" models like Noisy OR.
+			</p>
+			<div class="blue">
+				<p>Noisy OR:</p>
+				<ul>
+					<li>Describes set of \(n\) clauses \((x_1 .. x_n\) and their common effect (descendant) \(y\)</li>
+					<li><b>Assume</b> each \(x_i\) is sufficient to cause \(y\) regardless of state of other clauses: <b>independence</b>.</li>
+					<li>Thus \(p_i\) (prob. of causing \(y\) rel. to \(x_i\)) \(= P(y|\lnot x_1, \dots, x_i, \lnot x_{i+1}, \dots, \lnot x_n)\)</li>
+				</ul>
+			</div>
+
+			<p>
+				<img src="./infer-noisy-or.png" alt="" align="right">
+
+				Shown on the right is a BBN concerning <b>F</b>atigue, <b>B</b>ronchitis, <b>L</b>ung cancer, and <b>O</b>ther causes of fatigue. 
+			</p>
+
+			<p>
+				<b>Causal inhibition</b> is where each of the three causes F, O, L, has an inhibitor (not shown): Bronchitis will cause fatigue <b>if and only if</b> the inhibior mechanism for that cause is absent.
+			</p>
+
+			<p>
+				<b>Exception Independence</b> is where the inhibiting mechanism for each cause is independent.
+			</p>
+
+			<p>
+				And of course, the effect F can only happen if at least one cause is present.
+			</p>
+
+			<p>
+				A noisy-OR model adds new <b>deterministic nodes</b>, whose values are exactly specified by parents. We can extend the above BBN into a Noisy-OR tree, add in the inhibitors, and <i>voila</i>.
+			</p>
+
+			<figure>
+				<img src="./noisy-or-tree.png" alt="" title="Noisy OR tree" style="max-width: 70%;">
+			</figure>
+
+			<p>
+				Course a BBN won't actually show this, and condenses it down into a single probability / probability table. 
+			</p>
+			<p>
+				When constructing a network, only draw causal links from the new node to already existing ones - depending on the order new nodes are added, this wildly changes the number of arcs and thus the complexity.
+			</p>
+
+			<h3>Reasoning</h3>
+
+			<p>
+				Different types of reasoning can be done on a BBN:
+			</p>
+			<ol>
+				<li><b>Diagnostic Reasoning</b> from symptop to cause: backwards along the arcs. From our evidence reason <i>up</i> until we work out our query -- often involves Bayes' rule.</li>
+				<li><b>Causal Reasoning</b> from cause to symptom: forwards along the arcs -- often involves <i>just reading from the graph</i>.</li>
+				<li><b>Intercausal Reasoning</b>: If a cause and an immediate symptom are observed together, this concerns all other causes of a symptom</li>
+				<li><b>Combined Reasoning</b> if we have to go backwards and forwards simultaneously</li>
+			</ol>
+
+			<p>
+				A lot of this entials enumeration of possibilities.
+			</p>
+
+			<button class="collapsible">Reasoning Over 3 Nodes... </button>
+			<div class="ccontent" style="display: none;">
+				<p><b><i>Example.</i></b>; note that \(\alpha\) is the \(1/p\) normalisation constant.</p>
+				<img src="./reasoning-3-node.png" alt="">
+			</div>
+
+			<h4>Variable Elimination</h4>
+
+			<p>
+				VE is more efficient than enumeration. VE works over factors, which:
+			</p>
+			<p class="blue">
+				A <b>factor</b> is a <b>function</b> on a set of variables, called the <b>scope of the factor</b>.
+				<br><br>
+				Conditional Probability \(P(x|y,z)\) can be described as a factor with scope \(x,y,z\).
+			</p>
+			<p>
+				If we can (1) order variables, (2) index them, then we can uniquely represent each factor as a <b>1d array</b>. Ex. the table 
+				\begin{array} {|r|r|}\hline x & y & f_0 = P(z=T | x, y) \\ \hline T & T & 0.1 \\ \hline T & F & 0.2 \\ \hline F & T & 0.3 \\ \hline F & F & 0.4 \\ \hline  \end{array}
+				Can be represented as the list \(f_0 = [0.1, 0.2, 0.3, 0.4] \). We can then <b>condition, sum,</b> and <b>multiply</b> these.
+			</p>
+			<p>
+				<b>Conditioning:</b> If we have observed a var with a value, we can define a new factor with reduced scope: Starting with \(P(x|y,z\) then observe \(z=T\), define new factor \(P(x|y,z=t)\) with a scope \((x, y)\), since \(z\) is now known.
+			</p>
+			<p>
+				<b>Multiplying:</b> If factor 1 has scope \(A, B\) and factor 2 has scope \(B, C\) then we can multiply these together, which is doing a <code>natural join</code> multiply. If \(f_1: A=T, B=F \implies 0.9\) and \(f_2: B=F, C=T \implies 0.6\) then \(f_{new}: A=T, B=F, C=T \implies 0.6 \times 0.9 = 0.54\).
+			</p>
+			<p>
+				<b>Summing:</b> Eliminating a chosen variable by adding together possible outcomes. Given \(f(X,Y,Z)\) (factor over X, Y, Z) eliminate Y by doing \(f_{new}(X, Z) = f(X, Y=T, Z) + f(X, Y=F, Z)\).
+			</p>
+			<p>
+				Thus, the VE algorithm goes as
+			</p>
+			<ol class="side">
+				<li>Construct factor for each conditional probability</li>
+				<li>Eliminate each non-query variable:
+					<ol type="a">
+						<li>If variable has observed value, set it to that and condition</li>
+						<li>Otherwise sum it out</li>
+					</ol>
+				</li>
+				<li>Multiply remaining factors and normalise</li>
+			</ol>
+
+			<h2 id="pro-2">Decision Making</h2>
+
+			<p>
+				BBNs model probabilities, and often these probabilities are used to make decisions. Decision making can also be formalised.
+			</p>
+			<p>
+				First though, given a set of outcomes \(O=\{O_i ..\} \) of an action \(A\), a <b>utility function</b> \(U(O_i|A)\) assigns a utility to each outcome -- desirability. 
+			</p>
+			<p>
+				The expected utility is a weighted sum of outcomes' probabilities and their utils,
+				\[\sum_i P(O_i|A) \times U(O_i|A)\]
+				And we assume that a decision maker always wants to <b>maximise utility</b>.
+			</p>
+
+			<p>
+				The decision maker is an agent, and it must know how good outcomes are <i>relative</i> to each other. These relations should be complete and transitive.
+			</p>
+
+			<div class="blue">
+				<p>Two outcomes \(\sigma_1, \sigma_2\) are</p>
+				<ul>
+					<li><b>Weakly preferred</b> \(\sigma_1 \succeq \sigma_2\), 1 is at least as good as 2</li>
+					<li><b>Indifferent</b> \(\sigma_1 \sim \sigma_2\), 1 and 2 are the same</li>
+					<li><b>Strictly preferred</b> \(\sigma_1 \succ \sigma_2\), 1 is better than 2, we do not weakly prefer 2</li>
+				</ul>
+			</div>
+
+			<h3>Decision Trees</h3>
+
+			<p>
+				Decision trees have 2 types of nodes. <b>Chance Nodes</b> are circles, and are random variables. <b>Decision Nodes</b> are squares, and represent a set of mutually exclusive choices.
+			</p>
+
+			<button class="collapsible active">Buying stock...</button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<img src="./decision-tree.png" alt="" align="right" style="max-width: 30%;">
+					<b><i>Example.</i></b> Suppose you have £1000 to spend. You can put it in the bank, with a guaranteed 0.5% return in a month, or buy 100 shares of OCRCompnay @ $10 a share. The tree looks as follows:
+				</p>
+				<p>
+					\(EU(X) = 0.25 \times 500 + 0.25 \times 1000 + 0.5 \times 2000 = £1375\).
+				</p>
+				<p>
+					\(EU(D) = \max(EU(X), 1005) = £1375\)
+				</p>
+				<p>
+					Thus buy stonks.
+				</p>
+				
+			</div>
+			<p>
+				Naturally real people have different views on risk vs reward than an agent which goes off dumb numbers and a max function. We can also model this however. 
+			</p>
+			<p>
+				We can change our utility function to instead of being just the straight number, account for the risk involved as well:
+				\[U_R(x) = e^{\frac{-x}{R}}\]
+				Thus with a higher R value for certain options over others, we can represent risk accordingly.
+			</p>
+
+			<p>
+				If we have non-numeric outcomes in our decision tree, such as whether or not a suit gets ruined, we can still model this by <b>assigning</b> utility values, often 0 for the least desiresd, 1 for the most desired, and something in between for the others that reflects their undesirability vs their chance to mitigate disaster.
+			</p>
+
+			<h3>Influence Diagrams</h3>
+
+			<p>
+				
+			</p>
 		</div>
 		
 
