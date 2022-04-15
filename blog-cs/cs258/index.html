@@ -465,6 +465,7 @@
 				<li><a href="#sql-4">Joins</a></li>
 				<li><a href="#sql-5">Query Nesting</a></li>
 				<li><a href="#sql-6">Correlated Subqueries</a></li>
+				<li><a href="#sql-7">Aggregation and Grouping</a></li>
 			</ol>
 
 			<h3 id="sql-1">Declaring</h3>
@@ -1025,6 +1026,94 @@ where source1 > 2;</code></pre>
 					</p>
 					<p>
 						It's a similar case with <code class="lang-sql">intersect all</code> where they match and discard left overs.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-7">Aggregation and Grouping</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Aggregation</p>
+				</div>
+				<div>
+					<p>
+						Many queries involve computing aggregates, using <code class="lang-sql">sum(), avg(), count(), min(), max(), percentile()</code>. These keywords apply to columns.
+					</p>
+					<p>
+						<code class="lang-sql">count()</code> is special since it can take <code class="lang-sql">count(*)</code> which means count all rows, and is also extended to <code class="lang-sql">count(distinct ...)</code> which should be self explanatory.
+					</p>
+					<p>
+						The rest of these <b>need an attribute</b>.
+					</p>
+
+					<pre><code class="lang-sql">select avg(price) from sells where tea = 'Earl Grey';</code></pre>
+
+					<pre><code class="lang-sql">select studentID from studentCourseMarks
+where courseID = 2 and mark > (
+	select avg(mark) from studentCourseMarks where courseID = 2
+);</code></pre>
+				</div>
+
+				<div>
+					<p>Behaviour with nulls</p>
+				</div>
+				<div>
+					<p>
+						Nulls <b>never</b> contribute to a sum, average, and count, and can <b>never</b> be a max or a min.
+					</p>
+					<p>
+						If the whole column is null, <code class="lang-sql">count()</code> is 0, and <i>then</i> <code class="lang-sql">min(), max(), sum()</code> etc become null.
+					</p>
+				</div>
+
+				<div>
+					<p>Group by</p>
+				</div>
+				<div>
+					<p>
+						Follows a select-from-where, results are grouped according to the values for the specified attribute, and (it must be present) aggregates are <b>applied per group</b>.
+					</p>
+
+					<pre><code class="lang-sql">select courseID, count(*) as students
+from studentCourses group by courseID;</code></pre>
+
+					<pre><code class="lang-sql">select tea, avg(price) from sells group by tea;</code></pre>
+				</div>
+
+				<div>
+					<p>Limitations</p>
+				</div>
+				<div>
+					<p>
+						If an aggregate is used, <b>each</b> elem <b>must</b> be aggregated or grouped by. 
+					</p>
+
+					<pre><code class="lang-sql">-- selecting earl grey at cheapest price
+select teaRoom from sells
+where (tea, price) = (
+	select tea, min(price) from sells 
+	where tea = 'Earl Grey'
+	group by tea
+);</code></pre>
+				</div>
+
+				<div>
+					<p>Having</p>
+				</div>
+				<div>
+					<p>
+						A having condition is a condition on the grouped by rows, all rows must pass said condition to be shown.
+					</p>
+					<pre><code class="lang-sql">-- selecting courses with &gt; 2 students
+select sc.courseID, courseName, count(*) as students
+from studentCourses sc, courses 
+where sc.courseID = courses.courseID
+group by sc.courseID, courseName
+having count(*) > 2;</code></pre>
+
+					<p>
+						<code class="lang-sql">having</code> may refer to any tuple variable in <code class="lang-sql">from</code>, and may refer to an attribute, as long as that attribute makes sense (i.e. the attribute being grouped)
 					</p>
 				</div>
 			</div>
