@@ -415,7 +415,7 @@ button.nul {
     display: block;
 }
 
-.cnul {
+.ccontent.nul, .cnul {
     border: none;
     border-spacing: 0px 0px;
     padding-left: 0px;
@@ -478,7 +478,7 @@ p.small {
     font-size: 8pt;
 }
 
-p.grey {
+p.grey, .grey {
     color: gray;
 }
 

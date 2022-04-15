@@ -84,6 +84,7 @@
 
 			<ul>
 				<li><a href="#search">Search</a></li>
+				<li><a href="#csp">Constraint Satisfaction</a></li>
 				<li><a href="#probability">Conditional Probability and Bayes</a></li>
 			</ul>
 		</div>
@@ -339,9 +340,280 @@
 		</div>
 
 		<div class="colourband">
-			<h2 id="probability">Conditional Probability and Bayes</h2>
+			<h2 id="csp">Constraint Satisfaction</h2>
+		</div>
 
+		<div class="cbox">
+			<h3>Variables and Constraints</h3>
+
+			<p class="blue">
+				Given a set of variables, an <b>assignment</b> is a function from variables to their domain. A <b>total assigment</b> is a function that assigns all variables in the set, and partial is thus self-explanatory.
+			</p>
+
+			<p>
+				Constraints limit what combination of variables are possible.
+			</p>
+			<p class="blue">
+				A <b>constraint</b> \(C\) is a relation \(R: S \longleftarrow \{T, F\} \) over a scope \(S\), which is a set of variables. 
+			</p>
+			<p>
+				Any assignment \(A\) on the superset \(2^S\) <b>satisfies</b> \(C\) if all variables in S then map to true. 
+			</p>
+			<p>
+				A constraint can be <b>unary</b> (1 var), <b>binary</b> (2 vars), or more. 
+			</p>
+
+			<h3>CSPs</h3>
+
+			<p class="blue">
+				A <b>Constraint Satisfaction Problem</b> has a set of variables, a domain for every variable, and a set of constraints. <span class="grey">We will be working on finite CSPs only.</span>
+			</p>
+
+			<p>
+				Many things are reducible to CSPs, notably <i>3-SAT</i>, which is covered in CS260. CSPs are usually NP-hard, thus difficult to solve efficiently, and thus, like the rest of AI, our algorithms are heuristic based and "good-enough" based.
+			</p>
+
+			<h4>Generate and Test</h4>
+
+			<p>
+				The most naive method of solving CSPs. As the name suggests, generate a total assignment (randomly or systematically), and test if it violates any constraints.
+			</p>
+			<p>
+				Whilst this is stupid easy, it has a complexity of \(O(\textrm{horrible})\).
+			</p>
+
+			<h4>Backtracking</h4>
 			
+			<p>
+				So generate and test is horrible, maybe we do something smarter. CSPs can be reduced to trees, where nodes are <b>assignments of values</b> and neighbours are gotten by selecting a different node, and assigning it to something else. 
+			</p>
+			<p>
+				As soon as we hit an invalid (partial) assignment, backtrack one and try a different one, like the example below.
+			</p>
+
+			<button class="collapsible active">Backtracking... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Example.</i></b> Suppose we have a CSP with variables \(A, B, C\), each has domain \(\{1..4\}\), and our contraints are \(A &lt; B; B &lt; C\). A backtracking tree might look like the following:
+				</p>
+
+				<figure>
+					<img src="./csp-backtrack.png" alt="" style="max-width: 70%;">
+					<b>Full backtracking tree. Depending on the search algorithm the partially searched tree might look different.</b>
+				</figure>
+				
+			</div>
+
+			<p>
+				Backtracking is \(O(\textrm{less horrible})\), and is usually good enough for most applications <i class="grey">*cough* something beginnning with c</i>.
+			</p>
+
+			<button class="collapsible nul">Algorithm... </button>
+			<div class="ccontent nul">
+				<p></p>
+				<div class="codediv">backtrackCSP(CSP):
+	return backtrack_r(\(\{\}\), CSP)
+
+backtrack_r(assignment, CSP):
+	if assignment complete: 
+		return assignment
+	\(X \longrightarrow\) unassigned variable in CSP.vars
+	for each \(v \in\) CSP.domain(\(X\)):
+		if \(v\) consistent with assignment given CSP.constraints:
+			assignment.add(\(X = v\))
+			result \(\longrightarrow\) backtrack_r(assignment, CSP)
+			if result \(\neq\) fail: 
+				return result
+			assignment.remove(\(X = v\))
+	return fail</div>
+			</div>
+
+			<p>
+				If dumb backtracking is <i>not</i> good enough, we can use a heuristic-based search:
+			</p>
+			<ul>
+				<li>
+					<b>MRV | Minimum Remaining Value</b>: pick the variable with the fewest possible values; "fail first"
+				</li>
+				<li>
+					<b>Degree</b>: (backup to MRV) pick the variable with most constraints
+				</li>
+				<li>
+					<b>LCV | Least Constraining Value</b>: for a variable, pick the value that rules out the least other values
+				</li>
+			</ul>
+
+			<h3>Consistency Algorithms</h3>
+
+			<p>
+				Sometimes, some assignments will always fail nomatter what. For example, if \(A, B = \{1..4\}\) and \(A < B\), the assignment \(A=4\) is always invalid. Thus to speed up backtracking we can strip these domain values out as we go along.
+			</p>
+
+			<p>
+				These algorithms work on a <b>constraint network</b>, where nodes are variables (annotated by domain) and arcs are constrains connecting variables. 
+			</p>
+			<p class="small">
+				If you have more than just binary constraints you can have constrains as their own <b>square</b> nodes and connect <b>round</b> variable nodes instead.
+			</p>
+
+			<h4>Arc Consistency</h4>
+
+			<p>
+				(Generic) <b>Arc Consistency</b> (GAC) is the one algorithm, and the goal is to make everything "arc consistent":
+			</p>
+
+			<p class="blue">
+				A variable is <b>domain consistent</b> if all unary constraints (loops) are satisfied. A variable is <b>arc consistent</b> if the constraints on all arcs between it and other variables are satisfied as well. 
+			</p>
+
+			<ul class="side">
+				<li>
+					GAC keeps track of a <b>to-do list</b> of unconsidered arcs, which are initialised to all arcs in the graph.
+				</li>
+				<li>
+					Every iteration until the todo list is empty, we pick and remove an arc from a variable X to a constraint \(c\) and make it consistent. If, however, this changes the domain of X, do the next step:
+				</li>
+				<li>
+					For all other constraints \(c'\), we need to make sure that every other variable apart from X (\(Z \neq X\)) are satisfied again -- i.e. adding them back to the to-do list (if not there already).
+				</li>
+			</ul>
+
+			<button class="collapsible nul">Algorithm... </button>
+			<div class="ccontent nul">
+				<p></p>
+				<div class="codediv">generic_arc_consistency(vars \(V\), domains \(dom\), constraints \(C\)):
+	return gac2(\(V\), \(dom\), \(\{\langle X, c \rangle : c \in C, x \in scope(C)\} \))
+				
+gac2(vars \(V\), domains \(dom\), constraints \(C\), paths \(toDo\)):
+	while \(toDo \neq \varnothing\):
+		remove and select \(\langle X, c \rangle\) from \(toDo\)
+		\(\{Y_1, \dots, Y_k\} \longrightarrow scope(C) \setminus \{X\}\)
+		\(ND \longleftarrow \begin{align} \{X &: 
+			x \in dom[x] \land \exists y_1, \dots, y_k \in dom[Y_1], \dots, dom[Y_k] 
+			\\ &: c(X=x, Y_1=y_1, \dots, Y_k=y_k) \textrm{ true}\} \end{align}\)
+		if \(ND \neq dom[x]\):
+			\(toDo \longleftarrow toDo \cup \{\langle Z, c' \rangle 
+				: \{X, Z\} \subseteq scope(c'), c' \neq c, Z \neq X\}\)
+			\(dom[x] \longleftarrow ND\)
+		return \(dom\)</div>
+			</div>
+
+			<p>
+				<b>Regardless</b> of arc selection order, the algorithm will terminate with the same arc-consistent graph and set of domains. Three cases will happen:
+				<ol>
+					<li>A domain becomes \(\varnothing \implies\) no solution to CSP</li>
+					<li>Each domain has 1 value \(\implies\) unique solution</li>
+					<li>All or some domains have multiple values \(\implies\) we do not know the solution and will have to use another method to find it</li>
+				</ol>
+			</p>
+
+			<p>
+				The <b>time complexity</b> of such an algorithm is \(O(cd^3)\) for \(c\) constraints and a \(d\) domain size ~ linear in \(c\), which is efficient enough.
+			</p>
+			<p>
+				The <b>space complexity</b> is \(O(nd)\) for \(n\) total variables.
+			</p>
+			
+			<h4>Domain Splitting</h4>
+
+			<p>
+				Domain splitting splits a problem into two separate (disjoint) cases, solving them separately, and combining them.
+			</p>
+			<p>
+				Take a variable \(X \in \{T, F\} \), we can split this into two "worlds" where \(X=T\) and \(X=F\), solve those worlds, and combine all the valid results. With a domain of \(\{1, 2, 3, 4\} \) however, we can split into 4 worlds, or just 2 where \(X =\{1,2\}; X=\{3, 4\} \). If we only need one solution, we can just stop as soon as one world finds valid-- heeyyy wait, isn't this just "backtracking"?
+			</p>
+			<p>
+				Well, yes. Or rather, backtracking is a special case of domain splitting.
+			</p>
+			<p>
+				Interleave arc consistency here between every split/expand for best results.
+			</p>
+
+			<button class="collapsible">Algorithm... </button>
+			<div class="ccontent">
+				<p></p>
+				<div class="codediv">cspSolver(vars \(V\), domains \(dom\), constr's \(C\)):
+	return csp2(\(V, dom, C, \{\langle X, c \rangle : c \in C \land x \in scope(c)\}\))
+
+csp2(\(V, dom, C\), paths \(toDo\)):
+	\(dom_0 \longleftarrow\) gac2(\(V, dom, C, toDo\))  # gac alg from above
+	if \(\exists X \in V : X = \varnothing\):
+		return false
+	else if \(\forall X \in V,\; |dom_0[x]| = 1\):
+		return solution where \(X\) set to value in \(dom_0[x]\)
+	else:
+		select \(X \in V : |dom_0[x]| > 1\)
+		partition \(dom_0[x]\) into \(D_1, D_2\)
+		\(dom_1 \longleftarrow\) copy(\(dom_0\)); \(dom_1[x] \longleftarrow D_1\)
+		\(dom_2 \longleftarrow\) copy(\(dom_0\)); \(dom_2[x] \longleftarrow D_2\)
+		\(toDo \longleftarrow \{(Z, c') : \{X, Z\} \subseteq scope(c') \land Z \neq X\}\)
+		return csp2(\(V, dom_1, C, toDo\)) 
+			or if false return csp2(\(V, dom_2, C, toDo\))</div>
+			</div>
+
+			<h4>Variable Elimination: Trees</h4>
+
+			<p>
+				A regular CSP takes \(O(d^n)\) to solve (\(d\) domain size \(n\) variables), but if we split this into \(\frac{n}{c}\) subproblems of \(c\) variables, suddenly this becomes drastically quicker (\(O(\frac{n}{c}d^c)\))
+			</p>
+
+			<p>
+				Specifically, an <b>acyclic</b> CSP can be solved in \(O(nd^2)\) by: 
+			</p>
+			
+			<ol class="side">
+				<img src="./csp-tree-to-line.png" alt="A CSP tree being a line" style="max-width: 50%;" align="right">
+				<li>Choose a variable as root, and order from root to leaves such that all nodes' parents <b>preceeds</b> them in ordering
+					
+				</li>
+				<li>for \(j = 1 .. n\), make node\(x_j\) consistent with its parents</li>
+			</ol>
+
+			<p>
+				If we don't have a tree, but can make a tree by removing one or two nodes, we can instantiate those variables, prove their consistency, and then remove them from consideration.
+			</p>
+			
+			<p class="blue">
+				<img src="./csp-conditioning.png" alt="A graph where one node removed makes a tree" style="max-width: 40%; display: block;" >
+				<b>Conditioning</b> is removing one variable by the above method. <br>
+				<b>Cutset Conditioning</b> is conditioning done to a set of variables (nodes).
+			</p>
+
+			<h4>Variable Elimination</h4>
+
+			<p>
+				More generally, we can eliminate a variable by passing its effects off onto the constraints of its neighbours. 
+			</p>
+			<p>
+				The idea is to collect all constrains on a variable X and <b>natural join</b> them to make one \(, c_x(X, \bar{Y})\) (Y-bar are neighbours to X), then <b>project</b> only those \(\bar{Y} \) variables. <span class="grey">(CS258 Relational Algebra)</span>
+			</p>
+			<button class="collapsible">Algorithm... </button>
+			<div class="ccontent">
+				<p></p>
+				<div class="codediv">ve_csp(vars \(V\), constr's \(C\)):
+	if \(|V| = 1\):
+		return \(\bowtie\)join(\(\forall c \in C\))
+	else:
+		select variable \(X \in V\) to eliminate
+		\(V' \longleftarrow V \setminus \{X\}\)
+		\(C_X = \{t \in C : t \textrm{ involves } X\}\)
+		\(R_1 \longleftarrow \bowtie\)join(\(\forall t \in C_X\))
+		\(R' \longleftarrow R\) projected onto everything except \(X\)
+		\(S \longleftarrow\) ve_csp(\(V', (C \setminus C_X) \cup \{R'\}\))</div>
+			</div>
+
+			<p>
+				Efficiency depends on selection, and variable elimination only works when the graph is <b>sparse</b>.
+			</p>
+
+			<p class="blue">
+				The <b>treewidth</b> is the number of vars in the <b>largest</b> relation. The <b>graph treewidth</b> is the minimum treewidth of any ordering. VE is exponential in treewidth.
+			</p>
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="probability">Conditional Probability and Bayes</h2>
 		</div>
 
 		<div class="cbox">
@@ -710,6 +982,9 @@
 				I.e. if a decision node depends on a chance node with 4 outcomes, calculate an EU for each outcome, and record that final table.
 			</p>
 		</div>
+
+		
+		
 		
 
 		<footer>
