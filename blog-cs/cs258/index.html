@@ -461,6 +461,10 @@
 			<ol>
 				<li><a href="#sql-1">Declaring</a></li>
 				<li><a href="#sql-2">Querying</a></li>
+				<li><a href="#sql-3">Updating</a></li>
+				<li><a href="#sql-4">Joins</a></li>
+				<li><a href="#sql-5">Query Nesting</a></li>
+				<li><a href="#sql-6">Correlated Subqueries</a></li>
 			</ol>
 
 			<h3 id="sql-1">Declaring</h3>
@@ -742,6 +746,285 @@ age int not null check (age &gt; 0 and age &lt; 125)</code></pre>
 
 					<p>
 						To check nulls, use <i>is</i>: <code class="lang-sql">attr is null</code> or <code class="lang-sql">attr is not null</code>.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-3">Updating</h3>
+
+			<div class="cornell">
+				<div></div>
+				<div>
+					<p>A modification does not return, but changes the state of the DB</p>
+				</div>
+
+				<div>
+					<p>Insert</p>
+				</div>
+				<div>
+					<pre><code class="lang-sql">insert into &lt;tableName&gt; values (&lt;val1&gt;, &lt;val2&gt;, ...);</code></pre>
+					<p>
+						Inserted values must be <b>in attribute order</b> of list in schema. To insert partial values, we can specify the column names:
+					</p>
+					<pre><code class="lang-sql">insert into &lt;tableName&gt; (A1, A2, ..., Aj) values (V1, V2, ..., Vj);</code></pre>
+					<p>
+						Unspecified attributes will fall to a default or null value. This is also useful if we do not know the order of attributes.
+					</p>
+				</div>
+
+				<div>
+					<p>Delete</p>
+				</div>
+				<div>
+					<p>
+						To delete tuples from a table matching the expression,
+					</p>
+					<pre><code class="lang-sql">delete from &lt;tableName&gt; where &lt;expression&gt;;</code></pre>
+					<p>
+						And the next one, depending on database, will delete <b>either nothing or everything</b> -- in postgres, this deletes <b style="color: red">every tuple from the table</b>.
+					</p>
+					<pre><code class="lang-sql">delete from &lt;tableName&gt;;</code></pre>
+				</div>
+
+				<div>
+					<p>Update</p>
+				</div>
+				<div>
+					<pre><code class="lang-sql">update &lt;tableName&gt;
+set (att1=val1, att2=val2, ...)
+where &lt;condition&gt;</code></pre>
+				</div>
+			</div>
+
+			<h3 id="sql-4">Joins</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Selecting from multiple tables</p>
+				</div>
+				<div>
+					<p>
+						In a from when selecting more than one table: <code class="lang-sql">... from students, courses ...</code> by default with the comma we will get the <b>cartesian product</b>, or <b>cross join</b>.
+					</p>
+				</div>
+				<div>
+					<p>Cross join</p>
+				</div>
+				<div>
+					<p>
+						Cross join can also be explicit: <code class="lang-sql">students cross join courses</code>.
+					</p>
+				</div>
+				<div>
+					<p>Natural Join</p>
+				</div>
+				<div>
+					<p>
+						Write <code class="lang-sql">R natural join S</code>, natural join can be done by first cross joining \(R \times S\), take the attribute in R with the <b>same name</b> as that in S, merge the two columns into one and remove any where they don't match up:
+
+						\[
+						\begin{array} {|r|r|}\hline \textrm{StudentID} & \textrm{Name} \\ \hline 1 & Bob \\ \hline 2 & Alice \\ \hline 3 & Brian \\ \hline  \end{array}
+						\textrm{ natural join }
+						\begin{array} {|r|r|}\hline \textrm{StudentID} & \textrm{CourseID} \\ \hline 1 & 1 \\ \hline 1 & 2 \\ \hline 2 & 2  \\ \hline 3 & 1 \\ \hline 3 & 2 \\ \hline  \end{array} 					
+
+						\]
+						\[= \begin{array} {|r|r|}\hline \textrm{StudentID} & \textrm{Name} & \textrm{CourseID} \\ \hline 1 & Bob & 1 \\ \hline 1 & Bob & 2 \\ \hline 2 & Alice & 2 \\ \hline 3 & Brian & 1 \\ \hline 3 & Brian & 2 \\ \hline  \end{array}\]
+					</p>
+				</div>
+
+				<div>
+					<p>(Regular) Join</p>
+				</div>
+				<div>
+					<p>
+						Extension of natural join, has syntax <code class="lang-sql">R join S on &lt;cond&gt;</code> for some condition.
+					</p>
+					<p>
+						If the operator in the cond (because you'll need one) is an =, this is an <b>equi-join</b>. The default join method is an <b>inner join</b>.
+					</p>
+				</div>
+
+				<div>
+					<p>Inner join</p>
+				</div>
+				<div>
+					<p>
+						An inner join between R and S is the same as 
+						<pre><code class="lang-sql">select * from R, S where R.myID = S.theirID;</code></pre>
+						i.e. it's like a natural join, except the two columns are <b>not merged</b>. 
+					</p>
+				</div>
+
+				<div>
+					<p>Theta join</p>
+				</div>
+				<div>
+					<p>A theta join is simply <b>not an equi-join</b></p>
+				</div>
+				<div>
+					<p>Nesting joins</p>
+				</div>
+				<div>
+					<pre><code class="lang-sql">select *
+from (
+	(students S inner join studentCourses C on S.studentID = C.studentID) 
+	inner join courses D on C.courseID = D.courseID 
+);</code></pre>
+				</div>
+
+				<div>
+					<p>Outer Joins</p>
+				</div>
+				<div>
+					<p>
+						Inner joins lose info -- an inner join between students and studentCourses will discard all students <i>without</i> courses. An outer join will <b>keep</b> one side's tuples and fill in the other side's with <code class="lang-sql">null</code>.
+					</p>
+					<p>
+						<code class="lang-sql">left outer join</code> keeps the left side, <code class="lang-sql">right outer join</code> keeps the right side, and <code class="lang-sql">full outer join</code> keeps both.
+					</p>
+					<p>
+						Outer joins <b>must</b> come with a <code class="lang-sql">natural</code> or <code class="lang-sql">on</code> clause.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-5">Query Nesting</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Subqueries</p>
+				</div>
+				<div>
+					<p>
+						Subqueries are queries within queries - you can select from the result of a select, basically. Internal queries can also be aliased for convenience.
+					</p>
+					<pre><code class="lang-sql">select tea
+from likes, (
+	select drinker from frequents where tearoom = 'Joe"s Tea Room'
+) JD 
+where likes.drinker = JD.drinker</code></pre>
+				</div>
+
+				<div>
+					<p>Scalar Subqueries</p>
+				</div>
+				<div>
+					<p>
+						If a query produces a 1x1 table -- i.e a single value, it is <b>scalar</b>. Scalar subqueries can be used in calculations and where conditions.
+					</p>
+				</div>
+
+				<div>
+					<p>In</p>
+				</div>
+				<div>
+					<p>
+						The keyword <code class="lang-sql">in</code> asks if <code class="lang-sql">&lt;tuple&gt; in &lt;relation&gt;</code>. <code class="lang-sql">not in</code> is the opposite keyword. Used in where clauses.
+					</p>
+					<pre><code class="lang-sql">select A1, A2 from testTable where A1 in (select A2 from testTable);</code></pre>
+				</div>
+
+				<div>
+					<p>Set comparisons</p>
+				</div>
+				<div>
+					<p>
+						<code class="lang-sql">in</code> is essentially \(\in\) in set algebra. What if we want something like \(x &lt; (\forall y \in Y)\)? Well we have the all, any, and some operators:
+						<pre><code class="lang-sql">select ... from ... where &lt;attr&gt; &lt;operation&gt; all/any/some &lt;subquery&gt;</code></pre>
+						Where the operation is a standard comparator operation. <code class="lang-sql">ALL</code> matches \(\forall\) and <code class="lang-sql">ANY, SOME</code> both match \(\exists\).
+					</p>
+					<pre><code class="lang-sql">SELECT ProductName FROM Products
+WHERE ProductID = ANY
+	(SELECT ProductID FROM OrderDetails
+	WHERE Quantity = 10); </code></pre>
+				</div>
+			</div>
+
+			<h3 id="sql-6">Correlated Subqueries</h3>
+
+			<div class="cornell">
+				<div></div>
+				<div>
+					<p>
+						Subqueries which need to refer to values of the outer query - often subquery is run per tuple of main query.
+					</p>
+				</div>
+				<div>
+					<p>Exists</p>
+				</div>
+				<div>
+					<p>
+						We can <b>emptiness test</b> with <code class="lang-sql">select attr from tableName where EXISTS ( &lt;subq&gt; );</code>. Inner queries can use table aliases from outer queries, such as 
+					</p>
+					<pre><code class="lang-sql">select courseID, courseName from courses C
+where exists (
+	select * from studentCourses D where C.courseID = D.courseID
+);</code></pre>
+					<p>
+						Inner queries which use outer query tuples are <b>correlated</b>. Nested query evaluated <b>once per row</b> of outer, and thus can use the scope of outer. 
+					</p>
+					<p>
+						<code class="lang-sql">not exists</code> obviously exists (ironically enough).
+					</p>
+				</div>
+
+				<div>
+					<p>Correlated versus not</p>
+				</div>
+				<div>
+					<p>
+						If a subquery is independent from the outer one, the subquery is evaluated first. Otherwise it does the row thing.
+					</p>
+				</div>
+
+				<div>
+					<p>Inserting with queries</p>
+				</div>
+				<div>
+					<p>
+						Guess what, you can insert nested queries too.
+					</p>
+					<pre><code class="lang-sql">insert into backup (copy1, copy2)
+select E.source1, E.source2 
+from example E
+where source1 > 2;</code></pre>
+				</div>
+
+				<div>
+					<p>Set operations</p>
+				</div>
+				<div>
+					<p>
+						Relations are sets <span class="grey">(bags)</span> and of course we can do set operations, with keywords <code class="lang-sql">union, intersect, except</code> being \(\cup, \cap, \setminus\) respectively.
+					</p>
+					<p>
+						The sets must be comparable, however, for it to work. You cant have tables with different columns.
+					</p>
+					<pre><code class="lang-sql">(select * from likes)
+	intersect 
+(select drinker, tea from sells join frequents on (tearoom))</code></pre>
+				</div>
+
+				<div>
+					<p>Bags vs sets</p>
+				</div>
+				<div>
+					<p>
+						Yeah so you saw the grey "Bags" earlier? Well SQL "sets" aren't actually sets, they're "bags", or "multisets", or whatever word mathematicians make up to avoid saying <b>sets but with duplicate items</b>.
+					</p>
+					<p>
+						<code class="lang-sql">select distinct</code> rids us of the duplicates, and the set operations will too, but say you <i>do</i> have two tables with duplicates, and <i>don't</i> want to remove them when unioning. Well that's where <code class="lang-sql">all</code> comes in: <code class="lang-sql">union all</code> will put all the columns together <b>without removing duplicates</b>.
+					</p>
+
+					<p>
+						You also have <code class="lang-sql">intersect all</code> and <code class="lang-sql">except all</code>, but it starts to act a bit funny here.
+					</p>
+
+					<p>
+						Say we have the code <code class="lang-sql">(select person from A) except all (select person from B)</code>, the first one has <code>joe, bob, joe, tim, fred</code> and the second has <code>fred fred tim tim joe</code>, as a result you'd get <code>joe, bob</code>. Since there's <b>two</b> Joes in the first one, and only <b>one</b> Joe <span class="grey">(Who's Joe?)</span> in the second one, \(2-1=1\) one Joe left over.
+					</p>
+					<p>
+						It's a similar case with <code class="lang-sql">intersect all</code> where they match and discard left overs.
 					</p>
 				</div>
 			</div>

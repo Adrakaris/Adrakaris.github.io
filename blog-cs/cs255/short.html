@@ -73,10 +73,10 @@
 					Reinforcement (Q-) Learning 
 				</li>
 				<li>
-					Knowledge Bases 
+					Knowledge Bases and Rule-based systems
 				</li>
 				<li>
-					Partial Order Planning and Rule systems
+					Partial Order Planning 
 				</li>
 			</ul>
 
@@ -146,17 +146,17 @@
 
 			<h4>Breadth First Search</h4>
 
+			<figure >
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Breadth-First-Search-Algorithm.gif" alt="" style="max-width: 300px;" align="right">
+				<figcaption>Process of BFS (Wikimedia Commons) -></figcaption>
+			</figure>
+
 			<p>
 				In short: expand the <b>shallowest</b> node first. 
 			</p>
 			<p>
 				Frontier queue is ordered by distance from the origin/root. Successor nodes are added to the <b>end</b> of the queue.
 			</p>
-
-			<figure>
-				<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Breadth-First-Search-Algorithm.gif" alt="" style="max-width: 300px;">
-				<figcaption>Process of BFS (Wikimedia Commons)</figcaption>
-			</figure>
 
 			<p>
 				For a branching factor \(b\) and the <i>depth of least cost solution</i> \(d\) the <b>time</b> complexity is \(O(b^d)\)... i.e. \(O(n)\) in number of nodes. The <b>space</b> complexity is the <b>same</b> - which can be a big problem if there are lots of nodes.
@@ -167,6 +167,11 @@
 
 			<h4>Depth First Search</h4>
 
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Depth-First-Search.gif" alt="" style="max-width: 300px;" align="right">
+				<figcaption>Process of DFS (Wikimedia Commons) -></figcaption>
+			</figure>
+
 			<p>
 				In short: expand the <b>deepest</b> node first.
 			</p>
@@ -174,10 +179,7 @@
 				Frontier queue is a stack, put successors at the start. 
 			</p>
 
-			<figure>
-				<img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Depth-First-Search.gif" alt="" style="max-width: 300px;">
-				<figcaption>Process of DFS (Wikimedia Commons)</figcaption>
-			</figure>
+			
 
 			<p>
 				DFS has a time complexity of \(O(b^m)\), where \(m\) is the <i>maximum</i> depth, rather than that of the nearest solution. This can be bad if \(m\) is large. However, DFS's main advantage is its <b>space</b> complexity -- \(O(bm)\) -- only one path needs to be stored, making DFS better where memory is tighter.
@@ -983,7 +985,9 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 			</p>
 		</div>
 
-		
+		<div class="colourband">
+			<h2 id="kbs">Knowledge Bases and Rule-Based Systems</h2>
+		</div>
 		
 		
 

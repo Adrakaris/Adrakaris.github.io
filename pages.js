@@ -24,14 +24,14 @@ var pages = [
         "picture": "",
         "tags": []
     },
-    {
-        "date": new Date(Date.UTC(2021, 10, 14)),
-        "link": "blog-cs/cs241/",
-        "title": "Notes on CS241",
-        "desc": "Notes on CS241: Operating Systems and Networking. These are made throughout the year and will be updated as and when needed.</p>",
-        "picture": "",
-        "tags": ["cs"]
-    },
+    // {
+    //     "date": new Date(Date.UTC(2021, 10, 14)),
+    //     "link": "blog-cs/cs241/",
+    //     "title": "Notes on CS241",
+    //     "desc": "Notes on CS241: Operating Systems and Networking. These are made throughout the year and will be updated as and when needed.</p>",
+    //     "picture": "",
+    //     "tags": ["cs"]
+    // },
     {
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs258/",

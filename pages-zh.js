@@ -24,14 +24,14 @@ var pages = [
         "picture": "",
         "tags": []
     },
-    {
-        "date": new Date(Date.UTC(2021, 10, 14)),
-        "link": "blog-cs/cs241/",
-        "title": "CS241的记录",
-        "desc": "CS241：网络与操作系统的记录。这些是学完而写，会慢慢添加。无翻译。</p>",
-        "picture": "",
-        "tags": ["cs"]
-    },
+    // {
+    //     "date": new Date(Date.UTC(2021, 10, 14)),
+    //     "link": "blog-cs/cs241/",
+    //     "title": "CS241的记录",
+    //     "desc": "CS241：网络与操作系统的记录。这些是学完而写，会慢慢添加。无翻译。</p>",
+    //     "picture": "",
+    //     "tags": ["cs"]
+    // },
     {
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs258/",
