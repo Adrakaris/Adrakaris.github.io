@@ -296,9 +296,7 @@ footer.green {
     box-shadow: 0 50vh 0 50vh var(--green);
 }
 
-.active, .collapsible:hover {
-    background-color: var(--bg-active);
-}
+
 
 a.nav {
     font-family: Urbanist;
@@ -389,6 +387,11 @@ button.collapsible {
     text-align: left;
     font-weight: bold;
     font-style: italic;
+}
+
+/* if replaced with button.active then it works, but I thin the current looks nicer? */
+.active, .collapsible:hover {
+    background-color: var(--bg-active);
 }
 
 button.nul {

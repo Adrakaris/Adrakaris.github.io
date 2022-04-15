@@ -666,7 +666,48 @@
 			<h3>Influence Diagrams</h3>
 
 			<p>
-				
+				Decision trees can grow exponentially with the problem, and influence diagrams help prevent that. 
+			</p>
+			<p>
+				Influence diagrams have three types of nodes: <b>chance</b> (circle), <b>decision</b> (square), <b>utility</b> (diamond).
+			</p>
+			<p>
+				An edge <b>to</b> a chance node means its value is <b>probabilistically dependent</b> on value of parent.
+			</p>
+			<p>
+				An edge <b>to</b> a decision node means value of parent is <b>known</b> when decision made. If parent is decision, then this is chain of decisions. If parent is chance, means the chance has resolved before we decide. 	
+			</p>
+
+			<button class="collapsible active">Buying Stock (II)...</button>
+			<div class="ccontent" style="display: block;">
+				<img src="./influence-stonks.png" alt="" title="Influence tree for stocks example" align="right" style="max-width: 50%;">
+				<p>
+					<b><i>Example.</i></b> We recreate the buying stock example as an influence diagram. We want to work out the same thing, \(\max(EU(d_1), EU(d_2))\).
+				</p>
+
+				<p>
+					\(EU(d_1) = E(U|d_1)= \) <br>
+					\(P(X=£5) \times U(d_1, £5) + \)
+					\(P(X=£10) \times U(d_1, £10) + \)
+					\(P(X=£20) \times U(d_1, £20) = £1375.\)
+				</p>
+
+				<p>
+					\(EU(d_2) = E(U|d_2) = £1005.\)
+				</p>
+			</div>
+
+			<p>
+				Links from chance -> decision are also known as <b>information links</b> : chance must be known before decision can be made.
+			</p>
+			<p>
+				For a diagram with these links, 
+				<ul>
+					<li>Add any observed evidence by changing that chance node to \(p=1\) for that outcome,</li>
+					<li>For every possible parent occurence, calculate the expected utility for that specific setting,</li>
+					<li>Return the final stored table of decision values.</li>
+				</ul>
+				I.e. if a decision node depends on a chance node with 4 outcomes, calculate an EU for each outcome, and record that final table.
 			</p>
 		</div>
 		
