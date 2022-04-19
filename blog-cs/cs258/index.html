@@ -49,6 +49,7 @@
 			<ol>
 				<li><a href="#rel-db">Relational Databases and Constraints</a></li>
 				<li><a href="#sql">SQL</a></li>
+				<li><a href="#algebra">Relational Algebra</a></li>
 			</ol>
 
 			<h3>Introduction</h3>
@@ -1114,6 +1115,253 @@ having count(*) > 2;</code></pre>
 
 					<p>
 						<code class="lang-sql">having</code> may refer to any tuple variable in <code class="lang-sql">from</code>, and may refer to an attribute, as long as that attribute makes sense (i.e. the attribute being grouped)
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="algebra">Relational Algebra</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#alg-1">Overview</a></li>
+				<li><a href="#alg-2">Operators (Detailed)</a></li>
+			</ol>
+
+			<p>
+				SQL is based on relational algebra (RA): a formal mathematical model operating over relations, tuples, and attributes.
+			</p>
+			<p>
+				Note that whilst SQL is declarative, RA is <b>procedural</b>, one line at a time.
+			</p>
+			<p>
+				Since operators are formally defined, their properties are key to <b>optimising</b> execution on the back end.
+			</p>
+
+			<h3 id="alg-1">Overview</h3>
+
+			<p>
+				The operators are (the /1 and /2 are to show unary and binary operators)
+			</p>
+			<ul>
+				<li>
+					<b>Projection</b>/1: \(\pi_a(X)\) defines the attributes \(a\) of interest of X (like select from)
+				</li>
+				<li>
+					<b>Selection</b>/1: \(\sigma_c(X)\) defines tuples of interest with w/r/t constraint \(c\) (like where)
+				</li>
+				<li>
+					<b>Product</b>/2: \(X \times Y\) cartesian product 
+				</li>
+				<li>
+					<b>Join</b>/2: \(X \bowtie Y\) joins on attributes or criteria (\(\bowtie_c\))
+				</li>
+				<li>
+					<b>Set operators</b>: \(X \cup Y、X \cap Y、\overline{X} \).
+				</li>
+				<li>
+					<b>Rename</b>/1: \(\rho(X)\) can rename the table (\(\rho_S(X)\)), rename attributes (\(\rho_{a_1 \dots a_n}(X)\)), or both (\(\rho_{S(a_1 \dots a_n)}(X)\)).
+				</li>
+			</ul>
+			
+			<div class="side">
+				<p>
+					<b><i>Example.</i></b> For every project in stafford, list the project number, controlling department number, department manager's last name, address, and birthdate:
+				</p>
+				<button class="collapsible">SQL...</button>
+				<div class="ccontent">
+					<pre><code class="lang-sql">select Pnumber, Dnum, Lname, Address, Bdate
+from (
+	(
+		(
+			select * from PROJECT
+			where Plocation = 'Stafford'
+		) join DEPARTMENT on Dnum = Dnumber
+	) join EMPLOYEE on Mgr_ssn = Ssn
+);</code></pre>
+				</div>
+				<p>
+					In relational algebra, this is 
+					\[\pi((\sigma(P) \bowtie D) \bowtie E)\]
+					Or unabbreviated,
+					\[\pi_{\textrm{P.Pnumber, P.Dnum, E.Lname, E.Address, E.Bdate}}((\sigma_{\textrm{P.Location = 'Stafford'}}(P) \bowtie_{\textrm{P.Dnum=D.Dnumber}} D) \bowtie_{\textrm{D.Mgr_ssn = E.Ssn}} E)\]
+				</p>
+			</div>
+
+			<h3 id="alg-2">Operators (Detailed)</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Selection</p>
+				</div>
+				<div>
+					<p>
+						\[\sigma_{\textrm{condition}}(R)\]
+						The condition consists of &lt;attrname&gt; &lt;comparator&gt; &lt;constant/other attr name&gt;. 
+					</p>
+					<p>
+						This is applied independently to each tuple. 
+					</p>
+					<p>
+						Select is commutative: \(\sigma_a(\sigma_b(R)) = \sigma_b(\sigma_a(R))\), and chaining them is just the same as using <b>logical and</b>: \(\sigma_a(\sigma_b(R) = \sigma_{a \land b}(R)\).
+					</p>
+				</div>
+				<div>
+					<p>Projection</p>
+				</div>
+				<div>
+					<p>
+						\[\pi_{\textrm{attr list}(R)\]
+						Attribute list are the desired attributes (columns) of relation.
+					</p>
+					<p>
+						If there are no keys in this list, in SQL you may get duplicates, but in RA <b>duplicates are illegal</b> since we're using set maths.
+					</p>
+					<p>
+						If \(l_1 \supset l_2\) then \(\pi_{l_1}(\pi{l_2}(R))\) is illegal since you're projecting nonexistent columns.
+					</p>
+				</div>
+				<div>
+					<p>Renaming</p>
+				</div>
+				<div>
+					<ul>
+						<li>\(\rho_S(R)\) renames relation R to S</li>
+						<li>\(\rho_{(b_1 \dots b_n)} (R)\) renames attributes of R (\(b_i\) renames attribute \(a_i\))</li>
+						<li>\(\rho_{S(b_1 \dots b_n)} (R)\) does both!</li>
+					</ul>
+				</div>
+				<div>
+					<p>Expression order</p>
+				</div>
+				<div>
+					<p>
+						We've seen <b>single expressions</b>: \(\pi_{\textrm{Fname, Lname, Salary}}(\sigma_{Dno = 5}(\textrm{EMPLOYEE}))\)
+					</p>
+					<p>
+						We can also chain expressions:
+						\begin{align}
+							& \textrm{DEPS_EMPS} \longleftarrow \sigma_{Dno = 5}(\textrm{EMPLOYEE}) \\
+							& \textrm{RESULT} \longleftarrow \pi_{\textrm{Fname, Lname, Salary}}(\textrm{DEPS_EMPS})
+						\end{align}
+					</p>
+				</div>
+				<div>
+					<p>Set operations</p>
+				</div>
+				<div>
+					<p class="blue">
+						Two relations \(R(a_1 \dots a_m)\) and \(S(b_1 \dots b_m)\) are <b>type compatible</b> if \(m = n\) and \(dom(a_i) = dom(b_i) \; \forall i \in [1..n] \).
+					</p>
+				</div>
+				<div>
+					<p>Cross join</p>
+				</div>
+				<div>
+					<p>
+						Cartesian product of sets.
+					</p>
+				</div>
+				<div>
+					<p>Join</p>
+				</div>
+				<div>
+					<p>
+						Instead of cross join and select, we can join on a condition \(R \bowtie_{\textrm{cond}} S\).
+					</p>
+					<p>
+						An <b>equijoin</b> is a join where the condition has an =
+					</p>
+				</div>
+				<div>
+					<p>Natural Join</p>
+				</div>
+				<div>
+					<p>
+						An extension of join is natural join, represented by the star \(R \ast S\).
+					</p>
+				</div>
+				<div>
+					<p>Completeness</p>
+				</div>
+				<div>
+					<p>
+						Not all of these operators are needed to do everything, in fact the minimal complete set of operators is \(\{\sigma, \pi, \rho, \cup, -, \times\} \) (minus is set minus).
+					</p>
+				</div>
+
+				<div>
+					<p>Division</p>
+				</div>
+				<div>
+					<p>
+						If we have \(R \longleftarrow S \times T\), then we must have \(R \div S = T\)... right? 
+					</p>
+					<p>
+						Yeah, but it's a bit weird. Suppose S is students, T is topics, and R is something like "researches". Then \(S \times T\) will pair each student with all topics, or each topic with all students. \(R \div S\) "extracts" those topics out that all students research.
+					</p>
+					<p>
+						\(R \div S\) "extracts" those topics out that <b>all</b> students research. Even if we add more rows onto R to make \(R'\), then \(R' \div S\) would still <b>only</b> extract topics that <b>all</b> students research.
+					</p>
+					<p class="blue">
+						We define this as <b>universal quantification</b>, and T is the universal quantifier of all values of S.
+					</p>
+					<p>
+						Let \(R(Z)\) be the <b>fat relation</b> and \(S(X)\) be the <b>skinny relation</b>, such that \(X \subseteq Z\).
+					</p>
+					<p>
+						\(R(Z) \div S(X)\) is a relation \(T(Y):\) tuple \(t \in T(Y)\) <b>iff</b> \(\forall t_S \in S \exists t_R \in R :\)
+						<ul>
+							<li>\(t_R[Y] = t\) (t comes from R but only contains attributes Y)</li>
+							<li>\(t_R[X] = t_S\) (t must be present with all combinations of tuples from S <i>as a tuple in R</i></li>
+						</ul>
+					</p>
+					<p>
+						Alternatively, we can define \(T \longleftarrow R \div S\) as 
+						\begin{align}
+							T_1 &\longleftarrow \pi_Y(R) \\
+							T_2 &\longleftarrow \pi_Y((S \times T_1) - R) \\
+							T & \longleftarrow T_1 - T_2.
+						\end{align}
+					</p>
+				</div>
+			</div>
+
+			<h3 id="alg-3">Additional Operators</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Generalised Projection</p>
+				</div>
+				<div>
+					<p>
+						\(\pi_{F_1 \dots F_n} (R)\) where \(F_1 \dots F_n\) are <b>functions</b> on R: can do maths, constants, etc. 
+					</p>
+				</div>
+				<div>
+					<p>Aggregate Functions</p>
+				</div>
+				<div>
+					<p>
+						\(_{\textrm{grouping attrs}} \mathfrak{I} _\textrm{function list} (R)\): The notation is fraktur I.
+					</p>
+					<p>
+						Where the grouping attributes are attributes in R to <code class="lang-sql">group by</code>, and the function list is a list of (function, attribute) pairs, the functions are usually <code class="lang-sql">sum(), avg(), max(), min(), count()</code> etc.
+					</p>
+					<p>
+						\[ _\textrm{Dno} \mathfrak{I} _\textrm{COUNT Ssn, AVERGAGE Salary} (\textrm{EMPLOYEE}) \]
+					</p>
+				</div>
+				<div>
+					<p>Outer joins</p>
+				</div>
+				<div>
+					<p>
+						Join bowties with what looks like equals coming out of one (or both) sides: left ⟕ right ⟖. (These are unavailable in base mathjax)
 					</p>
 				</div>
 			</div>
