@@ -50,6 +50,8 @@
 				<li><a href="#rel-db">Relational Databases and Constraints</a></li>
 				<li><a href="#sql">SQL</a></li>
 				<li><a href="#algebra">Relational Algebra</a></li>
+				<li><a href="#calculus">Relational Calculus</a></li>
+				<li><a href="#design">Database Design, Normalisation and Security</a></li>
 			</ol>
 
 			<h3>Introduction</h3>
@@ -1130,6 +1132,7 @@ having count(*) > 2;</code></pre>
 			<ol>
 				<li><a href="#alg-1">Overview</a></li>
 				<li><a href="#alg-2">Operators (Detailed)</a></li>
+				<li><a href="#alg-3">Additional Operators</a></li>
 			</ol>
 
 			<p>
@@ -1365,6 +1368,323 @@ from (
 					</p>
 				</div>
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="calculus">Relational Calculus</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#calc-1">Relational Calculus</a></li>
+				<li><a href="#calc-2">Domain Relational Calculus</a></li>
+			</ol>
+
+			<p>
+				As if one formal system wasn't enough, here's another.
+			</p>
+			<p class="small">yay...</p>
+
+			<h3 id="calc-1">Relational Calculus</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Predicates and Propositions</p>
+				</div>
+				<div>
+					<p>
+						Relational Calculus is based on <b>predicates</b> and <b>propositions</b>.
+					</p>
+					<p>
+						A <b>predicate</b> is a declarative sentence: a statement. Predicates must be <b>verifiably</b> true or false. They specifiy retrieval requests, but only what to retrieve, not how.
+					</p>
+					<p>
+						True or false statements depend on presence within the database. 
+					</p>
+				</div>
+				<div>
+					<p>Variables in Predicates</p>
+				</div>
+				<div>
+					<p>
+						We can have a predicate with variables: "Person \(p\) plays intrument \(i\).", and these variables can be replaced: "Person <i>Megan</i> plays intrument \(i\)."
+					</p>
+
+					<p class="blue">
+						A predicate is <b>instantiated</b> when all parameters are filled, this becomes a <b>proposition</b>
+					</p>
+					<p>
+						"Person <i>Megan</i> plays instrument <i>cello</i>." is now a <b>proposition</b>.
+					</p>
+				</div>
+				<div>
+					<p>Intension and Extension</p>
+				</div>
+				<div>
+					<p class="blue">
+						The <b>intension</b> of a predicate is the predicate's "meaning": the properties and quantities associated with a statement. 
+					</p>
+					<p class="blue">
+						The <b>extension</b> of a predicate is the set of all instantiations where the predicate is <b>true</b>.
+					</p>
+				</div>
+				<div>
+					<p>Operations</p>
+				</div>
+				<div>
+					<p>
+						Propositions can be composed with others with logical and first order operators \(\land, \lor, \lnot, \forall, \exists\).
+					</p>
+				</div>
+				<div>
+					<p>Sets</p>
+				</div>
+				<div>
+					<p class="blue">
+						Let \(P(x)\) be a predicate. If \(a\) is an instance of \(x\), and \(P(a) = \top\), \(a\) <b>satisfies</b> \(P\). <br><br>
+						\(P(x)\) is the <b>membership predicate</b> for the set of all satisfactory objects \(a\).
+					</p>
+					<p>
+						Suppose \(P(y) = y \in \mathbb{Z} \land 5 &lt; y &lt; 10\). The Set related is \(\{6,7,8,9\} \).
+					</p>
+					<p>
+						These sets can also be composed with set operators.
+					</p>
+				</div>
+				
+				<div>
+					<p>Relational Calculus -> Relational Model</p>
+				</div>
+				<div>
+					<p>
+						A predicate can be thought of as a <b>schema</b>. The predicate defines what's true, whilst the schema defines attributes and domains for valid data.
+					</p>
+					<p>
+						A proposition can be thought of as a <b>tuple</b>. Propositions are set values substituted into parameters of a predicate; if they are satisfactory, they are valid in the schema.
+					</p>
+					<p>
+						The extension is the set of all valid states of the schema (the set of all predicate instantiations)
+					</p>
+					<p>
+						We work with a <b>closed world assumption</b>: a tuple is true <b>if and only if</b> it is in the database. 
+					</p>
+				</div>
+
+				<div>
+					<p>Queries</p>
+				</div>
+				<div>
+					<p>
+						RC can be used to express queries <b>declaratively</b>, and there are two types:
+					</p>
+					<p>
+						<b>Tuple Relational Calculus (TRC)</b> and <b>Domain Relational Calculus (DRC)</b>.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="calc-11">Tuple Relational Calculus</h3>
+
+			<div class="cornell">
+				<div>
+					<p>TRC</p>
+				</div>
+				<div>
+					<p>
+						Statements in RC are declarative.
+					</p>
+					<p>
+						To define queries, we need to define 3 more things:
+					</p>
+					<ul>
+						<li>The <b>range relation</b>, over which all tuples operate</li>
+						<li>The <b>condition</b> used to select tuples (aka formulas)</li>
+						<li>The desired <b>attributes</b> to be retrieved</li>
+					</ul>
+				</div>
+				<div>
+					<p>DB Queries</p>
+				</div>
+				<div>
+					<p>
+						A standard TRC query looks like
+						\[\{t_1\cdot A_1, t_2 \cdot A_2, \dots, t_n \cdot A_n | \textrm{cond}(t_1 \dots t_n)\}\]
+						Where cond is a true/false formula, \(t_1 \dots t_n\) are free variables.
+					</p>
+					<p>
+						The tuple variables range over all possible tuples, so must specify explicitly which relation they come from. 
+					</p>
+					<p>
+						An <b>atomic formula</b> is of form 
+						<ul>
+							<li>\(R(t_i)\) where R is a relation and \(t_i\) is a tuple variable.</li>
+							<li>\(t_i \cdot A \circ t_j \cdot B\) where \(\circ\) is \(=, &lt;, \leq, \geq, &gt;, \neq\)</li>
+							<li>\(t_i \cdot A \circ c\) (or inverse) where \(c\) is a constant</li>
+						</ul>
+					</p>
+					<p>
+						<b>Compound Formulas</b> are of form 
+						\begin{matrix}
+							&\lnot F, &F_1 \lor F_2, &F_1 \land F_2, &(\forall t)F, &(\exists t)F
+						\end{matrix}
+					</p>
+				</div>
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p>Because the formal definition is kinda confusing.</p>
+					<button class="collapsible active">Employees...</button>
+					<div class="ccontent" style="display: block;">
+						<p>
+							<b><i>Example.</i></b> Names of employees who earn more than $50k annually.
+							\[\{t.Fname, t.Lname | EMPLOYEE(t) \land t.salary > 50000\} \]
+						</p>
+					</div>
+					<button class="collapsible">Employees (II)...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Now we want the employees' full names and their supervisors.
+							\[\{t.Fname, t.Lname, s.Fname, s.Lname | EMPLOYEE(t) \land EMPLOYEE(s) \land t.Superssn = s.Ssn\} \]
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Quantification binds variables</p>
+				</div>
+				<div>
+					<p>
+						We can bind variables with first order logic quantifiers:
+
+						\[(\forall t)((\exists u)(PROJECT(v) \lor EMPLOYEE(t) \lor v.Ssn = u.Ssn))\]
+					</p>
+
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> List names and addresses of all employees who work for research.
+
+							\begin{align}
+								\{t.Fname, &t.Lname, t.Address | \\
+								&EMPLOYEE(t) \land \\
+								 &(\exists d)(DEPARTMENT(d) \land d.Dname = 「Research」 \land d.Dnumber = t.Dno) \\
+							\}
+							\end{align}
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Universal Quantification</p>
+				</div>
+				<div>
+					<p>
+						Note that implies doesn't exist, so \(a \implies b\) must become \(\lnot a \lor b\).
+					</p>
+
+					<button class="collapsible active">Example... </button>
+					<div class="ccontent" style="display: block;">
+						<p>
+							<b><i>Example.</i></b> We want names of all employees who work on a project controlled by department 5.
+						</p>
+						<p>
+							Start with \(\{e.Fname, e.Lname | EMPLOYEE(e) \land F(e)\} \) for some F. 
+						</p>
+						<p>
+							Where F \(\implies\) "\(e\) works on all projects controlled by dept 5" <br>
+							\(\implies\) "all projects in dept 5, and involves \(e\)" <br>
+							\(\implies (\forall p)(PROJECT(p) \implies \dots)\), whcih we can't do since imply doesn't exist <br>
+							\(\therefore (\forall p)(\lnot PROJECT(p) \lor (\lnot (p.Dnum = 5) \lor \dots))\) 
+						</p>
+						<p>
+							The second round of dots wants "e works on p",
+							\[(\exists w)(WORKS\_ON(w) \land w.Essn = e.Ssn \land w.Pno = p.Pnumber)\]
+							Thus finally getting
+						</p>
+						<div class="codediv">{\(e.Lname, e.Fname | EMPLOYEE(e) \land\)(
+	\((\forall p) (\lnot PROJECT(p) \lor \lnot (p.Pnum = 5) \lor\)(
+		\((\exists w) (WORKS\_ON(w) \land w.Essn = e.Ssn \land w.Pno = p.Pnumber)\)
+	)
+)}</div>
+					</div>
+				</div>
+
+				<div>
+					<p>Safety first</p>
+				</div>
+				<div>
+					<p class="blue">
+						An RC expression is <b>safe</b> if it is guaranteed to return a <b>finite</b> number of tuples.
+					</p>
+					<p>
+						Achieved when everything is explicitly mentioned. An unsafe expression would be like \(\{t | \lnot EMPLOYEE(t) \} \). Safe expressions are reducible to RA.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="calc-2">Domain Relational Calculus</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Introduction</p>
+				</div>
+				<div>
+					<p>
+						Whereas in TRC vars range over tuples, in DRC <del>we have political instability</del> vars range over attribute domains. Again it's similar notation, like
+						\[\{x_1 \dots x_n | \textrm{cond}(x_1 \dots x_n)\}\]
+					</p>
+				</div>
+				<div>
+					<p>Attributes</p>
+				</div>
+				<div>
+					<p>
+						<b>Atomic formulas</b> are like 
+						<ul>
+							<li>\(R(x_1, x_2 \dots x_k)\) is a relation over \(k\) attributes </li>
+							<li>\(x_i \circ x_j\) where \(\circ\) is an operator</li>
+							<li>\(x_i \circ c\) or vice-versa</li>
+						</ul>
+						
+					</p>
+				</div>
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p></p>
+					<button class="collapsible active">Example... </button>
+					<div class="ccontent" style="display: block;">
+						<p>
+							<b><i>Example.</i></b> List birthdate and address of employee whose name is John Smith.
+							\begin{align}
+								\{u, v &| (\exists q)(\exists r)(\exists t)(\exists w)(\exists x)(\exists y)(\exists z)( \\
+									&EMPLOYEE(qrstuvwxyz) \land q = 「John」 \land r = 「B」 \land s = 「smith」 \\
+								)\}
+							\end{align}
+						</p>
+					</div>
+					<p>
+						Now look at those ugly unnecessary quantifiers. For ease we say they're <b>implicitly mentioned</b>
+					</p>
+				</div>
+
+				<div>
+					<p>Codel's Theorem</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem.</i></b> Relational algebra and relational calculus are equally expressive languages.
+						<br><br>
+						Languages that are equal in expressive power to relational algebra are <b>relationally complete</b>.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourbox">
+			<h2 id="design">Database Design, Normalisation and Security</h2>
 		</div>
 
 		<footer>
