@@ -532,6 +532,10 @@ p.cls.border {
     padding: 10px;
 }
 
+p.centre, .centre {
+    text-align: center;
+}
+
 .clscont {
     margin: 0 auto;
     display: block;

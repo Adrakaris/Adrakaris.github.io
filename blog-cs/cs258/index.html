@@ -1683,8 +1683,478 @@ from (
 			</div>
 		</div>
 
-		<div class="colourbox">
+		<div class="colourband">
 			<h2 id="design">Database Design, Normalisation and Security</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+			
+			<ol>
+				<li><a href="#des-1">Relational DB Design</a></li>
+				<li><a href="#des-2">Normalisation</a></li>
+				<li><a href="#des-3">Security</a></li>
+			</ol>
+
+			<h3 id="des-1">Relational DB Design</h3>
+
+			<div class="cornell">
+				<div>
+					<p>DB Design</p>
+				</div>
+				<div>
+					<p>
+						We want to develop good database model so we don't end up storing unmaintainable garbage. 
+					</p>
+				</div>
+				<div>
+					<p>(1) being easy to understand</p>
+				</div>
+				<div>
+					<p>
+						Each row for one entitiy, and to only refer to different entities via foreign keys. 
+					</p>
+				</div>
+				<div>
+					<p>(2) Not redundant</p>
+				</div>
+				<div>
+					<ol>
+						<li><b>Storage cost</b>: storing the same thing twice is unnecessary,</li>
+						<li><b>Consistency Cost</b>: dealing with anomalies (from deleting or updating data),</li>
+						<li>Updating redundant data makes more effort.</li>
+					</ol>
+				</div>
+
+				<div>
+					<p>Anomalies</p>
+				</div>
+				<div>
+					<p>
+						Anomalies are when the things in the database don't line up. 
+					</p>
+					<p>
+						<b>Update Anomalies</b> happen on updates. If we change "Computing" to "Computer science", but "Computing" is multipully redundantly stored, 
+						then you might get some as "Computing" and some as "Computer Science". 
+					</p>
+					<p>
+						<b>Insert anomaly</b> suppose students and courses are on the same table. We can't insert a course without a student being on it. 
+					</p>
+					<p>
+						<b>Delete Anomaly</b> if a course is deleted, we could lose all students on said course. Again, bad. 
+					</p>
+					<p>
+						i.e. we want to design DBs such that <b>no anomalies present</b> (whether through triggers, good tables, etc)
+					</p>
+				</div>
+
+				<div>
+					<p>(3) No Nulls</p>
+				</div>
+				<div>
+					<p>
+						Nulls are unhelpful. They waste space <i>and</i> make operations complicated. Could occasionally be useful though. 
+					</p>
+					<p>
+						If there are a lot of nulls, why not move it into a different table?
+					</p>
+				</div>
+	
+				<div>
+					<p>Decomposition</p>
+				</div>
+				<div>
+					<p>
+						Decomposing a DB into smaller tables is generally helpful (to remove <b>spurious tuples</b>)- but must rejoin without information loss. <b>Must</b> use keys. 
+					</p>
+				</div>
+			</div>
+			
+
+			<h3 id="des-2">Normalisation</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Functional Dependencies</p>
+				</div>
+				<div>
+					<p><a href="#rel-2">See the definition in Constraints</a>. FDs are key to make database good. </p>
+				</div>
+				<div>
+					<p>Normalisation theory</p>
+				</div>
+				<div>
+					<p>
+						Want to structure a database so it is understandable and logical to retrieve data, and avoid anomalies. Thus we have <b>levels</b> of normalisation ("normal forms"), higher the better. 
+					</p>
+				</div>
+				<div>
+					<p>Universal relation</p>
+				</div>
+				<div>
+					<p>
+						Start with a <b>universal relation</b>: one with <b>all</b> attributes. Progressively reduce redundancy to normalise.  
+					</p>
+					<p>
+						When we split the tables, we need to be able to rejoin them with <b>lossless/non additive joins</b>, and preserving the dependencies. 
+					</p>
+				</div>
+				<div>
+					<p>Normal Forms</p>
+				</div>
+				<div>
+					<p>
+						In terms of normal forms, we have 4 "layers": 1st normal form (1NF), 2NF, 3NF, and "Boyce-Codd Normal form" BCNF. 
+					</p>
+					<p>
+						Of course 4NF, 5NF, etc exist but usually 3NF or BCNF suffices. If a schema is 3NF, it is also 2NF and 1NF: cascade.
+					</p>
+				</div>
+
+				<div>
+					<p>Decomposing</p>
+				</div>
+				<div>
+					<p>
+						Not all decompositions are good: seek those that remove spurious tuples. 
+					</p>
+					<p>
+						Also make sure that no extra spurious tuples are created when rejoining, and if possible, preserve all dependencies (but this may not be the case, and is not always perfectly necessary).
+					</p>
+				</div>
+
+				<div>
+					<p>Lossless Join Decomposition LJD</p>
+				</div>
+				<div>
+					<p>
+						Given a schema \(R\), and a set \(F\) of FDs of R, \(\{R_1 \dots R_k\}\) is the LJD of R if <b>for every legal instance</b> of \(R\),
+						\[\pi_{R_1} (R) \bowtie \pi_{R_2} (R) \bowtie \cdots \pi_{R_k} (R) = R.\]
+					</p>
+					
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> This is an invalid decomposition:
+							\[ 
+							\begin{array} {} A & B & C  \\ \hline 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 2 & 8 \end{array} 
+							\longrightarrow
+							R_1: \begin{array}{} A & B \\ \hline 1 & 2 \\ 4 & 5 \\ 7 & 2 \end{array} ,\;\; 
+							R_2: \begin{array}{} B & C \\ \hline 2 & 3 \\ 5 & 6 \\ 2 & 8 \end{array} 
+							\]
+							because
+							\[
+							R_1 \bowtie R_2 = \begin{array}{} A & B & C  \\ \hline 1 & 2 & 3 \\ 1 & 2 & 8 \\ 4 & 5 & 6 \\ 7 & 2 & 3 \\ 7 & 2 & 8 \end{array} 
+							\]
+							of which lines 2 and 4 are <b>spurious</b>.
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Implied FDs</p>
+				</div>
+				<div>
+					<p class="blue">
+						Given R, the <b>closure (cover)</b> \(F^+\) of a set of FDs \(F\) is the set of all implied FDs from \(F\).
+					</p>
+					<p>
+						Implief FDs can be derived using the following properties: (<b>Armstrong Inference Rules</b>)
+					</p>
+					<ol>
+						<li><b>Reflexive</b>: If \(Y \subseteq X\), then \(X \implies Y\) (trivial FD)</li>
+						<li><b>Augmentation</b>: if \(X \implies Y\), then \(XZ \implies YZ\) (where \(XZ = X \cup Z\))</li>
+						<li><b>Transitive</b>: IF \(X \implies Y\) and \(Y \implies Z\), then \(X \implies Z\)</li>
+					</ol>
+				</div>
+				<div>
+					<p>Additional Rules</p>
+				</div>
+				<div>
+					<ol>
+						<li><b>Decomposition</b>: If \(X \implies YZ\) then \(X \implies Y\) and \(X \implies Z\)</li>
+						<li><b>union</b>: If \(X \implies Y\) and \(X \implies Z\) then \(X \implies YZ\)</li>
+						<li><b>Pseudotransitivity</b>: If \(X \implies Y\) and \(WY \implies Z\), then \(WX \implies Z\)</li>
+					</ol>
+				</div>
+				<div>
+					<p>Test for non-additive joins</p>
+				</div>
+				<div>
+					<p class="side">
+						Given a relation R and a set of FDs F, \(R_1, R_2\) is a <B>lossless decomposition</B> of R in F <i>if and only if</i>
+						\begin{align}
+							&R_1 \cap R_2 \implies (R_1 - R_2) \\
+							\textrm{or }&R_1 \cap R_2 \implies (R_2 - R_1)
+						\end{align}
+						exists in \(F^+\)
+					</p>
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Take the tables from the previous example:
+							\[ 
+							\begin{array} {} A & B & C  \\ \hline 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 2 & 8 \end{array} 
+							\longrightarrow
+							R_1: \begin{array}{} A & B \\ \hline 1 & 2 \\ 4 & 5 \\ 7 & 2 \end{array} ,\;\; 
+							R_2: \begin{array}{} B & C \\ \hline 2 & 3 \\ 5 & 6 \\ 2 & 8 \end{array} 
+							\]
+							We know that 
+							\begin{align}
+								R_1 \cap R_2 &= B \\
+								R_1 - R_2 &= A \\
+								R_2 - R_1 &= C
+							\end{align}
+							Does B -> A or C? The answer is <b>no</b>, since there's two 2s in B, thus this is an <b>invalid</b> decomposition.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Dependency Preservation</p>
+				</div>
+				<div>
+					<p>
+						Take a relation R with a set of FDs, if it is decomposed into \(R_1, R_2, \dots\), we need to make sure the FDs hold for all tables (they can be observed independently without crossing tables).
+					</p>
+					<p>
+						Otherwise, if tables need to be crossed, then insertion becomes very expensive (as a join would be needed per insertion)
+					</p>
+					<button class="collapsible">Example...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Take R(city, streetNo, postcode) where {city, streetNo} -> postcode, and postcode -> city. 
+						</p>
+						<p>
+							We can decompse this into \(R_1\)(streetNo, postcode) and \(R_2\)(city, postcode).
+						</p>
+						<p>
+							To check ocnsistency, \(R_1 \cup R_2 =\) postcode, \(R_1 - R_2 = \) streetNo, and \(R_2 - R_1 = \) city. \(R_1 \cup R_2 \not \implies R_1 - R_2\), but \(R_1 \cup R_2 \implies R_2 - R_1\), so lossless join is preserved.
+						</p>
+						<p>
+							However, we cannot check the FD {city, streetNo} -> postcode, thus dependencies are not entirely preserved.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Decomposition Quality</p>
+				</div>
+				<div>
+					<p>
+						The better that the two criteria are held, the better the decomposition is. If we have R(A, B, C) with A -> B and B -> C, then
+						<ul>
+							<li>\(R_1(A,B),\;R_2(B,C)\) is better, because it is both lossless and preserves dependency, whereas</li>
+							<li>\(R_1(A,B),\;R_2(A,C)\) is worse, since it does not preserve dependency.</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Finally, Normalisation</p>
+				</div>
+				<div>
+					<p>
+						Finally, normalisation is the process of decomposition to reduce redundancy, such that the decomposed tables are losslessly joined. If a decomposed form fits a criteria, it is considered that normal form.
+					</p>
+					<ul>
+						<li><b>1NF</b> "the key": All attributes are atomic, and there exists a key</li>
+						<li><b>2NF</b> "the whole key": None key attributes must depend on a full key / any candidate key</li>
+						<li><b>3NF</b> "nothing but the key": Non key attributes must <b>only</b> depend on the key</li>
+						<li><b>BCNF</b>: every determinant of a non trivial FD is a superkey <span class="grey">whatever that means</span></li>
+					</ul>
+				</div>
+			</div>
+
+			<h4>The process</h4>
+
+			<div class="cornell">
+				<div>
+					<p>Level 0</p>
+				</div>
+				<div>
+					<p>
+						Data is converted into a table in the dumbest way possible.
+					</p>
+				</div>
+				<div>
+					<p>Level 1 (NF)</p>
+				</div>
+				<div>
+					<ul>
+						<li>Ensure: no multi-valued attributes, no composite attributes. (ex. a <code>tags</code> field with multiple tags would not count),</li>
+						<li>and we have a key</li>
+					</ul>
+					<p>
+						We still have one wide table, with storage anomalies. Still can get key troubles.
+					</p>
+				</div>
+				<div>
+					<p>Level 2</p>
+				</div>
+				<div>
+					<p>
+						Where every non-key attribute is fully dependent on any key -- no attr depends on a proper subset of the keys, so
+					</p>
+					<p>
+						\(\forall\)key \(k\) in R, and \(\forall\)non-key attribute \(A\) in R, \(k \implies \{A\} \) must be <b>irreducible</b>.
+					</p>
+					<p>
+						This improves integrity, prevents most anomalies. 
+					</p>
+					<p class="side">
+						When we say reducible, say we have a relation where \(\{A,B\} \implies C,\; A \implies D\), since \(A \in \{A,B\}\), \(\{A, B\} \implies D\) is reducible and this is not 2NF.
+					</p>
+				</div>
+				<div>
+					<p>Level 3</p>
+				</div>
+				<div>
+					<p>
+						In 2NF and <b>no transitive functional dependency</b> from key to nonkey. 
+					</p>
+					<p>
+						That is, none of \(R(\underline{A}, B, C) : A \implies B,\; A \implies C,\; B \implies C\), because \(B \implies C\) means \(A \implies B \implies C\) which is a transitive FD.
+					</p>
+				</div>
+				<div>
+					<p>Level 3+ (BCNF)</p>
+				</div>
+				<div>
+					<p>
+						A relation is in BCNF if, whenever \(\exists X \implies A\), X is a superkey. 
+					</p>
+					<p>
+						Most 3NF are automatically BCNF, but that's not always the case: if there is a determinant that does not belong to the superkey in a non-trivial functional dependency. 
+					</p>
+					<p><i>
+						"Each attribute must represent a fact about the key, the whole key, and nothing but the key, <span class="grey">so help me Codd</span>"
+					</i></p>
+				</div>
+			</div>
+			<p>
+				The ideal goal is BCNF with lossless join and dependency preservation. If this is impossible, go for BCNF with lossless join, or just 3NF.
+			</p>
+
+			<h3 id="des-3">Security</h3>
+
+			<div class="cornell">
+				<div>
+					<p>CIA (sus)</p>
+				</div>
+				<div>
+					<p>
+						In computer security \(\exists\) CIA triangle: <b>confidentiality, integrity, availability</b>, none of which we want to lose. 
+					</p>
+					<p>
+						DB software usually comes with access and inference control to help manage this. The power rests with the "governor", the DB administrator (DBA), who get access to
+						<ul>
+							<li>Two subsystems: security and authorisation</li>
+							<li>Two security mechanisms: discretionary (granting priveleges) and mandatory (classification levels)</li>
+						</ul>
+					</p>
+					<p>
+						There is often an audit log in a DB to log changes made.
+					</p>
+				</div>
+				<div>
+					<p>Discretionary Access Control DAC</p>
+				</div>
+				<div>
+					<p>
+						To grant and revoke priveliges to part of the database, and to certain SQL functions. Can be as fine as relation-level or even tuple-level access.
+					</p>
+					<p>
+						The <b>"Access Matrix Model"</b> stores data on which accounts can access which relations or tuples. Each relation has an owner with all priveliges. We can <code class="lang-sql">create schema name authorization your_mum</code> to let your mum access the relation name.
+					</p>
+					<p>
+						Priveliges can also be given with <code class="lang-sql">grant</code> (can also be fine detail, such as granting select but not insert), removed by <code class="lang-sql">revoke</code>, and the grantee can grant others their priveliges if they have the <code class="lang-sql">grant option</code> permission.
+					</p>
+					<p>
+						Some DBs limit this propagation, either horizontally (A can grant only to X many people) or vertically (nesting grants can only go Y "generations" down).
+					</p>
+				</div>
+				<div>
+					<p>Mandatory Access Control MAC</p>
+				</div>
+				<div>
+					<p>
+						More fine-grained than the "all or nothing" of DAC. 
+					</p>
+					<p>
+						Most DBMSs have DAC only, but special corporate/military versions will have MAC, which has things like a security heirarchy:
+					</p>
+					<p class="centre">
+						(t) Top Secret &gt; (s) Secret &gt; (c) Classified &gt; (u) Unclassified
+					</p>
+					<p>
+						And each user has a "clearance" level, that is their security classification. The main principle of this is <b>no read up, no write down</b>: a user cannot read (thus write) higher than their clearance, and cannot write but can read lower than their clearance. 
+					</p>
+					<p>
+						Even different attributes inside a row can have different securities. For example we could have <code>John (u), Smith (c), 140 000 (c), Fair (s), (u)</code> (columns first name, surname, salary, standing, overall classification) where the letters in brackets denote the classification of each single attribute. 
+					</p>
+					<p>
+						Then, a user with insufficient clearance will just see NULLs. 
+					</p>
+					<p>
+						This may cause anomalies however. If a classified user wants to update John Smith's standing to "Excellent", the database must not reject that change, since to him, John Smith's standing doesn't exist, and so we would get duplicate rows.
+					</p>
+				</div>
+
+				<div>
+					<p>Role Based RBAC</p>
+				</div>
+				<div>
+					<p>
+						Another system, this one works like discord roles with a heirarchy of roles.
+					</p>
+				</div>
+				<div>
+					<p>Statistical DBs</p>
+				</div>
+				<div>
+					<p>
+						Certain DBs exist for people to query aggregate data (i.e. population of males in Upper Slaughter), but <i>not</i> to retrieve personal information from. This is obviously done through permissions.
+					</p>
+					<p>
+						Problem is, increasing specificity can lead to a bad actor extracting personal information anyway, by querying data so specific that it pinpoints to very few people. 
+					</p>
+					<p>
+						We can mitigate this in a few ways, one of which is by limiting the count, e.g. restricting such that if a query gives a result less than 30, reject the query. 
+					</p>
+					<p>
+						Another is by adding noise, which introduces <b>plausible deniability</b>. Say you have a DB of men who've had STIs, and want to hide personal data whilst still being able to track population metrics. Every time you record data, you could flip a coin, and if tails, record "had STI" as true regardless - false data as noise. 
+					</p>
+					<p>
+						This way, you could track percentages in the population (half of what the database reports) whilst still leaving people with plausible deniability that they've just been entered as a false result for noise.
+					</p>
+				</div>
+				<div>
+					<p>Flow control</p>
+				</div>
+				<div>
+					<p>
+						A <b>flow</b> from X to Y is when a program reads from X, and writes to Y. 
+					</p>
+					<p>
+						Flow control essentially prevents higher classification reads being written to lower classification tables. 
+					</p>
+				</div>
+				<div>
+					<p>SQL Injection</p>
+				</div>
+				<div>
+					<p>
+						The "never use unchecked string formatting" in writing an SQL app, because attacks can specifically word their queries to manipulate statements for data that they should have never gotten. 
+					</p>
+					<p>
+						Always sanitise inputs / use prepared statements. Don't assume data is safe. 
+					</p>
+					<p>
+						Give error messages just informative enough to tell what's wrong, but just vague enough to give no useful information: "The username or password is incorrect".
+					</p>
+				</div>
+			</div>
+
 		</div>
 
 		<footer>
