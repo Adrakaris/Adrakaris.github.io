@@ -1,10 +1,17 @@
 https://yijun.hu/
+https://yijun.hu/index-zh.html
 https://yijun.hu/about.html
+https://yijun.hu/about-zh.html
 https://yijun.hu/blog.html
+https://yijun.hu/blog-zh.html
 https://yijun.hu/guqin/
+https://yijun.hu/guqin/index-zh.html
 https://yijun.hu/blog-misc/wyvern/
+https://yijun.hu/blog-misc/wyvern/index-zh.html
 https://yijun.hu/blog-misc/podcast/
+https://yijun.hu/blog-misc/podcast/index-zh.html
 https://yijun.hu/blog-misc/guqin/
+https://yijun.hu/blog-misc/guqin/index-zh.html
 https://yijun.hu/blog-cs/cs130/
 https://yijun.hu/blog-cs/cs118/
 https://yijun.hu/blog-cs/cs132/
@@ -13,6 +20,8 @@ https://yijun.hu/blog-cs/cs126/
 https://yijun.hu/blog-cs/cs141/
 https://yijun.hu/blog-cs/cs241/
 https://yijun.hu/blog-cs/cs255/
+https://yijun.hu/blog-cs/cs255/short.html
 https://yijun.hu/blog-cs/cs258/
 https://yijun.hu/blog-cs/cs260/
 https://yijun.hu/blog-cs/minty/
+https://yijun.hu/blog-cs/minty/index-zh.html
