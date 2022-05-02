@@ -19,7 +19,7 @@ var pages = [
     {
         "date": new Date(Date.UTC(2022,05,02)),
         "link": "blog-cs/cs259/",
-        "title": "Notes on CS269",
+        "title": "Notes on CS259",
         "desc": "Notes on CS259: Formal Languages</p>",
         "picture": "",
         "tags": []
