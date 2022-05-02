@@ -22,7 +22,7 @@ var pages = [
         "title": "Notes on CS259",
         "desc": "Notes on CS259: Formal Languages</p>",
         "picture": "",
-        "tags": []
+        "tags": ["cs"]
     },
     {
         "date": new Date(Date.UTC(2022,02,07)),
@@ -30,7 +30,7 @@ var pages = [
         "title": "Notes on CS262",
         "desc": "Notes on CS262: Logic and Verification. For a quick cheat sheet for the class test, click <a href='blog-cs/cs262/cheat.html'>here</a>.</p>",
         "picture": "",
-        "tags": []
+        "tags": ["cs"]
     },
     // {
     //     "date": new Date(Date.UTC(2021, 10, 14)),
