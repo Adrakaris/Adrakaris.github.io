@@ -108,17 +108,17 @@
 
 			<div class="blue">
 				<p>
-					\(\epsilon\) represents the <b>empty string</b>. Any DFA with an input of \(\epsilon\) will halt immediately on the start state. \(\epsilon \in \Sigma* \).
+					\(\varepsilon\) represents the <b>empty string</b>. Any DFA with an input of \(\varepsilon\) will halt immediately on the start state. \(\varepsilon \in \Sigma* \).
 				</p>
 				<p>
-					\(L = \{\} = \varnothing\) is the <b>empty language</b> - note that \(L = \{\epsilon\}\) is <i>not</i> empty.
+					\(L = \{\} = \varnothing\) is the <b>empty language</b> - note that \(L = \{\varepsilon\}\) is <i>not</i> empty.
 				</p>
 			</div>
 			<p>
 				A <b>monoid</b> is a tuple of a set, an associative binary equation, and an identity:
 				<ul>
 					<li>\((\mathbb{N}_0, +, 0)\) where + is integer addition, and \(\mathbb{N_0} \) are nonnegative integers.</li>
-					<li>\((\Sigma*, \circ, \epsilon)\) where \(\circ\) is string concat, is a monoid. </li>
+					<li>\((\Sigma*, \circ, \varepsilon)\) where \(\circ\) is string concat, is a monoid. </li>
 				</ul>
 			</p>
 			<p>
@@ -130,7 +130,7 @@
 				\[\hat{\delta} : Q \times \Sigma* \longrightarrow Q\]
 				Which can be recursively defined (in a haskell <i>like</i> form) over a string \(w = w' \circ a\) as
 				\begin{align}
-					\hat{\delta}(q, \epsilon) &= q\\
+					\hat{\delta}(q, \varepsilon) &= q\\
 					\hat{\delta}(q, w' \circ a) &= \delta(\hat{\delta}(q, w'), a).
 				\end{align}
 			</p>
@@ -144,9 +144,9 @@
 				<p>The <b>run</b> of M on a word \(s\) is the path of states M goes through for \(s\):</p>
 				
 				<ul>
-					<li>The run of M on \(\epsilon\) is trivially \(q_0\)</li>
+					<li>The run of M on \(\varepsilon\) is trivially \(q_0\)</li>
 					<li>
-						The run of M on a string \(s_0..s_n \neq \epsilon\) is \(r_0..r_n\) such that
+						The run of M on a string \(s_0..s_n \neq \varepsilon\) is \(r_0..r_n\) such that
 						\[r_0 = q_0,\; \forall i \in [1..n] \; r_i = \delta(r_{i-1}, s_i)\]
 					</li>
 				</ul>
@@ -240,7 +240,7 @@
 
 			<ol>
 				<li><a href="#nfa-1">NFAs</a></li>
-				<li><a href="#nfa-2">Transition Functions, \(\epsilon\)-closure, Runs</a></li>
+				<li><a href="#nfa-2">Transition Functions, \(\varepsilon\)-closure, Runs</a></li>
 			</ol>
 
 			<h3 id="nfa-1">NFAs</h3>
@@ -258,7 +258,7 @@
 					<li>\(q_0\) an initial state</li>
 					<li>\(F \subseteq Q\) accept states</li>
 					<li>\(\delta\) the transition function, <b>defined as</b>
-						\[\delta : Q \times (\Sigma \cup \{\epsilon\}) \longrightarrow 2^Q\]
+						\[\delta : Q \times (\Sigma \cup \{\varepsilon\}) \longrightarrow 2^Q\]
 					</li>
 				</ul>
 				<p>
@@ -272,7 +272,7 @@
 			</figure>
 
 			<p>
-				Going back to our \(L^{rev}\), we <i>still</i> can't have multiple start states, <i>however</i>, we can merely add a new start state, and add \(\epsilon\)-transitions to all the would've-been start states.
+				Going back to our \(L^{rev}\), we <i>still</i> can't have multiple start states, <i>however</i>, we can merely add a new start state, and add \(\varepsilon\)-transitions to all the would've-been start states.
 			</p>
 
 			<p>
@@ -300,14 +300,14 @@
 				We can think of DFAs as being strict subsets of NFAs, where there can only be one world and other special conditions.
 			</p>
 
-			<h3 id="nfa-2">Transition Functions, \(\epsilon\)-closure, Runs</h3>
+			<h3 id="nfa-2">Transition Functions, \(\varepsilon\)-closure, Runs</h3>
 
 			<p>
 				Let's try to formally define NFAs. 
 			</p>
 			<div class="side">
 				<p>
-					We want to use \(\delta : Q \times \Sigma_\epsilon \longrightarrow 2^Q\) to define \(\hat{\delta} \). (Note \(\Sigma_\epsilon = \Sigma \cup \{\epsilon\} \) for convenience). 
+					We want to use \(\delta : Q \times \Sigma_\varepsilon \longrightarrow 2^Q\) to define \(\hat{\delta} \). (Note \(\Sigma_\varepsilon = \Sigma \cup \{\varepsilon\} \) for convenience). 
 					\[\hat{\delta} : Q \times \Sigma* \longrightarrow 2^Q.\]
 				</p>
 				<p>
@@ -333,7 +333,7 @@
 
 			<div class="side">
 				<p>
-					<b>Epsilon Closure</b> is a function \(\textrm{ECLOSE}: Q \longrightarrow 2^Q\) which denotes all states that can be reached from a starting state \(q\) only by \(\epsilon\)-transitions. 
+					<b>Epsilon Closure</b> is a function \(\textrm{ECLOSE}: Q \longrightarrow 2^Q\) which denotes all states that can be reached from a starting state \(q\) only by \(\varepsilon\)-transitions. 
 				</p>
 				<p>
 					Formally, \(\forall X \subseteq Q\):
@@ -346,10 +346,10 @@
 
 			<div class="side">
 				<p>
-					The <b>Extended Transition Function</b> \(\hat{\delta}\) defined \(\forall q \in Q,\; \forall s \in \Sigma* \setminus \{\epsilon\}: s = wa\) where \(w \in \Sigma* \;\land \;\; a \in \Sigma \). In plain english: for all states \(q\), and for all non-empty strings \(s\) which are decomposed into \(w\), the prefix, and \(a\), the last letter:
+					The <b>Extended Transition Function</b> \(\hat{\delta}\) defined \(\forall q \in Q,\; \forall s \in \Sigma* \setminus \{\varepsilon\}: s = wa\) where \(w \in \Sigma* \;\land \;\; a \in \Sigma \). In plain english: for all states \(q\), and for all non-empty strings \(s\) which are decomposed into \(w\), the prefix, and \(a\), the last letter:
 
 					\begin{align}
-					\hat{\delta} (q, \epsilon) &= \textrm{ECLOSE}(q)\\
+					\hat{\delta} (q, \varepsilon) &= \textrm{ECLOSE}(q)\\
 					\hat{\delta} (q, wa) &= \textrm{ECLOSE}(\bigcup_{q' \in \hat{\delta}(q,w)} \delta(q',a))
 					\end{align}
 				</p>
@@ -383,7 +383,7 @@
 						M has a state for every subset of N: \(Q_d = 2^Q\). This includes the empty subset \(\varnothing\), which simulates N "crashing".
 					</li>
 					<li>
-						The start of NFA is \(q_0\), but since we have to consider \(\epsilon\)-transitions, \(q_d = \textrm{ECLOSE}(q_0)\).
+						The start of NFA is \(q_0\), but since we have to consider \(\varepsilon\)-transitions, \(q_d = \textrm{ECLOSE}(q_0)\).
 					</li>
 					<li>
 						Finish states are all subsets of N that contain N's finish states, \(F_d = \{X \subseteq Q : X \cap F \neq \varnothing\} \).
@@ -409,6 +409,175 @@
 			</p>
 		</div>
 		
+		<div class="colourband">
+			<h2 id="regex">RegEx</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#reg-1">Regex</a></li>
+				<li><a href="#reg-2">Regex to NFA</a></li>
+				<li><a href="#reg-3">Generalised NFA</a></li>
+			</ol>
+
+			<h3 id="reg-1">Regex</h3>
+
+			<div class="blue">
+				<p>
+					A <b>Regular Expression</b> (RegEx) is a compat way to describe a (regular) language. It can be defined with the following 6 rules:
+				</p>
+				<ul>
+					<li>R = \(a\) for some \(a \in \Sigma\)</li>
+					<li>R = \(\varepsilon\)</li>
+					<li>R = \(\varnothing\)</li>
+					<li>R = \(R_1 + R_2\) (<b>or</b>: \(R_1 \cup R_2\))</li>
+					<li>R = \(R_1 \cdot R_2\) (<b>concat</b>: more often \(R_1 R_2\))</li>
+					<li>R = \(R_1*\) (0 or more, called the <b>kleene star</b>)</li>
+				</ul>
+			</div>
+
+			<p class="small">
+				Sure, "regex" on most systems have way more symbols to make life easier, but this is sufficient to generate all regular languages.
+			</p>
+
+			<p>
+				In terms of operator precedence, it goes \(*, \cdot, +\).
+			</p>
+
+			<p>
+				Some examples then, over \(\Sigma = \{a,b\}\):
+			</p>
+			<ul>
+				<li><code>(a+b)*</code>: effectively \(\Sigma* \).</li>
+				<li><code>(a+b)*(a+bb)</code>, any word which ends in "a" or "bb".</li>
+				<li><code>(aa)*(bb)*b</code>, any word made up of even "a"s followed by even "b"s, ending in a "b".</li>
+				<li><code>(aa+b)*</code>, all consecutive "a"s must be of an even number.</li>
+			</ul>
+			<p>
+				Often, if a regex can be understood in plain english, one can turn that regex into a DFA or NFA directly via creative thinking, but there is a modular algorithmic way of doing so, since 
+			</p>
+			
+
+			<h3 id="reg-2">Regex to NFA</h3>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> A language is accepted by an NFA/DFA \(\iff\) it is generated by a regex.
+			</p>
+
+			<p>
+				<b><i>Proof.</i></b> We have two algorithms, one to turn a regex to an NFA, and vice-versa.
+			</p>
+
+			<h4>Regex to NFA</h4>
+
+			<p>
+				This can be done modularly based on the recursive definition of a regex string. Our base cases (below) can be modelled by three different "modules":
+			</p>
+			<figure>
+				<img src="./regex-dfa-base.png" alt="" title="R=a: ->()-a>(accept). R=ε: ->(accept). R=nothing: ->()" style="max-width: 500px;">
+			</figure>
+			<p>
+				Then we have our recursive / inductive cases: \(R_1 + R_2\), \(R_1 \cdot R_2\), and \(R*\). A rectangle, in this case, represents a whole machine. 
+			</p>
+			<figure>
+				<img src="./regex-dfa-recursive.png" alt="" style="max-width: 420px;" title="OR: e-transition to both machines from a common state. CONCAT: Connect all accept states of first to start of second (and make the accept states of first not accept). STAR: Make a new initial accept state, connect all accept states of machine to this state.">
+			</figure>
+
+			<p>
+				As an aside have a think about the language \(\varnothing* \). What does that make? Well, concating \(\varnothing\) with anything is just ... \(\varnothing\), but the definition of kleene star is 0 or more times: i.e. \(\{\varepsilon\} \cup \varnothing \cup \varnothing^2 \cup \dots\), thus \(\varnothing* = \{\varepsilon\}.\)
+			</p>
+
+			<h4>NFA to Regex</h4>
+
+			<p>
+				This is better explained going along with an example:
+			</p>
+			<figure><img src="./dfa-regex/st1.png" alt="" style="max-width: 420px;"></figure>
+			<p>
+				Our goal is to slowly eliminate all the nodes one at a time, reflecting their effect by changing arcs into smaller <i>regex expressions</i>. First though, we need to add a start \(q_s\) and unique final \(q_f\) state and transition to them with epsilon:
+			</p>
+			<figure><img src="./dfa-regex/st2.png" alt="" style="max-width: 420px;">
+				<figcaption>The start state is a source and the finish state is a sink</figcaption>
+			</figure>
+			<p>
+				Start by eliminating \(q_3\). Possible paths are \(\langle q_2,q_3,q_2 \rangle :10*\) and \(\langle q_2, q_3, q_f\rangle : 1\varepsilon = 1\). Thus, we can have a self loop on \(q_2\) to be \(10*\) and modify \(q_2 \longrightarrow q_f\) to be \(1 + \varepsilon\)* to represent the two possible choices. Then, \(q_3\) becomes redundant and can be removed.
+			</p>
+			<figure>
+				<img src="./dfa-regex/st3.png" alt="" style="max-width: 210px;">
+			</figure>
+			<p>
+				* Technically, the transition \(q_2 \longrightarrow q_f : \varepsilon\) remains unaffected, but since we also have a new transition \(q_2 \longrightarrow q_f : 1\), we <i>simplify</i> the two parallel transitions into one: \(1 + \varepsilon\). This is very important to note.
+			</p>
+			<p>
+				Eliminate \(q_2\) using a similar process. 
+			</p>
+			<figure>
+				<img src="./dfa-regex/st4.png" alt="" style="max-width: 420px;">
+			</figure>
+			<p>
+				Eliminate \(q_1\)
+			</p>
+			<figure><img src="./dfa-regex/st5.png" alt="" style="max-width: 420px;"></figure>
+			<p>
+				Finally, eliminate \(q_0\)
+			</p>
+			<figure><img src="./dfa-regex/st6.png" alt="" style="max-width: 420px;"></figure>
+			<p>
+				Then, we simply read off the last remaining transition for our regex. 
+			</p>
+			<p>
+				Now sure, it's not the cleanest, shortest, or most efficient, but it <i>is</i> a regex, and that's all that matters.
+				$$\tag*{$\Box$}$$
+			</p>
+
+			<h3 id="reg-3">Generalised NFA</h3>
+
+			<div class="blue">
+				<p>
+					A <b>Generalised NFA (GNFA)</b> is a tuple \((Q, \Sigma, \delta, q_{start}, q_{accept})\) where 
+					\[\delta : (Q \setminus \{q_{accept}\}) \times (Q \setminus \{q_{start})\} \longrightarrow \mathfrak{R}.\]
+					Which the fraktur blackletter \(\mathfrak{R}\) means the set of <b>all regular expressions</b>.
+				</p>
+				<p>
+					For simplicity \(q_0 = q_{start}\) and \(q_f = q_{accept} \). Note the <b>unique</b> start and finish states.
+				</p>
+				<p>
+					\(q_0\) must be a <b>source</b> with outgoing transitions to <b>all</b> other states. <br>
+					\(q_f\) must be a <b>sink</b> with incoming transitions from <b>all</b> other states. 
+				</p>
+				<p>
+					These transitions can be \(\varnothing\), i.e. nothing.
+				</p>
+			</div>
+
+			<p class="side">
+				The <b>run</b> of a GNFA M on a word \(s\) is a sequence of states \(r_0 .. r_n\) such that \(r_0 = q_0\), and 
+				\[\exists s_1 .. s_n \in \Sigma* : s = s_1 .. s_n \textrm{ and } \forall i \in [1..n] \; s_i \in L(\delta(r_{i-1}, r_i)).\]
+				Plain english: \(s\) can be broken down into <b>substrings</b> such that there is a transition that matches each substring.
+			</p>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> Every NFA can be converted to an equivalent GNFA. This is techically what we have done in the <i>NFA to Regex</i> section, but with the \(\varnothing\) lines omitted for simplicity, which they often can be.
+			</p>
+			<p>
+				With this fact we can now define our <b>elimination process</b> using some very complicated maths language. 
+			</p>
+			<div class="side">
+				<img src="./gnfa-elim.png" alt="" align="right" style="max-width: 315px;">
+				<p>
+					<b>Assuming</b> we have <b>already converted</b> our NFA to a GNFA, and we want to eliminate a state \(q_1\), then for all pairs \(q_a, q_b \in (Q \setminus \{q_f, q_1\}) \times (Q \setminus \{q_0, q_1\}\) (pairs which do not include start and finish states):
+
+					\begin{align}
+						\delta' (q_a, q_b) &= \delta(q_a, q_b) \\
+						&+ \delta(q_a, q_1) \cdot [\delta(q_1, q_1)*] \cdot \delta(q_1, q_b).
+					\end{align}
+
+					i.e. The existing a to b, or a to 1, any number of 1s, then 1 to b.
+				</p>
+			</div>
+		</div>
 
 		<footer>
 			<div class="cbox">
