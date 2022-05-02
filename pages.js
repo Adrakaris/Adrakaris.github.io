@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2022,05,02)),
+        "link": "blog-cs/cs259/",
+        "title": "Notes on CS269",
+        "desc": "Notes on CS259: Formal Languages</p>",
+        "picture": "",
+        "tags": []
+    },
+    {
         "date": new Date(Date.UTC(2022,02,07)),
         "link": "blog-cs/cs262/",
         "title": "Notes on CS262",
@@ -36,7 +44,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs258/",
         "title": "Notes on CS258",
-        "desc": "Notes on CS258: Database Systems. These are made throughout the year and will be updated as and when needed.</p>",
+        "desc": "Notes on CS258: Database Systems. </p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -52,7 +60,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 10)),
         "link": "blog-cs/cs260/",
         "title": "Notes on CS260",
-        "desc": "Notes on CS260: Algorithms. These are made throughout the year and will be updated as and when needed.</p>",
+        "desc": "Notes on CS260: Algorithms.</p>",
         "picture": "",
         "tags": ["cs"]
     },

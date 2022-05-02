@@ -5,7 +5,6 @@ https://yijun.hu/about-zh.html
 https://yijun.hu/blog.html
 https://yijun.hu/blog-zh.html
 https://yijun.hu/guqin/
-https://yijun.hu/guqin/index-zh.html
 https://yijun.hu/blog-misc/wyvern/
 https://yijun.hu/blog-misc/wyvern/index-zh.html
 https://yijun.hu/blog-misc/podcast/

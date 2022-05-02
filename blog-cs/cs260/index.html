@@ -2278,7 +2278,7 @@ shortestPath(\(V, E, \ell, t\)):
 				<b><i>Definition.</i></b> Problem X is <b>poly-time reducible</b> to problem Y if X can be solved in a polynomial number of steps plus a polynomial number of calls to problem Y (which is the <b>oracle</b> or <b>black box</b>). 
 			</p>
 			<figure>
-				<img src="./poly-reduction.png" alt="" style="max-width: 75%;">
+				<img src="./poly-reduction.png" alt="" style="max-width: 630px;">
 				<figcaption>Polynomial-time reduction: There are poly-time pre- and post-processing steps and calls to Y</figcaption>
 			</figure>
 			<p>
@@ -2805,10 +2805,9 @@ shortestPath(\(V, E, \ell, t\)):
 			The idea is to have a <b>residual graph \(G_f\)</b>, which is the backwards graph and has values equal to \(c(e) - f(e)\) for the current flow of an edge. Then, go through the graph repeatedly, finding a passable flow along the arrows (using the backwards arrows if needed) until \(s\) and \(t\) are partitioned into two separate <b>cutsets</b>, with the cut going through all saturated (\(f(e) = c(e)\)) edges.
 		</p>
 		<p>
-			This seems like a decent enough video.
+			
+			<a href="https://www.youtube.com/embed/oWjXF_SztWI">This seems like a decent enough video.</a>
 		</p>
-		<iframe width="560" height="315" src="https://www.youtube.com/embed/oWjXF_SztWI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-		<p></p>
 		<button class="collapsible">Ford Fulkerson Algorithm... </button>
 		<div class="ccontent">
 			<p>

@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2022,05,02)),
+        "link": "blog-cs/cs259/",
+        "title": "Notes on CS269",
+        "desc": "CS259：正式语言的笔记</p>",
+        "picture": "",
+        "tags": []
+    },
+    {
         "date": new Date(Date.UTC(2022,02,07)),
         "link": "blog-cs/cs262/",
         "title": "CS262的记录",
@@ -36,7 +44,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs258/",
         "title": "CS258的记录",
-        "desc": "CS258：数据库系统的记录。这些是学完而写，会慢慢添加。无翻译。</p>",
+        "desc": "CS258：数据库系统的记录。无翻译。</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -44,7 +52,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 10)),
         "link": "blog-cs/cs255/short.html",
         "title": "CS255的记录",
-        "desc": "CS255：人工智能的记录。这些是学完而写，会慢慢添加。无翻译。请注意这页非常长。</p>",
+        "desc": "CS255：人工智能的记录。请注意这页非常长。</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -52,7 +60,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 10)),
         "link": "blog-cs/cs260/",
         "title": "CS260的记录",
-        "desc": "CS260：算法的记录。这些是学完而写，会慢慢添加。无翻译。</p>",
+        "desc": "CS260：算法的记录。无翻译。</p>",
         "picture": "",
         "tags": ["cs"]
     },
