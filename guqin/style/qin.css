@@ -1,16 +1,16 @@
 @font-face {
     font-family: Noto;
-    src: url("./noto-qin-jianzipu.ttf") format("truetype");
+    src: url("./NotoSans-Qin-2.0.1.otf") format("opentype");
 }
 
 @font-face {
     font-family: Dejavu;
-    src: url("dejavu-sm.ttf");
+    src: url("dejavu-sm.ttf") format("truetype");
 }
 
 body {
     font-family: Noto, sans-serif;
-    font-variant-ligatures: contextual;
+    font-variant-ligatures: normal;
 }
 
 z-z {
@@ -27,6 +27,7 @@ q-in {
 }
 
 pre {
+    line-height: normal;
     font-size: 16px;
     font-family: Dejavu, sans-serif;
 }
