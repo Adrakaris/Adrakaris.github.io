@@ -482,6 +482,11 @@ p.grey, .grey {
     color: gray;
 }
 
+p.bigred, .bigred {
+    color: red;
+    font-weight: bold;
+}
+
 p.rj {
     text-align: right;
 }

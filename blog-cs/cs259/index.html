@@ -55,6 +55,7 @@
 				<li><a href="#dfa">Deterministic Finite Automata</a></li>
 				<li><a href="#nfa">Non-deterministic Finite Automata</a></li>
 				<li><a href="#regex">RegEx</a></li>
+				<li><a href="#nonreg">Non-Regular Languages</a></li>
 			</ol>
 			<h3>Languages</h3>
 			<p class="blue">
@@ -227,8 +228,6 @@
 			<p class="side">
 				<b>Set reverse</b> \(L^{rev}\) is... well it's closed, but it's not so simple with only DFAs. Intuitively, we want to reverse all the arrows, and make all the finish states start states, and vice versa, but of course, more often than not, this'll break a DFA rules, which means we need to introduce another abstraction:
 			</p>
-
-
 		</div>
 
 		<div class="colourband">
@@ -576,6 +575,241 @@
 					\end{align}
 
 					i.e. The existing a to b, or a to 1, any number of 1s, then 1 to b.
+				</p>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="nonreg">Non-Regular Languages</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#non-1">Myhill-Nerode</a></li>
+				<li><a href="#non-2">Pumping Lemma</a></li>
+			</ol>
+
+			<p>
+				Let \(L = \{0^n1^n : n \in \mathbb{N}\}\): i.e. equal number of zeroes and ones. Is this regular?
+			</p>
+			<p>
+				Intuitively, it isn't, since one would need to keep track of both the number of zeroes and ones, and thus would need inifite memory, impossible on a <i>finite</i> state machine. But how do we formally prove this? 
+			</p>
+
+			<p>
+				We can use <b>closure properties</b>, especially because its quick:
+			</p>
+
+			<button class="collapsible">Example \(L = \{w \in \{0, 1\}* : n_0 = n_1\} \)</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> i.e binary strings with equal zeroes and ones. Suppose L is regular. We know \(0*1*\) is regular, thus by closure properties \(0*1* \cap L\) should be regular ... right?
+				</p>
+				<p>
+					Nope: \(0*1* \cap L = 0^n 1^n\) which is known to be irregular. $$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<p>
+				But if we can't, there's two main ways.
+			</p>
+
+			<h3 id="non-1">Proving Nonregularity: Myhill-Nerode</h3>
+
+			<p>
+				If \(\hat{\delta}(q_0, \textrm{cat}) = \hat{\delta}(q_0, \textrm{rabbit}) = \hat{\delta}(q_0, \textrm{rat})\), then we can say these three strings are <b>equivalent</b>.
+			</p>
+			<p>
+				These can be thought of as <b>equivalent relations</b> (remember cs130?), and following on from this, we can partition \(\Sigma* \) into <b>equivalence classes</b> based on what states they end up in. 
+			</p>
+
+
+			
+
+			<p class="blue">
+				<b><i>Definition.</i></b> The <b>index</b> of a language is its <b>number of equivalence classes</b>. This can be written \(\equiv_L\).
+			</p>
+
+			<div class="blue">
+				<p>
+					Strings \(x,y\) are <b>distinguishable</b> in language L, if there exists a <b>certifier</b> string \(z \in \Sigma* \), such that \(xz \in L\) and \(yz \not \in L\).
+				</p>
+				<p>
+					Conversely, if two strings \(x,y\) are <b>indistinguishable</b>, we write \(x \equiv_L y\) where L is the language we're talking about. 
+				</p>
+				
+			</div>
+			<p>
+				<b>Note: \(x, y\) both do <i>not</i> have to be in L. As long as \(xz \in L\) and \(yz \not \in L\) then this is sufficient.</b>
+			</p>
+
+			<p>
+				Since DFAs have finite states, a regular language must have <b>finite equivalence classes</b>.
+			</p>
+			<p>
+				Thus if a language has infinite equivalence classes, it can't be regular:
+			</p>
+			
+			<p class="blue">
+				<b><i>Theorem.</i> (Myhill-Nerode)</b> L is a regular language <b>if and only if</b> \(\equiv_L\) is finite.
+			</p>
+
+			<div class="side">
+				<p>
+					Proof structure for Myhill-Nerode:
+				</p>
+				<ol>
+					<li>Come up with an infinite set of strings.</li>
+					<li><b>Either</b>: Come up with a cerificate for a string \(i\) that distinguishes \(i\) from every other string simultaneously</li>
+					<li><b>Or</b>: Come up with separate certificates that distinguish every \(i,j\) pair separately</li>
+				</ol>
+				<p>i.e, prove <b>pairwise distinguishability</b>.</p>
+			</div>
+
+			<button class="collapsible">Example \(L=\{0^n1^n : n \in \mathbb{N}\} \)</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> Take the set of strings \(0* = \{\epsilon, 0, 00, 000, \dots\} \). We claim that these are all pairwise distinguishable.
+				</p>
+				<p>
+					<b><i>Proof.</i></b> For string \(0^k\), take string \(1^k\) as certifier. That is: 0 has certificate 1, 00 has 11, 000 has 111, etc. 
+				</p>
+				<p>
+					Note that for 0 with certificate 1, \(01 \in L\) but \(001 \not \in L, 002 \not \in L, \dots\) Same goes for all the others.
+				</p>
+				<p>
+					Thus every string is pairwise distinguisable from every other. $$\tag*{$\Box$}$$
+				</p>
+				
+			</div>
+
+			<button class="collapsible">Example \(L = \{w : w \in \{a,b\}*, n_a(w) < n_b(w)\}\)</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> This language is basically words with less "a"s than "b"s. 
+				</p>
+				<p>
+					<b><i>Proof.</i></b> Take the set of strings \(a*\). For string \(a^r\), string \(b^{r+1} \) distinguishes \(a^r\) from every string \(a^s : s > r\). Thus, we can always find a distinguisher.
+					$$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<button class="collapsible">Example \(L = \{1^n : n \textrm{ is prime}\} \)</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> Take the set of strings \(1*\). We need to individually pairwise distinguish them this time.
+				</p>
+				<p>
+					Take any two strings \(1^i, 1^j\) (assuming \(i &lt; j\) for convenience). Pick any prime \(p : p &lt; i \land p &gt; 2\) <br>
+					&emsp;\(\implies p + 0(j-i)\) is prime, obviously.
+				</p>
+				<p>
+					Since \(p > 2,\; j-i > 0,\; p + p(j-i)\) is <i>not</i> prime.
+				</p>
+				<p>
+					Thus let's look at the series \(s_n = p + n(j-1)\). i.e.
+					\begin{align}
+						&p + 0(j-i) \\
+						&p + 0(j-i) \\
+						&\vdots \\
+						&p + (p-1)(j-i) \\
+						&p + p(j-i) \\
+					\end{align}
+					there must be a <b>switch</b> from being prime to not being prime, between \(s_0\) and \(s_p\). Let \(k \in [1..p] \) be the <b>first</b> such switch at \(s_k = p + k(j-i)\).
+				</p>
+				<p>
+					Thus, \(p + (k-1)(j-i)\) is prime whilst \(p + k(j-1)\) is not. Therefore, we make the certificate
+					\[z = 1^{p + (k-1)(j-i) -i}.\]
+					Note that
+					\[1^i \cdot z = 1^{p + (k-1)(j-i)} \textrm{ which is prime,}\]
+					Whereas
+					\[i^j \cdot z = 1^{p + (k-1)(j-i) + (j-1)} = 1^{p + k(j-i)} \textrm{ which is not.}\]
+					That was involved. $$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			
+			<h3 id="non-2">Proving Nonregularity: Pumping Lemma</h3>
+
+			<h4>Infiniteness or Finiteness</h4>
+
+			<p>
+				Looking at given a DFA, can we determine whether or not it accepts a language of an infinite length? 
+			</p>
+			<p>
+				Well, it must have a cycle that is (a) reachable from the start and (b) can reach the accept state: <b>cycle => inf words</b>
+			</p>
+			<p>
+				But if we have infinite words, it must be necessary to have a cycle, since the machine itself is finite: <b>inf words => cycle</b>.
+			</p>
+			<p>
+				Thus there is an if and only if. We can use this princple to find another way of proving <i>ir</i>regularity.
+			</p>
+
+			<h4>Pumping Lemma</h4>
+
+			<div class="blue">
+				<p>
+					<b><i>Lemma.</i></b> <b>if</b> L is a regular language,
+				</p>
+				<p>
+					<b>then</b> there exists an integer \(m \in \mathbb{Z}^+\), the <b>pumping number</b>, such that for <b>any</b> string \(w \in L : |w| > m\) (w longer than m), \(w\) can be decomposed into \(xyz\), where
+					\begin{array} 
+					& |xy| \leq m & |y| \geq 1 & \forall i \in \mathbb{N}_0,\, xy^i z \in L.
+					\end{array}
+					Usually referred to as "xy is <b>short</b>, y is nonempty". \(y\) is the string being "pumped": able to be repeated infinitely (i.e. cycle in the DFA).
+				</p>
+			</div>
+
+			<p class="small">
+				\(\newcommand{\notimplies}{\;\not\!\!\!\implies}\) Proof is left as an excersise to the reader (until/unless I have time to write it).
+			</p>
+
+			<p>
+				<span style="color: red;"><b>NOTE WELL</b></span> that this is <b>not an if and only if</b>. , and , but <b>not</b> pumpable strings \(\implies\) L regular.
+				<ul>
+					<li>L regular \(\implies\) pumpable strings</li>
+					<li>Contrapositively unpumpable strings \(\implies\) L irregular</li>
+					<li><b>but</b> pumpable strings \(\notimplies\) L regular. You <b>cannot</b> use the pumping lemma to prove something <i>is</i> regular.</li>
+				</ul>
+			</p>
+			<p>
+				<b>Use the contrapositive</b> (unpumpable strings \(\implies\) L irregular) to prove irregular languages.
+			</p>
+
+			<div class="side">
+				<p>
+					Proof structure for using pumping lemma: <span class="bigred">This is mandatory and must be clearly shown</span>
+				</p>
+				<ol>
+					<li>Suppose L is regular (for contrapositive). Then, there must be a pumping number \(m\) for L.</li>
+					<li>Choose some string \(w \in L : |w| \geq m\).</li>
+					<li>Let \(w = xyz\) be some arbitrary decomposition such that \(|xy| \leq m,\; |y| \geq 1\)</li>
+					<li>Pick any integer \(i\) which breaks the pumping lemma: \(xy^iz \not \in L\)</li>
+				</ol>
+			</div>
+			<p></p>
+
+			<button class="collapsible">Example \(L = \{1^n : n \textrm{ is prime.}\} \)</button>
+			<div class="ccontent">
+				<ol>
+					<li>
+						<b><i>Proof.</i></b> Suppose L is reguar. Let \(m\) be the pumping length of L.
+					</li>
+					<li>
+						Let our string \(w = 1^q : q \geq m\) and \(q\) is prime. 
+					</li>
+					<li>
+						Split \(w\) arbitrarily into \(1^\alpha 1^\beta 1^\gamma : \alpha + \beta + \gamma = q.\)
+					</li>
+					<li>
+						Let \(i = \alpha + \gamma\). Then \(xy^iz = 1^\alpha 1^{\alpha+\gamma} 1^\gamma = 1^{2\alpha + 2\gamma} = 1^{2(\alpha + \gamma)}\) which is <b>not</b> prime.
+					</li>
+				</ol>
+				<p>
+					Thus L is not regular by contrapositive of the pumping lemma. $$\tag*{$\Box$}$$
 				</p>
 			</div>
 		</div>
