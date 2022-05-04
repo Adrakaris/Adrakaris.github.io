@@ -296,9 +296,7 @@ footer.green {
     box-shadow: 0 50vh 0 50vh var(--green);
 }
 
-.active, .collapsible:hover {
-    background-color: var(--bg-active);
-}
+
 
 a.nav {
     font-family: Urbanist;
@@ -391,6 +389,11 @@ button.collapsible {
     font-style: italic;
 }
 
+/* if replaced with button.active then it works, but I thin the current looks nicer? */
+.active, .collapsible:hover {
+    background-color: var(--bg-active);
+}
+
 button.nul {
     border: none;
     border-spacing: 0px 0px;
@@ -412,7 +415,7 @@ button.nul {
     display: block;
 }
 
-.cnul {
+.ccontent.nul, .cnul {
     border: none;
     border-spacing: 0px 0px;
     padding-left: 0px;
@@ -439,6 +442,12 @@ h3 {
     font-size: 20pt;
     letter-spacing: 2px;
     /*padding: 3px;*/
+}
+
+h4 {
+    font-family: Urbanist;
+    font-size: 16pt;
+    letter-spacing: 2px;
 }
 
 h3.c {
@@ -469,7 +478,7 @@ p.small {
     font-size: 8pt;
 }
 
-p.grey {
+p.grey, .grey {
     color: gray;
 }
 
@@ -521,6 +530,10 @@ p.cls.border {
     border-bottom: 1px solid black;
     border-spacing: 10px;
     padding: 10px;
+}
+
+p.centre, .centre {
+    text-align: center;
 }
 
 .clscont {
@@ -649,6 +662,18 @@ table.noborder td, table.noborder th, table.noborder {
 
 :is(ul.not, ol.not) > li {
     margin-bottom: 0px;
+}
+
+ol.side, ul.side {
+    border-left: 1px solid var(--pink);
+    border-spacing: 24px 0px;
+    padding-left: 24px;
+    margin-left: -24px;
+}
+
+.nopad {
+    padding: 0px 0px;
+    border-spacing: 0px 0px;
 }
 
 /*-----------------------------------------------------------------------*/

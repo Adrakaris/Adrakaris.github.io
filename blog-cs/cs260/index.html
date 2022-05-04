@@ -54,7 +54,10 @@
 				<li><a href="#divide">Divide and Conquer</a></li>
 				<li><a href="#dynprogramming">Dynamic Programming</a></li>
 				<li><a href="#intractibility">Intractbility</a></li>
+				<li><a href="#networks">Networks*</a></li>
             </ol>
+
+			<p class="small">*that might be incomplete depending on timing this is 1.5 days before the exam.</p>
 		</div>
 
 
@@ -2252,9 +2255,761 @@ shortestPath(\(V, E, \ell, t\)):
 			<h2 id="intractibility">Intractibility</h2>
 		</div>
 
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#int-1">Poly-Time Reductions</a></li>
+				<li><a href="#int-2">Numerical Problems</a></li>
+				<li><a href="#int-3">P vs NP</a></li>
+				<li><a href="#int-4">NP Completeness</a></li>
+			</ol>
+
+			<p>
+				We will now look at "hard" problems, things that can't be solved in polynomial time, and at "polynomial" reductions, which are a way to argue that one problem is no harder than another.
+			</p>
+			<p>
+				A <b>poly-time</b> algorithm is solvable in \(O(n^x)\) time, and is considered <i>easy</i>. Granted, that doesn't mean they're practical, but since constants <i>tend</i> to be small, poly-time algorithms still scale quite well.
+			</p>
+
+			<h3 id="int-1">Poly-Time Reductions</h3>
+
+			<p class="blue">
+				<b><i>Definition.</i></b> Problem X is <b>poly-time reducible</b> to problem Y if X can be solved in a polynomial number of steps plus a polynomial number of calls to problem Y (which is the <b>oracle</b> or <b>black box</b>). 
+			</p>
+			<figure>
+				<img src="./poly-reduction.png" alt="" style="max-width: 630px;">
+				<figcaption>Polynomial-time reduction: There are poly-time pre- and post-processing steps and calls to Y</figcaption>
+			</figure>
+			<p>
+				This is denoted \(X \leq_p Y\): "X is <b>no harder</b> than Y".
+			</p>
+			<ul>
+				<li>If \(X \leq_p Y\) and Y is solvable in poly-time, then X is also.</li>
+				<li>If \(X \leq_p Y\) and X is unsolvable in poly-time, Y cannot be either.</li>
+				<li>If \(X \leq_p Y \land Y \leq_p X\), then denote \(X \equiv_p Y\) and X is solvable in polytime <b>if and only if</b> Y is.</li>
+			</ul>
+
+			<h4>Independent Set and Vertex Cover</h4>
+
+			<p class="side">
+				<b><i>Problem.</i></b> <b>Independent Set</b>: Given a graph \(G = (V,E)\) and integer \(k\), is there a subset \(\geq k\) vertices : no vertices in the subset are adjacent?
+			</p>
+
+			<p class="side">
+				<b><i>Problem.</i></b> <b>Vertex Cover</b>: Given graph and integer \(k\), is there a subset \(\leq k\) vertices : each edge is adjacent to at least a vertex in the subset?
+			</p>
+
+			<p class="side">
+				<b><i>Theorem 1.</i></b> Independent set \(IS \equiv_p VC\) vertex cover.
+			</p>
+
+			<button class="collapsible active">Proof 1... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Proof.</i></b> Looking at the graph, it seems the vertex cover is just whatever is not the independent set. Thus we want: S is an indep. set of size \(k \iff\) \(V \setminus S\) is the vertex cover of size \(n-k\).
+				</p>
+				<img src="./vertex-cover.png" alt="" align="right">
+				<p>
+					Our reduction is then: <br> 
+					&emsp;Input: \(G,k\) <br>
+					&emsp;Output: result of calling black box with \(G, n-k\)
+				</p>
+				<p>
+					Proving \(\implies\):
+				<ul>
+					<li>Let S be indep. set of size \(k\)</li>
+					<li>\(V \setminus S\) has size \(n-k\) (it is the complement)</li>
+					<li>Consider any edge \((u,v) \in E\)</li>
+					<li>Because S is independent, either \(u \not \in S\) or \(v \not \in S\) or both \(\implies u \in V \setminus S\) or \(v \in V \setminus S\).</li>
+					<li>Thus \(V \setminus S\) covers all \((u,v)\). \(\triangleright\)</li>
+				</ul>
+				</p>
+				<p>
+					Proving \(\impliedby\):
+				<ul>
+					<li>Let \(V \setminus S\) be a vertex cover of size \(n-k\)</li>
+					<li>S is then size \(k\)</li>
+					<li>Consider any edge \((u,v) \in E\)</li>
+					<li>\(V \setminus S\) is a vertex cover \(\implies\) etiher \(u \in V \setminus S \lor v \in V \setminus S\) or both,</li>
+					<li>Meaning \(v \not\in S \lor u \not\in S\),</li>
+					<li>Thus every edge has at most 1 vertex in S, and S is an independent set.</li>
+				</ul>
+				$$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<h4>Set Cover</h4>
+
+			<p class="side">
+				<b><i>Problem.</i></b> <b>Set Cover</b>: given set U, and a collection S of subset s of U, and an integer \(k\), are there \(\leq k\) of these subsets, whose union \(= U\)?
+			</p>
+
+			<button class="collapsible">Example... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example</i></b>. Take \(U = \{1,2,3,4,5,6,7\};\; k=2\)
+					\begin{align}
+						S : &\{3,7\} &\{2,4\} \\
+						&\{3,4,5,6\} &\{5\} \\
+						&\{1\} &\{1,2,6,7\}
+					\end{align}
+
+					We can see that yes, there is, since (reading horizontally) the third and last one union to make U.
+				</p>
+				
+
+			</div>
+
+			<p class="side">
+				<b><i>Theorem 2.</i></b> Vertex cover \(VC \leq_p SC\) set cover.
+			</p>
+			<button class="collapsible active">Proof 2... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Proof.</i></b> Given VC instance \(G=(V,E), k\) we can construct an SC instance \(U, S, k\) that has set cover size \(k\) <b>iff</b> G has vertex cover size \(k\).
+				</p>
+				<p>
+					Let \(U=E\). Let \(S = \{S_v | \forall v \in V\}\), where \(S_v = \{e \in E | e \textrm{ incident to } v\}\).	
+				</p>
+				<p>
+					<b><i>Lemma.</i></b> \(G=(V,E)\) contains a VC of size \(k \iff (U,S,k)\) has a SC size \(k\).
+				</p>
+				<p>
+					Proving \(\implies\):
+					<ul>
+						<li>Let \(X \subseteq V\) be the vertex cover size \(k\) in G.</li>
+						<li>Then \(Y = \{S_v | v \in X\} \) is a set cover size \(k\), because every edge is covered by at least 1 vertex. \(\triangleright\)</li>
+					</ul>
+					Proving \(\impliedby\):
+					<ul>
+						<li>Let \(Y \subseteq S\) be a set cover size \(k\).</li>
+						<li>Then \(X = \{v | S_v \in Y\} \) is a vertex cover size \(k\) in G,</li>
+						<li>because if the collection of sets (of edges) unions to a whole, then all edges must be covered.</li>
+					</ul>
+					$$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<h4>Constraint Satisfaction</h4>
+
+			<p>
+				<span class="grey">AI flashbacks</span> (Boolean) constraint satisfaction satisifies a CSP with boolean values. We define 
+				<ul>
+					<li>A <b>literal</b> \(x, \overline{x} (\lnot x)\),</li>
+					<li>A <b>clause</b> as a disjunction of literals,</li>
+					<li>A <b>Conjunctive Normal Form</b> \(\Phi\),</li>
+					<li>And a CSP, or <b>SAT</b>, which is a CNF and the question: is it satisfiable?</li>
+				</ul>
+				<b>3-SAT</b> is a SAT where clauses have 3 literals each, and is a hard problem. Many things are reducible to 3SAT
+			</p>
+			
+			<p class="side">
+				<b><i>Theorem 3.</i></b> \(3SAT \leq_p IS\).
+			</p>
+
+			<button class="collapsible active">Proof 3...</button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Proof.</i></b> Given \(\Phi\) of 3SAT, construct instance \((G,k)\) of IS : there is a set size \(k = |\Phi | \iff \Phi\) satisfiable. 
+				</p>
+				<p>
+					To construct G,
+					<ul>
+						<li>G has 3 nodes per clause.</li>
+						<li>Connect all literals in a clause.</li>
+						<li>Connect a literal to its negative literals.</li>
+					</ul>
+				</p>
+				<p>
+					<b><i>Lemma.</i></b> \(\Phi\) satisfiable <b>iff</b> G has independent set size \(k=| \Phi |\).
+				</p>
+				<p>
+					Proving \(\implies\)
+				<ul>
+					<li>Consider any satisfying configuration of \(\Phi\) (select 1 literal from each triangle).</li>
+					<li>This is an independent set size \(k = |\Phi |\), because</li>
+					<ul>
+						<li>Since vertices are in distinct triangles, the only inter-triangle connection is from a literal to its negative.</li>
+						<li>It is impossible to have \(x = T\) and \(\lnot x = T\).</li>
+					</ul>
+					<li>So no vertices touch. \(\triangleright\)</li>
+				</ul>
+					Proving \(\impliedby\)
+				<ul>
+					<li>Let S be an independent set of size \(k\)</li>
+					<li>S must have 1 node per triangle, since there are \(k\) triangles, and a triangle is \(K_3\) so only one point can be picked,</li>
+					<li>Set all literals in S to true, this is the satisfying assignment of \(\Phi\).</li>
+				</ul>
+					$$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<h4>Reduction Strategies</h4>
+
+			<ol>
+				<li>Finding the <b>equivalence of problems</b></li>
+				<li>Showing one problem is a <b>special case</b> whilst the other is a more <b>general case</b></li>
+				<li><b>Encoding</b> one problem into another problem with a special setup so it works</li>
+			</ol>
+
+			<p class="blue">
+				<b><i>Transitivity</i></b>. If \(X \leq_p Y\) and \(Y \leq_p Z\) then \(X \leq_p Z\), so can also reduce to an intermediate reducible.
+			</p>
+
+			<p>
+				\(3SAT \leq_p IS \leq_p VC \leq_p SC\). Since 3SAT is hard, the others must be hard too.
+			</p>
+
+			<h3 id="int-2">Numerical Problems</h3>
+
+			<h4>Subset Sum</h4>
+
+			<p class="side">
+				<b><i>Problem.</i></b> Given \(n\) natural numbers \(w_1 .. w_n\), along with another \(W \in \mathbb{N}\), is there a subset of numbers that adds to exactly W?
+			</p>
+			<p>
+				<b>Note Well</b> with arithmetic problems, inputs are in <b>binary</b>, thus a poly-time algorithm must be <b>polynomial in binary</b>.
+			</p>
+			<p class="side">
+				<b><i>Theorem 4.</i></b> 3SAT \(\leq_p\) Subset-Sum.
+			</p>
+			<button class="collapsible active">Proof 3... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Proof.</i></b> Given instance of 3SAT \(\Phi\), construct instance of subset sum that has a solution \(\iff \Phi\) satisfiable.
+				</p>
+				<p>
+					The construction goes: given a 3SAT instance with \(n\) variables and \(k\) clauses, form \(2n+2k\) decimal integers, each with \(n+k\) digits:
+					<ul>
+						<li>1 digit per variable \(x_i\), 1 digit per clause \(c_i\)</li>
+						<li>Two numbers per var \(x_i\)</li>
+						<li>Two numbers per clause \(c_j\)</li>
+						<li>Sum of each \(x_i\) digits is 1, and each \(c_j\) digits is 4</li>
+					</ul>
+					The <b>key property</b> of this is that no carries are possible when we sum.
+				</p>
+				<p>
+					Create a table based on the following (see example):
+				</p>
+				<ul>
+					<li>For the variable/variable boxes, assign 1 where the variable matches to the literal (\(x\) matches to \(x, \lnot x\))</li>
+					<li>For the variable/clause boxes, assign 1 where the variable appears positively \(x\) and 0 where negatively \(\lnot x\)</li>
+					<li>For the clause/variable boxes, assign 0</li>
+					<li>For the clause/clause boxes, where the clauses match up assign 1 and 2 respectively "dummy integers"</li>
+				</ul>
+				<button class="collapsible nul">Example Deconstruction.</button>
+				<div class="ccontent cnul">
+					<p>
+						Let
+						\begin{align}
+							c_1 &= \lnot x_1 \lor x_2 \lor x_3 \\
+							c_2 &= x_1 \lor \lnot x_2 \lor x_3 \\
+							c_3 &= \lnot x_1 \lor \lnot x_2 \lor \lnot x_3
+						\end{align}
+						Thus we make a table (get ready for this)
+					</p>
+					<table>
+						<tr>
+							<th></th>
+							<th>\(x_1\)</th>
+							<th>\(x_2\)</th>
+							<th>\(x_3\)</th>
+							<th>\(c_1\)</th>
+							<th>\(c_2\)</th>
+							<th>\(c_3\)</th>
+							<th>Number</th>
+						</tr>
+						<tr>
+							<td>\(x_1\)</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>100 010</td>
+						</tr>
+						<tr>
+							<td>\(\lnot x_1\)</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>1</td>
+							<td>100 101</td>
+						</tr>
+						<tr>
+							<td>\(x_2\)</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+							<td>10 100</td>
+						</tr>
+						<tr>
+							<td>\(\lnot x_2\)</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+							<td>10 011</td>
+						</tr>
+						<tr>
+							<td>\(x_3\)</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td>0</td>
+							<td>1110</td>
+						</tr>
+						<tr>
+							<td>\(\lnot x_3\)</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1001</td>
+						</tr>
+						<tr>
+							<td rowspan="2">\(c_1\)</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>0</td>
+							<td>100</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>2</td>
+							<td>0</td>
+							<td>0</td>
+							<td>200</td>
+						</tr>
+						<tr>
+							<td rowspan="2">\(c_2\)</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>0</td>
+							<td>10</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>2</td>
+							<td>0</td>
+							<td>20</td>
+						</tr>
+						<tr>
+							<td rowspan="2">\(c_3\)</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>1</td>
+							<td>1</td>
+						</tr>
+						<tr>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>0</td>
+							<td>2</td>
+							<td>2</td>
+						</tr>
+						<tr>
+							<td>\(W\)</td>
+							<td>1</td>
+							<td>1</td>
+							<td>1</td>
+							<td>4</td>
+							<td>4</td>
+							<td>4</td>
+							<td>111 444</td>
+						</tr>
+					</table>
+
+					<hr>
+				</div>
+				<p>
+					<b><i>Lemma.</i></b> \(\Phi\) satisfiable \(\iff \exists\)subset that sums to W.
+				</p>
+				<p>
+					Proving \(\implies\)
+				<ul>
+					<li>Suppose 3SAT has satisfying assignment \(x* \).</li>
+					<li>If \(x_i* = T\), select integer in row \(x_i\), else select integer in row \(\lnot x_i\).</li>
+					<li>Each of the \(x_i\) digits will sum to 1 (since each column will only have one 1 digit and all 0s)</li>
+					<li>Since \(\Phi\) satisfiable, each \(c_j\) digit will sum to at least 1 (from either the \(x_i\) or \(\lnot x_i\) rows), and at most 3 (from all 3 vars).</li>
+					<li>Select dummy integers 1, or 2, or both (for 3), to ensure it makes 4 at the end. \(\triangleright\)</li>
+				</ul>
+					Proving \(\impliedby\)
+				<ul>
+					<li>Suppose there exists a subset \(S* \) that sums to W for the configuration given.</li>
+					<li>Digit \(x_i\) forces \(S* \) to select either var \(x_i\) or \(\lnot x_i\), but not both.</li>
+					<li>Digit \(c_j\) forces \(S* \) to select at least one literal per clause (otherwise dummy integers don't sum),</li>
+					<li>This satisfies 3SAT.</li>
+				</ul>
+				$$\tag*{$\Box$}$$
+				</p>
+			</div>
+			<p>
+				Subset-sum reduces to <b>knapsack problem</b>.
+			</p>
+
+			<h3 id="int-3">P vs NP</h3>
+
+			<!-- <p>
+				<b><i>Definition.</i></b> <b>P</b> is the class of all problems solveable in polynomial time. 
+			</p>
+			<p>
+				We can further restrict to a <b>decision problem</b>: problem X is a set of strings (of all true instances). Given a single string \(s\), algorithm A solves problem X \(\iff A(s) = \begin{cases} T &\textrm{if }s \in X \\ F &\textrm{if }s \not \in X \end{cases} \).
+			</p>
+			<p>
+				<b><i>Definition.</i></b> Algorithm A is <b>poly time</b> if \(\forall S,\, A(s)\) terminates in \(\leq p(|s|)\) steps, where \(p(x)\) is a polynomial function.
+			</p> -->
+			<p class="blue">
+				<b><i>Definition.</i></b> <b>P</b> is the set of decision problems where there exists a polynomial time algorithm to solve the problem.
+			</p>
+			<p>
+				This can be thought of as a <b>decision problem</b>: problem X is a set of strings (of all true instances). Given a single string \(s\), algorithm A solves problem X \(\iff A(s) = \begin{cases} T &\textrm{if }s \in X \\ F &\textrm{if }s \not \in X \end{cases} \). A is polynomial if A solves in \(p(|s|)\) time, where \(p(x)\) is a polynomial algorithm.
+			</p>
+
+			<div class="blue">
+				<p><b><i>Definition.</i></b> <b>NP</b> is the set of all problems, where there is a poly-time <b>certifier</b> which can <b>verify</b> a solution is true, but cannot be <b>solved</b> in poly-time.</p>
+				<ul>
+					<li>Let \(C(s, t)\) be the poly-time certifier, where</li>
+					<li>\(s\) is the instance to check, and \(t\) is a <b>certificate</b> of poly-size: \(|t| \leq p(|s|)\).</li>
+				</ul>
+			</div>
+
+			<p>
+				<b>3SAT</b> is in NP:
+				<ul>
+					<li>Let \(s = \Phi\), and \(t =\) an assignment of truth values.</li>
+					<li>The certifier checks that each clause in \(\Phi\) has at least 1 true literal, which is clearly polynomial.</li>
+				</ul>
+			</p>
+			<p>
+				<b>Hamiltonian Path</b> is also in NP:
+				<ul>
+					<li>For a graph, let the certifier be a list of nodes. </li>
+					<li>The certifier checks that each node in the path is unique, and there is an arc between two adjacent nodes.</li>
+				</ul>
+			</p>
+
+			<p class="blue">
+				<b><i>Definition.</i></b> There also exists <b>EXP</b> (EXPTIME), the set of all problems solvable in exponential time.
+			</p>
+			<p>
+				\(P \subseteq NP\) and \(NP \subseteq EXP\), <b>but</b> \(P \subset EXP\), thus \(P \neq NP\) or \(NP \neq EXP\). (Millenium problem: P vs NP)
+			</p>
+
+			<h3 id="int-4">NP Completeness</h3>
+
+			<p class="blue">
+				<b><i>Definition.</i></b> A problem Y is <b>NP-Complete</b> if \(Y \in NP\), and for <b>every other problem</b> \(X \in NP\), \(X \leq_p Y\). Y can also be referred to as <b>NP-hard</b>.
+			</p>
+
+			<p>
+				To solve P vs NP, finding a poly algorithm for any NP-complete algorithm is sufficient (\(P = NP\))... or prove that this cannot be done (\(P \neq NP\)).
+			</p>
+
+			<p>
+				It is proven that <b>SAT is NP-Complete</b>. 
+			</p>
+
+			<div class="side">
+				<p>
+					To prove Y is NP-complete:
+				</p>
+				<ol>
+					<li>Show \(Y \in NP\)</li>
+					<li>Choose an NP-complete problem X (usually some SAT)</li>
+					<li>Prove X is reducible to Y: \(X \leq_p Y\)</li>
+				</ol>
+			</div>
+
+			<p>
+				Incidentally then, we also know Vertex Cover, Independent Set, Set Cover, Subset Sum, Knapsack Problem* are all NP-hard. 
+			</p>
+			<p>
+				*The <i>decision problem</i> of knapsack: given these items can we make a value V without exceeding weight W? is NP-hard. The optimisation problem is not, and has a dynamic programming solution.
+			</p>
+		</div>
+
 	</div>
 
-	
+	<div class="colourband">
+		<h2 id="networks">Network Flows</h2>
+	</div>
+
+	<div class="cbox">
+		<p>
+			As quick as possible then:
+		</p>
+
+		<ol>
+			<li><a href="#net-1">Flow Networks</a></li>
+			<li><a href="#net-2">Min Cut Max Flow</a></li>
+			<li><a href="#net-3">Bipartite Matching</a></li>
+		</ol>
+
+		<h3 id="net-1">Flow Networks</h3>
+
+		<p class="blue">
+			<b><i>Definition.</i></b> A flow network is a <b>directed graph</b> modelled as a tuple \(G = (V,E,s,t,c)\), where \(s, t\) are the <b>source</b> and <b>sink</b> nodes respectively, and capacity is an array such that \(c(e) \geq 0\) is the capacity of edge \(e\).
+		</p>
+
+		<p class="blue">
+			<b><i>Definition.</i></b> An <b>st-flow</b> \(f\) is a function (i.e. it assigns a number to an edge) that satisfies
+			\begin{align}
+				&\forall e \in E &0 \leq f(e) \leq c(e) \\
+				&\forall v \in V \setminus \{s,t\} &\sum_{\textrm{into }v} f(e) = \sum_{\textrm{out of } v}f(e)
+			\end{align} 
+			Which in english are (1) <b>flow along edge not greater than cap</b> and (2) <b>flow in = flow out</b>
+		</p>
+
+		<p class="blue">
+			<b><i>Definition.</i></b> The <b>value</b> of a flow \(val(f) = \sum_{\textrm{into }s} f(e) - \sum_{\textrm{out of } s}f(e)\): the <b>net flow</b> of the source.
+		</p>
+
+		<p class="side">
+			<b><i>Main Problem.</i></b> Find the flow of maximum value.
+		</p>
+
+		<p>
+			The main method to solve this is the <b>Ford-Fulkerson Algorithm</b>, which is taught in the Discrete section of A Level Further Maths. It relies on the idea of <b>augmenting flows</b>. 
+		</p>
+		<p>
+			The idea is to have a <b>residual graph \(G_f\)</b>, which is the backwards graph and has values equal to \(c(e) - f(e)\) for the current flow of an edge. Then, go through the graph repeatedly, finding a passable flow along the arrows (using the backwards arrows if needed) until \(s\) and \(t\) are partitioned into two separate <b>cutsets</b>, with the cut going through all saturated (\(f(e) = c(e)\)) edges.
+		</p>
+		<p>
+			
+			<a href="https://www.youtube.com/embed/oWjXF_SztWI">This seems like a decent enough video.</a>
+		</p>
+		<button class="collapsible">Ford Fulkerson Algorithm... </button>
+		<div class="ccontent">
+			<p>
+				See the pseuduocde for <code>FORD-FULKERSON</code>, and the helper function <code>AUGMENT</code>
+			</p>
+			<p>
+				Note the <b>bottleneck</b>, as name implies, is the least roomy edge on the path.
+			</p>
+			<div class="codediv">def AUGMENT(\(f,c,P\)):
+	\(\delta \longleftarrow\) bottleneck of augmenting path \(P\)
+	for each edge \(e \in P\):
+		if \(e \in E\):  # right way edge
+			\(f(e) \longleftarrow f(e) + \delta\)
+		else:  # residual edge
+			\(f(e^{\textrm{reverse}) \longleftarrow f(e^{\textrm{reverse}) - \delta\)
+	return \(f\)</div>
+			<p></p>
+			<div class="codediv">def FORD_FULKERSON(\(G\)):
+	for each edge \(e \in E\):
+		\(f(e) \longleftarrow 0\)
+	\(G_f \longleftarrow\) residual network of \(G\) with respect to \(f\)
+	while exists \(s \leadsto t\) path \(P\) in \(G_f\):
+		\(f \longleftarrow\) AUGMENT(\(f,c,P\))
+		update \(G_f\)
+	return \(f\)</div>
+		</div>
+
+		<p>
+			The idea of cuts is very important:
+		</p>
+
+		<h3 id="net-2">Min Cut, Max Flow</h3>
+
+		<p class="blue">
+			<b><i>Definition.</i></b> an <b>st-cut</b> is a partition \((A,B)\) where \(s \in A,\; t \in B\). The <b>capacity</b> of this cut is the sum of the capacities of the edges \(cap(A,B) = \sum_{e\textrm{ leaving }A}c(e)\).
+		</p>
+		
+
+		<p class="side">
+			<b><i>Lemma 1.</i> (Flow Value)</b> let \(f\) be a flow and \((A,B)\) be an st-cut. The value of flow \(f\) is the net flow across the cut:
+			\[val(f) = \sum_{e \textrm{ out of }A} f(e) - \sum_{e\textrm{ into }A}f(e).\]
+		</p>
+		<p>
+			Proofs are omitted at this current stage for speed.
+		</p>
+
+		<p>
+			As a corollary, <b>max flow = min cut</b>. So, find the min cut to find the max flow. 
+		</p>
+		
+		<p class="side">
+			<b><i>Theorem 1.</i> (Augmenting Path Thm.)</b> Flow \(f\) is a max flow <b>if and only if</b> there are no available augmenting paths. <span class="grey">This proves correctness of the FF algorithm</span>.
+		</p>
+
+		<p class="side">
+			<b><i>Theorem 2.</i></b> Given a max flow \(f\), we can find the min cut in \(O(m)\) time (\(m\) edges).
+		</p>
+
+		<h4>Running Time of Ford Fulkerson</h4>
+
+		<p>
+			<b>Assume</b> that all capacities are positive integers between 1 and some \(C\).
+		</p>
+		<p>
+			<b>Define</b> the <b>integrality invariant</b>: that throughout FF, every edge's flow and residual capacity will remain integers. Then,
+		</p>
+		<p class="side">
+			<b><i>Theorem 3.</i></b> Ford Fulkerson terminates in at most \(val(f*)\) iterations (\(f*\) means max flow). And also,
+			\[val(f*) \leq nC.\]
+		</p>
+		<p>
+			This leads to the corollary that the running time of FF is \(O(mnC)\), because FF finds the max flow value, from which we can use DFS/BFS to find the min cut.
+		</p>
+		<p class="side">
+			<b><i>Theorem 4.</i></b> If we assume the integrality constraint, we can guarantee that our max flow is also integral.
+		</p>
+		<p>
+			Note that the generic FF is <b>not necessarily polynomial</b>, for FF to be poly time, it must be poly on \(m, n, \log_2 C\) (C is a <b>binary</b> value to the computer).
+		</p>
+		<p>
+			You can engineer graphs that absolutely break a generic, non-deterministic FF algorithm. Suppose
+			<table>
+				<tr>
+					<th>Vertices</th>
+					<td>s</td>
+					<td>v</td>
+					<td>w</td>
+					<td>t</td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<th>Edges</th>
+					<td>(s,v)</td>
+					<td>(s,w)</td>
+					<td>(v,w)</td>
+					<td>(v,t)</td>
+					<td>(w,t)</td>
+				</tr>
+				<tr>
+					<th>Capacities</th>
+					<td>C</td>
+					<td>C</td>
+					<td>1</td>
+					<td>C</td>
+					<td>C</td>
+				</tr>
+			</table>
+			This will <i>royally </i>████ with a PC randomly picking paths, because it could forever pick the path \((s,v,w,t)\) and increment by 1 each time to some stupidly large number \(C\). Now as humans we can easily see past this, but PCs aren't humans ... yet at least. 
+		</p>
+		<p>
+			Thus, in reality we need some way of choosing path good. 
+		</p>
+
+		<h4>Capacity Scaling</h4>
+
+		<p>
+			The idea of capacity-scaling is to choose a path with a "large enough" capacity, i.e. have a <b>scaling value</b> \(\Delta\) and only pick paths with a bottleneck larger than it. 
+		</p>
+		<p>
+			Alter the algorithm so we have a \(G_f(\Delta)\) be the <b>subgraph</b> of \(G_f\) with all edges lower than Delta removed. Find augmenting paths. Halve Delta. Rinse and repeat.
+		</p>
+
+		<button class="collapsible">Capacity Scaling... </button>
+		<div class="ccontent">
+			<div class="codediv">def CAPCITY_SCALING(\(G\)):
+	for each edge \(e \in E\):
+		\(f(e) \longleftarrow 0\)
+	\(\Delta \longleftarrow\) largest power of 2 that is \(\leq C\)
+
+	while \(\Delta \geq 1\):
+		\(G_f(\Delta) \longleftarrow\) as described above
+		while exists \(s \leadsto t\) path \(P\) in \(G_f(\Delta)\):
+			\(f \longleftarrow\) AUGMENT(\(f,c,P)\))
+			update \(G_f(\Delta)\)
+		\(\Delta \longleftarrow \frac{\Delta}{2}\)
+	return \(f\)</div>
+		</div>
+
+		<p class="side">
+			<b><i>Lemma 2.</i></b> There are \(1 + \left\lfloor{\log_2 C}\right\rfloor \) scaling phases.
+		</p>
+		<p class="side">
+			<b><i>Lemma 3.</i></b> There are \(\leq 2m\) augmentations every scaling phase.
+		</p>
+		<p class="side">
+			<b><i>Theorem 5.</i></b> Thus from the above, capacity scaling has a time complexity of \(O(m^2 \log C\).
+		</p>
+		<p class="side">
+			<b><i>Lemma 4.</i></b> Let \(f\) be a flow at the <b>end</b> of a delta-scaling phase,
+			\[\textrm{max flow } \leq val(f) + m\Delta\]
+			\[\textrm{or }val(f) \geq val(f*) - m\Delta.\]
+		</p>
+
+		<h3 id="net-3">Bipartite Matching</h3>
+
+		<p>
+			This section looks at bipartite graphs. Bipartite graphs can be defined \(G(L \cup R, E)\) with a distinct left and right side.
+		</p>
+
+		<h4>Simple Matching</h4>
+
+		<p class="blue">
+			<b><i>Definition.</i></b> A <b>matching</b> in a graph \(G(V,E)\) is a set of edges \(M \subseteq E\) where each node appears in at most 1 edge. 
+		</p>
+		<p class="blue">
+			<b><i>Definition.</i></b> A <b>bipartite matching</b> is a matching in a bipartite graph, and we want to find the <b>max cardinality (largest) matching</b>.
+		</p>
+		<p>
+			The matching problem can actually be solved with (reduced to) flows. Given a bipartite graph \(G(L \cup R, E)\):
+		</p>
+		<ul>
+			<li>Create a digraph \(G' = (L \cup R \cup \{s,t\}, E')\)</li>
+			<li>Direct all edges from \(L \longrightarrow R\) and make their capacities \(\infty\)</li>
+			<li>Connect \(s\) to all nodes in \(L\) and set the capacity of these edges to 1</li>
+			<li>Connect all nodes in \(R\) to \(t\) and set the capacity also to 1</li>
+		</ul>
+		<p class="side">
+			<b><i>Theorem 6.</i></b> There is now a <b>1-1 correspondence</b> between the max matching size \(k\) in \(G\) and the max flow value in \(G'\).
+		</p>
+		<p>
+			A corollary is that we can solve bipartite matching in poly-time with max flow. Granted, non-bipartite matchings are also poly-time, but irrelevant. 
+		</p>
+		<h4>Perfect Matching</h4>
+		<p class="blue">
+			<b><i>Definition.</i></b> Given a graph \(G=(V,E)\), a subset \(M \subseteq E\) is a <b>perfect matching</b> if every node appears in \(M\) (M is a vertex cover and a matching).
+		</p>
+		<p>
+			Since we match one left node to one right node in a matching, it reasons that a bipartite graph with a perfect matching must have \(|L| = |R|\).
+		</p>
+		<p>
+			Let us <b>denote</b>, for a set \(S\) of nodes, \(N(S)\) as the neighbours of all nodes in \(S\).
+		</p>
+
+		<p class="side">
+			<b><i>Theorem 7.</i> (Hall's Marriage)</b> Given a bipartite graph \(G = (L \cup R, E) : |L| = |R|\), G has a perfect matching <b>if and only if</b> \(|N(S)| \geq |S|\; \forall S \subseteq L\).
+		</p>
+
+		<p>
+			<i>Proofs are left as an excersise to the reader.</i>
+		</p>
+	</div>
 
 	<footer>
 		<div class="cbox">

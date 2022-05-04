@@ -17,24 +17,40 @@
 
 var pages = [
     {
-        "date": new Date(Date.UTC(2021, 10, 14)),
-        "link": "blog-cs/cs241/",
-        "title": "Notes on CS241",
-        "desc": "Notes on CS241: Operating Systems and Networking. These are made throughout the year and will be updated as and when needed.</p>",
+        "date": new Date(Date.UTC(2022,05,02)),
+        "link": "blog-cs/cs259/",
+        "title": "Notes on CS259",
+        "desc": "Notes on CS259: Formal Languages</p>",
         "picture": "",
         "tags": ["cs"]
     },
     {
+        "date": new Date(Date.UTC(2022,02,07)),
+        "link": "blog-cs/cs262/",
+        "title": "Notes on CS262",
+        "desc": "Notes on CS262: Logic and Verification. For a quick cheat sheet for the class test, click <a href='blog-cs/cs262/cheat.html'>here</a>.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    // {
+    //     "date": new Date(Date.UTC(2021, 10, 14)),
+    //     "link": "blog-cs/cs241/",
+    //     "title": "Notes on CS241",
+    //     "desc": "Notes on CS241: Operating Systems and Networking. These are made throughout the year and will be updated as and when needed.</p>",
+    //     "picture": "",
+    //     "tags": ["cs"]
+    // },
+    {
         "date": new Date(Date.UTC(2021, 10, 14)),
         "link": "blog-cs/cs258/",
         "title": "Notes on CS258",
-        "desc": "Notes on CS258: Database Systems. These are made throughout the year and will be updated as and when needed.</p>",
+        "desc": "Notes on CS258: Database Systems. </p>",
         "picture": "",
         "tags": ["cs"]
     },
     {
         "date": new Date(Date.UTC(2021, 10, 10)),
-        "link": "blog-cs/cs255/",
+        "link": "blog-cs/cs255/short.html",
         "title": "Notes on CS255",
         "desc": "Notes on CS255: AI. These are made throughout the year and will be updated as and when needed. Please note that this is an <i>extremely long</i> module.</p>",
         "picture": "",
@@ -44,7 +60,7 @@ var pages = [
         "date": new Date(Date.UTC(2021, 10, 10)),
         "link": "blog-cs/cs260/",
         "title": "Notes on CS260",
-        "desc": "Notes on CS260: Algorithms. These are made throughout the year and will be updated as and when needed.</p>",
+        "desc": "Notes on CS260: Algorithms.</p>",
         "picture": "",
         "tags": ["cs"]
     },

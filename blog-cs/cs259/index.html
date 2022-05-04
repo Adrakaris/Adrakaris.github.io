@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS259</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS259</h1>
+					<p class="subheading">Formal Languages</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Introduction</h1>
+			</div>
+		</header>
+
+		<!-- <div class="buttonwrapper beside" >
+			<a href="./index-zh.html">简体中文</a>
+		</div> -->
+		<!-- REMEMBER TO DO! -->
+
+		<div class="cbox">
+
+			<h3>Contents</h3>
+			<ol>
+				<li><a href="#dfa">Deterministic Finite Automata</a></li>
+				<li><a href="#nfa">Non-deterministic Finite Automata</a></li>
+			</ol>
+			<h3>Languages</h3>
+			<p class="blue">
+				An <b>alphabet</b> is a <b>non-empty</b> set of symbols, usually denoted \(\Sigma = \{a,b,c,\dots\}\). 
+			</p>
+			<p class="blue">
+				A <b>language</b> is then a (potentially infinte) set of <b>finite strings</b> (words) over an alphabet. The set of <b>all</b> words is denoted \(\Sigma*\).
+			</p>
+			<p>
+				In CS, we can model every decision problem as a question "is a given string in a given language L?", thus, one can see the usefulness of formal languages.
+			</p>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="dfa">Deterministic Finite Automata</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#dfa-1">DFA</a></li>
+				<li><a href="#dfa-2">Regular Languages</a></li>
+			</ol>
+
+			<h3 id="dfa-1">DFA</h3>
+
+			<div class="blue">
+				<p>
+					A <b>deterministic finite automata</b> (DFA, also referred to as a finite state machine) is comprised of:
+				</p>
+				<ul>
+					<li>\(Q\) the <i>finite</i> set of states</li>
+					<li>\(\Sigma\) the alphabet set</li>
+					<li>\(q_0 \in Q\) the start/initial state</li>
+					<li>\(F \subseteq Q\) final/accept states</li>
+					<li>\(\delta : Q \times \Sigma \longrightarrow Q\) the <b>transition function</b> between states.</li>
+				</ul>
+				<p>
+					And is denoted by the 5-tuple \(M=(Q, \Sigma, q_0, F, \delta)\).
+				</p>
+				
+			</div>
+			<p>
+				The DFA can either be represented in a state diagram, or in a transition table:
+			</p>
+			<figure>
+				<img src="./dfa.png" alt="" style="max-width: 600px;">
+				<figcaption>A DFA. Every "transition" the DFA reads one symbol from the input string. States which are double circled (or annotated with stars) are finish states, and states with a blank arrow pointing in are start states. There must be one arrow for every possible incoming letter.</figcaption>
+			</figure>
+
+			<div class="blue">
+				<p>
+					\(\varepsilon\) represents the <b>empty string</b>. Any DFA with an input of \(\varepsilon\) will halt immediately on the start state. \(\varepsilon \in \Sigma* \).
+				</p>
+				<p>
+					\(L = \{\} = \varnothing\) is the <b>empty language</b> - note that \(L = \{\varepsilon\}\) is <i>not</i> empty.
+				</p>
+			</div>
+			<p>
+				A <b>monoid</b> is a tuple of a set, an associative binary equation, and an identity:
+				<ul>
+					<li>\((\mathbb{N}_0, +, 0)\) where + is integer addition, and \(\mathbb{N_0} \) are nonnegative integers.</li>
+					<li>\((\Sigma*, \circ, \varepsilon)\) where \(\circ\) is string concat, is a monoid. </li>
+				</ul>
+			</p>
+			<p>
+				<i><b>Note well</b> that the concat symbol \(\circ\) can also be written \(\cdot\) or omitted entirely.</i>
+			</p>
+
+			<p class="side">
+				Formally, the way a DFA computes can be defined with the help of the <b>extended transition function</b>:
+				\[\hat{\delta} : Q \times \Sigma* \longrightarrow Q\]
+				Which can be recursively defined (in a haskell <i>like</i> form) over a string \(w = w' \circ a\) as
+				\begin{align}
+					\hat{\delta}(q, \varepsilon) &= q\\
+					\hat{\delta}(q, w' \circ a) &= \delta(\hat{\delta}(q, w'), a).
+				\end{align}
+			</p>
+
+			<p class="side">
+				The <b>accepted language</b> of a DFA \(M = (Q, \Sigma, q_0, F, \delta)\) is \(L(M)\), such that
+				\[L(M) = \{ s \in \Sigma* : \hat{\delta} (q_0, s) \in F \}.\]
+			</p>
+
+			<div class="side">
+				<p>The <b>run</b> of M on a word \(s\) is the path of states M goes through for \(s\):</p>
+				
+				<ul>
+					<li>The run of M on \(\varepsilon\) is trivially \(q_0\)</li>
+					<li>
+						The run of M on a string \(s_0..s_n \neq \varepsilon\) is \(r_0..r_n\) such that
+						\[r_0 = q_0,\; \forall i \in [1..n] \; r_i = \delta(r_{i-1}, s_i)\]
+					</li>
+				</ul>
+			</div>
+
+			<p class="side">
+				The run is an <b>accepting run</b> is a run that ends in an accepting state, thus \(s\) is accepted if its run is accepting - we can also define \(L(M)\) using accepting runs.
+			</p>
+
+			<h3 id="dfa-2">Regular Languages</h3>
+
+			<p class="blue">
+				A language L is <b>regular</b> if it is accepted by some DFA. 
+			</p>
+			<p>
+				Trivially, the empty language \(L=\varnothing\) is regular (any DFA with no accept states), and \(\Sigma* \) is regular (define \(\delta(q_0, \_) = q_0\)).
+			</p>
+			<p>
+				Naturally not all languages are regular, one particular one to note is that the language of (binary) <b>palindromes</b> is <b>not</b> regular.	
+			</p>
+			<p>
+				Since languages are sets of strings, we can naturally perform set operations: \(\overline{L}, L \cap M, L \cup M\). There are also a few string-specific operators, such as
+				<ul>
+					<li><code>reverse L</code>: reverse all strings in L</li>
+					<li><code>truncate L n</code>: trim all strings in L to at most \(n\) long </li>
+					<li><code>concat L1 L2</code>: like cross product, but concactenating strings together instead of tuple pairing</li>
+				</ul>
+				But the main question is: are the results of these operations also regular languages?
+			</p>
+
+			<p class="side">
+				For <b>completement</b>: where \(\overline{L} = L \setminus \Sigma* \), this is <b>closed</b>, as one can just invert the accept and reject states of the DFA.
+			</p>
+			<p class="side">
+				For <b>intersection</b>: given \(L_1, L_2\), \(L_1 \cap L_2\) is regular, this is <b>closed</b>. Given \(M_1 = (Q_1, \Sigma, q_1, F_1, \delta_1)\) and \(M_2 = (Q_2, \Sigma, q_2, F_2, \delta_2)\), we can construct an <b>intersection automaton</b> like the following:
+			</p>
+
+			<button class="collapsible active">Intersection Automation... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					We define \(M_3 = (Q, \Sigma, q_0, F, \delta)\) as the intersection automaton of \(M_1, M_2\), and define it like follows:
+				</p>
+				<ul>
+					<li>\(Q = Q_1 \times Q_2\)</li>
+					<li>\(q_0 = (q_1, q_2)\) (note how states are labelled with pairs)</li>
+					<li>\(F = F_1 \times F_2\)</li>
+					<li>\(\forall a \in \Sigma, \forall x \in Q_1, \forall y \in Q_2:\)
+						\[\delta((x,y), a) = (\delta_1(x,a), \delta_2(x,a)).\]
+					</li>
+				</ul>
+			</div>
+			<p>
+				Note that \(L_1\) regular, \(L_2\) regular \(\implies L_1 \cap L_2\) regular is a <b>one-way implication</b>. If we take \(L_1\) to be the set of palindromes, \(L_2\) being all zeroes 0*, their union is clearly regular, but the separate languages are not.
+			</p>
+
+			<p class="side">
+				For <b>union</b>, this is also <b>closed</b>. We can similarly construct a union automaton.
+			</p>
+
+			<button class="collapsible active">Union Automaton... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					Given two machines \(M_1 = (Q_1, \Sigma, q_1, F_1, \delta)\) and \(M_2 = (Q_2, \Sigma, q_2, F_2, \delta)\) -- note the deltas are the same, construct a machine \(M_3 = (Q, \Sigma, q, F, \delta)\) as
+					<ul>
+						<li>\(Q = Q_1 \times Q_2\)</li>
+						<li>\(q = (q_1, q_2)\)</li>
+						<li>\(F = (F_1 \times Q_2) \cup (F_2 \times Q_1\)</li>
+					</ul>
+					To make the two \(\delta\)s the same, you can include the transitions in one as redundant transitions in the other.
+				</p>
+			</div>
+
+			<p class="side">
+				<b>Set difference</b> is <b>closed</b>, since \(L_1 \setminus L_2 = L_1 \cap \overline{L_2} \).
+			</p>
+
+			<p class="side">
+				<b>Set reverse</b> \(L^{rev}\) is... well it's closed, but it's not so simple with only DFAs. Intuitively, we want to reverse all the arrows, and make all the finish states start states, and vice versa, but of course, more often than not, this'll break a DFA rules, which means we need to introduce another abstraction:
+			</p>
+
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="nfa">Non-deterministic Finite Automata</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#nfa-1">NFAs</a></li>
+				<li><a href="#nfa-2">Transition Functions, \(\varepsilon\)-closure, Runs</a></li>
+			</ol>
+
+			<h3 id="nfa-1">NFAs</h3>
+			<p>
+				A <b>non-deterministic finite automata</b>, an NFA, is like a DFA, but you no longer have so much of the restrictions. 
+			</p>
+
+			<div class="blue">
+				<p>
+					An <b>NFA</b> can be defined as a five tuple of
+				</p>
+				<ul>
+					<li>\(Q\) a finite set of states</li>
+					<li>\(\Sigma\) a finite alphabet</li>
+					<li>\(q_0\) an initial state</li>
+					<li>\(F \subseteq Q\) accept states</li>
+					<li>\(\delta\) the transition function, <b>defined as</b>
+						\[\delta : Q \times (\Sigma \cup \{\varepsilon\}) \longrightarrow 2^Q\]
+					</li>
+				</ul>
+				<p>
+					Yep - that's right, an NFA can have empty string transitions (epsilon transitions), and a single letter can lead to multiple (a set of) states. 
+				</p>
+			</div>
+
+			<figure>
+				<img src="./nfa.png" alt="" style="max-width: 500px;">
+				<p>An NFA. Note the multiple possible transitions, missing transitions, and epsilon transitions.</p>
+			</figure>
+
+			<p>
+				Going back to our \(L^{rev}\), we <i>still</i> can't have multiple start states, <i>however</i>, we can merely add a new start state, and add \(\varepsilon\)-transitions to all the would've-been start states.
+			</p>
+
+			<p>
+				A DFA has a clear, linear progression, but how does an NFA run? An NFA runs like a multiple world theory, where every time the NFA encounters multiple possible transitions, the NFA "branches" into multiple worlds which each going to one possible transition.
+			</p>
+			<p>
+				If an NFA world reaches a state with no possible transitions, it crashes, and is considered a <b>reject</b> by default. 
+			</p>
+			<p>
+				As long as <b>at least one</b> world reaches a finish state, the NFA run is considered an <b>accept</b>.
+			</p>
+
+			<p>
+				A computer simulating an NFA would basically be doing a brute force DFS/BFS search.
+			</p>
+
+			<figure>
+				<img src="./nfa-worlds.png" alt="	" style="max-width: 420px;">
+				<figcaption>
+					An NFA branching, and one branch reaching a finish.
+				</figcaption>
+			</figure>
+
+			<p>
+				We can think of DFAs as being strict subsets of NFAs, where there can only be one world and other special conditions.
+			</p>
+
+			<h3 id="nfa-2">Transition Functions, \(\varepsilon\)-closure, Runs</h3>
+
+			<p>
+				Let's try to formally define NFAs. 
+			</p>
+			<div class="side">
+				<p>
+					We want to use \(\delta : Q \times \Sigma_\varepsilon \longrightarrow 2^Q\) to define \(\hat{\delta} \). (Note \(\Sigma_\varepsilon = \Sigma \cup \{\varepsilon\} \) for convenience). 
+					\[\hat{\delta} : Q \times \Sigma* \longrightarrow 2^Q.\]
+				</p>
+				<p>
+					Say that \(\forall q \in Q\, s \in \Sigma*,\; \hat{\delta}(q, s) =\) all states in Q such that there <b>exists a run</b> from \(q\) upon reading string \(s\). i.e. all reachable states.  
+				</p>
+				
+			</div>
+
+			<div class="side">
+				<p>
+					The <b>run</b> of an NFA M on a word \(s = s_1 .. s_n\) is the sequence of states \(r_0 .. r_n\), such that
+					<ul>
+						<li>\(r_0 = s_0\)</li>
+						<li>\(\forall i \in [1..n], \; r_i \in \delta(r_{i-1}, s_i)\)</li>
+					</ul>
+					An <b>accepting run</b> is then a run which ends in an accept state.
+				</p>
+			</div>
+
+			<p>
+				To define the extended transition function however, we need to first of all look at <b>epsilon-closure</b>: ECLOSE().
+			</p>
+
+			<div class="side">
+				<p>
+					<b>Epsilon Closure</b> is a function \(\textrm{ECLOSE}: Q \longrightarrow 2^Q\) which denotes all states that can be reached from a starting state \(q\) only by \(\varepsilon\)-transitions. 
+				</p>
+				<p>
+					Formally, \(\forall X \subseteq Q\):
+					\begin{align}
+						\textrm{ECLOSE}(\varnothing) &= \varnothing\\
+						\textrm{ECLOSE}(X) &= \bigcup_{x \in X} \textrm{ECLOSE}(\{x\})
+					\end{align}
+				</p>
+			</div>
+
+			<div class="side">
+				<p>
+					The <b>Extended Transition Function</b> \(\hat{\delta}\) defined \(\forall q \in Q,\; \forall s \in \Sigma* \setminus \{\varepsilon\}: s = wa\) where \(w \in \Sigma* \;\land \;\; a \in \Sigma \). In plain english: for all states \(q\), and for all non-empty strings \(s\) which are decomposed into \(w\), the prefix, and \(a\), the last letter:
+
+					\begin{align}
+					\hat{\delta} (q, \varepsilon) &= \textrm{ECLOSE}(q)\\
+					\hat{\delta} (q, wa) &= \textrm{ECLOSE}(\bigcup_{q' \in \hat{\delta}(q,w)} \delta(q',a))
+					\end{align}
+				</p>
+			</div>
+
+			<p>
+				Thus, the language accepted by an NFA can be defined in two ways, either as the set of all strings whose extended transition functions contain some finish state,
+				\[L(M) = \{s \in \Sigma* : \hat{\delta} (q_0, s) \cup F \neq \varnothing\}\]
+				or the set of all strings which have an accepting run.
+			</p>
+
+			<h3 id="nfa-3">Reduction to DFA</h3>
+
+			<p>
+				Are NFAs more powerful than DFAs? And by that, we mean can NFAs accept languages which DFAs can't? 
+			</p>
+			<p>
+				Well the answer to that is <b>no</b>. NFAs can reduce to DFAs. Similar to how one DFA can simulate two DFAs like in intersection automata, we can do something similar for simulating an NFA. 
+			</p>
+			<p>
+				An NFA's state information can be captured by a <b>set</b> of states, so we can just have a DFA with states corresponding to \(2^Q\) in the NFA, and transitions between them. 
+			</p>
+			
+
+			<div class="side">
+				<p>
+					<b><i>Subset Construction.</i></b> Let \(N = (Q, \Sigma, q_0, F, \delta)\) be the NFA we want to convert. Let the resulting DFA be denoted \(M = (Q_d, \Sigma, q_d, F_d, \delta_d)\).
+				</p>
+				<ul>
+					<li>
+						M has a state for every subset of N: \(Q_d = 2^Q\). This includes the empty subset \(\varnothing\), which simulates N "crashing".
+					</li>
+					<li>
+						The start of NFA is \(q_0\), but since we have to consider \(\varepsilon\)-transitions, \(q_d = \textrm{ECLOSE}(q_0)\).
+					</li>
+					<li>
+						Finish states are all subsets of N that contain N's finish states, \(F_d = \{X \subseteq Q : X \cap F \neq \varnothing\} \).
+					</li>
+					<li>
+						Given a starting set \(X\) and a letter \(a\), we reach the set of all possible states reached in N by \(\delta(X,a)\) followed by ECLOSE:
+						\begin{align}
+							\delta_d (X,a) &= \bigcup_{x \in X} \textrm{ECLOSE}(\delta(X,a)) \\
+							&= \{z : \textrm{ for some } x \in X, z \in \textrm{ ECLOSE}(\delta(X, a))\}
+						\end{align}
+					</li>
+				</ul>
+			</div>
+
+			<p>
+				Of course, drawing all of these states is <b>not feasible</b> for any significant number of NFA state0s, especially as there would probably be a lot of <b>redundant states</b>, and thus the machine should be built up incrementally. Start from \(\textrm{ECLOSE}(q_0)\) and work from there.
+			</p>
+
+			<p>
+				In general, this means that a language is regular <br>
+				&emsp;<b>iff</b> it is accepted by a DFA <br>
+				&emsp;<b>iff</b> it is accepted by an NFA.
+			</p>
+		</div>
+		
+		<div class="colourband">
+			<h2 id="regex">RegEx</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#reg-1">Regex</a></li>
+				<li><a href="#reg-2">Regex to NFA</a></li>
+				<li><a href="#reg-3">Generalised NFA</a></li>
+			</ol>
+
+			<h3 id="reg-1">Regex</h3>
+
+			<div class="blue">
+				<p>
+					A <b>Regular Expression</b> (RegEx) is a compat way to describe a (regular) language. It can be defined with the following 6 rules:
+				</p>
+				<ul>
+					<li>R = \(a\) for some \(a \in \Sigma\)</li>
+					<li>R = \(\varepsilon\)</li>
+					<li>R = \(\varnothing\)</li>
+					<li>R = \(R_1 + R_2\) (<b>or</b>: \(R_1 \cup R_2\))</li>
+					<li>R = \(R_1 \cdot R_2\) (<b>concat</b>: more often \(R_1 R_2\))</li>
+					<li>R = \(R_1*\) (0 or more, called the <b>kleene star</b>)</li>
+				</ul>
+			</div>
+
+			<p class="small">
+				Sure, "regex" on most systems have way more symbols to make life easier, but this is sufficient to generate all regular languages.
+			</p>
+
+			<p>
+				In terms of operator precedence, it goes \(*, \cdot, +\).
+			</p>
+
+			<p>
+				Some examples then, over \(\Sigma = \{a,b\}\):
+			</p>
+			<ul>
+				<li><code>(a+b)*</code>: effectively \(\Sigma* \).</li>
+				<li><code>(a+b)*(a+bb)</code>, any word which ends in "a" or "bb".</li>
+				<li><code>(aa)*(bb)*b</code>, any word made up of even "a"s followed by even "b"s, ending in a "b".</li>
+				<li><code>(aa+b)*</code>, all consecutive "a"s must be of an even number.</li>
+			</ul>
+			<p>
+				Often, if a regex can be understood in plain english, one can turn that regex into a DFA or NFA directly via creative thinking, but there is a modular algorithmic way of doing so, since 
+			</p>
+			
+
+			<h3 id="reg-2">Regex to NFA</h3>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> A language is accepted by an NFA/DFA \(\iff\) it is generated by a regex.
+			</p>
+
+			<p>
+				<b><i>Proof.</i></b> We have two algorithms, one to turn a regex to an NFA, and vice-versa.
+			</p>
+
+			<h4>Regex to NFA</h4>
+
+			<p>
+				This can be done modularly based on the recursive definition of a regex string. Our base cases (below) can be modelled by three different "modules":
+			</p>
+			<figure>
+				<img src="./regex-dfa-base.png" alt="" title="R=a: ->()-a>(accept). R=ε: ->(accept). R=nothing: ->()" style="max-width: 500px;">
+			</figure>
+			<p>
+				Then we have our recursive / inductive cases: \(R_1 + R_2\), \(R_1 \cdot R_2\), and \(R*\). A rectangle, in this case, represents a whole machine. 
+			</p>
+			<figure>
+				<img src="./regex-dfa-recursive.png" alt="" style="max-width: 420px;" title="OR: e-transition to both machines from a common state. CONCAT: Connect all accept states of first to start of second (and make the accept states of first not accept). STAR: Make a new initial accept state, connect all accept states of machine to this state.">
+			</figure>
+
+			<p>
+				As an aside have a think about the language \(\varnothing* \). What does that make? Well, concating \(\varnothing\) with anything is just ... \(\varnothing\), but the definition of kleene star is 0 or more times: i.e. \(\{\varepsilon\} \cup \varnothing \cup \varnothing^2 \cup \dots\), thus \(\varnothing* = \{\varepsilon\}.\)
+			</p>
+
+			<h4>NFA to Regex</h4>
+
+			<p>
+				This is better explained going along with an example:
+			</p>
+			<figure><img src="./dfa-regex/st1.png" alt="" style="max-width: 420px;"></figure>
+			<p>
+				Our goal is to slowly eliminate all the nodes one at a time, reflecting their effect by changing arcs into smaller <i>regex expressions</i>. First though, we need to add a start \(q_s\) and unique final \(q_f\) state and transition to them with epsilon:
+			</p>
+			<figure><img src="./dfa-regex/st2.png" alt="" style="max-width: 420px;">
+				<figcaption>The start state is a source and the finish state is a sink</figcaption>
+			</figure>
+			<p>
+				Start by eliminating \(q_3\). Possible paths are \(\langle q_2,q_3,q_2 \rangle :10*\) and \(\langle q_2, q_3, q_f\rangle : 1\varepsilon = 1\). Thus, we can have a self loop on \(q_2\) to be \(10*\) and modify \(q_2 \longrightarrow q_f\) to be \(1 + \varepsilon\)* to represent the two possible choices. Then, \(q_3\) becomes redundant and can be removed.
+			</p>
+			<figure>
+				<img src="./dfa-regex/st3.png" alt="" style="max-width: 210px;">
+			</figure>
+			<p>
+				* Technically, the transition \(q_2 \longrightarrow q_f : \varepsilon\) remains unaffected, but since we also have a new transition \(q_2 \longrightarrow q_f : 1\), we <i>simplify</i> the two parallel transitions into one: \(1 + \varepsilon\). This is very important to note.
+			</p>
+			<p>
+				Eliminate \(q_2\) using a similar process. 
+			</p>
+			<figure>
+				<img src="./dfa-regex/st4.png" alt="" style="max-width: 420px;">
+			</figure>
+			<p>
+				Eliminate \(q_1\)
+			</p>
+			<figure><img src="./dfa-regex/st5.png" alt="" style="max-width: 420px;"></figure>
+			<p>
+				Finally, eliminate \(q_0\)
+			</p>
+			<figure><img src="./dfa-regex/st6.png" alt="" style="max-width: 420px;"></figure>
+			<p>
+				Then, we simply read off the last remaining transition for our regex. 
+			</p>
+			<p>
+				Now sure, it's not the cleanest, shortest, or most efficient, but it <i>is</i> a regex, and that's all that matters.
+				$$\tag*{$\Box$}$$
+			</p>
+
+			<h3 id="reg-3">Generalised NFA</h3>
+
+			<div class="blue">
+				<p>
+					A <b>Generalised NFA (GNFA)</b> is a tuple \((Q, \Sigma, \delta, q_{start}, q_{accept})\) where 
+					\[\delta : (Q \setminus \{q_{accept}\}) \times (Q \setminus \{q_{start})\} \longrightarrow \mathfrak{R}.\]
+					Which the fraktur blackletter \(\mathfrak{R}\) means the set of <b>all regular expressions</b>.
+				</p>
+				<p>
+					For simplicity \(q_0 = q_{start}\) and \(q_f = q_{accept} \). Note the <b>unique</b> start and finish states.
+				</p>
+				<p>
+					\(q_0\) must be a <b>source</b> with outgoing transitions to <b>all</b> other states. <br>
+					\(q_f\) must be a <b>sink</b> with incoming transitions from <b>all</b> other states. 
+				</p>
+				<p>
+					These transitions can be \(\varnothing\), i.e. nothing.
+				</p>
+			</div>
+
+			<p class="side">
+				The <b>run</b> of a GNFA M on a word \(s\) is a sequence of states \(r_0 .. r_n\) such that \(r_0 = q_0\), and 
+				\[\exists s_1 .. s_n \in \Sigma* : s = s_1 .. s_n \textrm{ and } \forall i \in [1..n] \; s_i \in L(\delta(r_{i-1}, r_i)).\]
+				Plain english: \(s\) can be broken down into <b>substrings</b> such that there is a transition that matches each substring.
+			</p>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> Every NFA can be converted to an equivalent GNFA. This is techically what we have done in the <i>NFA to Regex</i> section, but with the \(\varnothing\) lines omitted for simplicity, which they often can be.
+			</p>
+			<p>
+				With this fact we can now define our <b>elimination process</b> using some very complicated maths language. 
+			</p>
+			<div class="side">
+				<img src="./gnfa-elim.png" alt="" align="right" style="max-width: 315px;">
+				<p>
+					<b>Assuming</b> we have <b>already converted</b> our NFA to a GNFA, and we want to eliminate a state \(q_1\), then for all pairs \(q_a, q_b \in (Q \setminus \{q_f, q_1\}) \times (Q \setminus \{q_0, q_1\}\) (pairs which do not include start and finish states):
+
+					\begin{align}
+						\delta' (q_a, q_b) &= \delta(q_a, q_b) \\
+						&+ \delta(q_a, q_1) \cdot [\delta(q_1, q_1)*] \cdot \delta(q_1, q_b).
+					\end{align}
+
+					i.e. The existing a to b, or a to 1, any number of 1s, then 1 to b.
+				</p>
+			</div>
+		</div>
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>

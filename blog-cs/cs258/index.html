@@ -49,6 +49,9 @@
 			<ol>
 				<li><a href="#rel-db">Relational Databases and Constraints</a></li>
 				<li><a href="#sql">SQL</a></li>
+				<li><a href="#algebra">Relational Algebra</a></li>
+				<li><a href="#calculus">Relational Calculus</a></li>
+				<li><a href="#design">Database Design, Normalisation and Security</a></li>
 			</ol>
 
 			<h3>Introduction</h3>
@@ -461,6 +464,11 @@
 			<ol>
 				<li><a href="#sql-1">Declaring</a></li>
 				<li><a href="#sql-2">Querying</a></li>
+				<li><a href="#sql-3">Updating</a></li>
+				<li><a href="#sql-4">Joins</a></li>
+				<li><a href="#sql-5">Query Nesting</a></li>
+				<li><a href="#sql-6">Correlated Subqueries</a></li>
+				<li><a href="#sql-7">Aggregation and Grouping</a></li>
 			</ol>
 
 			<h3 id="sql-1">Declaring</h3>
@@ -745,6 +753,1408 @@ age int not null check (age &gt; 0 and age &lt; 125)</code></pre>
 					</p>
 				</div>
 			</div>
+
+			<h3 id="sql-3">Updating</h3>
+
+			<div class="cornell">
+				<div></div>
+				<div>
+					<p>A modification does not return, but changes the state of the DB</p>
+				</div>
+
+				<div>
+					<p>Insert</p>
+				</div>
+				<div>
+					<pre><code class="lang-sql">insert into &lt;tableName&gt; values (&lt;val1&gt;, &lt;val2&gt;, ...);</code></pre>
+					<p>
+						Inserted values must be <b>in attribute order</b> of list in schema. To insert partial values, we can specify the column names:
+					</p>
+					<pre><code class="lang-sql">insert into &lt;tableName&gt; (A1, A2, ..., Aj) values (V1, V2, ..., Vj);</code></pre>
+					<p>
+						Unspecified attributes will fall to a default or null value. This is also useful if we do not know the order of attributes.
+					</p>
+				</div>
+
+				<div>
+					<p>Delete</p>
+				</div>
+				<div>
+					<p>
+						To delete tuples from a table matching the expression,
+					</p>
+					<pre><code class="lang-sql">delete from &lt;tableName&gt; where &lt;expression&gt;;</code></pre>
+					<p>
+						And the next one, depending on database, will delete <b>either nothing or everything</b> -- in postgres, this deletes <b style="color: red">every tuple from the table</b>.
+					</p>
+					<pre><code class="lang-sql">delete from &lt;tableName&gt;;</code></pre>
+				</div>
+
+				<div>
+					<p>Update</p>
+				</div>
+				<div>
+					<pre><code class="lang-sql">update &lt;tableName&gt;
+set (att1=val1, att2=val2, ...)
+where &lt;condition&gt;</code></pre>
+				</div>
+			</div>
+
+			<h3 id="sql-4">Joins</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Selecting from multiple tables</p>
+				</div>
+				<div>
+					<p>
+						In a from when selecting more than one table: <code class="lang-sql">... from students, courses ...</code> by default with the comma we will get the <b>cartesian product</b>, or <b>cross join</b>.
+					</p>
+				</div>
+				<div>
+					<p>Cross join</p>
+				</div>
+				<div>
+					<p>
+						Cross join can also be explicit: <code class="lang-sql">students cross join courses</code>.
+					</p>
+				</div>
+				<div>
+					<p>Natural Join</p>
+				</div>
+				<div>
+					<p>
+						Write <code class="lang-sql">R natural join S</code>, natural join can be done by first cross joining \(R \times S\), take the attribute in R with the <b>same name</b> as that in S, merge the two columns into one and remove any where they don't match up:
+
+						\[
+						\begin{array} {|r|r|}\hline \textrm{StudentID} & \textrm{Name} \\ \hline 1 & Bob \\ \hline 2 & Alice \\ \hline 3 & Brian \\ \hline  \end{array}
+						\textrm{ natural join }
+						\begin{array} {|r|r|}\hline \textrm{StudentID} & \textrm{CourseID} \\ \hline 1 & 1 \\ \hline 1 & 2 \\ \hline 2 & 2  \\ \hline 3 & 1 \\ \hline 3 & 2 \\ \hline  \end{array} 					
+
+						\]
+						\[= \begin{array} {|r|r|}\hline \textrm{StudentID} & \textrm{Name} & \textrm{CourseID} \\ \hline 1 & Bob & 1 \\ \hline 1 & Bob & 2 \\ \hline 2 & Alice & 2 \\ \hline 3 & Brian & 1 \\ \hline 3 & Brian & 2 \\ \hline  \end{array}\]
+					</p>
+				</div>
+
+				<div>
+					<p>(Regular) Join</p>
+				</div>
+				<div>
+					<p>
+						Extension of natural join, has syntax <code class="lang-sql">R join S on &lt;cond&gt;</code> for some condition.
+					</p>
+					<p>
+						If the operator in the cond (because you'll need one) is an =, this is an <b>equi-join</b>. The default join method is an <b>inner join</b>.
+					</p>
+				</div>
+
+				<div>
+					<p>Inner join</p>
+				</div>
+				<div>
+					<p>
+						An inner join between R and S is the same as 
+						<pre><code class="lang-sql">select * from R, S where R.myID = S.theirID;</code></pre>
+						i.e. it's like a natural join, except the two columns are <b>not merged</b>. 
+					</p>
+				</div>
+
+				<div>
+					<p>Theta join</p>
+				</div>
+				<div>
+					<p>A theta join is simply <b>not an equi-join</b></p>
+				</div>
+				<div>
+					<p>Nesting joins</p>
+				</div>
+				<div>
+					<pre><code class="lang-sql">select *
+from (
+	(students S inner join studentCourses C on S.studentID = C.studentID) 
+	inner join courses D on C.courseID = D.courseID 
+);</code></pre>
+				</div>
+
+				<div>
+					<p>Outer Joins</p>
+				</div>
+				<div>
+					<p>
+						Inner joins lose info -- an inner join between students and studentCourses will discard all students <i>without</i> courses. An outer join will <b>keep</b> one side's tuples and fill in the other side's with <code class="lang-sql">null</code>.
+					</p>
+					<p>
+						<code class="lang-sql">left outer join</code> keeps the left side, <code class="lang-sql">right outer join</code> keeps the right side, and <code class="lang-sql">full outer join</code> keeps both.
+					</p>
+					<p>
+						Outer joins <b>must</b> come with a <code class="lang-sql">natural</code> or <code class="lang-sql">on</code> clause.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-5">Query Nesting</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Subqueries</p>
+				</div>
+				<div>
+					<p>
+						Subqueries are queries within queries - you can select from the result of a select, basically. Internal queries can also be aliased for convenience.
+					</p>
+					<pre><code class="lang-sql">select tea
+from likes, (
+	select drinker from frequents where tearoom = 'Joe"s Tea Room'
+) JD 
+where likes.drinker = JD.drinker</code></pre>
+				</div>
+
+				<div>
+					<p>Scalar Subqueries</p>
+				</div>
+				<div>
+					<p>
+						If a query produces a 1x1 table -- i.e a single value, it is <b>scalar</b>. Scalar subqueries can be used in calculations and where conditions.
+					</p>
+				</div>
+
+				<div>
+					<p>In</p>
+				</div>
+				<div>
+					<p>
+						The keyword <code class="lang-sql">in</code> asks if <code class="lang-sql">&lt;tuple&gt; in &lt;relation&gt;</code>. <code class="lang-sql">not in</code> is the opposite keyword. Used in where clauses.
+					</p>
+					<pre><code class="lang-sql">select A1, A2 from testTable where A1 in (select A2 from testTable);</code></pre>
+				</div>
+
+				<div>
+					<p>Set comparisons</p>
+				</div>
+				<div>
+					<p>
+						<code class="lang-sql">in</code> is essentially \(\in\) in set algebra. What if we want something like \(x &lt; (\forall y \in Y)\)? Well we have the all, any, and some operators:
+						<pre><code class="lang-sql">select ... from ... where &lt;attr&gt; &lt;operation&gt; all/any/some &lt;subquery&gt;</code></pre>
+						Where the operation is a standard comparator operation. <code class="lang-sql">ALL</code> matches \(\forall\) and <code class="lang-sql">ANY, SOME</code> both match \(\exists\).
+					</p>
+					<pre><code class="lang-sql">SELECT ProductName FROM Products
+WHERE ProductID = ANY
+	(SELECT ProductID FROM OrderDetails
+	WHERE Quantity = 10); </code></pre>
+				</div>
+			</div>
+
+			<h3 id="sql-6">Correlated Subqueries</h3>
+
+			<div class="cornell">
+				<div></div>
+				<div>
+					<p>
+						Subqueries which need to refer to values of the outer query - often subquery is run per tuple of main query.
+					</p>
+				</div>
+				<div>
+					<p>Exists</p>
+				</div>
+				<div>
+					<p>
+						We can <b>emptiness test</b> with <code class="lang-sql">select attr from tableName where EXISTS ( &lt;subq&gt; );</code>. Inner queries can use table aliases from outer queries, such as 
+					</p>
+					<pre><code class="lang-sql">select courseID, courseName from courses C
+where exists (
+	select * from studentCourses D where C.courseID = D.courseID
+);</code></pre>
+					<p>
+						Inner queries which use outer query tuples are <b>correlated</b>. Nested query evaluated <b>once per row</b> of outer, and thus can use the scope of outer. 
+					</p>
+					<p>
+						<code class="lang-sql">not exists</code> obviously exists (ironically enough).
+					</p>
+				</div>
+
+				<div>
+					<p>Correlated versus not</p>
+				</div>
+				<div>
+					<p>
+						If a subquery is independent from the outer one, the subquery is evaluated first. Otherwise it does the row thing.
+					</p>
+				</div>
+
+				<div>
+					<p>Inserting with queries</p>
+				</div>
+				<div>
+					<p>
+						Guess what, you can insert nested queries too.
+					</p>
+					<pre><code class="lang-sql">insert into backup (copy1, copy2)
+select E.source1, E.source2 
+from example E
+where source1 > 2;</code></pre>
+				</div>
+
+				<div>
+					<p>Set operations</p>
+				</div>
+				<div>
+					<p>
+						Relations are sets <span class="grey">(bags)</span> and of course we can do set operations, with keywords <code class="lang-sql">union, intersect, except</code> being \(\cup, \cap, \setminus\) respectively.
+					</p>
+					<p>
+						The sets must be comparable, however, for it to work. You cant have tables with different columns.
+					</p>
+					<pre><code class="lang-sql">(select * from likes)
+	intersect 
+(select drinker, tea from sells join frequents on (tearoom))</code></pre>
+				</div>
+
+				<div>
+					<p>Bags vs sets</p>
+				</div>
+				<div>
+					<p>
+						Yeah so you saw the grey "Bags" earlier? Well SQL "sets" aren't actually sets, they're "bags", or "multisets", or whatever word mathematicians make up to avoid saying <b>sets but with duplicate items</b>.
+					</p>
+					<p>
+						<code class="lang-sql">select distinct</code> rids us of the duplicates, and the set operations will too, but say you <i>do</i> have two tables with duplicates, and <i>don't</i> want to remove them when unioning. Well that's where <code class="lang-sql">all</code> comes in: <code class="lang-sql">union all</code> will put all the columns together <b>without removing duplicates</b>.
+					</p>
+
+					<p>
+						You also have <code class="lang-sql">intersect all</code> and <code class="lang-sql">except all</code>, but it starts to act a bit funny here.
+					</p>
+
+					<p>
+						Say we have the code <code class="lang-sql">(select person from A) except all (select person from B)</code>, the first one has <code>joe, bob, joe, tim, fred</code> and the second has <code>fred fred tim tim joe</code>, as a result you'd get <code>joe, bob</code>. Since there's <b>two</b> Joes in the first one, and only <b>one</b> Joe <span class="grey">(Who's Joe?)</span> in the second one, \(2-1=1\) one Joe left over.
+					</p>
+					<p>
+						It's a similar case with <code class="lang-sql">intersect all</code> where they match and discard left overs.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="sql-7">Aggregation and Grouping</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Aggregation</p>
+				</div>
+				<div>
+					<p>
+						Many queries involve computing aggregates, using <code class="lang-sql">sum(), avg(), count(), min(), max(), percentile()</code>. These keywords apply to columns.
+					</p>
+					<p>
+						<code class="lang-sql">count()</code> is special since it can take <code class="lang-sql">count(*)</code> which means count all rows, and is also extended to <code class="lang-sql">count(distinct ...)</code> which should be self explanatory.
+					</p>
+					<p>
+						The rest of these <b>need an attribute</b>.
+					</p>
+
+					<pre><code class="lang-sql">select avg(price) from sells where tea = 'Earl Grey';</code></pre>
+
+					<pre><code class="lang-sql">select studentID from studentCourseMarks
+where courseID = 2 and mark > (
+	select avg(mark) from studentCourseMarks where courseID = 2
+);</code></pre>
+				</div>
+
+				<div>
+					<p>Behaviour with nulls</p>
+				</div>
+				<div>
+					<p>
+						Nulls <b>never</b> contribute to a sum, average, and count, and can <b>never</b> be a max or a min.
+					</p>
+					<p>
+						If the whole column is null, <code class="lang-sql">count()</code> is 0, and <i>then</i> <code class="lang-sql">min(), max(), sum()</code> etc become null.
+					</p>
+				</div>
+
+				<div>
+					<p>Group by</p>
+				</div>
+				<div>
+					<p>
+						Follows a select-from-where, results are grouped according to the values for the specified attribute, and (it must be present) aggregates are <b>applied per group</b>.
+					</p>
+
+					<pre><code class="lang-sql">select courseID, count(*) as students
+from studentCourses group by courseID;</code></pre>
+
+					<pre><code class="lang-sql">select tea, avg(price) from sells group by tea;</code></pre>
+				</div>
+
+				<div>
+					<p>Limitations</p>
+				</div>
+				<div>
+					<p>
+						If an aggregate is used, <b>each</b> elem <b>must</b> be aggregated or grouped by. 
+					</p>
+
+					<pre><code class="lang-sql">-- selecting earl grey at cheapest price
+select teaRoom from sells
+where (tea, price) = (
+	select tea, min(price) from sells 
+	where tea = 'Earl Grey'
+	group by tea
+);</code></pre>
+				</div>
+
+				<div>
+					<p>Having</p>
+				</div>
+				<div>
+					<p>
+						A having condition is a condition on the grouped by rows, all rows must pass said condition to be shown.
+					</p>
+					<pre><code class="lang-sql">-- selecting courses with &gt; 2 students
+select sc.courseID, courseName, count(*) as students
+from studentCourses sc, courses 
+where sc.courseID = courses.courseID
+group by sc.courseID, courseName
+having count(*) > 2;</code></pre>
+
+					<p>
+						<code class="lang-sql">having</code> may refer to any tuple variable in <code class="lang-sql">from</code>, and may refer to an attribute, as long as that attribute makes sense (i.e. the attribute being grouped)
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="algebra">Relational Algebra</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#alg-1">Overview</a></li>
+				<li><a href="#alg-2">Operators (Detailed)</a></li>
+				<li><a href="#alg-3">Additional Operators</a></li>
+			</ol>
+
+			<p>
+				SQL is based on relational algebra (RA): a formal mathematical model operating over relations, tuples, and attributes.
+			</p>
+			<p>
+				Note that whilst SQL is declarative, RA is <b>procedural</b>, one line at a time.
+			</p>
+			<p>
+				Since operators are formally defined, their properties are key to <b>optimising</b> execution on the back end.
+			</p>
+
+			<h3 id="alg-1">Overview</h3>
+
+			<p>
+				The operators are (the /1 and /2 are to show unary and binary operators)
+			</p>
+			<ul>
+				<li>
+					<b>Projection</b>/1: \(\pi_a(X)\) defines the attributes \(a\) of interest of X (like select from)
+				</li>
+				<li>
+					<b>Selection</b>/1: \(\sigma_c(X)\) defines tuples of interest with w/r/t constraint \(c\) (like where)
+				</li>
+				<li>
+					<b>Product</b>/2: \(X \times Y\) cartesian product 
+				</li>
+				<li>
+					<b>Join</b>/2: \(X \bowtie Y\) joins on attributes or criteria (\(\bowtie_c\))
+				</li>
+				<li>
+					<b>Set operators</b>: \(X \cup Y、X \cap Y、\overline{X} \).
+				</li>
+				<li>
+					<b>Rename</b>/1: \(\rho(X)\) can rename the table (\(\rho_S(X)\)), rename attributes (\(\rho_{a_1 \dots a_n}(X)\)), or both (\(\rho_{S(a_1 \dots a_n)}(X)\)).
+				</li>
+			</ul>
+			
+			<div class="side">
+				<p>
+					<b><i>Example.</i></b> For every project in stafford, list the project number, controlling department number, department manager's last name, address, and birthdate:
+				</p>
+				<button class="collapsible">SQL...</button>
+				<div class="ccontent">
+					<pre><code class="lang-sql">select Pnumber, Dnum, Lname, Address, Bdate
+from (
+	(
+		(
+			select * from PROJECT
+			where Plocation = 'Stafford'
+		) join DEPARTMENT on Dnum = Dnumber
+	) join EMPLOYEE on Mgr_ssn = Ssn
+);</code></pre>
+				</div>
+				<p>
+					In relational algebra, this is 
+					\[\pi((\sigma(P) \bowtie D) \bowtie E)\]
+					Or unabbreviated,
+					\[\pi_{\textrm{P.Pnumber, P.Dnum, E.Lname, E.Address, E.Bdate}}((\sigma_{\textrm{P.Location = 'Stafford'}}(P) \bowtie_{\textrm{P.Dnum=D.Dnumber}} D) \bowtie_{\textrm{D.Mgr_ssn = E.Ssn}} E)\]
+				</p>
+			</div>
+
+			<h3 id="alg-2">Operators (Detailed)</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Selection</p>
+				</div>
+				<div>
+					<p>
+						\[\sigma_{\textrm{condition}}(R)\]
+						The condition consists of &lt;attrname&gt; &lt;comparator&gt; &lt;constant/other attr name&gt;. 
+					</p>
+					<p>
+						This is applied independently to each tuple. 
+					</p>
+					<p>
+						Select is commutative: \(\sigma_a(\sigma_b(R)) = \sigma_b(\sigma_a(R))\), and chaining them is just the same as using <b>logical and</b>: \(\sigma_a(\sigma_b(R) = \sigma_{a \land b}(R)\).
+					</p>
+				</div>
+				<div>
+					<p>Projection</p>
+				</div>
+				<div>
+					<p>
+						\[\pi_{\textrm{attr list}(R)\]
+						Attribute list are the desired attributes (columns) of relation.
+					</p>
+					<p>
+						If there are no keys in this list, in SQL you may get duplicates, but in RA <b>duplicates are illegal</b> since we're using set maths.
+					</p>
+					<p>
+						If \(l_1 \supset l_2\) then \(\pi_{l_1}(\pi{l_2}(R))\) is illegal since you're projecting nonexistent columns.
+					</p>
+				</div>
+				<div>
+					<p>Renaming</p>
+				</div>
+				<div>
+					<ul>
+						<li>\(\rho_S(R)\) renames relation R to S</li>
+						<li>\(\rho_{(b_1 \dots b_n)} (R)\) renames attributes of R (\(b_i\) renames attribute \(a_i\))</li>
+						<li>\(\rho_{S(b_1 \dots b_n)} (R)\) does both!</li>
+					</ul>
+				</div>
+				<div>
+					<p>Expression order</p>
+				</div>
+				<div>
+					<p>
+						We've seen <b>single expressions</b>: \(\pi_{\textrm{Fname, Lname, Salary}}(\sigma_{Dno = 5}(\textrm{EMPLOYEE}))\)
+					</p>
+					<p>
+						We can also chain expressions:
+						\begin{align}
+							& \textrm{DEPS_EMPS} \longleftarrow \sigma_{Dno = 5}(\textrm{EMPLOYEE}) \\
+							& \textrm{RESULT} \longleftarrow \pi_{\textrm{Fname, Lname, Salary}}(\textrm{DEPS_EMPS})
+						\end{align}
+					</p>
+				</div>
+				<div>
+					<p>Set operations</p>
+				</div>
+				<div>
+					<p class="blue">
+						Two relations \(R(a_1 \dots a_m)\) and \(S(b_1 \dots b_m)\) are <b>type compatible</b> if \(m = n\) and \(dom(a_i) = dom(b_i) \; \forall i \in [1..n] \).
+					</p>
+				</div>
+				<div>
+					<p>Cross join</p>
+				</div>
+				<div>
+					<p>
+						Cartesian product of sets.
+					</p>
+				</div>
+				<div>
+					<p>Join</p>
+				</div>
+				<div>
+					<p>
+						Instead of cross join and select, we can join on a condition \(R \bowtie_{\textrm{cond}} S\).
+					</p>
+					<p>
+						An <b>equijoin</b> is a join where the condition has an =
+					</p>
+				</div>
+				<div>
+					<p>Natural Join</p>
+				</div>
+				<div>
+					<p>
+						An extension of join is natural join, represented by the star \(R \ast S\).
+					</p>
+				</div>
+				<div>
+					<p>Completeness</p>
+				</div>
+				<div>
+					<p>
+						Not all of these operators are needed to do everything, in fact the minimal complete set of operators is \(\{\sigma, \pi, \rho, \cup, -, \times\} \) (minus is set minus).
+					</p>
+				</div>
+
+				<div>
+					<p>Division</p>
+				</div>
+				<div>
+					<p>
+						If we have \(R \longleftarrow S \times T\), then we must have \(R \div S = T\)... right? 
+					</p>
+					<p>
+						Yeah, but it's a bit weird. Suppose S is students, T is topics, and R is something like "researches". Then \(S \times T\) will pair each student with all topics, or each topic with all students. \(R \div S\) "extracts" those topics out that all students research.
+					</p>
+					<p>
+						\(R \div S\) "extracts" those topics out that <b>all</b> students research. Even if we add more rows onto R to make \(R'\), then \(R' \div S\) would still <b>only</b> extract topics that <b>all</b> students research.
+					</p>
+					<p class="blue">
+						We define this as <b>universal quantification</b>, and T is the universal quantifier of all values of S.
+					</p>
+					<p>
+						Let \(R(Z)\) be the <b>fat relation</b> and \(S(X)\) be the <b>skinny relation</b>, such that \(X \subseteq Z\).
+					</p>
+					<p>
+						\(R(Z) \div S(X)\) is a relation \(T(Y):\) tuple \(t \in T(Y)\) <b>iff</b> \(\forall t_S \in S \exists t_R \in R :\)
+						<ul>
+							<li>\(t_R[Y] = t\) (t comes from R but only contains attributes Y)</li>
+							<li>\(t_R[X] = t_S\) (t must be present with all combinations of tuples from S <i>as a tuple in R</i></li>
+						</ul>
+					</p>
+					<p>
+						Alternatively, we can define \(T \longleftarrow R \div S\) as 
+						\begin{align}
+							T_1 &\longleftarrow \pi_Y(R) \\
+							T_2 &\longleftarrow \pi_Y((S \times T_1) - R) \\
+							T & \longleftarrow T_1 - T_2.
+						\end{align}
+					</p>
+				</div>
+			</div>
+
+			<h3 id="alg-3">Additional Operators</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Generalised Projection</p>
+				</div>
+				<div>
+					<p>
+						\(\pi_{F_1 \dots F_n} (R)\) where \(F_1 \dots F_n\) are <b>functions</b> on R: can do maths, constants, etc. 
+					</p>
+				</div>
+				<div>
+					<p>Aggregate Functions</p>
+				</div>
+				<div>
+					<p>
+						\(_{\textrm{grouping attrs}} \mathfrak{I} _\textrm{function list} (R)\): The notation is fraktur I.
+					</p>
+					<p>
+						Where the grouping attributes are attributes in R to <code class="lang-sql">group by</code>, and the function list is a list of (function, attribute) pairs, the functions are usually <code class="lang-sql">sum(), avg(), max(), min(), count()</code> etc.
+					</p>
+					<p>
+						\[ _\textrm{Dno} \mathfrak{I} _\textrm{COUNT Ssn, AVERGAGE Salary} (\textrm{EMPLOYEE}) \]
+					</p>
+				</div>
+				<div>
+					<p>Outer joins</p>
+				</div>
+				<div>
+					<p>
+						Join bowties with what looks like equals coming out of one (or both) sides: left ⟕ right ⟖. (These are unavailable in base mathjax)
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="calculus">Relational Calculus</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#calc-1">Relational Calculus</a></li>
+				<li><a href="#calc-2">Domain Relational Calculus</a></li>
+			</ol>
+
+			<p>
+				As if one formal system wasn't enough, here's another.
+			</p>
+			<p class="small">yay...</p>
+
+			<h3 id="calc-1">Relational Calculus</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Predicates and Propositions</p>
+				</div>
+				<div>
+					<p>
+						Relational Calculus is based on <b>predicates</b> and <b>propositions</b>.
+					</p>
+					<p>
+						A <b>predicate</b> is a declarative sentence: a statement. Predicates must be <b>verifiably</b> true or false. They specifiy retrieval requests, but only what to retrieve, not how.
+					</p>
+					<p>
+						True or false statements depend on presence within the database. 
+					</p>
+				</div>
+				<div>
+					<p>Variables in Predicates</p>
+				</div>
+				<div>
+					<p>
+						We can have a predicate with variables: "Person \(p\) plays intrument \(i\).", and these variables can be replaced: "Person <i>Megan</i> plays intrument \(i\)."
+					</p>
+
+					<p class="blue">
+						A predicate is <b>instantiated</b> when all parameters are filled, this becomes a <b>proposition</b>
+					</p>
+					<p>
+						"Person <i>Megan</i> plays instrument <i>cello</i>." is now a <b>proposition</b>.
+					</p>
+				</div>
+				<div>
+					<p>Intension and Extension</p>
+				</div>
+				<div>
+					<p class="blue">
+						The <b>intension</b> of a predicate is the predicate's "meaning": the properties and quantities associated with a statement. 
+					</p>
+					<p class="blue">
+						The <b>extension</b> of a predicate is the set of all instantiations where the predicate is <b>true</b>.
+					</p>
+				</div>
+				<div>
+					<p>Operations</p>
+				</div>
+				<div>
+					<p>
+						Propositions can be composed with others with logical and first order operators \(\land, \lor, \lnot, \forall, \exists\).
+					</p>
+				</div>
+				<div>
+					<p>Sets</p>
+				</div>
+				<div>
+					<p class="blue">
+						Let \(P(x)\) be a predicate. If \(a\) is an instance of \(x\), and \(P(a) = \top\), \(a\) <b>satisfies</b> \(P\). <br><br>
+						\(P(x)\) is the <b>membership predicate</b> for the set of all satisfactory objects \(a\).
+					</p>
+					<p>
+						Suppose \(P(y) = y \in \mathbb{Z} \land 5 &lt; y &lt; 10\). The Set related is \(\{6,7,8,9\} \).
+					</p>
+					<p>
+						These sets can also be composed with set operators.
+					</p>
+				</div>
+				
+				<div>
+					<p>Relational Calculus -> Relational Model</p>
+				</div>
+				<div>
+					<p>
+						A predicate can be thought of as a <b>schema</b>. The predicate defines what's true, whilst the schema defines attributes and domains for valid data.
+					</p>
+					<p>
+						A proposition can be thought of as a <b>tuple</b>. Propositions are set values substituted into parameters of a predicate; if they are satisfactory, they are valid in the schema.
+					</p>
+					<p>
+						The extension is the set of all valid states of the schema (the set of all predicate instantiations)
+					</p>
+					<p>
+						We work with a <b>closed world assumption</b>: a tuple is true <b>if and only if</b> it is in the database. 
+					</p>
+				</div>
+
+				<div>
+					<p>Queries</p>
+				</div>
+				<div>
+					<p>
+						RC can be used to express queries <b>declaratively</b>, and there are two types:
+					</p>
+					<p>
+						<b>Tuple Relational Calculus (TRC)</b> and <b>Domain Relational Calculus (DRC)</b>.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="calc-11">Tuple Relational Calculus</h3>
+
+			<div class="cornell">
+				<div>
+					<p>TRC</p>
+				</div>
+				<div>
+					<p>
+						Statements in RC are declarative.
+					</p>
+					<p>
+						To define queries, we need to define 3 more things:
+					</p>
+					<ul>
+						<li>The <b>range relation</b>, over which all tuples operate</li>
+						<li>The <b>condition</b> used to select tuples (aka formulas)</li>
+						<li>The desired <b>attributes</b> to be retrieved</li>
+					</ul>
+				</div>
+				<div>
+					<p>DB Queries</p>
+				</div>
+				<div>
+					<p>
+						A standard TRC query looks like
+						\[\{t_1\cdot A_1, t_2 \cdot A_2, \dots, t_n \cdot A_n | \textrm{cond}(t_1 \dots t_n)\}\]
+						Where cond is a true/false formula, \(t_1 \dots t_n\) are free variables.
+					</p>
+					<p>
+						The tuple variables range over all possible tuples, so must specify explicitly which relation they come from. 
+					</p>
+					<p>
+						An <b>atomic formula</b> is of form 
+						<ul>
+							<li>\(R(t_i)\) where R is a relation and \(t_i\) is a tuple variable.</li>
+							<li>\(t_i \cdot A \circ t_j \cdot B\) where \(\circ\) is \(=, &lt;, \leq, \geq, &gt;, \neq\)</li>
+							<li>\(t_i \cdot A \circ c\) (or inverse) where \(c\) is a constant</li>
+						</ul>
+					</p>
+					<p>
+						<b>Compound Formulas</b> are of form 
+						\begin{matrix}
+							&\lnot F, &F_1 \lor F_2, &F_1 \land F_2, &(\forall t)F, &(\exists t)F
+						\end{matrix}
+					</p>
+				</div>
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p>Because the formal definition is kinda confusing.</p>
+					<button class="collapsible active">Employees...</button>
+					<div class="ccontent" style="display: block;">
+						<p>
+							<b><i>Example.</i></b> Names of employees who earn more than $50k annually.
+							\[\{t.Fname, t.Lname | EMPLOYEE(t) \land t.salary > 50000\} \]
+						</p>
+					</div>
+					<button class="collapsible">Employees (II)...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Now we want the employees' full names and their supervisors.
+							\[\{t.Fname, t.Lname, s.Fname, s.Lname | EMPLOYEE(t) \land EMPLOYEE(s) \land t.Superssn = s.Ssn\} \]
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Quantification binds variables</p>
+				</div>
+				<div>
+					<p>
+						We can bind variables with first order logic quantifiers:
+
+						\[(\forall t)((\exists u)(PROJECT(v) \lor EMPLOYEE(t) \lor v.Ssn = u.Ssn))\]
+					</p>
+
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> List names and addresses of all employees who work for research.
+
+							\begin{align}
+								\{t.Fname, &t.Lname, t.Address | \\
+								&EMPLOYEE(t) \land \\
+								 &(\exists d)(DEPARTMENT(d) \land d.Dname = 「Research」 \land d.Dnumber = t.Dno) \\
+							\}
+							\end{align}
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Universal Quantification</p>
+				</div>
+				<div>
+					<p>
+						Note that implies doesn't exist, so \(a \implies b\) must become \(\lnot a \lor b\).
+					</p>
+
+					<button class="collapsible active">Example... </button>
+					<div class="ccontent" style="display: block;">
+						<p>
+							<b><i>Example.</i></b> We want names of all employees who work on a project controlled by department 5.
+						</p>
+						<p>
+							Start with \(\{e.Fname, e.Lname | EMPLOYEE(e) \land F(e)\} \) for some F. 
+						</p>
+						<p>
+							Where F \(\implies\) "\(e\) works on all projects controlled by dept 5" <br>
+							\(\implies\) "all projects in dept 5, and involves \(e\)" <br>
+							\(\implies (\forall p)(PROJECT(p) \implies \dots)\), whcih we can't do since imply doesn't exist <br>
+							\(\therefore (\forall p)(\lnot PROJECT(p) \lor (\lnot (p.Dnum = 5) \lor \dots))\) 
+						</p>
+						<p>
+							The second round of dots wants "e works on p",
+							\[(\exists w)(WORKS\_ON(w) \land w.Essn = e.Ssn \land w.Pno = p.Pnumber)\]
+							Thus finally getting
+						</p>
+						<div class="codediv">{\(e.Lname, e.Fname | EMPLOYEE(e) \land\)(
+	\((\forall p) (\lnot PROJECT(p) \lor \lnot (p.Pnum = 5) \lor\)(
+		\((\exists w) (WORKS\_ON(w) \land w.Essn = e.Ssn \land w.Pno = p.Pnumber)\)
+	)
+)}</div>
+					</div>
+				</div>
+
+				<div>
+					<p>Safety first</p>
+				</div>
+				<div>
+					<p class="blue">
+						An RC expression is <b>safe</b> if it is guaranteed to return a <b>finite</b> number of tuples.
+					</p>
+					<p>
+						Achieved when everything is explicitly mentioned. An unsafe expression would be like \(\{t | \lnot EMPLOYEE(t) \} \). Safe expressions are reducible to RA.
+					</p>
+				</div>
+			</div>
+
+			<h3 id="calc-2">Domain Relational Calculus</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Introduction</p>
+				</div>
+				<div>
+					<p>
+						Whereas in TRC vars range over tuples, in DRC <del>we have political instability</del> vars range over attribute domains. Again it's similar notation, like
+						\[\{x_1 \dots x_n | \textrm{cond}(x_1 \dots x_n)\}\]
+					</p>
+				</div>
+				<div>
+					<p>Attributes</p>
+				</div>
+				<div>
+					<p>
+						<b>Atomic formulas</b> are like 
+						<ul>
+							<li>\(R(x_1, x_2 \dots x_k)\) is a relation over \(k\) attributes </li>
+							<li>\(x_i \circ x_j\) where \(\circ\) is an operator</li>
+							<li>\(x_i \circ c\) or vice-versa</li>
+						</ul>
+						
+					</p>
+				</div>
+				<div>
+					<p>Examples</p>
+				</div>
+				<div>
+					<p></p>
+					<button class="collapsible active">Example... </button>
+					<div class="ccontent" style="display: block;">
+						<p>
+							<b><i>Example.</i></b> List birthdate and address of employee whose name is John Smith.
+							\begin{align}
+								\{u, v &| (\exists q)(\exists r)(\exists t)(\exists w)(\exists x)(\exists y)(\exists z)( \\
+									&EMPLOYEE(qrstuvwxyz) \land q = 「John」 \land r = 「B」 \land s = 「smith」 \\
+								)\}
+							\end{align}
+						</p>
+					</div>
+					<p>
+						Now look at those ugly unnecessary quantifiers. For ease we say they're <b>implicitly mentioned</b>
+					</p>
+				</div>
+
+				<div>
+					<p>Codel's Theorem</p>
+				</div>
+				<div>
+					<p class="side">
+						<b><i>Theorem.</i></b> Relational algebra and relational calculus are equally expressive languages.
+						<br><br>
+						Languages that are equal in expressive power to relational algebra are <b>relationally complete</b>.
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="design">Database Design, Normalisation and Security</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+			
+			<ol>
+				<li><a href="#des-1">Relational DB Design</a></li>
+				<li><a href="#des-2">Normalisation</a></li>
+				<li><a href="#des-3">Security</a></li>
+			</ol>
+
+			<h3 id="des-1">Relational DB Design</h3>
+
+			<div class="cornell">
+				<div>
+					<p>DB Design</p>
+				</div>
+				<div>
+					<p>
+						We want to develop good database model so we don't end up storing unmaintainable garbage. 
+					</p>
+				</div>
+				<div>
+					<p>(1) being easy to understand</p>
+				</div>
+				<div>
+					<p>
+						Each row for one entitiy, and to only refer to different entities via foreign keys. 
+					</p>
+				</div>
+				<div>
+					<p>(2) Not redundant</p>
+				</div>
+				<div>
+					<ol>
+						<li><b>Storage cost</b>: storing the same thing twice is unnecessary,</li>
+						<li><b>Consistency Cost</b>: dealing with anomalies (from deleting or updating data),</li>
+						<li>Updating redundant data makes more effort.</li>
+					</ol>
+				</div>
+
+				<div>
+					<p>Anomalies</p>
+				</div>
+				<div>
+					<p>
+						Anomalies are when the things in the database don't line up. 
+					</p>
+					<p>
+						<b>Update Anomalies</b> happen on updates. If we change "Computing" to "Computer science", but "Computing" is multipully redundantly stored, 
+						then you might get some as "Computing" and some as "Computer Science". 
+					</p>
+					<p>
+						<b>Insert anomaly</b> suppose students and courses are on the same table. We can't insert a course without a student being on it. 
+					</p>
+					<p>
+						<b>Delete Anomaly</b> if a course is deleted, we could lose all students on said course. Again, bad. 
+					</p>
+					<p>
+						i.e. we want to design DBs such that <b>no anomalies present</b> (whether through triggers, good tables, etc)
+					</p>
+				</div>
+
+				<div>
+					<p>(3) No Nulls</p>
+				</div>
+				<div>
+					<p>
+						Nulls are unhelpful. They waste space <i>and</i> make operations complicated. Could occasionally be useful though. 
+					</p>
+					<p>
+						If there are a lot of nulls, why not move it into a different table?
+					</p>
+				</div>
+	
+				<div>
+					<p>Decomposition</p>
+				</div>
+				<div>
+					<p>
+						Decomposing a DB into smaller tables is generally helpful (to remove <b>spurious tuples</b>)- but must rejoin without information loss. <b>Must</b> use keys. 
+					</p>
+				</div>
+			</div>
+			
+
+			<h3 id="des-2">Normalisation</h3>
+
+			<div class="cornell">
+				<div>
+					<p>Functional Dependencies</p>
+				</div>
+				<div>
+					<p><a href="#rel-2">See the definition in Constraints</a>. FDs are key to make database good. </p>
+				</div>
+				<div>
+					<p>Normalisation theory</p>
+				</div>
+				<div>
+					<p>
+						Want to structure a database so it is understandable and logical to retrieve data, and avoid anomalies. Thus we have <b>levels</b> of normalisation ("normal forms"), higher the better. 
+					</p>
+				</div>
+				<div>
+					<p>Universal relation</p>
+				</div>
+				<div>
+					<p>
+						Start with a <b>universal relation</b>: one with <b>all</b> attributes. Progressively reduce redundancy to normalise.  
+					</p>
+					<p>
+						When we split the tables, we need to be able to rejoin them with <b>lossless/non additive joins</b>, and preserving the dependencies. 
+					</p>
+				</div>
+				<div>
+					<p>Normal Forms</p>
+				</div>
+				<div>
+					<p>
+						In terms of normal forms, we have 4 "layers": 1st normal form (1NF), 2NF, 3NF, and "Boyce-Codd Normal form" BCNF. 
+					</p>
+					<p>
+						Of course 4NF, 5NF, etc exist but usually 3NF or BCNF suffices. If a schema is 3NF, it is also 2NF and 1NF: cascade.
+					</p>
+				</div>
+
+				<div>
+					<p>Decomposing</p>
+				</div>
+				<div>
+					<p>
+						Not all decompositions are good: seek those that remove spurious tuples. 
+					</p>
+					<p>
+						Also make sure that no extra spurious tuples are created when rejoining, and if possible, preserve all dependencies (but this may not be the case, and is not always perfectly necessary).
+					</p>
+				</div>
+
+				<div>
+					<p>Lossless Join Decomposition LJD</p>
+				</div>
+				<div>
+					<p>
+						Given a schema \(R\), and a set \(F\) of FDs of R, \(\{R_1 \dots R_k\}\) is the LJD of R if <b>for every legal instance</b> of \(R\),
+						\[\pi_{R_1} (R) \bowtie \pi_{R_2} (R) \bowtie \cdots \pi_{R_k} (R) = R.\]
+					</p>
+					
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> This is an invalid decomposition:
+							\[ 
+							\begin{array} {} A & B & C  \\ \hline 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 2 & 8 \end{array} 
+							\longrightarrow
+							R_1: \begin{array}{} A & B \\ \hline 1 & 2 \\ 4 & 5 \\ 7 & 2 \end{array} ,\;\; 
+							R_2: \begin{array}{} B & C \\ \hline 2 & 3 \\ 5 & 6 \\ 2 & 8 \end{array} 
+							\]
+							because
+							\[
+							R_1 \bowtie R_2 = \begin{array}{} A & B & C  \\ \hline 1 & 2 & 3 \\ 1 & 2 & 8 \\ 4 & 5 & 6 \\ 7 & 2 & 3 \\ 7 & 2 & 8 \end{array} 
+							\]
+							of which lines 2 and 4 are <b>spurious</b>.
+						</p>
+					</div>
+				</div>
+				<div>
+					<p>Implied FDs</p>
+				</div>
+				<div>
+					<p class="blue">
+						Given R, the <b>closure (cover)</b> \(F^+\) of a set of FDs \(F\) is the set of all implied FDs from \(F\).
+					</p>
+					<p>
+						Implief FDs can be derived using the following properties: (<b>Armstrong Inference Rules</b>)
+					</p>
+					<ol>
+						<li><b>Reflexive</b>: If \(Y \subseteq X\), then \(X \implies Y\) (trivial FD)</li>
+						<li><b>Augmentation</b>: if \(X \implies Y\), then \(XZ \implies YZ\) (where \(XZ = X \cup Z\))</li>
+						<li><b>Transitive</b>: IF \(X \implies Y\) and \(Y \implies Z\), then \(X \implies Z\)</li>
+					</ol>
+				</div>
+				<div>
+					<p>Additional Rules</p>
+				</div>
+				<div>
+					<ol>
+						<li><b>Decomposition</b>: If \(X \implies YZ\) then \(X \implies Y\) and \(X \implies Z\)</li>
+						<li><b>union</b>: If \(X \implies Y\) and \(X \implies Z\) then \(X \implies YZ\)</li>
+						<li><b>Pseudotransitivity</b>: If \(X \implies Y\) and \(WY \implies Z\), then \(WX \implies Z\)</li>
+					</ol>
+				</div>
+				<div>
+					<p>Test for non-additive joins</p>
+				</div>
+				<div>
+					<p class="side">
+						Given a relation R and a set of FDs F, \(R_1, R_2\) is a <B>lossless decomposition</B> of R in F <i>if and only if</i>
+						\begin{align}
+							&R_1 \cap R_2 \implies (R_1 - R_2) \\
+							\textrm{or }&R_1 \cap R_2 \implies (R_2 - R_1)
+						\end{align}
+						exists in \(F^+\)
+					</p>
+					<button class="collapsible">Example... </button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Take the tables from the previous example:
+							\[ 
+							\begin{array} {} A & B & C  \\ \hline 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 2 & 8 \end{array} 
+							\longrightarrow
+							R_1: \begin{array}{} A & B \\ \hline 1 & 2 \\ 4 & 5 \\ 7 & 2 \end{array} ,\;\; 
+							R_2: \begin{array}{} B & C \\ \hline 2 & 3 \\ 5 & 6 \\ 2 & 8 \end{array} 
+							\]
+							We know that 
+							\begin{align}
+								R_1 \cap R_2 &= B \\
+								R_1 - R_2 &= A \\
+								R_2 - R_1 &= C
+							\end{align}
+							Does B -> A or C? The answer is <b>no</b>, since there's two 2s in B, thus this is an <b>invalid</b> decomposition.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Dependency Preservation</p>
+				</div>
+				<div>
+					<p>
+						Take a relation R with a set of FDs, if it is decomposed into \(R_1, R_2, \dots\), we need to make sure the FDs hold for all tables (they can be observed independently without crossing tables).
+					</p>
+					<p>
+						Otherwise, if tables need to be crossed, then insertion becomes very expensive (as a join would be needed per insertion)
+					</p>
+					<button class="collapsible">Example...</button>
+					<div class="ccontent">
+						<p>
+							<b><i>Example.</i></b> Take R(city, streetNo, postcode) where {city, streetNo} -> postcode, and postcode -> city. 
+						</p>
+						<p>
+							We can decompse this into \(R_1\)(streetNo, postcode) and \(R_2\)(city, postcode).
+						</p>
+						<p>
+							To check ocnsistency, \(R_1 \cup R_2 =\) postcode, \(R_1 - R_2 = \) streetNo, and \(R_2 - R_1 = \) city. \(R_1 \cup R_2 \not \implies R_1 - R_2\), but \(R_1 \cup R_2 \implies R_2 - R_1\), so lossless join is preserved.
+						</p>
+						<p>
+							However, we cannot check the FD {city, streetNo} -> postcode, thus dependencies are not entirely preserved.
+						</p>
+					</div>
+				</div>
+
+				<div>
+					<p>Decomposition Quality</p>
+				</div>
+				<div>
+					<p>
+						The better that the two criteria are held, the better the decomposition is. If we have R(A, B, C) with A -> B and B -> C, then
+						<ul>
+							<li>\(R_1(A,B),\;R_2(B,C)\) is better, because it is both lossless and preserves dependency, whereas</li>
+							<li>\(R_1(A,B),\;R_2(A,C)\) is worse, since it does not preserve dependency.</li>
+						</ul>
+					</p>
+				</div>
+
+				<div>
+					<p>Finally, Normalisation</p>
+				</div>
+				<div>
+					<p>
+						Finally, normalisation is the process of decomposition to reduce redundancy, such that the decomposed tables are losslessly joined. If a decomposed form fits a criteria, it is considered that normal form.
+					</p>
+					<ul>
+						<li><b>1NF</b> "the key": All attributes are atomic, and there exists a key</li>
+						<li><b>2NF</b> "the whole key": None key attributes must depend on a full key / any candidate key</li>
+						<li><b>3NF</b> "nothing but the key": Non key attributes must <b>only</b> depend on the key</li>
+						<li><b>BCNF</b>: every determinant of a non trivial FD is a superkey <span class="grey">whatever that means</span></li>
+					</ul>
+				</div>
+			</div>
+
+			<h4>The process</h4>
+
+			<div class="cornell">
+				<div>
+					<p>Level 0</p>
+				</div>
+				<div>
+					<p>
+						Data is converted into a table in the dumbest way possible.
+					</p>
+				</div>
+				<div>
+					<p>Level 1 (NF)</p>
+				</div>
+				<div>
+					<ul>
+						<li>Ensure: no multi-valued attributes, no composite attributes. (ex. a <code>tags</code> field with multiple tags would not count),</li>
+						<li>and we have a key</li>
+					</ul>
+					<p>
+						We still have one wide table, with storage anomalies. Still can get key troubles.
+					</p>
+				</div>
+				<div>
+					<p>Level 2</p>
+				</div>
+				<div>
+					<p>
+						Where every non-key attribute is fully dependent on any key -- no attr depends on a proper subset of the keys, so
+					</p>
+					<p>
+						\(\forall\)key \(k\) in R, and \(\forall\)non-key attribute \(A\) in R, \(k \implies \{A\} \) must be <b>irreducible</b>.
+					</p>
+					<p>
+						This improves integrity, prevents most anomalies. 
+					</p>
+					<p class="side">
+						When we say reducible, say we have a relation where \(\{A,B\} \implies C,\; A \implies D\), since \(A \in \{A,B\}\), \(\{A, B\} \implies D\) is reducible and this is not 2NF.
+					</p>
+				</div>
+				<div>
+					<p>Level 3</p>
+				</div>
+				<div>
+					<p>
+						In 2NF and <b>no transitive functional dependency</b> from key to nonkey. 
+					</p>
+					<p>
+						That is, none of \(R(\underline{A}, B, C) : A \implies B,\; A \implies C,\; B \implies C\), because \(B \implies C\) means \(A \implies B \implies C\) which is a transitive FD.
+					</p>
+				</div>
+				<div>
+					<p>Level 3+ (BCNF)</p>
+				</div>
+				<div>
+					<p>
+						A relation is in BCNF if, whenever \(\exists X \implies A\), X is a superkey. 
+					</p>
+					<p>
+						Most 3NF are automatically BCNF, but that's not always the case: if there is a determinant that does not belong to the superkey in a non-trivial functional dependency. 
+					</p>
+					<p><i>
+						"Each attribute must represent a fact about the key, the whole key, and nothing but the key, <span class="grey">so help me Codd</span>"
+					</i></p>
+				</div>
+			</div>
+			<p>
+				The ideal goal is BCNF with lossless join and dependency preservation. If this is impossible, go for BCNF with lossless join, or just 3NF.
+			</p>
+
+			<h3 id="des-3">Security</h3>
+
+			<div class="cornell">
+				<div>
+					<p>CIA (sus)</p>
+				</div>
+				<div>
+					<p>
+						In computer security \(\exists\) CIA triangle: <b>confidentiality, integrity, availability</b>, none of which we want to lose. 
+					</p>
+					<p>
+						DB software usually comes with access and inference control to help manage this. The power rests with the "governor", the DB administrator (DBA), who get access to
+						<ul>
+							<li>Two subsystems: security and authorisation</li>
+							<li>Two security mechanisms: discretionary (granting priveleges) and mandatory (classification levels)</li>
+						</ul>
+					</p>
+					<p>
+						There is often an audit log in a DB to log changes made.
+					</p>
+				</div>
+				<div>
+					<p>Discretionary Access Control DAC</p>
+				</div>
+				<div>
+					<p>
+						To grant and revoke priveliges to part of the database, and to certain SQL functions. Can be as fine as relation-level or even tuple-level access.
+					</p>
+					<p>
+						The <b>"Access Matrix Model"</b> stores data on which accounts can access which relations or tuples. Each relation has an owner with all priveliges. We can <code class="lang-sql">create schema name authorization your_mum</code> to let your mum access the relation name.
+					</p>
+					<p>
+						Priveliges can also be given with <code class="lang-sql">grant</code> (can also be fine detail, such as granting select but not insert), removed by <code class="lang-sql">revoke</code>, and the grantee can grant others their priveliges if they have the <code class="lang-sql">grant option</code> permission.
+					</p>
+					<p>
+						Some DBs limit this propagation, either horizontally (A can grant only to X many people) or vertically (nesting grants can only go Y "generations" down).
+					</p>
+				</div>
+				<div>
+					<p>Mandatory Access Control MAC</p>
+				</div>
+				<div>
+					<p>
+						More fine-grained than the "all or nothing" of DAC. 
+					</p>
+					<p>
+						Most DBMSs have DAC only, but special corporate/military versions will have MAC, which has things like a security heirarchy:
+					</p>
+					<p class="centre">
+						(t) Top Secret &gt; (s) Secret &gt; (c) Classified &gt; (u) Unclassified
+					</p>
+					<p>
+						And each user has a "clearance" level, that is their security classification. The main principle of this is <b>no read up, no write down</b>: a user cannot read (thus write) higher than their clearance, and cannot write but can read lower than their clearance. 
+					</p>
+					<p>
+						Even different attributes inside a row can have different securities. For example we could have <code>John (u), Smith (c), 140 000 (c), Fair (s), (u)</code> (columns first name, surname, salary, standing, overall classification) where the letters in brackets denote the classification of each single attribute. 
+					</p>
+					<p>
+						Then, a user with insufficient clearance will just see NULLs. 
+					</p>
+					<p>
+						This may cause anomalies however. If a classified user wants to update John Smith's standing to "Excellent", the database must not reject that change, since to him, John Smith's standing doesn't exist, and so we would get duplicate rows.
+					</p>
+				</div>
+
+				<div>
+					<p>Role Based RBAC</p>
+				</div>
+				<div>
+					<p>
+						Another system, this one works like discord roles with a heirarchy of roles.
+					</p>
+				</div>
+				<div>
+					<p>Statistical DBs</p>
+				</div>
+				<div>
+					<p>
+						Certain DBs exist for people to query aggregate data (i.e. population of males in Upper Slaughter), but <i>not</i> to retrieve personal information from. This is obviously done through permissions.
+					</p>
+					<p>
+						Problem is, increasing specificity can lead to a bad actor extracting personal information anyway, by querying data so specific that it pinpoints to very few people. 
+					</p>
+					<p>
+						We can mitigate this in a few ways, one of which is by limiting the count, e.g. restricting such that if a query gives a result less than 30, reject the query. 
+					</p>
+					<p>
+						Another is by adding noise, which introduces <b>plausible deniability</b>. Say you have a DB of men who've had STIs, and want to hide personal data whilst still being able to track population metrics. Every time you record data, you could flip a coin, and if tails, record "had STI" as true regardless - false data as noise. 
+					</p>
+					<p>
+						This way, you could track percentages in the population (half of what the database reports) whilst still leaving people with plausible deniability that they've just been entered as a false result for noise.
+					</p>
+				</div>
+				<div>
+					<p>Flow control</p>
+				</div>
+				<div>
+					<p>
+						A <b>flow</b> from X to Y is when a program reads from X, and writes to Y. 
+					</p>
+					<p>
+						Flow control essentially prevents higher classification reads being written to lower classification tables. 
+					</p>
+				</div>
+				<div>
+					<p>SQL Injection</p>
+				</div>
+				<div>
+					<p>
+						The "never use unchecked string formatting" in writing an SQL app, because attacks can specifically word their queries to manipulate statements for data that they should have never gotten. 
+					</p>
+					<p>
+						Always sanitise inputs / use prepared statements. Don't assume data is safe. 
+					</p>
+					<p>
+						Give error messages just informative enough to tell what's wrong, but just vague enough to give no useful information: "The username or password is incorrect".
+					</p>
+				</div>
+			</div>
+
 		</div>
 
 		<footer>

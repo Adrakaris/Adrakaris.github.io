@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>CS255</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+		<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+		<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+		<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+		<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="./index.html" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS255 Abridged</h1>
+                    <p class="subheading">Artificial Intelligence</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Introduction</h1>
+			</div>
+		</header>
+
+		<!-- <div class="buttonwrapper beside" >
+			<a href="./index-zh.html">简体中文</a>
+		</div> -->
+		<!-- REMEMBER TO DO! -->
+
+		<div class="cbox">
+			<p>
+				AI is a massive module, filled with a lot of important things and redundant fluff. My aim here is to rewrite my notes for the module to remove all of the fluff, which not only makes the task easier for me, but also means there's less filler content. <b>This page assumes some inherent knowledge from AI and its keywords</b>, as well as knowledge of logic from CS130 or CS262 -- it will not do to read it from scratch.
+			</p>
+			<p>
+				The old long one can be found <a href="./">here</a>.
+			</p>
+
+			<p>
+				Looking through the past exam papers, there are 7 overall topics that are included, some more than others, being
+			</p>
+
+			<ul>
+				<li><b>Conditional Probability and Bayes' Theorem</b>
+				</li>
+				<li>
+					<b>CSPs</b>
+				</li>
+				<li>
+					<b>Graph Searching and Heuristics</b>
+				</li>
+				<li>
+					Reinforcement (Q-) Learning 
+				</li>
+				<li>
+					Knowledge Bases and Rule-based systems
+				</li>
+				<li>
+					Partial Order Planning 
+				</li>
+			</ul>
+
+			<h2>Contents</h2>
+
+			<ul>
+				<li><a href="#search">Search</a></li>
+				<li><a href="#csp">Constraint Satisfaction</a></li>
+				<li><a href="#probability">Conditional Probability and Bayes</a></li>
+			</ul>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="search">Search</h2>
+		</div>
+
+		<div class="cbox">
+			<p>
+				<b>Search</b> is one of the most essential forms of problem solving. It entails making moves along a problem space (usually nodes in a graph) in order to try get to a goal. 
+			</p>
+			
+			<p>
+				There are two main methods of searching: <i>Informed</i> and <i>Uninformed</i>.
+			</p>
+
+			<p>
+				In all cases, assume we have reduced the problem down to a graph of nodes, where searching algorithms is at home. Specifically, often we want to talk about a tree graph. Trees have a root node and some goal nodes further down.
+			</p>
+
+			<p>
+				Graph searching is pretty much no different from tree searching, except that we use \(\langle x, y, z \rangle\) to represent paths.
+			</p>
+
+			<h3>Uninformed Search</h3>
+
+			<p>
+				Uninformed does not use information from the question - it is a brute force method.
+			</p>
+
+			<h4>Generic Tree Search</h4>
+
+			<p>
+				In the general case, a search, starting from the root node of a tree (or from a given node in a graph) can be described as follows:
+			</p>
+
+			<ol class="side">
+				<li>
+					While there are still nodes yet to be expored (candidates for expansion):
+					<ol type="a">
+						<li>
+							Expand a node according to your searching strategy
+						</li>
+						<li>
+							Is it a goal? If so, return success. Else, carry on.
+						</li>
+					</ol>
+				</li>
+				<li>
+					Return failure
+				</li>
+			</ol>
+
+			<p>
+				The unexpanded nodes that we can immediately expand to are called the <b>frontier</b>, and are stored in a <b>queue</b> structure -- our search strategy determines how this queue is ordered.
+			</p>
+
+			<h4>Breadth First Search</h4>
+
+			<figure >
+				<img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Breadth-First-Search-Algorithm.gif" alt="" style="max-width: 300px;" align="right">
+				<figcaption>Process of BFS (Wikimedia Commons) -></figcaption>
+			</figure>
+
+			<p>
+				In short: expand the <b>shallowest</b> node first. 
+			</p>
+			<p>
+				Frontier queue is ordered by distance from the origin/root. Successor nodes are added to the <b>end</b> of the queue.
+			</p>
+
+			<p>
+				For a branching factor \(b\) and the <i>depth of least cost solution</i> \(d\) the <b>time</b> complexity is \(O(b^d)\)... i.e. \(O(n)\) in number of nodes. The <b>space</b> complexity is the <b>same</b> - which can be a big problem if there are lots of nodes.
+			</p>
+			<p>
+				BFS will always find a solution if \(b\) is finite (complete).
+			</p>
+
+			<h4>Depth First Search</h4>
+
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/7/7f/Depth-First-Search.gif" alt="" style="max-width: 300px;" align="right">
+				<figcaption>Process of DFS (Wikimedia Commons) -></figcaption>
+			</figure>
+
+			<p>
+				In short: expand the <b>deepest</b> node first.
+			</p>
+			<p>
+				Frontier queue is a stack, put successors at the start. 
+			</p>
+
+			
+
+			<p>
+				DFS has a time complexity of \(O(b^m)\), where \(m\) is the <i>maximum</i> depth, rather than that of the nearest solution. This can be bad if \(m\) is large. However, DFS's main advantage is its <b>space</b> complexity -- \(O(bm)\) -- only one path needs to be stored, making DFS better where memory is tighter.
+			</p>
+
+			<p>
+				DFS is <b>incomplete</b> -- if \(d\) is infinite (or graph has loops) then DFS may never terminate. 
+			</p>
+
+			<h4>Lowest Cost First Search</h4>
+
+			<p>
+				As the name implies, select a node on the <b>path with the lowest cost</b> first. 
+			</p>
+			<p>
+				The path cost is the sum of all the arcs from the origin to the newly expanded node: \(cost(\langle n_0 \dots n_k \rangle) = \sum_{i=1}^k cost(\langle n_{i-1}, n_i \rangle \).
+			</p>
+			<p>
+				Frontier is priority queue ordered by cost. The first path to a goal found is the least cost goal. Note this reduces to breadth first when all arcs are of equal cost.
+			</p>
+
+			<h3>Informed Search</h3>
+
+			<p>
+				Informed search uses "problem specific knowledge", such as the location of the goal, an estimate of distance, etc., to help inform its search choices. They are usually much better than brute force uninformed search.
+			</p>
+
+			<h4>Best First Search</h4>
+
+			<p>
+				Best first search uses a <b>heuristic</b> - some estimate of the final distance for each path to determine the choice of exploration. Heuristics come up <b>a lot</b>, since AI is all about "good enough". There are two variants:
+			</p>
+
+			<p class="side">
+				<b>Heuristic DFS</b> picks the <i>node</i> with the best possible heuristic estimate.
+			</p>
+			<p class="side">
+				<b>Greedy Best First Search</b> picks the <i>path</i> with the best possible heuristic.
+			</p>
+			<p>
+				And what is the heurisitc? Well, it depends on the situation, but say you're in a maze, and the nodes are intersections / turns. Perhaps the heuristic is the euclidean (i.e. straight diagonal distance) between that corner and the goal square. 
+			</p>
+			<p>
+				However, you might quickly notice that for a maze, the closest "as the crow flies" might be a massive dead end. This is the problem with BFS, where the heuristic <i>may</i> just lead to the wrong path, and if the algorithm is not programmed well enough, forever looping.
+			</p>
+			<p class="blue">
+				The crucial thing is that <b>heuristics are underestimates</b>.
+			</p>
+
+			<p>
+				There seems to not be much difference between the two apart from naming, so just default to "Greedy BFS I guess".
+			</p>
+
+			<p>
+				Greedy BFS has a time and space complexity of \(b^n\) for a <b>branching factor</b> \(b\) and a <b>path length</b> \(n\). It may not ever find a solution, and thus is <b>incomplete</b>.
+			</p>
+
+			<h4>A* Search</h4>
+
+			<p>
+				<b>The very important significant one</b>. A* takes into account both path cost and remaining heuristic when it does its searching. 
+			</p>
+			<p class="blue">
+				Let \(g(p)\) or \(cost(p)\) be the cost of the current path \(p\), and the heuristic from the end of p to the goal as \(h(p)\).
+				<br><br>
+				Let \(f(p) = h(p) + g(p)\), the total estimate of a path's cost from start to finish, so to say. This is our final <b>evaluation function</b>
+			</p>
+			<p>
+				A* orders the frontier by \(f(p)\), and picks like that. In this way, it is a mix of Lowest-cost first and Best-first, and is actually pretty damn good.
+			</p>
+
+			<p class="blue">
+				An algorithm is <b>ADMISSIBLE</b> if a solution existing \(\implies\) the <b>optimal solution</b> is found.
+			</p>
+			<p>
+				A* is an <b>admissible algorithm</b>.
+			</p>
+
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/9/98/AstarExampleEn.gif" alt="" style="max-width: 50%;">
+				<figcaption>A* Search example (wikipedia)</figcaption>
+			</figure>
+
+			<p>
+				A good heuristic is better, an overestimate can be really bad but too far of an underestimate is also bad - A* explores every path with an estimate less than the optimal cost, so if there are a lot of paths here, A* can still take a while.
+			</p>
+			<p>
+				A* thus has a time complexity relative to \(\textrm{error of }h(p) \cdot \textrm{length of solution}\) - which is pretty good, the only problem is that A* is <b>exponential in space</b>, because it needs all nodes in memory. 
+			</p>
+
+			<h3>Cycle Checking and Path Pruning</h3>
+
+			<p>
+				This is how you stop algorithms which may not halt from not halting.
+			</p>
+			<p>
+				<b>Pruning</b> a path means removing it from consideration entirely, which saves memory holding unnecessary paths.
+			</p>
+			<p>
+				<b>Cycle Checking:</b> If your explored path reaches an already explored node in memory, for example if you went <code>a -> b -> c -> d -> b</code>, you can prune the <code>d -> c -> b</code> bit without losing an optimal path solution, since it forms a closed cycle. 
+			</p>
+			<p>
+				<b>Path pruning:</b> If you have a path in memory that goes like <code>s -> b -> x -> y -> z -> u -> h -> m -> p</code>, and later on in searching you find a different path <code>s -> i -> m -> p</code> through a new node <code>i</code>, then you can prune away the first path, since you can use the second one to get to the same destination.
+			</p>
+			<p>
+				<b>Note</b> though how I didn't say <i>longer</i> and <i>shorter</i> - that's because it's not, it's recency. <b>This is why you have underestimate heuristics</b> - otherwise you won't necessarily get the most optimal solution.
+			</p>
+			<p class="blue">
+				A <b>Monotone Heuristic</b> is where the heuristic is an underestimate for all arcs across a graph. These heuristics are also called <b>consistent</b>, and will never overestimate. 
+			</p>
+			<p>
+				A* Search with a consistent heuristic is needed to find an optimal path.
+			</p>
+
+			<h3>More Searching</h3>
+
+			<p>
+				Searching backwards from the goal is effectively the same as searching forward from the start. 
+			</p>
+			<p>
+				Of course if the <i>backwards</i> branching factor is much different from the <i>forwards</i> one, the efficiency of one direction vs another may be vastly different. Sometimes, even, one direction is not available, if the graph is being constructed dynamically.
+			</p>
+			<p>
+				Provided not, we can get <b>bidirectional search</b>: search from both start and end simultaneously. \(2b^{\frac{k}{2}} < b^k\) after all (b branch. factor, k depth of goal). Of course, the frontiers must somehow meet, so one side is usually a BFS.
+			</p>
+			<p>
+				Extend to <b>island-driven search</b>, where we pick \(M\) "interesting locations/checkpoints" and search simultanously from all of those. \(Mb^{\frac{k}{M}}\) is faster still -- the problem is choosing said "interesting locations".
+			</p>
+
+			<h4>Iterative Deepening and Depth First Branch and Bound</h4>
+
+			<p>
+				We like DFS because low memory, but DFS might follow its own tail into the abyss, so how do we prevent that? We can limit how deep DFS will go - making <b>bounded DFS</b>.
+			</p>
+			<p>
+				But what if the bound is too shallow? Then, we gradually increase the bound, and rerun DFS, until we get to the goal. This is now <b>Iterative Deepening</b> of the bound. 
+			</p>
+			<p>
+				But this is still a dumb algorithm. What if we add h e u r i s t i c s to find an optimal solution? Suppose we already have a path to the goal. Let's set a bound \(p\) as its cost. If we have a path where the cost + heuristic \(&gt; p\), then clearly, it will never be shorter, and thus is immediately pruned. 
+			</p>
+			<p>
+				Rinse and repeat until we have no more shorter paths than our \(p\). That is our optimal solution, and this is <b>Depth First Branch and Bound</b>.
+			</p>
+
+			<h3>Finding Heuristics</h3>
+
+			<p>
+				Heuristics are underestimates, but the closer the underestimate the better. A heuristic of 0 is no better than a dumb search. Finding heuristics however is difficult, good ones even more so, but there are a few approaches:
+			</p>
+			<p>
+				<b>Relax the problem</b>: try a less restrictive version of the problem. If it's a maze, imagine there's no walls and you can fly. If it's a 15-tile game, imagine you can move tiles through others. 
+			</p>
+			<p>
+				<b>Combine heuristics</b>: If you have several different admissible heuristics, combine them and use the best one out of them for each individual state as your final value.
+			</p>
+			<p>
+				<b>Statistics</b>: Actually run simulations to try get data estimates. This is however <b>NOT ADMISSIBLE</b>, but can be good enough.
+			</p>
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="csp">Constraint Satisfaction</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Variables and Constraints</h3>
+
+			<p class="blue">
+				Given a set of variables, an <b>assignment</b> is a function from variables to their domain. A <b>total assigment</b> is a function that assigns all variables in the set, and partial is thus self-explanatory.
+			</p>
+
+			<p>
+				Constraints limit what combination of variables are possible.
+			</p>
+			<p class="blue">
+				A <b>constraint</b> \(C\) is a relation \(R: S \longleftarrow \{T, F\} \) over a scope \(S\), which is a set of variables. 
+			</p>
+			<p>
+				Any assignment \(A\) on the superset \(2^S\) <b>satisfies</b> \(C\) if all variables in S then map to true. 
+			</p>
+			<p>
+				A constraint can be <b>unary</b> (1 var), <b>binary</b> (2 vars), or more. 
+			</p>
+
+			<h3>CSPs</h3>
+
+			<p class="blue">
+				A <b>Constraint Satisfaction Problem</b> has a set of variables, a domain for every variable, and a set of constraints. <span class="grey">We will be working on finite CSPs only.</span>
+			</p>
+
+			<p>
+				Many things are reducible to CSPs, notably <i>3-SAT</i>, which is covered in CS260. CSPs are usually NP-hard, thus difficult to solve efficiently, and thus, like the rest of AI, our algorithms are heuristic based and "good-enough" based.
+			</p>
+
+			<h4>Generate and Test</h4>
+
+			<p>
+				The most naive method of solving CSPs. As the name suggests, generate a total assignment (randomly or systematically), and test if it violates any constraints.
+			</p>
+			<p>
+				Whilst this is stupid easy, it has a complexity of \(O(\textrm{horrible})\).
+			</p>
+
+			<h4>Backtracking</h4>
+			
+			<p>
+				So generate and test is horrible, maybe we do something smarter. CSPs can be reduced to trees, where nodes are <b>assignments of values</b> and neighbours are gotten by selecting a different node, and assigning it to something else. 
+			</p>
+			<p>
+				As soon as we hit an invalid (partial) assignment, backtrack one and try a different one, like the example below.
+			</p>
+
+			<button class="collapsible active">Backtracking... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Example.</i></b> Suppose we have a CSP with variables \(A, B, C\), each has domain \(\{1..4\}\), and our contraints are \(A &lt; B; B &lt; C\). A backtracking tree might look like the following:
+				</p>
+
+				<figure>
+					<img src="./csp-backtrack.png" alt="" style="max-width: 70%;">
+					<b>Full backtracking tree. Depending on the search algorithm the partially searched tree might look different.</b>
+				</figure>
+				
+			</div>
+
+			<p>
+				Backtracking is \(O(\textrm{less horrible})\), and is usually good enough for most applications <i class="grey">*cough* something beginnning with c</i>.
+			</p>
+
+			<button class="collapsible nul">Algorithm... </button>
+			<div class="ccontent nul">
+				<p></p>
+				<div class="codediv">backtrackCSP(CSP):
+	return backtrack_r(\(\{\}\), CSP)
+
+backtrack_r(assignment, CSP):
+	if assignment complete: 
+		return assignment
+	\(X \longrightarrow\) unassigned variable in CSP.vars
+	for each \(v \in\) CSP.domain(\(X\)):
+		if \(v\) consistent with assignment given CSP.constraints:
+			assignment.add(\(X = v\))
+			result \(\longrightarrow\) backtrack_r(assignment, CSP)
+			if result \(\neq\) fail: 
+				return result
+			assignment.remove(\(X = v\))
+	return fail</div>
+			</div>
+
+			<p>
+				If dumb backtracking is <i>not</i> good enough, we can use a heuristic-based search:
+			</p>
+			<ul>
+				<li>
+					<b>MRV | Minimum Remaining Value</b>: pick the variable with the fewest possible values; "fail first"
+				</li>
+				<li>
+					<b>Degree</b>: (backup to MRV) pick the variable with most constraints
+				</li>
+				<li>
+					<b>LCV | Least Constraining Value</b>: for a variable, pick the value that rules out the least other values
+				</li>
+			</ul>
+
+			<h3>Consistency Algorithms</h3>
+
+			<p>
+				Sometimes, some assignments will always fail nomatter what. For example, if \(A, B = \{1..4\}\) and \(A < B\), the assignment \(A=4\) is always invalid. Thus to speed up backtracking we can strip these domain values out as we go along.
+			</p>
+
+			<p>
+				These algorithms work on a <b>constraint network</b>, where nodes are variables (annotated by domain) and arcs are constrains connecting variables. 
+			</p>
+			<p class="small">
+				If you have more than just binary constraints you can have constrains as their own <b>square</b> nodes and connect <b>round</b> variable nodes instead.
+			</p>
+
+			<h4>Arc Consistency</h4>
+
+			<p>
+				(Generic) <b>Arc Consistency</b> (GAC) is the one algorithm, and the goal is to make everything "arc consistent":
+			</p>
+
+			<p class="blue">
+				A variable is <b>domain consistent</b> if all unary constraints (loops) are satisfied. A variable is <b>arc consistent</b> if the constraints on all arcs between it and other variables are satisfied as well. 
+			</p>
+
+			<ul class="side">
+				<li>
+					GAC keeps track of a <b>to-do list</b> of unconsidered arcs, which are initialised to all arcs in the graph.
+				</li>
+				<li>
+					Every iteration until the todo list is empty, we pick and remove an arc from a variable X to a constraint \(c\) and make it consistent. If, however, this changes the domain of X, do the next step:
+				</li>
+				<li>
+					For all other constraints \(c'\), we need to make sure that every other variable apart from X (\(Z \neq X\)) are satisfied again -- i.e. adding them back to the to-do list (if not there already).
+				</li>
+			</ul>
+
+			<button class="collapsible nul">Algorithm... </button>
+			<div class="ccontent nul">
+				<p></p>
+				<div class="codediv">generic_arc_consistency(vars \(V\), domains \(dom\), constraints \(C\)):
+	return gac2(\(V\), \(dom\), \(\{\langle X, c \rangle : c \in C, x \in scope(C)\} \))
+				
+gac2(vars \(V\), domains \(dom\), constraints \(C\), paths \(toDo\)):
+	while \(toDo \neq \varnothing\):
+		remove and select \(\langle X, c \rangle\) from \(toDo\)
+		\(\{Y_1, \dots, Y_k\} \longrightarrow scope(C) \setminus \{X\}\)
+		\(ND \longleftarrow \begin{align} \{X &: 
+			x \in dom[x] \land \exists y_1, \dots, y_k \in dom[Y_1], \dots, dom[Y_k] 
+			\\ &: c(X=x, Y_1=y_1, \dots, Y_k=y_k) \textrm{ true}\} \end{align}\)
+		if \(ND \neq dom[x]\):
+			\(toDo \longleftarrow toDo \cup \{\langle Z, c' \rangle 
+				: \{X, Z\} \subseteq scope(c'), c' \neq c, Z \neq X\}\)
+			\(dom[x] \longleftarrow ND\)
+		return \(dom\)</div>
+			</div>
+
+			<p>
+				<b>Regardless</b> of arc selection order, the algorithm will terminate with the same arc-consistent graph and set of domains. Three cases will happen:
+				<ol>
+					<li>A domain becomes \(\varnothing \implies\) no solution to CSP</li>
+					<li>Each domain has 1 value \(\implies\) unique solution</li>
+					<li>All or some domains have multiple values \(\implies\) we do not know the solution and will have to use another method to find it</li>
+				</ol>
+			</p>
+
+			<p>
+				The <b>time complexity</b> of such an algorithm is \(O(cd^3)\) for \(c\) constraints and a \(d\) domain size ~ linear in \(c\), which is efficient enough.
+			</p>
+			<p>
+				The <b>space complexity</b> is \(O(nd)\) for \(n\) total variables.
+			</p>
+			
+			<h4>Domain Splitting</h4>
+
+			<p>
+				Domain splitting splits a problem into two separate (disjoint) cases, solving them separately, and combining them.
+			</p>
+			<p>
+				Take a variable \(X \in \{T, F\} \), we can split this into two "worlds" where \(X=T\) and \(X=F\), solve those worlds, and combine all the valid results. With a domain of \(\{1, 2, 3, 4\} \) however, we can split into 4 worlds, or just 2 where \(X =\{1,2\}; X=\{3, 4\} \). If we only need one solution, we can just stop as soon as one world finds valid-- heeyyy wait, isn't this just "backtracking"?
+			</p>
+			<p>
+				Well, yes. Or rather, backtracking is a special case of domain splitting.
+			</p>
+			<p>
+				Interleave arc consistency here between every split/expand for best results.
+			</p>
+
+			<button class="collapsible">Algorithm... </button>
+			<div class="ccontent">
+				<p></p>
+				<div class="codediv">cspSolver(vars \(V\), domains \(dom\), constr's \(C\)):
+	return csp2(\(V, dom, C, \{\langle X, c \rangle : c \in C \land x \in scope(c)\}\))
+
+csp2(\(V, dom, C\), paths \(toDo\)):
+	\(dom_0 \longleftarrow\) gac2(\(V, dom, C, toDo\))  # gac alg from above
+	if \(\exists X \in V : X = \varnothing\):
+		return false
+	else if \(\forall X \in V,\; |dom_0[x]| = 1\):
+		return solution where \(X\) set to value in \(dom_0[x]\)
+	else:
+		select \(X \in V : |dom_0[x]| > 1\)
+		partition \(dom_0[x]\) into \(D_1, D_2\)
+		\(dom_1 \longleftarrow\) copy(\(dom_0\)); \(dom_1[x] \longleftarrow D_1\)
+		\(dom_2 \longleftarrow\) copy(\(dom_0\)); \(dom_2[x] \longleftarrow D_2\)
+		\(toDo \longleftarrow \{(Z, c') : \{X, Z\} \subseteq scope(c') \land Z \neq X\}\)
+		return csp2(\(V, dom_1, C, toDo\)) 
+			or if false return csp2(\(V, dom_2, C, toDo\))</div>
+			</div>
+
+			<h4>Variable Elimination: Trees</h4>
+
+			<p>
+				A regular CSP takes \(O(d^n)\) to solve (\(d\) domain size \(n\) variables), but if we split this into \(\frac{n}{c}\) subproblems of \(c\) variables, suddenly this becomes drastically quicker (\(O(\frac{n}{c}d^c)\))
+			</p>
+
+			<p>
+				Specifically, an <b>acyclic</b> CSP can be solved in \(O(nd^2)\) by: 
+			</p>
+			
+			<ol class="side">
+				<img src="./csp-tree-to-line.png" alt="A CSP tree being a line" style="max-width: 50%;" align="right">
+				<li>Choose a variable as root, and order from root to leaves such that all nodes' parents <b>preceeds</b> them in ordering
+					
+				</li>
+				<li>for \(j = 1 .. n\), make node\(x_j\) consistent with its parents</li>
+			</ol>
+
+			<p>
+				If we don't have a tree, but can make a tree by removing one or two nodes, we can instantiate those variables, prove their consistency, and then remove them from consideration.
+			</p>
+			
+			<p class="blue">
+				<img src="./csp-conditioning.png" alt="A graph where one node removed makes a tree" style="max-width: 40%; display: block;" >
+				<b>Conditioning</b> is removing one variable by the above method. <br>
+				<b>Cutset Conditioning</b> is conditioning done to a set of variables (nodes).
+			</p>
+
+			<h4>Variable Elimination</h4>
+
+			<p>
+				More generally, we can eliminate a variable by passing its effects off onto the constraints of its neighbours. 
+			</p>
+			<p>
+				The idea is to collect all constrains on a variable X and <b>natural join</b> them to make one \(, c_x(X, \bar{Y})\) (Y-bar are neighbours to X), then <b>project</b> only those \(\bar{Y} \) variables. <span class="grey">(CS258 Relational Algebra)</span>
+			</p>
+			<button class="collapsible">Algorithm... </button>
+			<div class="ccontent">
+				<p></p>
+				<div class="codediv">ve_csp(vars \(V\), constr's \(C\)):
+	if \(|V| = 1\):
+		return \(\bowtie\)join(\(\forall c \in C\))
+	else:
+		select variable \(X \in V\) to eliminate
+		\(V' \longleftarrow V \setminus \{X\}\)
+		\(C_X = \{t \in C : t \textrm{ involves } X\}\)
+		\(R_1 \longleftarrow \bowtie\)join(\(\forall t \in C_X\))
+		\(R' \longleftarrow R\) projected onto everything except \(X\)
+		\(S \longleftarrow\) ve_csp(\(V', (C \setminus C_X) \cup \{R'\}\))</div>
+			</div>
+
+			<p>
+				Efficiency depends on selection, and variable elimination only works when the graph is <b>sparse</b>.
+			</p>
+
+			<p class="blue">
+				The <b>treewidth</b> is the number of vars in the <b>largest</b> relation. The <b>graph treewidth</b> is the minimum treewidth of any ordering. VE is exponential in treewidth.
+			</p>
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="probability">Conditional Probability and Bayes</h2>
+		</div>
+
+		<div class="cbox">
+			<ul>
+				<li><a href="#pro-1">Probability and Bayes</a></li>
+				<li><a href="#pro-2">Decision Making</a></li>
+			</ul>
+
+			<h2 id="pro-1">Probability</h2>
+
+			<p>
+				First of all, see <a href="../cs130#probability">Probability</a> from CS130 since this needs probability spaces \(\Omega\) annd expected values of random vars \(E[X] = \sum_{s_i \in \Omega} P(s_i) X[s_i] \).
+			</p>
+			<p>
+				Recall that for conditional probability: \(P(A|B) = \frac{P(A \land B)}{P(B)}\). If \(P(A|B) = P(A)\) and \(P(B|A) = P(B)\) then they're independent.
+			</p>
+
+			<p class="blue">
+				<span class="nopad">
+				From which we get <b>Bayes' Theorem</b> \(P(A|B) = \frac{P(B|A)P(A)}{P(B)}\) (provided neither \(P(A), P(B) = 0\)). <br>
+				Where \(P(B) = P(B|A)P(A) + P(B|\lnot A)P(\lnot A)\) -- the possibility of B given all occurences of A.
+				</span>
+			</p>
+		
+			<p>
+				If A is instead split into <i>mutually exclusive, exhaustive</i> states \(a_1 \cdots a_n\) rather than a true and false, then we can extend the equation for \(P(B)\) to be a sum \(\sum_{i=1}^{n} P(B|a_i) P(a_i)\)
+			</p>
+			<p class="blue">
+				Note also the chain rule:
+				\[P(a_1 \land a_2 \land \dots \land a_i) = P(a_1) \times P(a_2|a_1) \times P(a_3|a_1 \land a_2) \times \cdots \times P(a_i|a_1 \land a_2 \land \cdots \land a_{i-1} )\]
+			</p>
+			<p class="blue">
+					The <b>joint probability distribution</b> \(P(A,B)\) is a probability dist over A, which has \(n\) states, and B, which has \(m\) states. Thus, for every A state \(a_i\), we have \(m\) entries in the prob. dist for every possible B state (i.e. it's \(A \land B\)). 
+			</p>
+
+			<p>
+				To work out \(p(a_i)\) from \(p(A, B)\) do \(p(a_i) = \sum_{j=1}^{m} p(a_i, b_j)\). This is referred to as <b>marginalising</b> B out of \(P(A,B)\)
+			</p>
+
+			<p>
+				Naturally this is difficult for continuous probabilities. In that case, we have to use integration (that I doubt will <i>actually</i> come up).
+			</p>
+
+			<p class="blue">
+				Note that <b>conditional independence</b> for some \(X, Y\) given \(Z\) means that \(P(X, Y|Z) = P(X|Z) \cdot P(Y|Z)\).
+			</p>
+
+			<h3>Inference</h3>
+
+			<p>
+				<b>Probabilistic inference</b> is about computing <i>values</i> for queried <i>propositions</i> given observed <i>evidence</i>.
+			</p>
+
+			<ul class="side">
+				<li>
+					Let \(X\) be our query variable, and \(E\) be our evidence variables with observed values \(e\).
+				</li>
+				<li>
+					Let \(Y\) be other, unobserved variables, with some values \(y\)
+				</li>
+				<li class="nopad">
+					<!-- <span class="nopad"> -->
+					We want \(p(X|e)\):
+					\[p(X|e) =\frac{p(X, e)}{p(e)} = \alpha \sum_{y}p(X, e, y)\]
+					Where the \(\frac{1}{p(e)}\) multiplier is called the <b>normalisation constant</b> (sometimes written \(\alpha\)), \(p(e)_= \sum_{x, y} p(x, e, y)\).
+					<!-- </span> -->
+				</li>
+			</ul>
+			<p>
+				Now, this is probably meaningless when just presented in theory, so below is an example.	
+			</p>
+
+			<button class="collapsible active">Simple Example... </button>
+			<div class="ccontent" style="display: block;"><span class="nopad">
+				<p>
+					<b><i>Example.</i></b> Given the following table, we want to calculate P(cavity|toothache).
+				</p>
+				<table>
+					<tr>
+						<th></th>
+						<th colspan="2">Toothache</th>
+						<th colspan="2">¬Toothache</th>
+					</tr>
+					<tr>
+						<th></th>
+						<th>catch</th>
+						<th>¬catch</th>
+						<th>catch</th>
+						<th>¬catch</th>
+					</tr>
+					<tr>
+						<th>cavity</th>
+						<td>0.108</td>
+						<td>0.012</td>
+						<td>0.072</td>
+						<td>0.008</td>
+					</tr>
+					<tr>
+						<th>¬cavity</th>
+						<td>0.016</td>
+						<td>0.064</td>
+						<td>0.144</td>
+						<td>0.576</td>
+					</tr>
+				</table>
+
+				<p>
+					Note we have an "unobserved" (irrelevant variable) catch. Then, to work everything out:
+				</p>
+				<ul>
+					<li>p(cavity \(\land\) toothache) = 0.108 + 0.012 = 0.12 (marginalising catch)</li>
+					<li>p(cavity \(\land\) ¬toothache) = 0.008 + 0.072 = 0.08</li>
+					<li>Then p(cavity) = 0.108 + 0.012 + 0.016 + 0.064 = 0.2</li>
+					<li>p(toothache) = 0.108 + 0.012 + 0.016 + 0.064 = 0.2</li>
+					<li>Thus p(cavity|toothache) = \(\frac{0.12}{0.2}\) = 0.6.</li>
+				</ul>
+			</span>
+			</div>
+
+			<p>
+				For more complex examples, this type of enumeration may become incredibly difficult - thus we need some sort of <i>graphical method</i> to represent and take advantage of conditional independence.
+			</p>
+			<p>
+				<img src="./infer-tree.png" alt="" align="right" style="size: 100px;">
+				Since often events lead to other events which lead further in a chain, we can represent this graphically. 
+			</p>
+			<p>
+				We want an acyclic graph, where each node corresponds to one variable in our probability distribution. 
+			</p>
+			<p>
+				This graph should then satisfy the <b>markov condition</b>:
+			</p>
+			<p class="blue">
+				<b>Markov Condition:</b> For all variables \(V\), \(V\) is <b>conditionally independent</b> of all its <b>non</b>descendants, given its parents: \(P(B,C|H) = P(B|H) \cdot P(C|H)\) because C does not descend from B.
+			</p>
+			<p>
+				This reduces vastly the number of conditional probabilities we need to work out, and simplifies the ones we do -- only the conditional probabilities \(P(X|PA_X)\) (given the parents of X) need to be calculated.
+			</p>
+			<p>
+				This type of graph is a <b>Bayesian Belief Network</b> -- directed, acyclic, showing influence, and in total representing a full joint prob. dist.
+			</p>
+
+			<p>
+				When building a BBN, order of nodes matters (different order = different complexity) -- we really only want a node to depend on only those before it. Then, we can use chain rule principles and only the parents function \(PA_X\) to define the joint probability:
+				\[P(X_1, X_2, \dots, X_n) = \prod_{i=1}^n P(X_i | PA_{X_i})\]
+			</p>
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/SimpleBayesNet.svg/400px-SimpleBayesNet.svg.png" alt="">
+				<FIGCaption>Bayesian Belief Network example (Wikiepdia)</FIGCaption>
+			</figure>
+
+			<h3>Noisy OR</h3>
+
+			<p>
+				Even still, local probability distributions tend to grow very quickly (\(O(2^n)\)) -- simplify using "canonical interaction" models like Noisy OR.
+			</p>
+			<div class="blue">
+				<p>Noisy OR:</p>
+				<ul>
+					<li>Describes set of \(n\) clauses \((x_1 .. x_n\) and their common effect (descendant) \(y\)</li>
+					<li><b>Assume</b> each \(x_i\) is sufficient to cause \(y\) regardless of state of other clauses: <b>independence</b>.</li>
+					<li>Thus \(p_i\) (prob. of causing \(y\) rel. to \(x_i\)) \(= P(y|\lnot x_1, \dots, x_i, \lnot x_{i+1}, \dots, \lnot x_n)\)</li>
+				</ul>
+			</div>
+
+			<p>
+				<img src="./infer-noisy-or.png" alt="" align="right">
+
+				Shown on the right is a BBN concerning <b>F</b>atigue, <b>B</b>ronchitis, <b>L</b>ung cancer, and <b>O</b>ther causes of fatigue. 
+			</p>
+
+			<p>
+				<b>Causal inhibition</b> is where each of the three causes F, O, L, has an inhibitor (not shown): Bronchitis will cause fatigue <b>if and only if</b> the inhibior mechanism for that cause is absent.
+			</p>
+
+			<p>
+				<b>Exception Independence</b> is where the inhibiting mechanism for each cause is independent.
+			</p>
+
+			<p>
+				And of course, the effect F can only happen if at least one cause is present.
+			</p>
+
+			<p>
+				A noisy-OR model adds new <b>deterministic nodes</b>, whose values are exactly specified by parents. We can extend the above BBN into a Noisy-OR tree, add in the inhibitors, and <i>voila</i>.
+			</p>
+
+			<figure>
+				<img src="./noisy-or-tree.png" alt="" title="Noisy OR tree" style="max-width: 70%;">
+			</figure>
+
+			<p>
+				Course a BBN won't actually show this, and condenses it down into a single probability / probability table. 
+			</p>
+			<p>
+				When constructing a network, only draw causal links from the new node to already existing ones - depending on the order new nodes are added, this wildly changes the number of arcs and thus the complexity.
+			</p>
+
+			<h3>Reasoning</h3>
+
+			<p>
+				Different types of reasoning can be done on a BBN:
+			</p>
+			<ol>
+				<li><b>Diagnostic Reasoning</b> from symptop to cause: backwards along the arcs. From our evidence reason <i>up</i> until we work out our query -- often involves Bayes' rule.</li>
+				<li><b>Causal Reasoning</b> from cause to symptom: forwards along the arcs -- often involves <i>just reading from the graph</i>.</li>
+				<li><b>Intercausal Reasoning</b>: If a cause and an immediate symptom are observed together, this concerns all other causes of a symptom</li>
+				<li><b>Combined Reasoning</b> if we have to go backwards and forwards simultaneously</li>
+			</ol>
+
+			<p>
+				A lot of this entials enumeration of possibilities.
+			</p>
+
+			<button class="collapsible">Reasoning Over 3 Nodes... </button>
+			<div class="ccontent" style="display: none;">
+				<p><b><i>Example.</i></b>; note that \(\alpha\) is the \(1/p\) normalisation constant.</p>
+				<img src="./reasoning-3-node.png" alt="">
+			</div>
+
+			<h4>Variable Elimination</h4>
+
+			<p>
+				VE is more efficient than enumeration. VE works over factors, which:
+			</p>
+			<p class="blue">
+				A <b>factor</b> is a <b>function</b> on a set of variables, called the <b>scope of the factor</b>.
+				<br><br>
+				Conditional Probability \(P(x|y,z)\) can be described as a factor with scope \(x,y,z\).
+			</p>
+			<p>
+				If we can (1) order variables, (2) index them, then we can uniquely represent each factor as a <b>1d array</b>. Ex. the table 
+				\begin{array} {|r|r|}\hline x & y & f_0 = P(z=T | x, y) \\ \hline T & T & 0.1 \\ \hline T & F & 0.2 \\ \hline F & T & 0.3 \\ \hline F & F & 0.4 \\ \hline  \end{array}
+				Can be represented as the list \(f_0 = [0.1, 0.2, 0.3, 0.4] \). We can then <b>condition, sum,</b> and <b>multiply</b> these.
+			</p>
+			<p>
+				<b>Conditioning:</b> If we have observed a var with a value, we can define a new factor with reduced scope: Starting with \(P(x|y,z\) then observe \(z=T\), define new factor \(P(x|y,z=t)\) with a scope \((x, y)\), since \(z\) is now known.
+			</p>
+			<p>
+				<b>Multiplying:</b> If factor 1 has scope \(A, B\) and factor 2 has scope \(B, C\) then we can multiply these together, which is doing a <code>natural join</code> multiply. If \(f_1: A=T, B=F \implies 0.9\) and \(f_2: B=F, C=T \implies 0.6\) then \(f_{new}: A=T, B=F, C=T \implies 0.6 \times 0.9 = 0.54\).
+			</p>
+			<p>
+				<b>Summing:</b> Eliminating a chosen variable by adding together possible outcomes. Given \(f(X,Y,Z)\) (factor over X, Y, Z) eliminate Y by doing \(f_{new}(X, Z) = f(X, Y=T, Z) + f(X, Y=F, Z)\).
+			</p>
+			<p>
+				Thus, the VE algorithm goes as
+			</p>
+			<ol class="side">
+				<li>Construct factor for each conditional probability</li>
+				<li>Eliminate each non-query variable:
+					<ol type="a">
+						<li>If variable has observed value, set it to that and condition</li>
+						<li>Otherwise sum it out</li>
+					</ol>
+				</li>
+				<li>Multiply remaining factors and normalise</li>
+			</ol>
+
+			<h2 id="pro-2">Decision Making</h2>
+
+			<p>
+				BBNs model probabilities, and often these probabilities are used to make decisions. Decision making can also be formalised.
+			</p>
+			<p>
+				First though, given a set of outcomes \(O=\{O_i ..\} \) of an action \(A\), a <b>utility function</b> \(U(O_i|A)\) assigns a utility to each outcome -- desirability. 
+			</p>
+			<p>
+				The expected utility is a weighted sum of outcomes' probabilities and their utils,
+				\[\sum_i P(O_i|A) \times U(O_i|A)\]
+				And we assume that a decision maker always wants to <b>maximise utility</b>.
+			</p>
+
+			<p>
+				The decision maker is an agent, and it must know how good outcomes are <i>relative</i> to each other. These relations should be complete and transitive.
+			</p>
+
+			<div class="blue">
+				<p>Two outcomes \(\sigma_1, \sigma_2\) are</p>
+				<ul>
+					<li><b>Weakly preferred</b> \(\sigma_1 \succeq \sigma_2\), 1 is at least as good as 2</li>
+					<li><b>Indifferent</b> \(\sigma_1 \sim \sigma_2\), 1 and 2 are the same</li>
+					<li><b>Strictly preferred</b> \(\sigma_1 \succ \sigma_2\), 1 is better than 2, we do not weakly prefer 2</li>
+				</ul>
+			</div>
+
+			<h3>Decision Trees</h3>
+
+			<p>
+				Decision trees have 2 types of nodes. <b>Chance Nodes</b> are circles, and are random variables. <b>Decision Nodes</b> are squares, and represent a set of mutually exclusive choices.
+			</p>
+
+			<button class="collapsible active">Buying stock...</button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<img src="./decision-tree.png" alt="" align="right" style="max-width: 30%;">
+					<b><i>Example.</i></b> Suppose you have £1000 to spend. You can put it in the bank, with a guaranteed 0.5% return in a month, or buy 100 shares of OCRCompnay @ $10 a share. The tree looks as follows:
+				</p>
+				<p>
+					\(EU(X) = 0.25 \times 500 + 0.25 \times 1000 + 0.5 \times 2000 = £1375\).
+				</p>
+				<p>
+					\(EU(D) = \max(EU(X), 1005) = £1375\)
+				</p>
+				<p>
+					Thus buy stonks.
+				</p>
+				
+			</div>
+			<p>
+				Naturally real people have different views on risk vs reward than an agent which goes off dumb numbers and a max function. We can also model this however. 
+			</p>
+			<p>
+				We can change our utility function to instead of being just the straight number, account for the risk involved as well:
+				\[U_R(x) = e^{\frac{-x}{R}}\]
+				Thus with a higher R value for certain options over others, we can represent risk accordingly.
+			</p>
+
+			<p>
+				If we have non-numeric outcomes in our decision tree, such as whether or not a suit gets ruined, we can still model this by <b>assigning</b> utility values, often 0 for the least desiresd, 1 for the most desired, and something in between for the others that reflects their undesirability vs their chance to mitigate disaster.
+			</p>
+
+			<h3>Influence Diagrams</h3>
+
+			<p>
+				Decision trees can grow exponentially with the problem, and influence diagrams help prevent that. 
+			</p>
+			<p>
+				Influence diagrams have three types of nodes: <b>chance</b> (circle), <b>decision</b> (square), <b>utility</b> (diamond).
+			</p>
+			<p>
+				An edge <b>to</b> a chance node means its value is <b>probabilistically dependent</b> on value of parent.
+			</p>
+			<p>
+				An edge <b>to</b> a decision node means value of parent is <b>known</b> when decision made. If parent is decision, then this is chain of decisions. If parent is chance, means the chance has resolved before we decide. 	
+			</p>
+
+			<button class="collapsible active">Buying Stock (II)...</button>
+			<div class="ccontent" style="display: block;">
+				<img src="./influence-stonks.png" alt="" title="Influence tree for stocks example" align="right" style="max-width: 50%;">
+				<p>
+					<b><i>Example.</i></b> We recreate the buying stock example as an influence diagram. We want to work out the same thing, \(\max(EU(d_1), EU(d_2))\).
+				</p>
+
+				<p>
+					\(EU(d_1) = E(U|d_1)= \) <br>
+					\(P(X=£5) \times U(d_1, £5) + \)
+					\(P(X=£10) \times U(d_1, £10) + \)
+					\(P(X=£20) \times U(d_1, £20) = £1375.\)
+				</p>
+
+				<p>
+					\(EU(d_2) = E(U|d_2) = £1005.\)
+				</p>
+			</div>
+
+			<p>
+				Links from chance -> decision are also known as <b>information links</b> : chance must be known before decision can be made.
+			</p>
+			<p>
+				For a diagram with these links, 
+				<ul>
+					<li>Add any observed evidence by changing that chance node to \(p=1\) for that outcome,</li>
+					<li>For every possible parent occurence, calculate the expected utility for that specific setting,</li>
+					<li>Return the final stored table of decision values.</li>
+				</ul>
+				I.e. if a decision node depends on a chance node with 4 outcomes, calculate an EU for each outcome, and record that final table.
+			</p>
+		</div>
+
+		<div class="colourband">
+			<h2 id="kbs">Knowledge Bases and Rule-Based Systems</h2>
+		</div>
+		
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>
