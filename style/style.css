@@ -467,7 +467,7 @@ p {
     z-index: 2;
 }
 
-p.subheading {
+p.subheading, p.subtitle {
     font-family: Urbanist;
     text-align: center;
     letter-spacing: 2px;

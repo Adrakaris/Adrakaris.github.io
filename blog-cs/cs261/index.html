@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS261</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS261</h1>
+					<p class="subheading">Software Engineering (wah)</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="dev">Software Development Methodologies</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#dev-1">Plan-Driven</a></li>
+				<li><a href="#dev-2">Software Spec</a></li>
+				<li><a href="#dev-3">Agile</a></li>
+			</ol>
+
+			<ul>
+				<li>
+					Different Systems need different processes.
+				</li>
+				<li>
+					All processes involve some sort of specification, design and implementation, testing, and evolution (maintaining)
+				</li>
+				<li>
+					Two main types of development: plan driven and agile
+				</li>
+				<li>
+					Plan driven: everything is planned and fixed in advance. Inflexible.
+				</li>
+				<li>
+					Agile: Incremental planning, more adaptable to change.
+				</li>
+			</ul>
+
+			<h3 id="dev-1">Plan-Driven</h3>
+
+			<p>
+				<b>Waterfall Model</b>
+			</p>
+			<ul>
+				<li>
+					Invented in 1970, strictest of all plan driven models. 
+				</li>
+				<li>
+					If a change is required, the waterfall model must restart. Incredibly inflexible and in practice not completely followed. 
+					<figure>
+						<img src="https://www.umsl.edu/~hugheyd/is6840/images/Waterfall_model.png" alt="" style="max-width: 300px;" title="Uni of Missouri">
+					</figure>
+				</li>
+				<li>
+					<b>Requirements:</b> most customer focused, involves identification of resources, distribution of work.
+				</li>
+				<li>
+					<b>Design:</b> design document generated, should be really detailed so implementation is not hard.
+				</li>
+				<li>
+					<b>Implementation:</b> only when design doc is finished. Everything written should be unit tested.
+				</li>
+				<li>
+					<b>Verification/Integration:</b> Most group focused - putting all parts of system together, making sure they work.
+				</li>
+				<li>
+					<b>Maintenance:</b> Hand over program and documentation. Offer maintenance, which is also done via waterfall.
+				</li>
+				<li>
+					Waterfall is good when requirements are understood and will not change. Few constraints on location and teams size (development distributed and isolated) and each component can be first tested in isolation.
+				</li>
+				<li>
+					Waterfall is not good as the client has to wait a long time for results, and changes are difficult to accommodate, and there is a problem of software tech deprecation over the entire years-long development timespan.
+				</li>
+			</ul>
+
+			<p><b>Inremental Development</b> </p>
+
+			<ul>
+				<li>
+					A more flexible system than waterfall.
+					<figure><img src="https://i.stack.imgur.com/BqktJ.jpg" alt="" title="stackoverflow" style="max-width: 420px;"></figure>
+				</li>
+				<li>
+					Each iteration is still planned like waterfall, spec updated between iterations (not rewritten).
+				</li>
+				<li>
+					(+) cost of accomodating change much reduced, and user gets software quicker, feedback is easier to get -- better (perceived) value for money
+				</li>
+				<li>
+					(+) user inclustion in acceptance testing, can even install system before the final version.
+				</li>
+				<li>
+					(-) <b>very</b> difficult to estimate overall cost of development of such a system.
+				</li>
+				<li>
+					(-) difficult to maintain consistency between versions - poor design choices early on hamper later feature additions. Spaghetti code. 
+				</li>
+			</ul>
+
+			<p><b>Reuse-Oriented Sofware Engineering</b></p>
+
+			<ul>
+				<li>
+					Why reinvent the wheel? Instead, many devs rely on "off-the-shelf" / open source premade components, and just writes the glue code to tack them together. <b>Common off the shelf (COTS) systems</b>.
+				</li>
+				<li>
+					Compromises on features with client has to be made, but tradeoff is that program is banged out in record time. 
+				</li>
+			</ul>
+
+			<h3 id="dev-2">Software Spec</h3>
+
+			<ul>
+				<li>
+					To understand and define what services are required
+				</li>
+				<li>
+					To identify limits in feasibility - "requirements engineering", producing requirements document. 
+				</li>
+				<li>
+					<figure><img src="./requirements-doc.png" alt="" style="max-width: 630px;"></figure>
+				</li>
+			</ul>
+
+			<h3 id="dev-3">Agile</h3>
+
+			<ul>
+				<li >
+					Agile development is about <i>rapid</i> development: interleave spec, design, and implementation, and develop the system as a series of evolving prototypes. 
+				</li>
+				<li>
+					Focus on code over design, develop as you go. Aim for speed, and flexibility. 
+				</li>
+				<li>
+					Often has the short stand up meeting concept. 
+				</li>
+				<li>
+					Major principles of Agile are
+					<ul>
+						<li>Customer involvement - cannot respond rapidly to changes without rapid feedback</li>
+						<li>Incremental delivery - have prototypes, and update spec for next iterations</li>
+						<li>People not process - have highly skilled coders that know what they're doing. Share knowledge and improve processes</li>
+						<li>Embrace change - open to additions, and design system to accommodate change (hard)</li>
+						<li>Maintain simplicity - since there is a lack of good doucmentation, software must be simple and easy to understand for new members - "self commenting code" (lofty ideals)</li>
+					</ul>
+				</li>
+				<li>
+					Most companies spend more money on miantenance than actual development. Since agile prioritised development over documentation, this can be difficult to pick up and maintain later on. 
+				</li>
+				<li>
+					Very flexible to requirements changes <b>provided</b> it's the original team doing it. Team losses hit harder in agile. 
+				</li>
+				<li>
+					It is possible to mix plan-based and agile and pick and choose. 
+				</li>
+			</ul>
+
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>
