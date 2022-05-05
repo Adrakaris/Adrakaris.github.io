@@ -48,6 +48,7 @@
 				<li><a href="#dev">Software Development Methodologies</a></li>
 				<li><a href="#reqanal">Requirements Analysis</a></li>
 				<li><a href="#teamorg">Team Organisation</a></li>
+				<li><a href="#design">System Design</a></li>
 			</ol>
 		</div>
 
@@ -375,6 +376,106 @@
 				</li>
 				<li>
 					Throughout, accountability for code is important. Use version control, <code>git blame</code> exists for a reason. Git is good.
+				</li>
+			</ul>
+		</div>
+
+		<div class="colourband">
+			<h2 id="design">System Design</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#dev-1">System Modelling</a></li>
+				<li><a href="#dev-2">UML in more detail</a></li>
+			</ol>
+
+			<h3 id="dev-1">System Modelling</h3>
+
+			<ul>
+				<li>
+					System design is supplemented by mathematical/logical <b>system modelling</b> diagrams, which 
+				</li>
+				<li>
+					clarify fuctionality, provide a <b>basis</b> for development, and inform design approaches and component level decisions.
+				</li>
+				<li>
+					<b>UML</b> - Unified Modelling Language - is a set of formal representations which help with the 4 "perspectives":
+					<ul>
+						<li>
+							<b>External</b> -- context of system, interaction systems
+						</li>
+						<li>
+							<b>Interaction</b> -- how people interact with the software, what is accessed by who, what is internal
+						</li>
+						<li>
+							<b>Structural</b> -- layout, core features, class organisatiom
+						</li>
+						<li>
+							<b>Behavioural</b> -- dynamic behaviour, algorithms and processes reacting to external or internal interactions.
+						</li>
+					</ul>
+				</li>
+				<li>
+					UML has two subsections (views): <b>static / structural;</b> and <b>behavioural</b>. 
+				</li>
+				<li>
+					Within these views are different types of diagrams, like class diagrams, sequence diagrams, use case diagrams, activity ", state machines, sequence ".
+				</li>
+			</ul>
+
+			<h3 id="dev-2">UML in more detail</h3>
+
+			<p>
+				<b>Class diagrams</b> (static): most common type of diagram, shows the entites within a system and their relations. Obviously most suited to OOP.
+			</p>
+			<ul>
+				<li>
+					Entities can be identified through 
+					<ul>
+						<li>A grammatical approach, where they are extracted from a description of requirements</li>
+						<li>Tangible things in application domain</li>
+						<li>Behavioural approach, thinking about how entities will interact</li>
+						<li>Scenario-based, objects and methods from scenarios</li>
+					</ul>
+				</li>
+				<li>
+					<figure><img src="./classidagram.png" alt=""></figure>
+				</li>
+			</ul>
+
+			<p>
+				<b>Activity Diagrams</b> (behaviour): kinda like a flowchart really. Note that decision doesn't have anything written inside it.
+			</p>
+			<figure><img src="./activitydiagram.png" alt="" style="max-width: 630px;"></figure>
+
+			<p>
+				<b>Use case diagrams</b>: how different events interact with other events. 
+			</p>
+			<figure><img src="./usecasediagm.png" alt="" style="max-width: 630px;"></figure>
+
+			<p>
+				<b>Sequence Diagrams:</b> to show <i>temporal</i> interaction -- how a system's interactions go over time.
+			</p>
+			<figure><img src="./sequenceidamg.png" alt="" style="max-width: 630px;"></figure>
+			<ul>
+				<li>
+					Participants are objects or entites. 
+				</li>
+				<li>
+					Each diagram always starts with a <b>call out arrow</b>, showing external prompting. Messages passed are shown in arrows. Time is not to scale. 
+				</li>
+				<li>
+					Labels take the form of <code>name:Object</code> for a named object, <code>:Object</code> for an anonymous object, and <code>name</code> for a named unknown class.
+				</li>
+				<li>
+					If an object calls itself, we need to nest a bar inside a bar. Loops and ifs are done with labelled boxes.
+					<figure><img src="./seqdiag2.png" alt="" style="max-width: 310px;"></figure>
+				</li>
+				<li>
+					Don't model a whole system on them - they're ugly and ungainly, best used for subsystems.
 				</li>
 			</ul>
 		</div>
