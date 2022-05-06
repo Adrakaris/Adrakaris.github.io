@@ -620,6 +620,7 @@
 				<li><a href="#imp-2">Creational Patterns</a></li>
 				<li><a href="#imp-3">Structural Patterns</a></li>
 				<li><a href="#imp-4">Behavioural Patterns</a></li>
+				<li><a href="#imp-5">SOLID</a></li>
 			</ol>
 
 			<h3 id="imp-1">Design Patterns</h3>
@@ -1075,6 +1076,138 @@ class Orc {
 			<ul>
 				<li>
 					Save and Restore objects without revealing details of implementation.
+				</li>
+				<li>
+					Especially useful in the event we need undos.
+				</li>
+				<li>
+					The idea is the object can implement a method that makes a <b>snapshot</b> of itself, which is a limited interface that can then be stored in a <b>caretaker</b> class. This way, we don't violate encapsulation and expose all the private innards of an object.
+				</li>
+				<li>
+					<button class="collapsible nul">Memento Example... </button>
+					<div class="ccontent cnul">
+						<p>The example given is an art program</p>
+						<pre><code class="lang-java">public class Canvas {
+	private int[][] colours;
+
+	public Canvas(int x, int y) {
+		colours = new int[x][y];
+	}
+
+	public void setPixel(int x, int y, int col) {
+		colours[x][y] = col;
+	}
+
+	public Snapshot makeSnapshot() {
+		return new Snapshot(this, colours);
+	}
+}</code></pre>
+<pre><code class="lang-java">public class Snapshot {
+	private Canvas canvas;
+	private int[][] colours;
+
+	public Snapshot(Canvas canvas, int[][] colours) {
+		this.canvas = canvas;  // maintain refererence to existing canvas object
+		this.colours = colours;
+	}
+
+	public void restore() {
+		for (int i = 0; i < colours.length; i++) {
+			for (int j = 0; j < colours[0].length; j++) {
+				canvas.setPixel(i, j, colours[i][j]);
+			}
+		}
+	}
+}
+</code></pre>
+<pre><code class="lang-java">public class Caretaker {
+	List&lt;Snapshot&gt; history;
+	
+	public Caretaker() {
+		history = new ArrayList&lt;Snapshot&gt;();
+	}
+
+	public void addEntry(Snapshot s) {
+		history.add(s);
+	}
+
+	public void restore() {
+		Snapshot s = history.get(history.size()-1);
+		s.restore();
+	}
+}</code></pre>
+					</div>
+				</li>
+
+				<li>
+					Advantages:
+					<ul>
+						<li>Making backups without violating encapsulation</li>
+						<li>By extracting out maintenance and restoration, we keep original object as simple as possible</li>
+					</ul>
+				</li>
+
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Heavy memory cost, managing mementos</li>
+						<li>Need caretakers to track life cycles, more classes</li>
+						<li>Dynamic langauges can't actually guarantee state is preserved. </li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Strategy Pattern</h4>
+
+			<ul>
+				<li>
+					To select the method to complete a task dynamically at runtime. 
+				</li>
+				<li>
+					Say we have an object completing a problem, and we want it to choose on its own how to apprach said problem. 
+				</li>
+				<li>
+					We have several new classes called <b>strategies</b>, each of which is a different solving approach. The original object selects from and uses these classes, and becomes a <b>context</b> object.
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>Can swap implementation at runtime</li>
+						<li>separating implementation details of an algorithm from the code that is just running it</li>
+						<li>Simplifies class heirarchy -- composition replacing inheritance</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Unnecessary when there's only few choices</li>
+						<li>Requires clients to understand differences between strategies</li>
+						<li>Anonymous functions are making this obsolete</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h3 id="imp-5">SOLID</h3>
+
+
+			<ul>
+				<li>
+					These patterns help achieve SOLID principles of good code design, those being
+				</li>
+				<li>
+					<b>Single Responsibility:</b> each class does one thing
+				</li>
+				<li>
+					<b>Open/Closed:</b> open to extension closed to modification - once we finish a class, don't modify it again - extend it
+				</li>
+				<li>
+					<b>Liskov Substitution:</b> an object that uses a parent class can use its child classes without knowing -- child class can pretend to be parent class and serve all functionality of parent class
+				</li>
+				<li>
+					<b>Interface segregation:</b> many specific interfaces better than one generic interface -- no code should depend on methods it doesn't use
+				</li>
+				<li>
+					<b>Dependency Inversion:</b> ensure high level classes do not rely on functions from low level classes
 				</li>
 			</ul>
 
