@@ -50,6 +50,7 @@
 				<li><a href="#teamorg">Team Organisation</a></li>
 				<li><a href="#design">System Design</a></li>
 				<li><a href="#proj-manage">Project Management</a></li>
+				<LI><a href="#implementation">Implementation</a></LI>
 			</ol>
 		</div>
 
@@ -605,6 +606,386 @@
 				Success is measured against how well the project meets the spec and existing expectations.
 			</p>
 
+		</div>
+
+		<div class="colourband">
+			<h2 id="implementation">Implementation</h2>	
+		</div>
+
+		<div class="cbox">
+			<h3 id="imp-1">Design Patterns</h3>
+
+			<ul>
+				<li>
+					<b>Design Patterns</b> are solutions to common programming problems. They're modular blocks designed to make code more flexible, a design structure that achieves a purpose. You see them a lot in OOP, where most enterprise code is.
+				</li>
+				<li>
+					Design patterns all have 4 aspects: a meaninngful name, a description of the problem to solve, the solution, and a statement of the drawbacks.
+				</li>
+				<li>
+					They are generic blueprints, and it takes experience to know when to use them in the correct situations. 
+				</li>
+			</ul>
+
+			<h3 id="imp-2">Creational Patterns</h3>
+			<h4>Factories</h4>
+			<ul>
+				<li>
+					Creational Pattrns help with reducing the tedium of creating objects. 
+				</li>
+				<li>
+					Imagine a bicycle race: 
+					<pre><code class="lang-java">class Race {
+	public Race createRace() {
+		Frame frame1 = new Frame();
+		Wheel frontWheel1 = new Wheel();
+		Wheel rearWheel1 = new Wheel();
+		Bike bike1 = new Bike(frame1, frontWheel1, rearWheel1);
+		// repeat for every single other bike in the race...
+	}</code></pre>
+				</li>
+				<li>
+					This is <i>bloody tedius</i>. Plus if we were to extend from race:
+					<pre><code class="lang-java">class TourDeMartinique extends Race {
+	public Race createRace() {
+		// we need regulation bikes
+		// so we have to go through the whole rigamarole again of bike creation...
+		Frame frame1 = new RegulationFrameEx007();
+		Wheel frontWheel1 = new RegulationWheel1800F();
+		Wheel rearWheel1 = new RegulationWheel1800F();
+		Bike bike1 = new Bike(frame1, frontWheel1, rearWheel1);
+		// ...
+	}</code></pre>
+					it makes things even worse. Worse still, if we need to change something, then we would have to update the whole thing, which is error prone.
+				</li>
+				<li>
+					Instead, let's have methods which create objects for us, so we can have object creation all in one place -- this is the <b>factory method</b>
+					<pre><code class="lang-java">class TourDeMartinique extends Race {
+	Frame createFrame() { return new RegulationFrameEx007(); }
+	Wheel createWheel() { return new RegulationWheel1800F(); }
+	Bike createBike(Frame frame, Wheel front, Wheel back) {
+		return new Bike(frame, front, back);
+	}
+}</code></pre>
+					especially helpful if these common method signatures are implemented in the Race class.
+				</li>
+				<li>
+					We could even pull this into its own class - a <b>factory class</b>.
+					<pre><code class="lang-java">class BicycleFactory {
+	Frame createFrame() { ... }
+	Wheel createWheel() { ... }
+	Bike createBike(Frame frame, Wheel front, Wheel back) { ... }
+	Bike createDefaultBike() { ... }
+	// etc.
+}</code></pre>
+				</li>
+				<li>
+					It's a way to get around the limitations of statically typed OOP constructors.
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>Cutting down on repeated code</li>
+						<li>Adding new variations, scenarios is easier</li>
+						<li>Making changes is easier</li>
+						<li>Easier to test</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Lots of boilerplate classes</li>
+						<li>Factory is linked to its produced class, thus when we update that class, we must update all the factories -- still some sort of cascading update.</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Builders</h4>
+
+			<ul>
+				<li>
+					When an object has many attributes, especially when you want to just forget about some of them, writing constructors is hard. We'd need to consider all the variations of what we want, what constructors we need, and if there are like two dozen different attributes, <i>wah</i>.
+				</li>
+				<li>
+					<b>Builders</b> are the pattern to help with this issue. Builders abstract a constructor into a series of substeps, each of which "builds" an individual component, and the object is created with a final <code>build</code> call.
+					<pre><code class="lang-java">abstract class HouseBuilder {
+	abstract void buildWindows();
+	abstract void buildDoors();
+	abstract void buildWalls(); 
+	abstract void buildRooms();
+}</code></pre>
+				</li>
+				<li>
+					Builders are not factories, they are more flexible, and designed for large classes with many optional parameters. Their goal is to avoid long tedius constructors.
+				</li>
+				<li>
+					(Note: Lombok for java has the annotation <code class="lang-java">@Builder</code>)
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>More control over construction</li>
+						<li>Can reuse construction code for different instances</li>
+						<li><b>Single responsibility principle</b> one bit of code responsible for one thing. One place deals with construction.</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Like factories, needs large number of new classes and boilerplate</li>
+						<li>Code becomes longer, construction still complex, just modular now!</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Prototypes</h4>
+
+			<ul>
+				<li>
+					Another object construction method, where we create a <b>prototype object</b> and then <b>clone</b> it. e.g.
+					<pre><code class="lang-java">class Bike {
+	Object clone() { ... }
+    // ...
+}</code></pre>
+<pre><code class="lang-java">class Race {
+	Bike prototye;
+
+	public Race(Bike prototype) {
+		this.prototype = prototype;
+	}
+
+	public Race createRace() {
+		Bike b1 = (Bike) prototype.clone();
+		//...
+	}
+}</code></pre>
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>Don't need to make another subclass just to create an object</li>
+						<li>Remove heavy initialisation for cloning</li>
+						<li>Produce complex objects easily</li>
+						<li>Keep class heirarchy simple</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Circular references are difficult</li>
+						<li>Might still have to do heavy update code on cloned objects</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h3 id="imp-2">Structural Patterns</h3>
+
+			<h4>Proxy Pattern</h4>
+
+			<ul>
+				<li>
+					The proxy pattern allows us to create <b>placeholders</b> for other objects. 
+				</li>
+				<li>
+					Reference an entity without having to load the entire thing (such as in previews)
+				</li>
+				<li>
+					Used for anything which needs a "load on demand"
+				</li>
+				<li>
+					<button class="collapsible nul">Image Proxy Example... </button>
+					<div class="ccontent cnul">
+						<pre><code class="lang-java">public interface Graphic {
+	void draw();
+}
+
+public class ImageProxy implements Graphic {
+	private String fileName;
+	private Image content;
+
+	public ImageProxy(String fileName) {
+		this.fileName = fileName;
+		content = null;
+	}
+
+	public void draw() {
+		// only load the content when it is needed 
+		if (content == null) content = new Image(fileName);
+		// the actual image class will have a draw function
+		content.draw();
+	}
+}</code></pre>
+					</div>
+				</li>
+				<li>
+					There are many different types of proxy, like:
+				</li>
+				<li>
+					<b>Virtual Proxy</b> (lazy initialisation): for something that is resource heavy, put off loading until last minute.
+				</li>
+				<li>
+					<b>Protection Proxy</b>: provides access control to object.
+				</li>
+				<li>
+					<b>Remote Proxy:</b> offers functionality which is off-site, and handles all networking.
+				</li>
+				<li>
+					<b>Logging Proxy:</b> to keep track of accesses and requests on the side.
+				</li>
+				<li>
+					<b>Caching Proxy:</b> save contents/results of object for a short time, useful if object is computationally or networkly intensive.
+				</li>
+				<li>
+					<b>Smart Referencing:</b> essentially garbage collection.
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>Can hide away parts of service object</li>
+						<li>Allows to manage object life cycle</li>
+						<li>Proxy provides availability even if object not available</li>
+						<li>New proxies can be made without changing service</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Added complexity</li>
+						<li>Adds another step in getting response -- overhead concerns</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Decorator Pattern</h4>
+
+			<ul>
+				<li>
+					Suppose we want to have an object that does multiple things. Say, we have a message bot, that needs to send to several different platforms at once. Well, given a base <code>Message</code> class, for each platform we would have to subcass: <code>FacebookMessage</code>, <code>TwitterMessage</code>, <code>DiscordMessage</code>, etc, etc.
+				</li>
+				<li>
+					But what if we want to send to multiple at once? Then we'd need to do all the combinations and ... 
+				</li>
+				<li>
+					Wah.
+				</li>
+				<li>
+					<b>Decorators</b> are a way around this, by wrapping objects so they can have dynamic behaviour at runtime. They're the <code>@Data</code> type things you see in Java. 
+				</li>
+				<li>
+					A wrapper is an outside "packaging class" that has all the functionality of the inner class, but will do some extra logic before calling original methods. 
+				</li>
+				<li>
+					At runtime, we can now check what options the client has picked, and wrap our message object in all the necessary decorators.
+				</li>
+				<li>
+					Decorators and Proxies are very similar in method, but are there for different things.
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>
+							Extend behaviour without adding several subclasses
+						</li>
+						<li>Responsibilities become dynamic at runtime</li>
+						<li>Combinable, unlike subclasses</li>
+						<li>Promotes single responsibility</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Removing wrappers later is difficult</li>
+						<li>Hard to implement in a way that isn't order dependent</li>
+						<li>Initial code layout can look messy - having used Spring... <i>can</i> bloody confirm.</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Adaptor</h4>
+
+			<ul>
+				<li>
+					As name implies, allows output from one object to be used by another. 
+				</li>
+				<li>
+					If we update a class that is used everywhere, we would need to make sweeping changes across entire code base, which is really error prone and hard to do. Alternatively, stick an adaptor between the object and everything else.
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>Promotes single responsibility</li>
+						<li>New adaptors can be introduced without heavy refactoring</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Increased code complexity</li>
+						<li>Depending on size of codebase, converting original object might just be easier</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Flyweight</h4>
+
+			<ul>
+				<li>
+					The above is all about wrapping objects to add more functionality.
+				</li>
+				<li>
+					What if we don't want to do that, rather just rearrange the objects so they're nicer?
+				</li>
+				<li>
+					The <b>flyweight</b> pattern is a design pattern that allows us to get more objects in memory. They work best when objects share common properties which are also huge in size.
+				</li>
+				<li>
+					Essentially: find all the data that is the same over a bunch of objects, and just extract that into a static class.
+				</li>
+				<li>
+					<button class="collapsible nul">Flyweight Example... </button>
+					<div class="ccontent cnul">
+						<p>
+							Suppose we have this NPC:
+						</p>
+						<pre><code class="lang-java">class Orc {
+    String name;
+	int health;
+	Weapon weapon;
+	NPCAI style;
+	Map texture;
+
+	// methods...
+}</code></pre>
+						<p>
+							But the texture map is huge, because this is a really detailed game. If every orc has its own copy, we can't store many of them. But this texture is common to all orcs (as well as a few other things), so might as well split this into
+						</p>
+						<pre><code class="lang-java">class OrcData {
+	static NPCAI style;
+	static Map texture;
+	static Weapon weapon;
+}
+
+class Orc {
+	String name;
+	int health;
+	OrcData data;
+}</code></pre>
+						<p>
+							And so now we only store <b>one</b> copy of <code>OrcData</code>.
+						</p>
+					</div>
+				</li>
+				<li>
+					Advantages: Saves memory, potentially drastically
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Some data may need to be recalculated every call -- saving memory for increased compute time</li>
+						<li>Complex code</li>
+					</ul>
+				</li>
+			</ul>
 		</div>
 		
 
