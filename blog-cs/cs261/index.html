@@ -613,6 +613,15 @@
 		</div>
 
 		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#imp-1">Design Patterns</a></li>
+				<li><a href="#imp-2">Creational Patterns</a></li>
+				<li><a href="#imp-3">Structural Patterns</a></li>
+				<li><a href="#imp-4">Behavioural Patterns</a></li>
+			</ol>
+
 			<h3 id="imp-1">Design Patterns</h3>
 
 			<ul>
@@ -778,7 +787,7 @@
 				</li>
 			</ul>
 
-			<h3 id="imp-2">Structural Patterns</h3>
+			<h3 id="imp-3">Structural Patterns</h3>
 
 			<h4>Proxy Pattern</h4>
 
@@ -986,6 +995,89 @@ class Orc {
 					</ul>
 				</li>
 			</ul>
+
+			<h3 id="imp-4">Behavioural Patterns</h3>
+
+			<ul>
+				<li>
+					Concerned with how objects communicate. Majority of object's behaviour is communication.
+				</li>
+				<li>
+					Object can eithe change its own internal state, or interact by passing data to another object. The latter is what we care about.
+				</li>
+			</ul>
+
+			<h4>Iterator Patterns</h4>
+
+			<ul>
+				<li>
+					I think we've all used these? All default java data structures implement <code>Iterator</code> so we can do <code class="lang-java">for (Object i : listOfObjects) { ... }</code>
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>Single responsibility principle</li>
+						<li>New iterators can be introduced without heavy redesigns</li>
+						<li>Iterate multiple ways in parallel</li>
+						<li>Can even pause iteration and carry on later</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Not always necessary</li>
+						<li>Less effective for highly specialised objects</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Observer patterns</h4>
+
+			<ul>
+				<li>
+					Allows an object's dependents to be automatically notified of a change.
+				</li>
+				<li>
+					This can work as a <b>push model</b> (sender sends) or a <b>pull model</b> (receiver periodically asks).
+				</li>
+				<li>
+					Often referred to as Producer/Consumer or Publisher/Subscriber.
+				</li>
+				<li>
+					On the producer side, subscribers should be able to be added and removed from notification lists. Can have a different notification method for each type of notification publisher sends. Then, when the event occurs, iterate through all subscribed and send.
+				</li>
+				<li>
+					This way removes the need for subscribers to constantly check - busy waiting is bad and is a waste of resources.
+				</li>
+				<li>
+					Subscriber lists must be <b>opt-in</b>.
+				</li>
+				<li>
+					By maintaining lists we reduce the number of subscribers that need to receive data and do not bother the rest of the system unnecessarily.
+				</li>
+				<li>
+					Advantages:
+					<ul>
+						<li>New subs can be added without needing to redesign publisher</li>
+						<li>Relationships between objects can change at runtime</li>
+					</ul>
+				</li>
+				<li>
+					Disadvantages:
+					<ul>
+						<li>Subscribers notified in possibly random order</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Memento Pattern</h4>
+
+			<ul>
+				<li>
+					Save and Restore objects without revealing details of implementation.
+				</li>
+			</ul>
+
 		</div>
 		
 
