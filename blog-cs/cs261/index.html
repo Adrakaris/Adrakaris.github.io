@@ -1223,7 +1223,9 @@ class Orc {
 			<h3>Introduction</h3>
 
 			<ol>
-
+				<li><a href="#hci-1">Attention</a></li>
+				<li><a href="#hci-2">Memory</a></li>
+				<li><a href="#hci-3">Cognition</a></li>
 			</ol>
 
 			<hr>
@@ -1321,6 +1323,122 @@ class Orc {
 					This relates to <b>icon design</b>, where we want to use existing known icons for things (like a bell or envelope for notifications). Icons can be designed in 4 ways - <i>resemblance</i>; <i>exemplar</i> (using an example, like knife and fork for restaurant); <i>symbolic</i> (abstraction, a glass with a crack is fragile); or <i>arbitrary</i> (like the radioactive symbol).
 				</li>
 			</ul>
+
+			<h3 id="hci-3">Cognition</h3>
+
+			<h4>Norman's Action Cycle</h4>
+
+			<ul>
+				<li>
+					Cognition includes understanding, remembering, reasoning, attending, ideas, and skills. 
+				</li>
+				<li>
+					Psychologist Donald Norman created a <i>human action cycle</i> to describe actions people take when interacting with systems. We can use it to evaluate how good our UI is.
+				</li>
+				<li>
+					<figure>
+						<img src="http://petekinser.com/wp-content/uploads/2011/04/Norman-Action-Cycle.png" alt="" title="(Pete Kinser)" style="max-width: 200px;">
+					</figure>
+					<ul>
+						<li>
+							Form a goal - user first decides what they want to do 
+						</li>
+						<li>
+							Intention to act - user makes intention explicit
+						</li>
+						<li>
+							Plannign to act - user chooses action from list of possible actions
+						</li>
+						<li>
+							Execution - user does the interaction
+						</li>
+						<li>
+							Feedback - user receives feedback from the world / system
+						</li>
+						<li>
+							Interpret feedback - user interprets the feedback based on what they expected to happen
+						</li>
+						<li>
+							Evaluate - user determines if they have been successful and are now closer to their goal
+						</li>
+					</ul>
+				</li>
+				<li>
+					Using the cycle to evaluate focuses on two aspects: the <b>Gulf of Evaluation</b> and the <b>Gulf of Execution</b>. 
+				</li>
+				<li>
+					The former is the gap which must be corssed to interpret a UI. If outcomes are not expected, then the UI may be difficult to interpret. 
+				</li>
+				<li>
+					The latter is the gap between wanting to complete an action and doing that action. Effectively how long / many steps it takes for the user to complete their actions, which should be small for common actions. Powerusers can make use of macros or shortcuts or something.
+				</li>
+				<li>
+					From the action cycle we can also get 4 principles of design:
+					<ul>
+						<li>
+							<b>Provide visibility</b> -- ensure user can easily understand current state of operations
+						</li>
+						<li>
+							<b>Provide a good conceptual model</b> -- ensure outcomes and results are consistently presented 
+						</li>
+						<li>
+							<b>Provide good mappings</b> -- ensure easy to determine what the outcome of any action will be 
+						</li>
+						<li>
+							<b>Provide feedback</b> -- ensure user gets constant and consistent feedback on results
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+			<h4>Gestalt Principles</h4>
+
+			<ul>
+				<li>
+					Some more psychologists blah blah blah. Patterns and rules on how humans will perceive sensory information.
+				</li>
+				<li>
+					1: <b>Figure Ground Principle</b>: People segment their vision into "figure" and "ground" (i.e. fore and background). The figure gets the focus and is perceived as in front.
+				</li>
+				<li>
+					2: <b>Similarity Principle</b>: Form informs function. If two things look similar, they'll probably behave similar. Can make use of colours and shapes in UI. 
+				</li>
+				<li>
+					3: <b>Proximity Princple</b>: If objects are grouped together, they're probably related. Proximity overrides similarity. 
+				</li>
+				<li>
+					4: <b>Common Region Principle</b>: Following from proximity, we group objects together in the same closed region -- what borders do. A UI will have several boxes and menus.
+				</li>
+				<li>
+					5: <b>Continuity Principle</b>: If a series of objects are in a line or a curve, we think they are related. Curves and lines are better because we pattern match them quickly. 
+				</li>
+				<li>
+					6: <b>Closure Principle</b>: If we see a complex arrangement of shapes, likely to form them into a single pattern and fill in the blanks. ඞ
+				</li>
+				<li>
+					7: <b>Focal Point Principle</b>: When we look at an image, we are drawn to the thing that stands out the most. Think about the big, bold, green-on-white <span style="background-color: green; color: white; font-weight: bolder;">ACCEPT COOKIES</span> and then the small, inconspicuous <span class="grey">reject non-essential cookies</span> on those popups.
+				</li>
+			</ul>
+
+			<h3 id="hci-4">Affordances</h3>
+
+			<ul>
+				<li>
+					Perception is where information is detected rather than constructed. <b>Affordances</b> are what an object allows us to do. A door affords opening it. 
+				</li>
+				<li>
+					We must make affordances as clear to the user as possible, to make more intuitive. We show affordances via <b>signifiers</b>
+				</li>
+				<li>
+					Affordances can be perceptible, or invisible (not shown, but is known), but signifiers <b>must be perceptible</b> -- a plate on a door indicating push (and also used wrong, like a handle on a push door, which is a false signifier) 
+				</li>
+				<li>
+					Many affordances and signifiers exist by convention, such as a floppy disc being used for the save icon. 
+				</li>
+			</ul>
+			<p>
+				We can use metrics to evaluate a UI - such as the ratio of success to failure, time to complete a task, number of errors a user makes, or the number of times a user expresses frustration (windows 10 settings app) or satisfaction.
+			</p>
 		</div>
 		
 
