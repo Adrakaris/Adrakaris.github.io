@@ -86,6 +86,7 @@
 				<li><a href="#search">Search</a></li>
 				<li><a href="#csp">Constraint Satisfaction</a></li>
 				<li><a href="#probability">Conditional Probability and Bayes</a></li>
+				<li><a href="#kbs">Knowledge Bases and Rule Based Systems</a></li>
 			</ul>
 		</div>
 
@@ -987,6 +988,367 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 
 		<div class="colourband">
 			<h2 id="kbs">Knowledge Bases and Rule-Based Systems</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#kbs-1">Knowledge Bases</a></li>
+				<li><a href="#kbs-2">Rules as Knowledge</a></li>
+				<li><a href="#kbs-3">Debugging and Conflict Resolution</a></li>
+				<li><a href="#kbs-4">Assumption Reasoning</a></li>
+			</ol>
+
+			<h3 id="kbs-1">Knowledge Bases</h3>
+
+			<p>
+				Knowledge bases are stores of <b>facts</b>, in propositional logic. Usually they're stored as <i>horn clauses</i> (of form \(a_1 \land a_2 \land \cdots \land a_n \implies x\)). Knowledge bases are usually denoted \(KB\).
+			</p>
+			<p>
+				<b>Reasoning</b> is the bridge between the facts, and what can be deduced to be true from the facts. After all, it is difficult to store <i>every</i> true thing. If a proposition \(\alpha\) can be deduced from the KB, we write \(KB \models \alpha\) (KB entails alpha).
+			</p>
+			<p>
+				That being said, KBs can be represented by different languages, and the expressiveness of the language can determine what we can represent.	
+			</p>
+			<p>
+				The <i>knowledge representation hypothesis</i> is that any mechanical, intelligent agent will have a <b>collection of true propositions</b>, and be able to do <b>formal reasoning</b> on them to deduce new facts. 
+			</p>
+			<p>
+				As mentioned, boolean algebra (and propositional logic) is often used, because it is easy to work with.
+			</p>
+			<p>
+				Note that the variables themselves have no intrinsic meaning, the user must decide the <b>intended implementation</b>, and thus each atomic proposition would represent one thing the user wants to describe about the world. 
+			</p>
+
+			<h3 id="kbs-2">Expert Systems</h3>
+
+			<p>
+				The <i>Expert System</i> was one of the older in-fashion AI models. It's basically a program with a KB that <b>represents</b> knowledge, and can <b>reason</b> (logically) with it. 
+			</p>
+			<p>
+				An expert, a human who has knowledge in the subject, is responsible for entering the base data that the system has to go one (hence, expert system). The user then interacts with the "other side" of the system to input data and query facts. 
+			</p>
+			<button class="collapsible active">MYCIN... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b>MYCIN</b> was an old expert system used (well, intended to be used) in medicine. Its knowledge base was made up of rules, of the form <blockquote>if conditions \(c_1, c_2, \dots\), then, with probability (tally) \(t\), draw conclusions \(x_1, x_2, \dots\)</blockquote>
+				</p>
+				<p>
+					Data is stored in a tree, and then the system will search through the tree. Each node is a "goal", a condition to be met, and all / some subgoals must be met for the parent node to be. 
+				</p>
+				<p>
+					This type of tree is an <b>and-or tree</b>. In an AND/OR tree, if a nodes' children are connected with an arc between their lines to the parent, it is an AND. Otherwise, it is an OR. 
+				</p>
+			</div>
+
+			<h3 id="kbs-3">Rules as Knowledge</h3>
+
+			<p>
+				Rational people act consistently, thus consistent behaviour is seen as intelligent behaviour. For an AI system we can describe these in the form of <b>production rules</b> (i.e. from this state you can do these things).
+			</p>
+			<p>
+				A <b>canonical</b> system is a formal grammar system based on an alphabet, some "axiom" strings (variables), and a set of production rules - in all effect, a <i>context sensitive language</i> (see 255).
+			</p>
+
+			<button class="collapsible">Example language... </button>
+			<div class="ccontent">
+				<ul>
+					<li>The alphabet \(A = \{a,b,c\} \)</li>
+					<li>The axioms \($ \in \{a, b, c, aa, bb, cc\} \)</li>
+					<li>
+						The production rules
+						\begin{align}
+							$ &\longrightarrow a$a \\
+							$ &\longrightarrow b$b \\
+							$ &\longrightarrow c$c 
+						\end{align}
+					</li>
+				</ul>
+				<p>
+					Where, as seen, $ belongs to one of the starting axioms.
+				</p>
+			</div>
+			<p>
+				In a KB, we can represent knowledge through our "alphabet", which conists of three sets of words: O of objects, A of attribtes, and V of values of attributes.
+			</p>
+			<p>
+				Our grammar here is based on <b>object-value-attribute triples</b>, where we can have
+				<ul>
+					<li>(object attribute value) or</li>
+					<li>(object (attribute value) (attribute value) ... )</li>
+				</ul>
+			</p>
+			<p>
+				Our <b>working memory</b> is the knowledge base. It stores strings of facts (axioms), which define the initial state. It also stores production rules, to allow transitions from one state to another.
+			</p>
+			<p>
+				Each fact is a <b>working memory element</b>, and can be interpreted as an existential first-order logic: (student (name John) (department computerScience)) means the same as \(\exists x : student(x) \land (name(x) = \textrm{John}) \land (department(x) = \textrm{computerScience})\)
+			</p>
+
+			<p>
+				Production rules are then effectively <b>if-then</b> statements. 
+			</p>
+			<p class="blue">
+				The <b>CLIPS</b> syntax is one of these rule-representation syntaxes -- <i>and does appear on the exam</i>
+			</p>
+			<button class="collapsible active">CLIPS example... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Example.</i></b> Assume the working memory has the rules: <span class="grey">(organism means the patient is infected with that organism)</span>
+				</p>
+				<div class="codediv">(patient (name Jones) (organism organism-1))
+(organism (name organism-1) (morphology rod) (aerobicity aerobic))</div>
+
+				<p>
+					And has the rule 
+				</p>
+				<div class="codediv">(defrule diagnosis
+	(patient (name ?) (organism ?org))
+	(organism (name ?org) (morphology rod) (aerobicity aerobic))
+	=>
+	(assert 
+		(organism (name ?org) (identity enterobacteriacae) (confidence 0.8))
+	)
+)</div>
+			</div>
+
+			<p>
+				The rule interpreter applies the rules, and it works in a <b>recognise-act cycle</b>. I.e, match the front, and then apply the rule. If multiple things match, pick one according to some strategy (e.g. at random, or through h&nbsp;e&nbsp;u&nbsp;r&nbsp;i&nbsp;s&nbsp;t&nbsp;i&nbsp;c&nbsp;s)
+			</p>
+			<p>
+				When no actions are left, then the recognise-act cycle stops.
+			</p>
+			<p>
+				Controlling inference behaviour is deciding what rules to fire if we have multiple. Control can be <b>global</b> -- hard coded into the engine and domain independent, or <b>local</b> -- domain dependent and encoded as "meta rules", rules about how to fire rules.
+			</p>
+			<p>
+				We fire several rules in order to reach a conclusion, this is an <b>inference chain</b>, like steps of a proof. You can think of all possible inference chains as a tree. 
+			</p>
+			<p>
+				Building an inference chain can be done in two ways: <b>forward chaining</b> and <b>backwards chaining</b>.
+			</p>
+			<p>
+				<b>Forward chaining</b> starts from data, and tries to fire rules until you reach a conclusion. Irrelevant facts will also be inferred. <b>Backwards chaining</b> goes from a goal and tries to reverse the rules to reach known facts. 
+			</p>
+
+			<button class="collapsible active">Forward Chaining Example... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Example.</i></b> Forward chaining is the <b>"bottom-up ground proof procedure"</b>. It is logically sound, deterministic, but may unnecessarily fire rules. Suppose we have the facts \(A, B, C, D, E\) and the rules 
+					\begin{align}
+						Y \land D &\longrightarrow Z \\
+						X \land B \land E &\longrightarrow Y \\
+						A &\longrightarrow X \\
+						C &\longrightarrow L \\
+						L \land M &\longrightarrow N
+					\end{align}
+					and wanted to get Z. (note that in the slides the \(\land\) is a & symbol)
+
+				</p>
+				<p>
+					We're iterating through the list repeatedly, firing all the rules we can on every pass.
+				</p>
+				<ul>
+					<li>
+						Fire \(A \longrightarrow X\), known facts now \(A, B, C, D, E, X\)
+					</li>
+					<li>
+						Fire \(C \longrightarrow L\), now have \(A, B, C, D, E, L, X\)
+					</li>
+					<li>
+						Fire \(X \land B \land E \longrightarrow Y\), now have \(A, B, C, D, E, L, X, Y\)
+					</li>
+					<li>
+						Fire \(Y \land D \longrightarrow Z \), now have \(A, B, C, D, E, L, X, Y, Z\)
+					</li>
+				</ul>
+				<p>
+					Note that inferring L was <b>wasteful</b>.
+				</p>
+			</div>
+			<p></p>
+			<button class="collapsible active">Backwards Chaining Example... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Example.</i></b> Backwards chaining is the <b>"top-down definite clause proof procedure"</b>. We start with a goal, and <i>replace</i> it with the LHS of a rule, until our clause entirely consists of KB facts. This is <b>nondeterministic</b>
+				</p>
+				<p>
+					Suppose we have the same KB and ruleset as the previous example
+				</p>
+				<ul>
+					<li>
+						Start with \(Z\)
+					</li>
+					<li>
+						Replace with \(Y \land D\) via rule. D is ok, but Y?
+					</li>
+					<li>
+						Replace with \(X \land B \land E \land D\) via rule replacing Y. Now X?
+					</li>
+					<li>
+						Replace with \(A \land B \land E \land D\) via rule replacing X. 
+					</li>
+					<li>
+						Thus we fire the chain
+						\begin{align}
+							A &\longrightarrow X \\
+							X \land B \land E &\longrightarrow Y \\
+							Y \land D &\longrightarrow Z.
+						\end{align}
+					</li>
+				</ul>
+
+				
+			</div>
+
+			<p>
+				In some cases, we want to ask the user at certain points. We can then introduce <b>askable clauses</b>. The idea is it is tedius for the user to input all possible knowledge, and also they don't know what will be relevant, and so askable clauses provide targeted asking at the right time. 
+			</p>
+
+			<h3 id="kbs-4">Debugging and Conflict Resolution</h3>
+
+			<p>
+				Sometimes, things go wrong (logically). There are 4 possibilities of wrong logical answers: (1) <b>incorrect</b>, when a clause that should be false is true, (2) <b>not produced</b>, a true clause could not be derived, (3) <b>infinite loop</b>, and (4) <b>irrelevant questions asked</b>, which requires reassesment of the KB.
+			</p>
+			<p>
+				If the answer is incorrect, then there must be some fact that is wrong, and some rule in the KB that wrongly proved it. We can re-ask the user/expert about all the variables, but if that gets us nowhere, then a rule is wrong. 
+			</p>
+			<p>
+				If the answer could not be derived, then either there's no rule for it, or the rule exists but isn't fired (another variable is wrong). Can solve this recursively by finding all variables that should be true, but are currently underivable. 
+			</p>
+			<p>
+				If the rules are <b>cyclical</b>, a KB can loop. We can convert the KB into a directed graph, and check for cycles, and redo the KB so it does't exist. Forward chaining however <i>cannot</i> loop, since it doesn't fire a rule that doesn't add a new fact. 
+			</p>
+			
+			<h4>Conflict Resolution</h4>
+
+			<p>
+				One rule firing can affect other rules, since it changes the KB. 
+			</p>
+			<p>
+				<b>Conflict Resolution</b> is choosing which rule to fire when multiple possible can be. 
+			</p>
+			<p class="blue">
+				The set of fireable rules is the <b>conflict set</b>. This is called the <b>agenda</b> in CLIPS.
+			</p>
+
+			<p>
+				A basic (or fallback) approach would be to fire rules in order of appearance. However, then the order of rules has an impact, and there is <i>implicit</i> knowledge that higher rules are more important. 
+			</p>
+			<p>
+				Generally, conflict resolution is based on <b>specificity</b>. The more conditions, the harder to satisfy, thus, match the most specific one.
+			</p>
+			<p>
+				We can also use <b>recency</b>, the more recent the data, the higher its priority (useful for, say, weather). 
+			</p>
+			<p>
+				We can also enforce <b>refactoriness</b>, a rather confusing way of saying each rule can only be used once.
+			</p>
+
+			<p>
+				Conflict resolution can also employ <b>meta knowledge</b>, which are rules about the use of domain knowledge in a system. More often than not dependent on the domain at hand, and determine  Represented as <b>meta rules</b>. 
+			</p>
+
+			<button class="collapsible">Meta Rules Example... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> A domain independent meta rule can be 
+				</p>
+				<div class="codediv">IF there are rules which do not mention the current goal in premise
+	AND there are rules which do mention the current goal in premise
+THEN with probability (1.0) the former should be fired before the latter</div>
+				<p>
+					A domain dependent meta rule can be
+				</p>
+				<div class="codediv">IF the infection is a pelvic abcess
+	AND there are rules which mention in premise enterobacteriacae
+	AND there are rules which mention in premise gram-positive rods
+THEN with probability (0.4) the former should be fired before the latter</div>
+				<p>
+					Look... Nathan does medical stuff, ok? Don't ask.
+				</p>
+			</div>
+
+			<h4>RETE</h4>
+
+			<p>
+				We want to increase the efficiency of rule matching. Especially as every recognise-act cycle, little is changed, and many rules share conditions. 
+			</p>
+			<p>
+				The idea is to use the <b>Rete</b> (latin for net) algorithm.
+			</p>
+			<img src="https://fico.my.salesforce.com/servlet/servlet.ImageServer?id=01580000002jqhuAAA&oid=00D0000000052aJ" alt="" title="(Sanjana Marce)" align="right" style="max-width: 240px;">
+			<p>
+				Every rule is represented as a directed acyclic graph, based on the characteristics of the  antecedent (left hand side), which must be met for the RHS to be fired. 
+			</p>
+			<p>
+				There are two main types of nodes in the body, \(\alpha, \beta\). 
+				<ul>
+					<li>
+						\(\alpha\) nodes are self-contained, that is, they have only one input, and can be thought of as a unary test. 
+					</li>
+					<li>
+						\(\beta\) nodes are two input, they join together two conditions into one single constraint.
+					</li>
+
+				</ul>
+			</p>
+			<p>
+				New or changed working memory elements (tokens) are passed through the tree, taking the path that matches best. If the token can make it from the root to the terminal rule node, then that rule can be fired. 
+			</p>
+			<p>
+				Anyway, slides are obtuse, I got this from <a href="https://community.fico.com/s/blog-post/a5Q8000000082VcEAI/fico1097">this article here</a>, have a read if you want.
+			</p>
+
+			<hr>
+
+			<p>
+				Rule based systems are 
+			</p>
+			<ul>
+				<li>(+) good because they make for an easy mapping between an expert's knowledge and rule format</li>
+				<li>(+) they represent rules as individual bits of knowledge</li>
+				<li>(-) however this makes relationships between rules can be unclear</li>
+				<li>(-) and it is harder to manage with more rules.</li>
+				<li>(+) they separate out processing from knowledge</li>
+				<li>(+) and are able to represent and reason with uncertainty</li>
+				<li>(-) but each cycle requires a full search through the rules, which can take a while</li>
+				<li>(-) and the system cannot learn by itself, and is also easily broken.</li>
+			</ul>
+
+			<hr>
+
+			<h3 id="kbs-5">Assumption Reasoning</h3>
+
+			<p>
+				Assumption based reasoning is where an agent makes some <b>assumptions</b> instead of deducing knowledge, such as
+			</p>
+			<p>
+				<b>Abduction</b>, where an agent makes a hypothesis to explain observations, and 
+			</p>
+			<p>
+				<b>Default reasoning</b>, where "normality" is assumed -- where something is assumed to exist as it normally would (no edge cases) to facilitate processing. 
+			</p>
+			<p>
+				An <b>assumption based framework</b> has <i>two</i> sets of formulae, <b>facts</b> F and <b>possible hypotheses</b>/assumables H. Facts can also include integrity constraints, which musn't evaluate to true.
+			</p>
+			<p>
+				Using this framework, 
+				<ul>
+					<li>
+						Under <b>default reasoning</b> when the truth of a clause \(g\) is unknown, an explanation for \(g\) will be an argument / observation of \(g\)
+					</li>
+					<li>
+						Compared to <b>abduction</b>, where given a \(g\), and we want to explain why it is. 
+					</li>
+				</ul>
+				Given an observation we do abduction, then default reasoning is used to find the consequences.
+			</p>
+			<p>
+				Repeat the assumption process until all our variables are comprised of assumables. However at the same time, we mustn't violate integrity constraints.
+			</p>
 		</div>
 		
 		
