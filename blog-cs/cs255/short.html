@@ -1364,6 +1364,16 @@ THEN with probability (0.4) the former should be fired before the latter</div>
 		</div>
 		
 		<div class="cbox">
+
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#pop-1">Reasoning with knowledge</a></li>
+				<li><a href="#pop-2">Planning</a></li>
+				<li><a href="#pop-3">Situation Calculus and STRIPS</a></li>
+			</ol>
+
+			<h3 id="pop-1">Reasoning with Knowledge</h3>
 			<p>
 				Partial Order planning, or <i>planning with certainty</i>, also uses knowledge bases. Agents who use knowledge bases are <b>knowledge based agents</b>.
 			</p>
@@ -1401,16 +1411,102 @@ kbAgent(percept):
 			<p>
 				Three functions here abstract away implementation. <code>makePercentSentence</code> encodes the observed percept into a formal sentence. <code>makeActionQuery</code> asks the knowledge base on what action to do at this time with this state. <code>makeActionSentence</code> then tells the query what action was done.
 			</p>
+
 			<p>
-				Below is an example of a game where everything is certain.
+				In certain planning, we're interested in worlds where everything is certain - that is, there is no random chance. When there is no random chance, we can reason with absolute certainty.
 			</p>
 
-			<button class="collapsible">Wumpus World... </button>
-			<div class="ccontent">
+			<div style="display: none;">
 				<p>
-					
+					Below is an example of a game where everything is certain.
+				</p>
+	
+				<button class="collapsible">Wumpus World... </button>
+				<div class="ccontent">
+					<p>
+						
+					</p>
+				</div>
+			</div>
+
+			<p>
+				However, in some situations, even after all our logical predictions we cannot be sure of an optimal move. There are cases of <i>no good moves</i>. Imagine in minesweeper where you have two possible mine places, and one mine remaining, and there's no indication from the numbers which one it is. 
+			</p>
+			<p> 
+				In this case, we can use a few things. <b>Background knowledge:</b> where we take what we know built into the agent, such as the distribution of mines, to make an educated guess. Or <b>Coersion:</b> where we force a move to reduce the world into a more certain state. In minesweeper, this risks loss as you make a random move. In other games, like <i>wumpus</i>, you can shoot and check if you killed anything. If not, that direction is safe. Thus, you sacrifice an arrow to coerce the world into where you have safe states. 
+			</p>
+
+			<h3 id="pop-2">Planning</h3>
+
+			<p>
+				We can encode all of these states and conditions formally in propositional logic, but, as found out in CS262 Logic, this blows up very quickly to lots and lots of sentences, thus searching through such possible state spaces is incredibly inefficient.
+			</p>
+			<p>
+				Thus, we use <b>planning</b>. Planning is a different way of, well, planning actions, which does not require searching through a full state space. 
+			</p>
+			<p>
+				Suppose we have an easier problem: We are at home with nothing. We can do all sorts of things, but our goal is to buy milk, bananas, and a drill. 
+			</p>
+			<p>
+				Now, whilst this is easier to us, a search algorithm will be extremely lost. WHat's the first action? We can sit idly staring at a wall, take the dog out for a walk, go wander round the garden, make a sandwich, etc, etc ... since the branching factor may be thousands or more, and path length fairly long, exhaustive searching is infeasible. It may even be hard to use heuristics. 
+			</p>
+			<p>
+				A <b>planning system</b> has a set of sentences for the <b>states</b>, and the <b>goals</b>. It also has <b>actions</b>, which have preconditions, and have effects. 
+				<ul>
+					<li>
+						In search, states are stored in data structures, both the action and goal are hard-coded, and the plan is a sequence from \(s_0\) the start state.
+					</li>
+					<li>
+						In planning, states are logic sentences, actions are just "boxes" with preconditions and outcomes, the goal is also a logic sentence, a <b>conjunction</b>, and the plan is just constraints on actions.
+					</li>
+				</ul>
+			</p>
+			<p>
+				The planner connects states and actions. We can even use divide and conquer, where we have several subplans that have little interaction between them -- such as (a) get to the shop and (b) buy stuff in the shop, which are subplans which wouldn't affect each other. 
+			</p>
+
+			<button class="collapsible">Pseudocode Simple Planning Agent</button>
+			<div class="ccontent">
+				<div class="codediv">static KB
+static t = 0  # time 
+static p = None  # plan 
+
+simplePlanningAgent(percept):
+	G;  # a goal 
+	current;  # description of current state
+	tell(KB, makePerceptSentence(percept, t))
+	current &lt;- stateDescription(KB, t)
+	if p == noPlan:
+		G &lt;- ask(KB, makeGoalQuery(t))
+		p &lt;- idealPlanner(current, G, KB)
+	if p == None or p is empty:
+		action &lt;- noOp
+	else:
+		action %&lt;- first(p)
+		p &lt;- rest(p)
+	tell(KB, makeActionSentence(action, t))
+	t &lt; t + 1 
+	return action </div>
+			</div>
+			
+			<p>
+				The planning agent
+				<ul>
+					<li>Updates the knowledge base</li>
+					<li>Create a new goal, and a plan, if there isn't already one. A NoOp must exist where the goal is infeasible or achieved</li>
+					<li>Once agent has a plan, it will execute it to completion</li>
+				</ul>
+				There is minial interaction with the environment. 
+			</p>
+
+			<h3 id="pop-3">Situation Calculus and <span class="sc">STRIPS</span></h3> 
+
+			<div class="blue">
+				<p>
+					<b>Situational Calcucus</b> is using <b>first order logic</b> to describe change. In SC, the world is viewed as <b>situations</b> - "snapshots" of state. Each situation is made from a previous via an action.
 				</p>
 			</div>
+			
 			
 		</div>
 		
