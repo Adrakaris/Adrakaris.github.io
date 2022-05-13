@@ -87,6 +87,7 @@
 				<li><a href="#csp">Constraint Satisfaction</a></li>
 				<li><a href="#probability">Conditional Probability and Bayes</a></li>
 				<li><a href="#kbs">Knowledge Bases and Rule Based Systems</a></li>
+				<li><a href="#pop">Partial Order Planning</a></li>
 			</ul>
 		</div>
 
@@ -322,7 +323,14 @@
 				But this is still a dumb algorithm. What if we add h e u r i s t i c s to find an optimal solution? Suppose we already have a path to the goal. Let's set a bound \(p\) as its cost. If we have a path where the cost + heuristic \(&gt; p\), then clearly, it will never be shorter, and thus is immediately pruned. 
 			</p>
 			<p>
+				Basically, given a known goal at depth \(p\), no nodes with depth \(&gt; p\) will even be encountered. Set the bound to <b>less than</b> \(p\) and keep searching at a decreasing depth until we can't find goal nodes any more.
+			</p>
+			<p>
 				Rinse and repeat until we have no more shorter paths than our \(p\). That is our optimal solution, and this is <b>Depth First Branch and Bound</b>.
+			</p>
+
+			<p>
+				(For a known state space with unknown goals, then just put the bound at the max depth, to save researching anything)
 			</p>
 
 			<h3>Finding Heuristics</h3>
@@ -1350,7 +1358,61 @@ THEN with probability (0.4) the former should be fired before the latter</div>
 				Repeat the assumption process until all our variables are comprised of assumables. However at the same time, we mustn't violate integrity constraints.
 			</p>
 		</div>
+
+		<div class="colourband">
+			<h2 id="pop">Partial Order Planning</h2>
+		</div>
 		
+		<div class="cbox">
+			<p>
+				Partial Order planning, or <i>planning with certainty</i>, also uses knowledge bases. Agents who use knowledge bases are <b>knowledge based agents</b>.
+			</p>
+
+			<p>
+				KB Agents can be characterised at three levels based on abstraction:
+				<ul>
+					<li>
+						<b>Knowledge Level:</b> what is known, regardless of implementation. Most abstract level. We are given <code>ask()</code> to retrieve data and <code>tell()</code> to input data.
+					</li>
+					<li>
+						<b>Logical level:</b> where the knowledge is encoded in formal sentences, like propositional logic.
+					</li>
+					<li>
+						<b>Implementation level:</b> the actual data structures and whatever. 
+					</li>
+				</ul>
+			</p>
+			<p>
+				A simple KB agent can be represented by this pseudocode:
+			</p>
+			<div class="codediv">static KB  # a knowledge base 
+t = 0  # time counter
+
+kbAgent(percept):
+	tell(KB, makePerceptSentence(percept, t))
+	action &lt;- ask(KB, makeActionQuery(t))
+	tell(KB, makeActionSentence(action, t))
+	t &lt;- t + 1
+	return action</div>
+			
+			<p>
+				A <b>percept</b> is an observation of the world state. The KB may contain initial background knowledge.
+			</p>
+			<p>
+				Three functions here abstract away implementation. <code>makePercentSentence</code> encodes the observed percept into a formal sentence. <code>makeActionQuery</code> asks the knowledge base on what action to do at this time with this state. <code>makeActionSentence</code> then tells the query what action was done.
+			</p>
+			<p>
+				Below is an example of a game where everything is certain.
+			</p>
+
+			<button class="collapsible">Wumpus World... </button>
+			<div class="ccontent">
+				<p>
+					
+				</p>
+			</div>
+			
+		</div>
 		
 
 		<footer>
