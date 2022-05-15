@@ -1416,7 +1416,7 @@ kbAgent(percept):
 				In certain planning, we're interested in worlds where everything is certain - that is, there is no random chance. When there is no random chance, we can reason with absolute certainty.
 			</p>
 
-			<div style="display: none;">
+			<div style="display: block;">
 				<p>
 					Below is an example of a game where everything is certain.
 				</p>
@@ -1424,8 +1424,21 @@ kbAgent(percept):
 				<button class="collapsible">Wumpus World... </button>
 				<div class="ccontent">
 					<p>
-						
+						<b>Wumpus World</b> is a simple AI game, with an explorer exploring for treasure.
 					</p>
+					<p>
+						The world is made up of a grid, in which can either be gold, a pit, or Wumpus. The player is an adventurer, who enters and exits from the bottom left square. The player has one arrow, which it can fire in the direction its facing. However, the player can only detect information about the square it is on. 
+					</p>
+					<p>
+						The player can <b>perceive</b>: a breeze, when adjacent to a pit; a smell, when adjacent to the wumpus; glitter, when directly on top of the gold; a scream, if the player kills the wumpus; and a bump, when it walks into a wall. 
+					</p>
+					<p>
+						The player can <b>do</b>: walk into an adjacent square; fire an arrow in a direction <i>(once only)</i>; grab or release the gold; and climb out of the room.
+					</p>
+					<p>
+						The <b>goal</b> is to get the gold, and escape, without falling into a pit (and dying) or running into the wumpus (and dying)
+					</p>
+
 				</div>
 			</div>
 
@@ -1503,7 +1516,103 @@ simplePlanningAgent(percept):
 
 			<div class="blue">
 				<p>
-					<b>Situational Calcucus</b> is using <b>first order logic</b> to describe change. In SC, the world is viewed as <b>situations</b> - "snapshots" of state. Each situation is made from a previous via an action.
+					<b>Situational Calcucus</b> is using <b>first order logic</b> to describe change. In SC, the world is viewed as <b>situations</b> - "snapshots" of state. Each situation is made from a previous via an action, and denoted with \(s\).
+				</p>
+			</div>
+			<p>
+				There are <b>fluents</b>: functions which change with time -- they have a situation in their argument: \(At(Agent, [1,1], s_0)\).
+			</p>
+			<p>
+				And there are <b>Eternal/Atemporal</b> functions, which do not change and do not have a situation as argument: \(Wall(1,0)\).
+			</p>
+			<p>
+				Change is represented by a <b>result function</b>: \(Result(action, situation)\).
+			</p>
+			<p>
+				<b>Possibility axioms:</b> are expressions using function Poss(action, situation), which describes which actions are possible. \(At(Agent, a, s) \land Adjacent(a,b) \implies Poss(Go(a,b), s)\) [Go(a,b): go from a to b]
+			</p>
+			<p>
+				<b>Effect axioms:</b> are expressions describing what an action can result in. \(Poss(Go(a,b), s) \implies At(Agent, b, Result(Go(a, b), s)\) [the result of going from a to b at state s -- varies depending on the situation]
+			</p>
+			<p>
+				We can have logical statements about initial and goal states 
+				<ul>
+					<li>
+						The <b>initial</b> state \(s_0\), we can have \(At(Home, s_0) \land \lnot Have(Milk, s_0) \land \lnot Have(Bananas, s_0) \dots\)
+					</li>
+					<li>
+						The <b>final</b> condition: \(\exists s_f : At(Home, s_f) \land Have(Milk, s_f) \land Have(Bananas, s_f) \dots\)
+					</li>
+				</ul>
+				From this, we can essentially reason logically to get from start to a state which matches the end conditions.
+			</p>
+			<p>
+				All of the abovementioned, possibilities, effects, fluents, etc, all describe <i>change</i>. However, we also need to express when the world <i>stays the same</i> -- this is done via <b>frame axioms</b>.
+			</p>
+			<p>
+				<b>Frame axioms</b> describe <b>non-changes</b> due to actions. i.e. walking into a wall does not change state. \(At(o,x,s) \land (o \neq Agent) \land \lnot Holding(o,s) \implies At(o, x, Result(Go(x, b), s))\). Note that as before, Result() returns a <b>state</b>, since we need the new state of the world, even if nothing else has changed.
+			</p>
+			<p>
+				There's a problem with frames, the <a href="https://en.wikipedia.org/wiki/Frame_problem">frame problem</a>, which is... something. <b>Successor-state axioms</b> exist to solve the "Representational Frame Problem", and essentially the way it works is 
+				<ul>
+					<li>
+						Each statement is about a predicate, and not necessarily an action. 
+					</li>
+					<li>
+						P being true after \(\iff\) An action made P true, or P is already true and remains true. 
+					</li>
+					<li>
+						e.g.	
+					</li>
+				</ul>
+				\begin{align}
+							Poss(a,s) \implies At(o,y,Result(a,s)) &\iff \\
+							&a = Go(x,y) \land (o = Agent \lor Holding(o,s)) \lor  \\
+							&(At(o,y,s) \land \exists z : y \neq z \land a = Go(y,z) \land (o=Agent \lor Holding(o,s)))
+						\end{align}
+				in plain english: the effect axiom that causes object to be at y, is only true if and only if (a) the agent is the object, or is holding the object, and goes to y; or (b) the object is at y, and the agent does not go to y.
+			</p>
+
+			<p>
+				This gets clunky very quickly, and so most people use a restricted language -- <b><span class="sc">STRIPS</span></b>.
+			</p>
+
+			<h4>STRIPS</h4>
+			<p>
+				Strips has a planner, and not a generic theorem prover. It was written in Stanford to solve planning problems. 
+			</p>
+			<p>
+				<b>States</b> are just conjunctions of free literals (which may be assigned meaning).
+			</p>
+			<p>
+				State descriptions may be incomplete, but usually we work under <b>closed world assumption</b> -- if it's not stated to be true, it is false.
+			</p>
+			<p>
+				The <b>goal</b> is also a state, and the <b>planner</b> is asked for a sequence of actions to get from the start to the goal state. 
+			</p>
+			
+			<div class="blue">
+				<p>
+					<b>Operators</b> are the actual process, and are important. They have three parts:
+				</p>
+				<ol>
+					<li>The <b>Action</b> / \(Buy(x)\)</li>
+					<li>The <b>preconditions</b> / \(At(p), Sells(p,x)\)</li>
+					<li>The <b>effect</b> / \(Have(x)\)</li>
+				</ol>
+				<p>
+					Which are displayed like a box:
+					<table style="border: none;">
+						<tr style="border: none;">
+							<td>Preconditions</td>
+						</tr>
+						<tr style="border: 1px solid var(--pink);">
+							<td>Action</td>
+						</tr>
+						<tr style="border: none;">
+							<td>Postconditions</td>
+						</tr>
+					</table>
 				</p>
 			</div>
 			
