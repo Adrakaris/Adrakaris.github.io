@@ -1601,21 +1601,41 @@ simplePlanningAgent(percept):
 					<li>The <b>effect</b> / \(Have(x)\)</li>
 				</ol>
 				<p>
-					Which are displayed like a box:
-					<table style="border: none;">
-						<tr style="border: none;">
-							<td>Preconditions</td>
-						</tr>
-						<tr style="border: 1px solid var(--pink);">
-							<td>Action</td>
-						</tr>
-						<tr style="border: none;">
-							<td>Postconditions</td>
-						</tr>
-					</table>
+					Which are displayed like a box, with preconditions on top, effects on bottom, and actions inside.
 				</p>
 			</div>
+
+			<p>
+				An operator with variables is called an <b>operator schema</b> -- a "family" of related actions that need to be instantiated with an actual object.
+			</p>
+			<p>
+				An operator is <b>applicable</b> if we can assign all variables to make the precondition match. 
+			</p>
 			
+			<h3 id="pop-4">Partial Order Planning</h3>
+
+			<p>
+				In a standard search, each node is a state. In a <i>planning search</i> however, each node is a <b>partial plan</b> -- that is, an incomplete plan. 
+			</p>
+			<p>
+				Operators act on partial plans by (1) <b>adding a link</b> from an existing action to an <i>open condition</i>, (2) <b>add a step</b> to fulfill the open condition, and (3) <b>order</b> one step w.r.t. another. 
+			</p>
+			<p>
+				An <b>open condition</b> is any part of a precondition that is unfulfilled. 
+			</p>
+			<p>
+				Some useful terminology are
+				<ul>
+					<li><b>Progression:</b> Search forward from initial state to goal (large branch factor, search space)</li>
+					<li><b>Regression:</b> Search backwards from goal (lower branch factor, more complex due to conjunctions in goal)</li>
+					<li><b>Partial Plan:</b> As name implies, is incomplete. Some steps not initialised.</li>
+					<li><b>Partial Order:</b> Some steps are ordered w.r.t. others.</li>
+					<li><b>Total Order:</b> A full list of ordered steps.</li>
+				</ul>
+			</p>
+			<p>
+				POPs work on the <b>principle of least commitment</b>, leaving choices as long as possible.
+			</p>
 			
 		</div>
 		
