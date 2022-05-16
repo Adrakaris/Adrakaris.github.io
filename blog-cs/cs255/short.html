@@ -97,6 +97,19 @@
 		</div>
 
 		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#sea-1">Uninformed Search</a></li>
+				<li><a href="#sea-2">Informed Search</a></li>
+				<li><a href="#sea-3">Cycle Checking and Path Pruning</a></li>
+				<li><a href="#sea-4">More Searching</a></li>
+				<li><a href="#sea-5">Finding Heuristics</a></li>
+				<li><a href="#sea-6">Adversarial Search</a></li>
+				<li><a href="#sea-7">Minimax</a></li>
+				<li><a href="#sea-8">Games with Chance</a></li>
+			</ol>
+
 			<p>
 				<b>Search</b> is one of the most essential forms of problem solving. It entails making moves along a problem space (usually nodes in a graph) in order to try get to a goal. 
 			</p>
@@ -113,7 +126,7 @@
 				Graph searching is pretty much no different from tree searching, except that we use \(\langle x, y, z \rangle\) to represent paths.
 			</p>
 
-			<h3>Uninformed Search</h3>
+			<h3 id="sea-1">Uninformed Search</h3>
 
 			<p>
 				Uninformed does not use information from the question - it is a brute force method.
@@ -203,7 +216,7 @@
 				Frontier is priority queue ordered by cost. The first path to a goal found is the least cost goal. Note this reduces to breadth first when all arcs are of equal cost.
 			</p>
 
-			<h3>Informed Search</h3>
+			<h3 id="sea-2">Informed Search</h3>
 
 			<p>
 				Informed search uses "problem specific knowledge", such as the location of the goal, an estimate of distance, etc., to help inform its search choices. They are usually much better than brute force uninformed search.
@@ -296,7 +309,7 @@
 				A* Search with a consistent heuristic is needed to find an optimal path.
 			</p>
 
-			<h3>More Searching</h3>
+			<h3 id="sea-4">More Searching</h3>
 
 			<p>
 				Searching backwards from the goal is effectively the same as searching forward from the start. 
@@ -333,7 +346,7 @@
 				(For a known state space with unknown goals, then just put the bound at the max depth, to save researching anything)
 			</p>
 
-			<h3>Finding Heuristics</h3>
+			<h3 id="sea-5">Finding Heuristics</h3>
 
 			<p>
 				Heuristics are underestimates, but the closer the underestimate the better. A heuristic of 0 is no better than a dumb search. Finding heuristics however is difficult, good ones even more so, but there are a few approaches:
