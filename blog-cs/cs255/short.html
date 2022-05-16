@@ -1371,6 +1371,9 @@ THEN with probability (0.4) the former should be fired before the latter</div>
 				<li><a href="#pop-1">Reasoning with knowledge</a></li>
 				<li><a href="#pop-2">Planning</a></li>
 				<li><a href="#pop-3">Situation Calculus and STRIPS</a></li>
+				<li><a href="#pop-4">Partial Order Planning</a></li>
+				<li><a href="#pop-5">Heirarchical Decomposition</a></li>
+				<li><a href="#pop-6">Conditional Planning</a></li>
 			</ol>
 
 			<h3 id="pop-1">Reasoning with Knowledge</h3>
@@ -1618,7 +1621,7 @@ simplePlanningAgent(percept):
 				In a standard search, each node is a state. In a <i>planning search</i> however, each node is a <b>partial plan</b> -- that is, an incomplete plan. 
 			</p>
 			<p>
-				Operators act on partial plans by (1) <b>adding a link</b> from an existing action to an <i>open condition</i>, (2) <b>add a step</b> to fulfill the open condition, and (3) <b>order</b> one step w.r.t. another. 
+				Operators act on partial plans by (1) <b>adding a</b> (causal) <b>link</b> from an existing action to an <i>open condition</i>, (2) <b>add a step</b> to fulfill the open condition, and (3) <b>order</b> one step w.r.t. another. 
 			</p>
 			<p>
 				An <b>open condition</b> is any part of a precondition that is unfulfilled. 
@@ -1634,10 +1637,170 @@ simplePlanningAgent(percept):
 				</ul>
 			</p>
 			<p>
-				POPs work on the <b>principle of least commitment</b>, leaving choices as long as possible.
+				POPs work on the <b>principle of least commitment</b>, leaving choices as long as possible. When every precondition is satisfied, then the plan is referred to as <b>complete</b>.
+			</p>
+			<p>
+				Note that for a precondition to be achieved, there must be <i>no possible intervening step</i> <i>(threats)</i> that undos it -- there are methods to ensure this. 
+			</p>
+
+			<h4>Overview</h4>
+			<div class="blue">
+				<p>
+					A problem is defined by a <b>partial plan</b> (the <i>minimal plan</i>), consisting <i>only</i> of start, and finish.
+				</p>
+				<p>
+					A <b>Partial-Order Planner</b> (POP) is a <b>regressive</b> (backtracking) planner, searching through the plan space. It adds causal links without breaking already existing ones.
+				</p>
+			</div>
+			<ul>
+				<li>
+					The initial state is defined by the operator: <br>
+					<div class="side">
+						<span class="sc">Op</span>(Action: \(Start\), <br>
+						Precond: --,<br>
+						Effect: \(At(Home) \land Sells(HW, Drill) \land Sells(SM, Milk) \land Sells(SM, Bananas)\)) <br>
+					</div>
+					<i>HW: Hardware Store; SM: Supermarket</i>
+				</li>
+				<li>
+					The final state is defined by: <br>
+					<div class="side">
+						<span class="sc">Op</span>(Action: \(Finish\) <br>
+						Precond: \(At(Home) \land Have(Drill) \land Have(Milk) \land Have(Bananas)\) <br>
+						Effect: --) 
+					</div>
+				</li>
+				<li>
+					We have the operators:
+					<div class="side">
+						<span class="sc">Op</span>(Action: \(Go(there)\) <br>
+						Precond: \(At(here)\) <br>
+						Effect: \(At(there) \land \lnot At(here)\))
+					</div>
+					and 
+					<div class="side">
+						<span class="sc">Op</span>(Action: \(Buy(x)\) <br>
+						Precond: \(At(Store) \land Sells(Store, x)\) <br>
+						Effect: \(Have(x)\))
+					</div>
+				</li>
+			</ul>
+
+			<h4>Algorithm</h4>
+			<p>
+				Overview:
+				<ul>
+					<li>Start with minimal plan</li>
+					<li>Each iteration, find a step to achieve the precondition (\(c\)) of some step (\(s_{need}\))
+						<ul>
+							<li>By choosing an operator : it achieves \(c\)</li>
+							<li>Add a causal link to the achieved precond</li>
+							<li>Resolve any threats</li>
+						</ul>
+					</li>
+					<li>If this fails entirely, backtrack</li>
+				</ul>
 			</p>
 			
+			<button class="collapsible">Pseudocode POP... </button>
+			<div class="ccontent">
+				<div class="codediv">POP(start, goal, operators) \(\longrightarrow\) plan:
+	plan \(\longleftarrow\) makeMinimalPlan(start, goal)
+	while True:
+		if plan is solution:
+			return plan 
+		\(s_{need}, c \longleftarrow\) selectSubgoal(plan)
+		chooseOperator(plan, operators, \(s_{need}, c\))
+		resolveThreats(plan)
+
+<div class="grey">-------</div>
+selectSubgoal(plan) \(\longrightarrow\) (\(s_{need}, c\)):  
+	pick step \(s_{need}\) from plan.steps with precondition \(c\) that is unachieved
+	return \(s_{need}, c\)
+
+chooseOperator(plan, operators, \(s_{need}, c\)):
+	pick step \(s_{add}\) from operators or plan.steps with effect \(c\)
+	if \(s_{add} \) does not exist:
+		<i>fail</i>
+	add causal link \(s_{add} \xrightarrow{c} s_{need}\) to plan.links 
+	add ordering constraint \(s_{add} \prec s_{need}\) to plan.orderings 
+	if \(s_{add} \) is a newly added step from operators:
+		add \(s_{add} \) to plan.steps
+		add \(Start \prec s_{add} \prec Finish\) to plan.orderings
+
+resolveThreats(plan):
+	for each \(s_{threat} \) that threatens a link \(s_i \xrightarrow{c} s_j\) in plan.links:
+		choose
+			either: demotion; Add \(s_{threat} \prec s_i\) to plan.orderings 
+			or: promotion; Add \(s_j \prec s_{threat}\) to plan.orderings 
+	if not consistent(plan):
+		<i>fail</i></div>
+			</div>
+
+			<h4>Clobbering</h4>
+
+			<p class="blue">
+				A <b>threat</b>, or <b>clobber</b>, is a potentially intervening step that destroys a causal link. 
+			</p>
+			<p>
+				Suppose we have Go(HWS) \(\xrightarrow{c} \) Buy(Drill). Since Go(HWS) makes you At(HWS), and Sells(HWS, Drill). The <b>clobberer</b> is Go(Home), since if that comes between the two actions, it makes you At(Home) and you no longer can buy a drill.
+			</p>
+			<p>
+				To deal with clobbering, we need to either <b>demote</b> or <b>promote</b> the clobberer. By demote, we mean put it before, and by promote, we mean put it after. 
+			</p>
+
+			<button class="collapsible active">Blocks World... </button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					The <b>Blocks World</b> is a classic POP problem. You have some lettered blocks, on a table. 
+				</p>
+				<p>
+					\(Clear(x)\) means that \(x\) does not have anything on it. \(On(x,y)\) means that \(x\) is on top of \(y\).
+				</p>
+				<figure>
+					<img src="./blocksworld.png" alt="" style="max-width: 420px;">
+				</figure>
+			</div>
+
+			<p>
+				There's also something called the <a href="https://en.wikipedia.org/wiki/Sussman_anomaly">Sussman Anomaly</a>, which is mentioned as an aside. ඞ
+			</p>
+
+			<button class="collapsible active">Blocks World POP Example...</button>
+			<div class="ccontent" style="display: block;">
+				<p>
+					<b><i>Example.</i></b> See image below. 
+				</p>
+				<figure>
+					<img src="./clobbering.png" alt="">
+				</figure>
+				<p>
+					Essentially the idea is to build the graph by finding operators whose effects satisfy the prerequisites of the ones after it without conflicts. 
+				</p>
+			</div>
+
+			<h4>Problems</h4>
+
+			<p>
+				With <span class="sc">Strips</span>, we cannot express heirarchical plans, with different level of detail. 
+			</p>
+			<p>
+				Often we also want to give the planner guidance as it's planning, which is difficult.
+			</p>
+			<p>
+				Condition expressiveness is limited. 
+			</p>
+			<p>
+				We don't have any quantification. We can't express more complex conditions, such as <i>Pickup(bag)</i> also picking up all items in the bag. 
+			</p>
+			<p>
+				Operators are unconditional, thus we can't have one action do something different based on some conditions. 
+			</p>
+
+			h3
 		</div>
+
+		
 		
 
 		<footer>
