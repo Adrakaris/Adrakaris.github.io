@@ -1373,7 +1373,7 @@ THEN with probability (0.4) the former should be fired before the latter</div>
 				<li><a href="#pop-3">Situation Calculus and STRIPS</a></li>
 				<li><a href="#pop-4">Partial Order Planning</a></li>
 				<li><a href="#pop-5">Heirarchical Decomposition</a></li>
-				<li><a href="#pop-6">Conditional Planning</a></li>
+				<li><a href="#pop-6">Conditional Planning and Replanning</a></li>
 			</ol>
 
 			<h3 id="pop-1">Reasoning with Knowledge</h3>
@@ -1797,7 +1797,183 @@ resolveThreats(plan):
 				Operators are unconditional, thus we can't have one action do something different based on some conditions. 
 			</p>
 
-			h3
+			<h3 id="pop-5">Heirarchical Decomposition</h3>
+			
+			<p>
+				In STRIPS, Time is <b>discrete</b> and actions are <b>instant</b>. Thus, we cannot represent actions which take time. 
+			</p>
+			<p>
+				In the real world, resources are limited and <b>actions have cost</b>, which is not representable in vanilla STRIPS. 
+			</p>
+			<p>
+				Thus we need to extend STRIPS and POP with more fine-detailed control. Go(Shop) is not helpful if you don't know the exact route to the shop, for example. Course, representing everything at fine levels is unfeasible in computation time, 
+			</p>
+			<p>
+				Thus, we extends STRIPS with <b>non-primitive/abstract</b> operators, which are <b>decomposed</b> into <b>primitive steps</b>. These decompositions are pre-determined and pre-stored. 
+			</p>
+			<p>
+				A plan \(p\) <b>correctly implements</b> a nonprimitive \(o\) if it is a complete and consistent plan achiving its effects, given its preconds. 
+			</p>
+
+			<button class="collapsible">Modified POP Pseudocode... </button>
+			<div class="ccontent">
+				<div class="codediv">HD-Pop(plan, operators, methods) \(\longrightarrow\) plan:
+	while True:
+		if plan is solution:
+			return plan 
+		\(s_{need}, c \longleftarrow\) selectSubgoal(plan)
+		chooseOperator(plan, operators, \(s_{need}, c\))
+		\(s_{nonprim} \longleftarrow\) selectNonprimitive(plan)
+		chooseDecomposition(plan, methods, \(s_{nonprim}\))
+		resolveThreats(plan)</div>
+			</div>
+
+			<p>
+				We also want to make operator descriptions more expressive. 
+			</p>
+			<p>
+				Have <b>conditional effects</b> with the <code>when</code> clause: <span class="sc">Effect:</span> \(\dots \land Clear(y) \textrm{ when } y \neq Table\).
+			</p>
+			<p>
+				Any step with effect \(\lnot c \textrm{ when } p\) is a threat to link \(s_i \xrightarrow{c} s_j\). We need to ensure \(p\) is false.
+			</p>
+			<p>
+				Have <b>Negated goals</b>: to call <code>chooseOperator</code> with a ¬goal. We would need to be careful to avoid writing down all false representations, there should be something that explicitly matches a ¬goal.
+			</p>
+			<p>
+				<b>Disjunctive Preconditions</b>, allowing <code>selectSubgoal</code> to select non-deterministically 
+			</p>
+			<p>
+				<b>Disjunctive Effects</b>, allowing non-determinism/noncertainty in effects. Possibly addressable via coersion of state. 
+			</p>
+			<p>
+				<b>Universally quantified preconditions and effects</b> - \(\forall x,\,Block(x) \implies \lnot On(x,b)\) vs \(Clear(b)\)
+			</p>
+			<p>
+				This form of FOL is <i>restricted</i>, closed world assumption still followed. Initial states give all objects a type. 
+			</p>
+			<p>
+				Have <b>Measures</b> (\(Litres(4),\; FuelLevel, \dots\)) -- numeric valued conditions. These are called <b>measure fluent</b>s. 
+			</p>
+			<p>
+				Some measures, the planner cannot control. Others, the planner can by producing or consuming. It is generally a good idea to prioritise scarce resources, delaying choosing links where possible. We can pick the steps and do a rough check, before resolving threats, to check for failure without a finished plan. 
+			</p>
+			<p>
+				Time in and of itself can be a resource. We can specify how long each operator takes. The main differences are
+				<ul>
+					<li>
+						(1) parallel resources \(s_1, s_2\) cost \(\max(s_1, s_2)\) time, not \(s_1 + s_2\) as with everything else
+					</li>
+					<li>
+						(2) time never goes backwards -- if deadline breached, might as well stop immediately. 
+					</li>
+				</ul>
+			</p>
+
+			<h3 id="pop-6">Conditional Planning and Replanning</h3>
+
+			<p>
+				The real world is not fully observable, static, and deterministic, as we have been assuming before. Usually we need to work with incomplete and incorrect information. 
+			</p>
+
+			<p>
+				2 solutions:
+				<ul>
+					<li>
+						<b>Conditional Planning</b>: plan to obtain information with sensing actions. Subplan for each contingency: [Check(thing), <i>if</i> A then do this]
+					</li>
+					<li>
+						<b>Replanning/Monitoring</b>: <i>Assume</i> normal states and outcomes. Check the progress during execution, and replan on the fly. Note that unanticipated outcomes may lead to failure. 
+					</li>
+				</ul>
+				Though generally, a combination of both is used. 
+			</p>
+
+			<h4>Conditional Planning</h4>
+
+			<p>
+				\[[\dots \textrm{if}(p, [\textrm{then }plan_1], [\textrm{else }plan_2]) \dots]\]
+				During execution, check \(p\) against current KB, execute then or else accordingly. 
+			</p>
+			<p>
+				If an open condition can be established by observation, we can add the action, and POP for <i>each possible outcome</i>, and insert a conditional step. 
+				\[[CheckTyre(x)]\; KnowsIf(Intact(x))\]
+			</p>
+			<p>
+				<b>Steps have context</b>, at exec time agent must know the current state. Sensing actions find state, but may also have side effects: putting something in water will make it wet. 
+			</p>
+
+			<figure>
+				<img src="./conditional-planning.png" alt="">
+				<figcaption>Conditional Planning Example with changing a car tyre</figcaption>
+			</figure>
+
+			<p>
+				A sensing action may have several outcomes. We can use these actions in <b>parameterised plans</b>, which are plans where exact actions are only defined at runtime.
+			</p>
+			<p>
+				E.g. we have <span class="sc">Goal:</span> <i>Colour(Chair, c) \(\land\) Colour(Table, c)</i>, and we start with <i>Colour(Chair, none)</i>. In our plan, we can sense the colour of the table, then use that colour to paint the chair. 
+			</p>
+			<p>
+				Note that \(c\) is a <b>runtime variable</b>, unknown until sensed. 
+			</p>
+			<p>
+				We can also have <b>maintenance goals</b>, to preserve certain facts: <span class="sc">Goal:</span> <i>Colour(Chair, c) \(\land\) Colour(Table, c) \(\land\) Maintain(Colour(Table, mahogany))</i>
+			</p>
+			<p>
+				We can also branch into loops, etc, and it soon begins to look awfully like a programming language. 
+			</p>
+
+			<h4>Monitoring</h4>
+
+			<p>
+				The effect of an action might not be as predicted. 
+			</p>
+			<p>
+				We must <b>monitor</b> the actions for failure, as that would ruin our plan. Either the entire plan fails because the action fails to deliver on some precondition, or the action itself cannot run. 
+			</p>
+			<p>
+				Either way, we must <b>replan</b> on the fly. 
+			</p>
+			<p>
+				Plans can fail in two main ways:
+				<ul>
+					<li>
+						<b>Bounded indeterminacy</b>: unexpected effects can be enumerated :- use conditionaal planning
+					</li>
+					<li>
+						<b>Unbounded indeterminacy</b>: too large to enumerate. Can plan for some contingencies, but not all. Must replan when contingency not planned for. 
+					</li>
+				</ul>
+			</p>
+			<p>
+				The simplest way to replan is to do it from scratch, but this is inefficient, and may be stuck in a cycle of failue.
+			</p>
+			<p>
+				Alternatively, we can <i>plan to get back on track</i>. If in the list \(h,i,j,k,l\) action \(i\) fails, then we want to find a way from \(i\) back to the planned list, in teh best possible place. 
+			</p>
+			<p>
+				e.g <span class="sc">Start</span> with <i>Colour(Chair, blue), ¬Have(Red)</i> and want <i>Colour(Chair, Red)</i>
+				<ul>
+					<li>
+						Actions go [Start, <i>Get(Red)</i>, <i>Paint(Red)</i>, Finish]
+					</li>
+					<li>
+						Imagine Paint(Red) fails because you didn't get enough red paint. A replanner to get back on track would try run <i>Get(Red)</i> again to get more red paint.
+					</li>
+				</ul>
+			</p>
+			<p>
+				In some other situations, we may be able to avoid replanning altogether, with some good enough methods such as 
+				<ul>
+					<li>Coersion</li>
+					<li>Abstraction -- ignore unknown details</li>
+					<li>Aggregation -- treat a large number of individually uncertain objects together as one predictable aggregate object</li>
+				</ul>
+			</p>
+			<p>
+				We can also use <b>Reactive Planning</b>, which abandons domain-independent planning entirely. The agent's knowledge is <i>procedural</i> -- it has a library of partial plans representing behaviours, from which it picks. 
+			</p>
 		</div>
 
 		
