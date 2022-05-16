@@ -361,6 +361,188 @@
 				<b>Statistics</b>: Actually run simulations to try get data estimates. This is however <b>NOT ADMISSIBLE</b>, but can be good enough.
 			</p>
 
+			<h3 id="sea-6">Adversarial Search</h3>
+
+			<p>
+				Often we have games where multiple agents compete. In a competitive game, agents must deal with <b>contingencies</b>
+			</p>
+			<p>
+				Time is of the essence: there is often not enough time to think through everything properly.
+			</p>
+			<p>
+				Thus we have uncertainty. Whether from opponent moves, insufficient time, or even the random chance nature of a game (such as dice). This makes them more interesting. 
+			</p>
+			<p>
+				Formally, we view a game as 
+				<ul>
+					<li><b>An Initial State:</b> board position, and player to move</li>
+					<li><b>Operators</b> set, for legal moves</li>
+					<li><b>Terminal Test</b> for game conclusion</li>
+					<li><b>Payoff function</b> to numerically evaluate terminal states. For noughs and crosses, we could have +1 win, 0 draw, -1 lose.</li>
+				</ul>
+			</p>
+
+			<h3 id="sea-7">Minimax</h3>
+
+			<p>
+				Consider a game of noughts and crosses, between two players, Min and Max. If Max wins, Max gains a point. If Min wins, Max loses a point. In this way, this is a <b>zero sum game</b>.
+			</p>
+			
+			<p>
+				Max must form a strategy that will try to maximise its points, whilst Min does the opposite. 
+			</p>
+			<p>
+				Since there is no random chance, and the search space is small, we can afford to make <b>perfect decisions</b>. This considers the <i>entire</i> state space. 
+			</p>
+			<p>
+				Create a search tree simulating Min minimising, Max maximising, repeat until you reach terminal states. The terminal values propagate up by:
+				<ul>
+					<li>If the node is a <i>min</i> node, take the minimum of the children</li>
+					<li>If the node is a <i>max</i> node, take the maximum of the children</li>
+				</ul>
+				Repeat until you reach the root node of the current state. Then, (as Max) just make (one of) the move(s) that yields the highest score. 
+			</p>
+			<p>
+				Hence, <b><i>Minimax</i></b>.
+			</p>
+			<p>
+				For <b>two</b> players, a minimax search tree is a <b>two-ply game tree</b>, since two "ply" (layers) make one full round. 
+			</p>
+			
+			<div style="display: flex; flex-direction: row;">
+				<figure>
+					<img src="./twoply-gametree.png" alt="" style="max-width: 300px;">
+					<figcaption>2-ply game tree</figcaption>
+				</figure>
+				<figure>
+					<img src="./minimaxing.png" alt="" style="max-width: 300px;">
+					<figcaption>Minimax process</figcaption>
+				</figure>
+			</div>
+
+			<h4>\(\alpha\beta\)-pruning</h4>
+
+			<p>
+				\(\alpha \beta\)-pruning is based on <b>minimax</b>, and gets its name from the utilities on the min-max tree. 
+				<ul>
+					<li>
+						\(\alpha\) is the best choice along the path for <b>Max</b>
+					</li><li>
+						\(\beta\) is the best choice along the path for <b>Min</b>
+					</li>
+				</ul>
+			</p>
+
+			<p>
+				The pruning part comes from when we search through the search tree. In short, if we discover a node which makes a path <b>objectively worse</b> than any other already found, we don't bother to search more on that path, and prune it out entirely - terminate the recursive call.
+			</p>
+			<p>
+				The efficiency of this depends on how we search -- using good heuristics may help \(\alpha\beta\)-pruning to become very efficient. 
+			</p>
+
+			<h4>Imperfect Decisions</h4>
+
+			<p>
+				The biggest problem we have left is that sometimes, we're not afforded the time to search the whole tree, which \(\alpha\beta\) still has to do. Thus we need some sort of way to accomodate this, usually including 
+				<ul>
+					<li>A <b>heuristic evaluation function</b> to get values for non-terminals</li>
+					<li>A <b>cutoff test</b> to determine when to stop.</li>
+				</ul>
+			</p>
+			<p>
+				The evaluation function gives an <b>estimate</b> of expected utility -- usually by calculating "features", which are game dependent.
+			</p>
+			<p>
+				The simplest cutoff apprach is fixed depth, a slightly better method would be to <b>iteratively deepen</b> until time runs out. 
+			</p>
+			<p>
+				Alternatively, we can base everything off <b>quiescent</b> states -- those which are <b>not likely to change in value</b>. Non-quiescent states are expanded until quiescent ones are found, which are resolved with an evaluation function. This extra search is called the <b>quiescent search</b>.
+			</p>
+			<p>
+				Quiescent Search's main problem is the <b>horizon problem</b> -- faced with unavoidable damage, it thinks stalling is advancing -- we can mitigate this by instead picking the least worst non-stalling move.
+			</p>
+
+			<h3 id="sea-8">Games with Chance</h3>
+
+			<p>
+				Many games, like Backgammon, contain chance. We must alter our tree to include <b>chance nodes</b>, and take the <b>expected value</b> of all possible moves for each possibility. 
+			</p>
+			<p>
+				Generally represented as 
+				\[
+						\textrm{expMinMax}(n) = \begin{cases} 
+							\textrm{utility}(n) & n \textrm{ is terminal node} \\
+							\max_{s \in \textrm{successor}(n)}(\textrm{expMinMax}(s)) & n \textrm{ is node for Max} \\
+							\min_{s \in \textrm{successor}(n)}(\textrm{expMinMax}(s)) & n \textrm{ is node for Min} \\
+							\sum_{s \in \textrm{successor}(n)}(P(s) \cdot \textrm{expMinMax}(s)) & n \textrm{ is chance node}
+						\end{cases}
+						\]
+			</p>
+
+			<h4>Monte Carlo</h4>
+			
+			<p>
+				Monte Carlo tree search is an improvement on \(\alpha \beta\)-pruning which addesses some of the latter's limitations, namely
+
+				<ul>
+					<li>High branching factors reducing depth of search</li>
+					<li>difficulty defining an evaluation function</li>
+				</ul>
+
+				Monte Carlo addresses these via numerical methods: 
+			</p>
+			<p>
+				<b>Estimate the value of a state from the average utility of many simulated games (playouts) from the start state.</b> 
+			</p>
+			<p>
+				By playing games against itself Monte Carlo can learn which states often lead to which outcomes, rather than the programmer having to come up with some function.
+			</p>
+			<p>
+				The <i>way</i> moves are made during playouts is called <b>playout policy</b>, and can vary depending on games. 
+			</p>
+
+			<hr>
+
+			<p>
+				<b>Pure MTCS</b> performs N simulations from the current state, track which moves from current position has highest win %. 
+			</p>
+			<p>
+				As N increases, this converges to optimal play. 
+			</p>
+			<p>
+				A pure MTCS is usually infeasible, given the large amount of processing power needed to run. Thus, a <b>selection policy</b> is applied to focus simulation on important parts of the game tree.
+			</p>
+			<p>
+				To balance <b>exploration</b> (simulating from states with few playouts) and <b>exploitation</b> (simulating from known good states to increase accuracy of estimate).s
+			</p>
+			<p>
+				steps:
+			</p>
+			<ul>
+				<li><b>Selection</b>: starting at the root, choosing a move via policy, and repeat moving to a leaf</li>
+				<li><b>Expansion</b>: grow tree by generating successor</li>
+				<li><b>Simulation</b>: Performing a playout from the newly generated successor node (determine the outcome, do not record moves)</li>
+				<li><b>Backpropagation</b>: Use the result to update values going back up to the root.</li>
+			</ul>
+			<p>
+				Repeat for either a fixed no. of iterations, or until we are out of time, and return the move with the <b>highest number</b> of playouts. 
+			</p>
+
+			<hr>
+
+			<p>
+				<b>Upper confidence</b> is a selection policy based off the <b>upper confidence bound</b> formula UCB1:
+
+				\[
+				UCB1(n) = \frac{U(n)}{N(n)} + C \sqrt{\frac{\log (N \cdot \textrm{parent}(n))}{N(n}}
+				\]
+
+				\(U(n)\) is the <b>total utility</b> of all playouts with \(n\) as the starting node (from n), \(N(n)\) as the <b>number</b> of playouts from n, parent is self explanatory, and \(C\) is a set constant, which is used to balance exploration with exploitation.
+			</p>
+			<p>
+				The computation time of a playout is linear in depth of tree.
+			</p>
+
 		</div>
 
 		<div class="colourband">
