@@ -80,6 +80,10 @@
 				</li>
 			</ul>
 
+			<p>
+				... I may also do multiagent systems.
+			</p>
+
 			<h2>Contents</h2>
 
 			<ul>
@@ -88,6 +92,7 @@
 				<li><a href="#probability">Conditional Probability and Bayes</a></li>
 				<li><a href="#kbs">Knowledge Bases and Rule Based Systems</a></li>
 				<li><a href="#pop">Partial Order Planning</a></li>
+				<li><a href="#reinforcement">Reinforcement Learning</a></li>
 			</ul>
 		</div>
 
@@ -2171,7 +2176,175 @@ resolveThreats(plan):
 			</p>
 		</div>
 
-		
+		<div class="colourband">
+			<h2 id="reinforcement">Reinforcement Learning</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#rei-1">Actions have Rewards (and consequences)</a></li>
+				<li><a href="#rei-2">What Values do Policies Have Really?</a></li>
+				<li><a href="#rei-3">Q Learning and SARSA</a></li>
+			</ol>
+			
+			<p>
+				Imagine reinforcement learning is like training a pet, except that pet is an AI. You reward it for desired behaviour and punish it for undesirable behaviour. And instead of treats, it receives negative and positive numbers.
+			</p>
+
+			<h3 id="rei-1">Actions have Rewards (and consequences)</h3>
+
+			<h4>Markov Decision Process</h4>
+
+			<p>
+				Reinforcement learning can be described as a type of <b>Markov Decision Process</b> (MDP). 
+			</p>
+			<p>
+				Markov Decision Processes are based off <b>Markov Chains</b>, which are themselves Bayesian <b>belief networks</b> with variables in a sequence 
+				\[s_0 \longrightarrow s_1 \longrightarrow s_2 \longrightarrow s_3 \longrightarrow \cdots\]
+				Where every variable only relies on the one before it. I.e. \(P(s_{i+1} | s_0 \cdots s_i) = P(s_{i+1} | s_i)\).
+			</p>
+			<p>
+				We augment markov chains to show the actions, and resulting rewards from one state to another.
+			</p>
+			<div class="blue">
+				<p>
+					A <b>MDP</b> consists of 
+					<ul>
+						<li>\(S\) the set of states</li>
+						<li>\(A\) the set of actions</li>
+						<li>\(P : S \times S \times A \longrightarrow [0,1] \) is a probability function called the <b>dynamics</b>. 
+							<ul><li>Written \(P(s' | s, a)\), it describes the probability of transitioning to state \(s'\) given it performs action \(a\) in state \(s\).</li></ul>
+						</li>
+						<li>
+							\(R : S \times A \times S \longrightarrow \mathfrak{R}\) is the <b>reward function</b>. 
+							<ul>
+								<li>
+									\(R(s,a,s')\) is the reward for doing action \(a\) in state \(s\) and ending up in state \(s'\).
+								</li>
+								<li>
+									\(R(s,a)\) is the overall expected reward of doing action \(a\) in state \(s\),
+									<span class="nopad">\[R(s,a) = \sum_{\forall s'} R(s,a,s') \cdot P(s' | s, a).\]</span>
+									
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</p>
+			</div>
+
+			<figure>
+				<img src="https://artint.info/2e/html/x438.png" alt="" title="(Poole; Mackworth. Artifical Intelligence 2e)" style="max-width: 360px;">
+				<figcaption>This is what a MDP chain may look like.</figcaption>
+			</figure>
+
+			<p>
+				If the dynamics prob. dist. is the same across time, it is called <b>stationary</b>.
+			</p>
+
+			<p>
+				In a <b>fully observable MDP</b>, the agent gets to see the entire current state. 
+			</p>
+			<p>
+				In a <b>partially observable MDP</b>, the agent knows its history of rewards and previous actions, and can indirectly / partially observe the current state.
+			</p>
+
+			<h4>Valuation</h4>
+
+			<p>
+				A <i>state</i> leads to an <i>action</i>, which yields a <i>reward</i>. 
+			</p>
+			<p>
+				An agent can <b>explore</b> to gain knowledge, or <b>exploit</b> existing knowledge. 
+			</p>
+			<p>
+				For ease, we initially assume that only the current state is relevant to future states. 
+			</p>
+			
+			<p>
+				Agents can carry out actions forever or for some limit. During this, it gets rewards and punishments as it goes along. 
+			</p>
+			<p>
+				Time is also an important factor. £1000 now is a lot better than £1000 in a year's time, since there's no benefit to waiting a year. The agent will also receive rewards \(r_1, r_2, \dots\) over time. 
+			</p>
+			<p>
+				We want a way to quantify the rewards received and how valuable they are. In this, we use a value measure. And to represent rewards further down the line being possibly less valuable, we introduce a <b>discount factor</b>, \(\gamma \in [0,1]\), which represents how impatient we are. 
+			</p>
+			<p class="blue">
+				The <b>discounted return value</b> is a measure of how good a series of rewards is. For a time \(t\):
+				\begin{align}
+					V &= r_1 + \gamma r_2 + \gamma^2 r_3 + \cdots \\
+					&= r_1 + \gamma(r_2 + \gamma(\cdots)) \\
+					\textrm{i.e. } V_t &= r_t + \gamma V_{t+1}.
+				\end{align}
+			</p>
+			<p>
+				Because \(\sum_0^n \gamma^n = \frac{1}{1-\gamma}\) the reward at time \(t\) must be 
+				\[\frac{\textrm{min reward}}{1-\gamma} \leq V_t \leq \frac{\textrm{max reward}}{1-\gamma}\]
+				Thus even if you go infinitely far, you only get a finite reward.
+			</p>
+
+			
+
+			<h3 id="rei-2">What Values do Policies Have Really?</h3>
+
+			<p class="blue">
+				A <b>stationary policy</b> is a function \(\pi : S \longrightarrow A\), where given a state \(s,\; \pi(s)\) specifies the action the agent will take. 
+			</p>
+
+			<p>
+				An <b>optmial policy</b> is the policy with maximum expected reward (discounted value).
+			</p>
+			<p>
+				A fully observable MDP with stationary dynamics, rewards, and an infinite/indefinite horizon, will always have an optimal stationary policy. 
+			</p>
+
+			<h4>Introducing \(Q\)</h4>
+
+			<div class="blue">
+				<ul>
+					<li>
+						\(Q^\pi(s,a)\) is the expected value of doing \(a\) in state \(s\), following policy \(\pi\).
+					</li>
+					<li>
+						\(V^\pi (s)\) is the expected value of the state \(s\) itself, following policy \(pi\). 
+					</li>
+				</ul>
+				<p>
+					The "Q-value", and the state value, are usually mutually defined, as 
+					\begin{align}
+						Q^\pi (s,a) &= \sum_{\forall s'} P(s'| s, a) (R(s,a,s') + \gamma V^\pi(s')) \\
+						V^\pi (s) &= Q(s, \pi(s))
+					\end{align}
+				</p>
+			</div>
+			<p>
+				So uh, if they're mutually defined, how do we know where to start? Usually random initialisation.
+			</p>
+			
+			<div class="blue">
+				<p>
+					The <b>optimal policy</b> value and q-value, denoted by \(Q^*(s,a)\) and \(V^*(s)\), is defined as:
+					\begin{align}
+						Q^*(s,a) &= \sum_{\forall s'} P(s'| s, a) (R(s,a,s') + \gamma V^*(s')) \\
+						V^*(s) &= \max_a Q(s,a)
+					\end{align}
+					Which also leads to 
+					<span class="nopad">
+						\[\pi^*(s) = \textrm{arg}\max_a Q(s,a)\]
+					</span>
+					<i>argmax: take the action that generates the largest Q value</i>
+				</p>
+			</div>
+
+			<p>
+				Since these are defined recursively, the idea is to iteratively converge them to the optimal value.
+			</p>
+
+			<h3 id="rei-3">Q Learning and SARSA</h3>
+			
+		</div>
 		
 
 		<footer>
