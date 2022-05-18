@@ -2186,7 +2186,7 @@ resolveThreats(plan):
 			<ol>
 				<li><a href="#rei-1">Actions have Rewards (and consequences)</a></li>
 				<li><a href="#rei-2">What Values do Policies Have Really?</a></li>
-				<li><a href="#rei-3">Q Learning and SARSA</a></li>
+				<li><a href="#rei-3">Q Learning</a></li>
 			</ol>
 			
 			<p>
@@ -2308,7 +2308,7 @@ resolveThreats(plan):
 						\(Q^\pi(s,a)\) is the expected value of doing \(a\) in state \(s\), following policy \(\pi\).
 					</li>
 					<li>
-						\(V^\pi (s)\) is the expected value of the state \(s\) itself, following policy \(pi\). 
+						\(V^\pi (s)\) is the expected value of the state \(s\) itself, following policy \(\pi\). 
 					</li>
 				</ul>
 				<p>
@@ -2342,7 +2342,180 @@ resolveThreats(plan):
 				Since these are defined recursively, the idea is to iteratively converge them to the optimal value.
 			</p>
 
-			<h3 id="rei-3">Q Learning and SARSA</h3>
+			<p>
+				If we say \(V_k, Q_k\) are "\(k\)-step lookahead functions" - i.e. they work out the value after \(k\) steps, and we set \(V_0\) arbitrarily/randomly, we can compute \(Q_{i+1}, V_{i+1}\) from \(V_i\) and have it converge quickly to the optimum.
+			</p>
+			<p>
+				This is <b>Value Iteration</b>.
+			</p>
+			<p>
+				We can amend this to <b>asynchronous value iteration</b>, where each state can be individually updated instead of the whole state space. 
+			</p>
+			<p>
+				These are stored together in an array, of either values \(V[s]\) or more commonly q-values \(Q[s,a] \).
+				<div class="blue" style="display: block;"><span class="nopad">
+					\begin{align}
+					\textrm{Repeat: } Q[s,a] &\longleftarrow \sum_{\forall s'} P(s' | s, a) (R(s, a, s') + \gamma \max_{a'}(Q[s',a'])) \\
+					\iff Q[s,a] &\longleftarrow R(s,a) + \gamma \sum_{\forall s'} P(s' | s, a) \max_{a'}(Q[s',a'])
+					\end{align}
+				</span></div>
+				The above (look at the second one if it's easier) is the basis of the <b>Q-learning equation</b>. It reads: <br>
+				<ul>
+					<li>The sum, for all possible states \(s'\),</li>
+					<li>of the probability of ending up in that new state after doing action \(a\) in state \(s\),</li>
+					<li>times (the reward of doing \(a\) in \(s\) and ending in \(s'\)</li>
+					<li>plus discounted the max Q-value of all possible actions \(a'\) in that new state \(s'\))</li>
+				</ul>
+				There's a similar equation for Value, with the last bit being \(\gamma V[s']\) instead.
+			</p>
+			<p>
+				This'll converge for every state if every state is visited enough. 
+			</p>
+
+			<h3 id="rei-3">Q Learning</h3>
+
+			<p>
+				Reinforcement Learning, or Q-learning, is <i>flat, explicit state, indefinite/infinite stage, deterministic or stochastic,</i> with <i>complex preferences,</i> being <i>single agent, learned knowledge,</i> and <i>perfect rationality</i>.
+			</p>
+
+			<p>
+				For <b>deterministic Q-Learning</b>, it is fairly simple, since no probability \(P(s' | s, a)\) is taken into account. We initialise our table of Q values \(Q[S,A] \) <b>randomly</b>. 
+			</p>
+			<p>
+				Then, observe the current state \(s\). Repeat forever (or until stopped):
+				<ul>
+					<li>Select and perform action \(a\)</li>
+					<li>Get reward \(r\) for state \(s'\)</li>
+					<li>\(Q[s,a] \longleftarrow r + \gamma \max_{a'} Q[s', a']; \)</li>
+					<li>\(s \longleftarrow s'\)</li>
+				</ul>
+			</p>
+			<p>
+				For nondeterministic, naturally we have to take into account the probabilties of ending in each state after doing an action as well.
+			</p>
+
+			<hr>
+
+			<p>
+				Suppose we have a history of values \(v_1, v_2, \dots\), and we want to predict the next, given what we know. The natural way to do this is with <b>running average:</b>
+			</p>
+			<p>
+				Let \(A_k\) be estimate based on first \(k\) values of \(v\) -- the mean will do: \(A_k = \frac{v_1 + \cdots + v_k}{k}\)
+				\begin{align}
+					kA_k &= v_1 + \cdots + v_{k-1} + v_k \\ 
+					&= (k-1) A_{k-1} + v_k \\
+					A_k &= (1 - \frac{1}{k}) A_{k-1} + \frac{v_k}{k} \\
+					&= (1-\alpha_k)A_{k-1} + \alpha_k v_k &(\alpha_k = \frac{1}{k}) \\
+				\end{align}
+				Thus we get, as the <b>temporal difference equation</b>:
+				<div class="blue"><span class="nopad">
+					\[A_k = A_{k-1} + \alpha_k(v_k - A_{k-1}).\]
+				</span></div>
+				
+				\(v_k - A_{k-1} \) is called the <b>temporal difference error (TD Error)</b>. If \(\sum_{k=1}^\infty a_k = \infty\) and \(\sum_{k=1}^\infty a^2_k &lt; \infty\), then Q values <b>will converge</b>.
+			</p>
+
+			<hr>
+			<p>
+				An <b>experience</b> is a tuple \(\langle s,a,r,s' \rangle\), that describes an agent in a state, doing an action, getting a reward, and ending up a new state. 
+			</p>
+			<p>
+				This is one piece of data for updating our q-value for \(Q[s,a]\), to give a new estimate of \(Q^* (s,a)\) via
+				\[r + \gamma V[s'] = r + \gamma \max_{a'} Q[s',a'] \]
+			</p>
+			<p>
+				Note, that what we're doing with \(Q[s,a]\) is just predicting the value based on our past experiences, thus we can use the <b>temporal difference equation</b> to Q-learn: 
+			</p>
+			<div class="blue"><span class="nopad">
+				\[Q[s,a] \longleftarrow Q[s,a] + \alpha(r + \gamma \max_{a'} Q[s',a'] - Q[s,a])\]
+			</span></div>
+			<p>
+				The \(\alpha\) value was \(\frac{1}{k}\), where \(k\) is a constant, and so we can simply make \(\alpha\) the constant -- which is between 0 and 1, showing how much the agent prizes new information. (No learning happens at 0). This constant will be called the <b>step size</b>.
+			</p>
+			
+			<button class="collapsible">Pseudocode... </button>
+			<div class="ccontent">
+				<div class="codediv">AGENT qLearn(\(S, A, \gamma, \alpha\))
+	<i>inputs</i>
+		<i>\(S\) of states, \(A\) of actions, \(\gamma\) discount, \(\alpha\) step size</i>
+	<i>local</i>
+		<i>float array \(Q[S,A]\)</i>
+		<i>state \(s, s'\)</i>
+		<i>action \(a\)</i>
+	
+	\(Q[S,A] \longleftarrow\) random values 
+	observe current state \(s\)
+	while not terminated:
+		select action \(a\)
+		\(r, s' \longleftarrow\) execute(\(a\))
+		\(Q[s,a] \longleftarrow Q[s,a] + \alpha(r + \gamma \max_{a'} Q[s', a'] - Q[s,a]\)
+		\(s \longleftarrow s'\)</div>
+			</div>
+			
+			<hr>
+
+			<p>
+				Q learning will always converge to an optimum ... provided each action and state is encountered enough. 
+			</p>
+			<p>
+				<b>Exploiting</b> is selecting an action that maximises your \(Q[s,a]\), whereas <b>Exploring</b> is selecting literally anything else. 
+			</p>
+			<p>
+				If we only exploit, then we will never learn anything new. If we only explore ... well what's the point of this whole "learning" thing then!? So we need some strategy to balacne exploration with exploitation. 
+			</p>
+			
+			<p>
+				The <b>epsilon-greedy strategy</b> uses a constant, \(\varepsilon\). Choose a random action (explore)* with probability \(\varepsilon\) and exploit with probability \(1-\varepsilon\).
+			</p>
+			<p class="small">
+				*all random actions are equally selected between, and may include the maximised q-value action
+			</p>
+			<p>
+				The <b>softmax action selection strategy</b> uses a temperature \(\tau > 0\), and will choose an action \(a\) in state \(s\) weighted with the probability 
+				\[\frac{e^{\frac{Q[s,a] }{\tau}}}{\sum_a e^{\frac{Q[s,a] }{\tau}}}\]
+			</p>
+			<p>
+				Amongst others.
+			</p>
+
+			<p>
+				We know that q-values converge however. Thus, exploring has diminishing returns, and so we would want a mechanism that <b>decays</b> our constants over time to emphasise exploration. 
+			</p>
+
+			<h4>SARSA</h4>
+
+			<p>
+				Q-learning does what's called <b>off-policy learning</b>, meaning values converge regardless of policy. As long as there is enough exploration, there will be convergence. The value of the policy is never learned. 
+			</p>
+			<p>
+				If exploration is dangerous (large negative rewards), this may be undesirable.
+			</p>
+			<p>
+				<b>On-policy learning</b> learns the value of the policy, including exploration, in order to improve the policy. 
+			</p>
+			<p>
+				Modify the experience tuple to be \(\langle s, a, r, s', a' \rangle\) (hence the name) and the algorithm accordingly. 
+			</p>
+			<button class="collapsible">Pseudocode (SARSA)... </button>
+			<div class="ccontent">
+				<div class="codediv">AGENT qLearn(\(S, A, \gamma, \alpha\))
+<i>inputs</i>
+	<i>\(S\) of states, \(A\) of actions, \(\gamma\) discount, \(\alpha\) step size</i>
+<i>local</i>
+	<i>float array \(Q[S,A]\)</i>
+	<i>state \(s, s'\)</i>
+	<i>action \(a\)</i>
+
+\(Q[S,A] \longleftarrow\) random values 
+observe current state \(s\)
+select action \(a\) using policy based on \(Q\)
+while not terminated:
+	\(r, s' \longleftarrow\) execute(\(a\))
+	select action \(a'\) using policy based on \(Q\)
+	\(Q[s,a] \longleftarrow Q[s,a] + \alpha(r + \gamma Q[s', a'] - Q[s,a]\)
+	\(s \longleftarrow s'\)
+	\(a \longleftarrow a'\)</div>
+			</div>
 			
 		</div>
 		
