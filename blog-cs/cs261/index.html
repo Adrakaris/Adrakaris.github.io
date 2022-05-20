@@ -53,6 +53,7 @@
 				<LI><a href="#implementation">Implementation</a></LI>
 				<li><a href="#hci">Human Computer Interaction</a></li>
 				<li><a href="#dependability">Dependability</a></li>
+				<li><a href="#testing">Testing</a></li>
 			</ol>
 		</div>
 
@@ -1615,6 +1616,168 @@ class Orc {
 
 		</div>
 		
+		<div class="colourband">
+			<h2 id="testing">Testing</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ul>
+				<li><a href="#tes-1">Static Testing</a></li>
+				<li><a href="#tes-2">Dynamic Testing</a></li>
+			</ul>
+
+			<ul>
+				<li>
+					Insufficient testing has lead to many examples of massive damages, whether financially or in human life. 
+				</li>
+				<li>
+					Testing shows program does what it is meant to, and reveals defects to be fixed before production. 
+				</li>
+				<li>
+					Part of verification and validation. 
+				</li>
+				<li>
+					Testing can only show <b>presence</b> of bugs, and cannot prove absence of bugs. 
+				</li>
+				<li>
+					Some terminology are
+					<ul>
+						<li>
+							<b>Verification:</b> does it meet spec? 
+						</li>
+						<li>
+							<b>Validation:</b> does it meet needs of customer (which may be not as explicitly mentioned in the spec)?
+						</li>
+						<li>
+							<b>Error:</b> human action that produces incorrect result 
+						</li>
+						<li>
+							<b>Failure:</b> software deviates from expected function
+						</li>
+						<li>
+							<b>Defects/Bugs:</b> manifestation of error in software, may cause failure 
+						</li>
+						<li>
+							<b>Testing:</b> process of "excersising" software to ensure all requirements are met. 
+						</li>
+						<li>
+							<b>Test case:</b> a series of inputs, preconditions, and expected outcomes to ensure compliance with a specific requirement. 
+						</li>
+						<li>
+							<b>Reliability:</b> probability that software will not cause system failure for a specified time range and conditions
+						</li>
+						<li>
+
+							<b>Test plan:</b> record of applying test cases and the reasoning behind those cases 
+						</li>
+						<li>
+							<b>System testing:</b> tests both funtional and nonfunctional requirements. 
+						</li>
+					</ul>
+				</li>
+			</ul>
+			
+			<h3 id="tes-1">Static Testing</h3>
+
+			<ul>
+				<li>
+					<b>Static testing</b> is testing <b>without execution</b>. 
+				</li>
+				<li>
+					Involves stuff like code review, walkthroughs, inspections, etc. Allows attributes like quality, compliance, and maintainability to be studied. 
+				</li>
+				<li>
+					Essentially <i>verification</i>. 
+				</li>
+				<li>
+					Static testing not limited to code: can also statically inspect system design and requirement documents. 
+				</li>
+				<li>
+					We do static testing because:
+				</li>
+				<li>
+					<b>Errors hide errors:</b> errors interact, if we just test by running code, we fix one thing at a time, whereas statically we can see something that leads to multiple problems. 
+				</li>
+				<li>
+					<b>Code does not need to be complete:</b> we can look at code before it's complete enough to run. 
+				</li>
+				<li>
+					<b>Allows quality checking:</b> can also check how well code is written, and whether or not it is up to standard. 
+				</li>
+				<li>
+					But naturally <i>only</i> inspection will not do. 
+				</li>
+				<li>
+					Inspection is bad at finding unexpected component interactions, timing and performance issues, which is why we need <b>dynamic testing</b>.
+				</li>
+			</ul>
+
+			<h3 id="tes-2">Dynamic Testing</h3>
+		
+			<ul>
+				<li>
+					<b>Dynamic testing</b> is executing code with given test cases. It also involves <i>validation</i>.
+				</li>
+				<li>
+					Code segments must be complete, but we can test on function, class, and system level. 
+				</li>
+				<li>
+					Need a test plan and cases, and involves 
+					<ul>
+						<li>
+							<b>Structural testing:</b> (white box testing), derived from data flow of system 
+						</li>
+						<li>
+							<b>Functional testing:</b> (black box testing), derived from formal specification
+						</li>
+					</ul>
+				</li>
+				<li>
+					A piece of code can be turned into a <a href="https://en.wikipedia.org/wiki/Control-flow_graph">Control flow graph</a>
+				</li>
+				<li>
+					Once we have one of those, we can then think about our test cases. Should cover all possibilities, as best as possible, anyway.
+				</li>
+				<li>
+					<b>statement adequacy</b> is when all statements have been executed by at least one test. <b>Statement coverage</b> is then \(\frac{\textrm{number of executed statements}}{\textrm{number of statements}}\).
+				</li>
+				<li>
+					Complient to statement adequacy is <i>branch adequacy and discovery</i> (each decision has a branch), <i>condition coverage</i> (each condition is hit at least once), and thus <i>path coverage</i> (each path is followed).
+				</li>
+
+				<li>
+					Functional, black box testing, has 6 steps: 
+					<ol>
+						<li>Identify what we want software to do</li>
+						<li>Make input data based on func specifications</li>
+						<li>Determine what is meant to be returned as output</li>
+						<li>Execute case</li>
+						<li>Compare actual and expected results</li>
+						<li>Check if application works as customer needs</li>
+					</ol>
+					No internal code is considered. 
+				</li>
+				<li>
+					Can apply at different levels:
+					<ul>
+						<li>
+							Unit (from module interface spec)
+						</li>
+						<li>
+							Integration (from API, subsystem spec)
+						</li>
+						<li>
+							System (from system requirements)
+						</li>
+						<li>
+							Regressions (check common bugs that we've had in the past)
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
 
 		<footer>
 			<div class="cbox">
