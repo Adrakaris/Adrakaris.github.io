@@ -52,6 +52,7 @@
 				<li><a href="#proj-manage">Project Management</a></li>
 				<LI><a href="#implementation">Implementation</a></LI>
 				<li><a href="#hci">Human Computer Interaction</a></li>
+				<li><a href="#dependability">Dependability</a></li>
 			</ol>
 		</div>
 
@@ -1226,6 +1227,7 @@ class Orc {
 				<li><a href="#hci-1">Attention</a></li>
 				<li><a href="#hci-2">Memory</a></li>
 				<li><a href="#hci-3">Cognition</a></li>
+				<li><a href="#hci-4">Affordances</a></li>
 			</ol>
 
 			<hr>
@@ -1439,6 +1441,178 @@ class Orc {
 			<p>
 				We can use metrics to evaluate a UI - such as the ratio of success to failure, time to complete a task, number of errors a user makes, or the number of times a user expresses frustration (windows 10 settings app) or satisfaction.
 			</p>
+		</div>
+
+		<div class="colourband">
+			<h2 id="dependability">Dependability</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+			<ol>
+				<li><a href="#dep-1">Dependency and Failure</a></li>
+				<li><a href="#dep-2">Dependable Processes</a></li>
+			</ol>
+
+			<blockquote>Dependability is the trustworthiness of a computer system such that reliance can be justifiably placed on the service it delivers.</blockquote>
+			<p>
+				That was -- that was more of a word salad than I expected. <q>Dependability is the trustworthiness of a computer system and the services it provides</q> might be better?
+			</p>
+
+			<h3 id="dep-1">Dependency and Failure</h3>
+
+			<ul>
+				<li>
+					Computer systems become more crucial, thus they need to be more reliable/dependable.
+				</li>
+				<li>
+					System failures affect more people than a few missing features. Unreliable systems are avoided by users. System failure can also have massive cost to whatever the system was supposed to be doing (data, money, lives, money, security, and most importantly money)
+				</li>
+				<li>
+					<b>Reliability</b> is a measure of how likely a system will work over a set period of time. 
+				</li>
+				<li>
+					<b>Perceived Reliability</b> is how it seems to the user. May differ from real reliability since problems more likely with less used functions. 
+				</li>
+				<li>
+					We can measure reliability via 
+					<ul>
+						<li>
+							<i>Probability of failure on demand:</i> failure on request of service
+						</li>
+						<li>
+							<i>Rate of failure occurence:</i> failures per time period
+						</li>
+						<li>
+							<i>Mean time to failure</i> or how long it can keep running, on average
+						</li>
+						<li>
+							<i>Availability:</i> if I request something, chances it's down?
+						</li>
+					</ul>
+				</li>
+				<li>
+					Dependability consists of: Availability, Reliability, Safety, Confidentiality, Integrity, and Maintainability. 
+				</li>
+				<li>
+					Attributes can be reduced or broken down into others. Not all attributes of dependency is relevant to all systems -- security is less of an issue for a pacemaker than reliability.
+				</li>
+				<li>
+					Other system properties related to dependability are
+					<ul>
+						<li>
+							<i>Repairability:</i> how easy is system to repair if it breaks. Are broken components accessible/modifiable easily?
+						</li>
+						<li>
+							<i>Maintainability:</i> Is it economical to add new requirements and updates -- without breaking a lot of stuff. 
+						</li>
+						<li>
+							<i>Error tolerance:</i> Designing system to accommodate user errors
+						</li>
+					</ul>
+				</li>
+				<li>
+					The <b>fault</b> is the cause of the <b>error</b>, which is the effect, which may cause <b>failure</b>, when that error propagates past what the system/module can handle. 
+				</li>
+				<li>
+					One module's failure can be the <i>fault</i> of another module, and so on and so forth until it exceeds the system boundary, and the whole system fails. 
+				</li>
+				<li>
+					System failure can be caused by many things, notably <b>hardware failure</b>, <b>software failure</b> (due to design/impl errors), or <b>operational failure</b> (where the human operator makes mistakes)
+				</li>
+				<li>
+					To provide dependability, we can 
+					<ul>
+						<li>
+							Develop carefully to prevent faults -- <b>fault avoidance</b>
+						</li>
+						<li>
+							Verification and testing to discover and remove faults before push -- <b>fault detection and correction</b>
+						</li>
+						<li>
+							Desigining systems so that faults are handled and the system does not fail -- <b>fault tolerance</b>
+						</li>
+					</ul>
+					Cost of fixing faults increases exponentioally. If its more cost-effective to release software with faults and fix them later, then it will be done.
+				</li>
+				<li>
+					A system needs to recover, or continue operating in the case of a failure of a component:
+					<ul>
+						<li>
+							<b>Graceful degredation</b> enables the system to still operate (perhaps in reduced capacity) when 
+						</li>
+						<li>
+							<b>Redundancy</b> is where spare capacity is included in a system in case part of the system fails
+						</li>
+						<li>
+							<b>Diversity</b> making redundnant systems have different implementations, so they're less likely to fail similarly. 
+						</li>
+					</ul>
+				</li>
+				<li>
+					Software itself is intangible, and fairly cheap to fix. The only problem being when its effects ripple out into the real world. 
+				</li>
+				<li>
+					Ideally we want to contain failure and not let it propagate -- this is difficult for the developers though. 
+				</li>
+				<li>
+					Failures often come from adding new system requirements. 
+				</li>
+			</ul>
+
+			<h3 id="dep-2">Dependable Processes</h3>
+
+			<ul>
+				<li>
+					Dependable processes are designed to produce dependable software. 
+				</li>
+				<li>
+					These processes are 
+					<ul>
+						<li>
+							<b>Documentable:</b> defined process model that sets out what documentation is needed
+						</li>
+						<li>
+							<b>Standardised:</b> processes applicable for many different systems, and should have standards applicable to all of them.
+						</li>
+						<li>
+							<b>Auditable:</b> understandable by people other than the users, so verification can be done 
+						</li>
+						<li>
+							<b>Diverse:</b> include redundant and diverse validation/verification 
+						</li>
+						<li>
+							<b>Robust:</b> should be able to recover from failures of individual models. 
+						</li>
+					</ul>
+				</li>
+				<li>
+					Dependable processes may not be enough to guarantee dependability. If so, system environments need to be designed dependably. 
+				</li>
+				<li>
+					<b>Protection systems</b> are special systems parallel to other (usually control) systems. They exist to monitor the control system, and to move it to a safe state on fault. 
+					<figure>
+						<img src="./protection-systems.png" alt="" style="max-width: 630px;">
+					</figure>
+				</li>
+				<li>
+					<b>Self monitoring architectures</b> are systems designed to monitor its own operation. 
+					<figure>
+						<img src="./self-monitoring-system.png" alt="" style="max-width: 500px;">
+					</figure>
+					Each channel should have different hardware and software.
+				</li>
+				<li>
+					<b>N-version programming</b> have multiple software unites (perhaps made by different teams), where each version is executed separately, and then outputs are compared. This has a high cost, and is used where other systems are impractical.
+				</li>
+				<li>
+					All rely on <b>diversity</b>. If we give the same spec to different isolated teams, their implementations may be different, with different bugs and points of failure, reducing chance of overall failure from all systems. 
+				</li>
+				<li>
+					Achieving complete diversity is impossible though, as programmers still work similarly at the basic level.
+				</li>
+			</ul>
+
 		</div>
 		
 
