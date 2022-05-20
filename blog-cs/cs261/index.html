@@ -1623,10 +1623,13 @@ class Orc {
 		<div class="cbox">
 			<h3>Introduction</h3>
 
-			<ul>
+			<ol>
 				<li><a href="#tes-1">Static Testing</a></li>
 				<li><a href="#tes-2">Dynamic Testing</a></li>
-			</ul>
+				<li><a href="#tes-3">Unit Testing</a></li>
+				<li><a href="#tes-4">Component and System Testing, TDD </a></li>
+				<li><a href="#tes-5">User Testing</a></li>
+			</ol>
 
 			<ul>
 				<li>
@@ -1777,6 +1780,194 @@ class Orc {
 					</ul>
 				</li>
 			</ul>
+
+			<h3 id="tes-3">Unit Testing</h3>
+
+			<ul>
+				<li>
+					Testing the methods and objects of our system in isolation.
+				</li>
+				<li>
+					Can be automated. 
+				</li>
+				<li>
+					We cannot assume that if a function works in one class, it will work in its subclasses. We need to test everything in the subclasses as well.
+				</li>
+				<li>
+					This leads to a lot of work, which is where automated unit testing libraries come in. 
+				</li>
+				<li>
+					All we're doing is initialising a thing with inputs and expected outputs, calling the method, and checking if the outputs match. 
+				</li>
+				<li>
+					Writing tests take time, and so every single test must have a purpose, whether that be to verify a behaviour, or to catch a problem. 
+				</li>
+			</ul>
+
+			<h3 id="tes-4">Component and System Testing, TDD</h3>
+
+			<ul>
+				<li>
+					When we start combining components, we must test that everything works in combination. After unit testing, so we know basic functionality works in isolation. 
+				</li>
+				<li>
+					Unit testing does not account for interactions between components. 
+				</li>
+				<li>
+					<b>Interface errors</b> are very common. They come from <b>interface misuse</b> (a component not passing correct parameters, receiving unexpected returns), <b>interface misunderstanding</b> (one interface does not understand the behaviour of another), and <b>timing errors</b> (in systems which need timing)
+				</li>
+				<li>
+					Component testing should 
+					<ul>
+						<li>check extremes of ranges of parameters</li>
+						<li>call interfaces with null values</li>
+						<li>testing how failure is handled by deliberately making interfaces fail</li>
+						<li>stress test, especially for message passing systems</li>
+						<li>vary order components access shared memory</li>
+					</ul>
+				</li>
+				<li>
+					The goal of <b>system testing</b> is also to check that all components work.
+				</li>
+				<li>
+					However, with system testing, off-the-shelf/premade components may be added.
+				</li>
+				<li>
+					Components from all teams will be put together, and looking for <i>"emergent behaviour"</i>.
+				</li>
+				<li>
+					<b>emergent behaviour</b> are characteristics that only appear when components interact. 
+				</li>
+				<li>
+					Some emergent behaviour is expected, some is unexpected. We need to test for both, 
+				</li>
+				<li>
+					and since the testing is very interaction-focused, use-case testing is effective. Use case testing often involves multiple components and thus causes interactions to occur. 
+				</li>
+				<li>
+					<b>Test driven Development (TDD)</b> is when tests are written first for an increment code, and then writing the code to pass the test. 
+				</li>
+				<li>
+					TDD came from extreme programming, but is now accepted mainstream. 
+				</li>
+				<li>
+					The process goes as thus 
+					<ol>
+						<li>Identify small, implementable, functional increment</li>
+						<li>Write an (ideally automated) test</li>
+						<li>Run all the tests (it will fail) -- this is important to show that this is a new test for the system</li>
+						<li>Implement functionality and retest -- may include refactoring old code</li>
+						<li>Move onto next increment when all tests pass</li>
+					</ol>
+				</li>
+				<li>
+					TD is good because 
+					<ul>
+						<li>It helps clarify what the code is meant to do</li>
+						<li>Writing the test requires strong understanding of functionality</li>
+						<li>Which leads to implementation being easier, since understanding is already there</li>
+					</ul>
+					But has some drawbacks 
+					<ul>
+						<li>If you don't know enough to write the tests, you can't develop</li>
+						<li>If certain important scenarios are not included in the tests, this impacts effectiveness of both testing and development</li>
+					</ul>
+				</li>
+				<li>
+					We also get 
+					<ul>
+						<li>High code coverage -- each segment has at least 1 associated test</li>
+						<li>Regression testing -- constantly verifying that new segment has not introduced bugs</li>
+						<li>Simplified debugging -- any bugs must be in the newest segment</li>
+						<li>System documentation -- "tests can double as documentation"</li>
+					</ul>
+				</li>
+				<li>
+					TDD is most effective for a <b>new</b> system, building on top of existing systems / reuse based development, it is hard to break things down into testable segments. 
+				</li>
+				<li>
+					Multithreading also makes this difficult (beacause consistency)
+				</li>
+				<li>
+					TDD does not replace system testing. 
+				</li>
+			</ul>
+
+			<h3 id="tes-5">User Testing</h3>
+
+			<ul>
+				<li>
+					It is important to give user time with the system to use it, so that it is used in its intended environment.
+				</li>
+				<li>
+					User testing has three approaches:
+					<ul>
+						<li><b>Alpha testing</b> for selected users on very early versions of software</li>
+						<li><b>Beta testing</b> with a larger group of users with a more complete version</li>
+						<li><b>Acceptance testing</b> for customers, to decide if the system is ready.</li>
+					</ul>
+				</li>
+				<li>
+					In alpha testing, users can identify early issues that the dev team may have missed. Not all requirement features may have been implemented at this stage, only those needed for minimum operation and use. 
+				</li>
+				<li>
+					Alpha testing reduces the risk of unanticipated changes disrupting business.
+				</li>
+				<li>
+					Beta testing is done with software that is complete or nearly complete. 
+				</li>
+				<li>
+					There's a larger group of users which help find perhaps less common issues, and discovering interactions between system and intended environment.
+				</li>
+				<li>
+					Also useful for marketing and generating.
+				</li>
+				<li>
+					Acceptance testing is crucial for systems built for a client. The client can use their own data, and see if the system is acceptable to them.
+				</li>
+				<ul>
+					<li>
+						<b>Define acceptance criteria</b> first of all, before the contract. May be difficult if requirements not in pace. This makes a test criteria.  
+					</li>
+					<li>
+						<b>Plan acceptance testing</b> establishing testing schedule and resources, and coverage and order. This makes a test plan.
+					</li>
+					<li>
+						<b>Derive acceptance tests</b> which should be both functional and non-functional. Should cover all requirements. Carefully consider. This makes the tests.
+						<ul>
+							<li><b>Acceptance Tests</b> define a "user journey" -- a series of steps a user might take -- and then its expected output.  </li>
+						</ul>
+					</li>
+					<li>
+						<b>Run acceptance tests</b> ideally in the delopyment environment. Difficult to automate. Ideally involve users. This gets the test results. 
+					</li>
+					<li>
+						<b>Negotiate test results</b> since unlikely that all acceptance tests will pass. Determine if the failures are negligible or important. This makes a test report. 
+					</li>
+					<li>
+						<b>Accept or reject system</b> either go back for more development or done. 
+					</li>
+				</ul>
+				<li>
+					Failed acceptance tests \(\neq\) rejected system. A customer may be willing to accept it even with some minor defects. 
+				</li>
+				<li>
+					Or <b>conditional acceptance</b> -- accept on the condition that bugs will be fixed eventually, as part of maintenance. 
+				</li>
+				<li>
+					In extreme programming, user involved throughout development, so there is no testing step. Thus developing tests makes them acceptance tests. 
+				</li>
+				<li>
+					Best users are "typical users" -- difficult. Make sure tests do not reflect a <i>specific</i> user. 
+				</li>
+				<li>
+					Automated tests still don't test interaction, so we have manual testing too. 
+				</li>
+				<li>
+					Most companies go for hybrid agile/plan Methodology.
+				</li>
+			</ul>
+
 		</div>
 
 		<footer>
