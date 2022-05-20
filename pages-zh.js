@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2022,05,05)),
+        "link": "blog-cs/cs261/",
+        "title": "Notes on CS261",
+        "desc": "CS259：软件工程的笔记 (wah)</p>",
+        "picture": "",
+        "tags": []
+    },
+    {
         "date": new Date(Date.UTC(2022,05,02)),
         "link": "blog-cs/cs259/",
         "title": "Notes on CS259",
