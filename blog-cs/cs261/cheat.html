@@ -56,6 +56,9 @@
 				<li><a href="#des">Design</a></li>
 				<li><a href="#pm">Project Management</a></li>
 				<li><a href="#imp">Implementation</a></li>
+				<li><a href="#hci">Human Computer Interaction</a></li>
+				<li><a href="#dep">Dependability</a></li>
+				<li><a href="#tes">Testing</a></li>
 			</ol>
 
 			<h2 id="dev">Dev Methodologies</h2>
@@ -393,9 +396,318 @@
 						</ul>
 					</div>
 				</div>
+
+				<div class="cornell">
+					<div>
+						<p>SOLID principles</p>
+					</div>
+					<div>
+						<li>
+							<b>Single Responsibility:</b> each class does one thing
+						</li>
+						<li>
+							<b>Open/Closed:</b> open to extension closed to modification - once we finish a class, don't modify it again - extend it
+						</li>
+						<li>
+							<b>Liskov Substitution:</b> an object that uses a parent class can use its child classes without knowing -- child class can pretend to be parent class and serve all functionality of parent class
+						</li>
+						<li>
+							<b>Interface segregation:</b> many specific interfaces better than one generic interface -- no code should depend on methods it doesn't use
+						</li>
+						<li>
+							<b>Dependency Inversion:</b> ensure high level classes do not rely on functions from low level classes
+						</li>
+					</div>
+				</div>
 			</div>
 
-			
+			<h2 id="hci">Human Computer Interaction</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Nielsen's usability principles</p>
+				</div>
+				<div>
+					<ol>
+						<li><b>STATUS | Visibility of system status</b> should always keep user informed on whats going on in reasonable amount of time</li>
+						<li><b>MATCH | Match between system and real world</b> use metaphors from the real world for intuition, follow conventions</li>
+						<li><b>FREEDOM | User control and freedom</b> need to permit people to back out / cancel actions at will 
+						</li>
+						<li><b>CONSISTENCY | Consistency and Standards</b> follow platform and industry standards for design</li>
+						<li><b>PREVENT | Error prevention</b> program to prevent errors from user mistakes, or add confirmations for error prone operations </li>
+						<li><b>RECOVER | Recognise, Diagnose, and Recover from errors</b> error messages should be in plain language, indicate the problem and suggest a solution</li>
+						<li><b>RECOGNITION | Recognition rather than recall</b> minimise user memory load by making actions and elements visible, information required should easily be retrievable</li>
+						<li><b>EFFICIENCY | Flexibility and Efficiency of Use</b> Shortcuts can speed up use for powerusers. Let people customise these. </li>
+						<li><b>MINIMALIST | Aesthetic and minimalist design</b> interfaces should not contain irrelevant or rarely needed information, focus on essentials</li>
+						<li><b>DOCUMENTATION | Help and documentation</b> provide easy to search documentation to help users</li>
+					</ol>
+				</div>
+				<div>
+					<p>
+						Norman's action cycle
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							Form a goal - user first decides what they want to do 
+						</li>
+						<li>
+							Intention to act - user makes intention explicit
+						</li>
+						<li>
+							Plannign to act - user chooses action from list of possible actions
+						</li>
+						<li>
+							Execution - user does the interaction
+						</li>
+						<li>
+							Feedback - user receives feedback from the world / system
+						</li>
+						<li>
+							Interpret feedback - user interprets the feedback based on what they expected to happen
+						</li>
+						<li>
+							Evaluate - user determines if they have been successful and are now closer to their goal
+						</li>
+					</ul>
+				</div>
+				<div>
+					<p>-> principles of design</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							<b>Provide visibility</b> -- ensure user can easily understand current state of operations
+						</li>
+						<li>
+							<b>Provide a good conceptual model</b> -- ensure outcomes and results are consistently presented 
+						</li>
+						<li>
+							<b>Provide good mappings</b> -- ensure easy to determine what the outcome of any action will be 
+						</li>
+						<li>
+							<b>Provide feedback</b> -- ensure user gets constant and consistent feedback on results
+						</li>
+					</ul>
+				</div>
+				<div>
+					<p>Gestalt Principles</p>
+				</div>
+				<div>
+					<ol>
+						<li>
+							<b>Figure Ground Principle</b>: People segment their vision into "figure" and "ground" (i.e. fore and background). The figure gets the focus and is perceived as in front.
+						</li>
+						<li>
+							<b>Similarity Principle</b>: Form informs function. If two things look similar, they'll probably behave similar. Can make use of colours and shapes in UI. 
+						</li>
+						<li>
+							<b>Proximity Princple</b>: If objects are grouped together, they're probably related. Proximity overrides similarity. 
+						</li>
+						<li>
+							<b>Common Region Principle</b>: Following from proximity, we group objects together in the same closed region -- what borders do. A UI will have several boxes and menus.
+						</li>
+						<li>
+							<b>Continuity Principle</b>: If a series of objects are in a line or a curve, we think they are related. Curves and lines are better because we pattern match them quickly. 
+						</li>
+						<li>
+							<b>Closure Principle</b>: If we see a complex arrangement of shapes, likely to form them into a single pattern and fill in the blanks. ඞ
+						</li>
+						<li>
+							<b>Focal Point Principle</b>: When we look at an image, we are drawn to the thing that stands out the most. 
+						</li>
+					</ol>
+				</div>
+			</div>
+
+			<h2 id="dep">Dependability</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Reliability</p>
+				</div>
+				<div>
+					<p> <b>Reliability</b> is a measure of how likely a system will work over a set period of time.
+						 </p>
+					<p><b>Perceived Reliability </b>is how it seems to the user. May differ from real reliability since problems more likely with less used functions.</p>
+				</div>
+				<div>
+					<p>Dependable processes are</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							<b>Documentable:</b> defined process model that sets out what documentation is needed
+						</li>
+						<li>
+							<b>Standardised:</b> processes applicable for many different systems, and should have standards applicable to all of them.
+						</li>
+						<li>
+							<b>Auditable:</b> understandable by people other than the users, so verification can be done 
+						</li>
+						<li>
+							<b>Diverse:</b> include redundant and diverse validation/verification 
+						</li>
+						<li>
+							<b>Robust:</b> should be able to recover from failures of individual models. 
+						</li>
+					</ul>
+				</div>
+				<div>
+					<p>On event of failure</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							<b>Graceful degredation</b> enables the system to still operate (perhaps in reduced capacity) when 
+						</li>
+						<li>
+							<b>Redundancy</b> is where spare capacity is included in a system in case part of the system fails
+						</li>
+						<li>
+							<b>Diversity</b> making redundnant systems have different implementations, so they're less likely to fail similarly. 
+						</li>
+					</ul>
+				</div>
+				<div>
+					<p>Protection Systems </p>
+				</div>
+				<div>
+					<figure>
+						<img src="./protection-systems.png" alt="">
+					</figure>
+				</div>
+				<div>
+					<p>Self-monitoring architectures</p>
+				</div>
+				<div>
+					<figure>
+						<img src="./self-monitoring-system.png" alt="">
+					</figure>
+				</div>
+			</div>
+
+			<h2 id="tes">Testing</h2>
+
+			<button class="collapsible">Terminology... </button>
+			<div class="ccontent">
+				<ul>
+					<li>
+						<b>Verification:</b> does it meet spec? 
+					</li>
+					<li>
+						<b>Validation:</b> does it meet needs of customer (which may be not as explicitly mentioned in the spec)?
+					</li>
+					<li>
+						<b>Error:</b> human action that produces incorrect result 
+					</li>
+					<li>
+						<b>Failure:</b> software deviates from expected function
+					</li>
+					<li>
+						<b>Defects/Bugs:</b> manifestation of error in software, may cause failure 
+					</li>
+					<li>
+						<b>Testing:</b> process of "excersising" software to ensure all requirements are met. 
+					</li>
+					<li>
+						<b>Test case:</b> a series of inputs, preconditions, and expected outcomes to ensure compliance with a specific requirement. 
+					</li>
+					<li>
+						<b>Reliability:</b> probability that software will not cause system failure for a specified time range and conditions
+					</li>
+					<li>
+
+						<b>Test plan:</b> record of applying test cases and the reasoning behind those cases 
+					</li>
+					<li>
+						<b>System testing:</b> tests both funtional and nonfunctional requirements. 
+					</li>
+				</ul>
+			</div>
+
+			<div class="cornell">
+				<div>
+					<p>Static testing</p>
+				</div>
+				<div>
+					<p>
+						<b>Static testing</b> is testing <b>without execution</b>. I.e. code inspection, verification
+					</p>
+				</div>
+				<div>
+					<p>Dynamic testing</p>
+				</div>
+				<div>
+					<p>
+						<b>Dynamic testing</b> is executing code with given test cases. It also involves <i>validation</i>.
+					</p>
+					<p>
+						<b>statement adequacy</b> is when all statements have been executed by at least one test. <b>Statement coverage</b> is then \(\frac{\textrm{number of executed statements}}{\textrm{number of statements}}\).
+					</p>
+				</div>
+				<div>
+					<p>Unit testing</p>
+				</div>
+				<div>
+					<p>Tests individual functions and classes</p>
+				</div>
+				<div>
+					<p>Component, System testing</p>
+				</div>
+				<div>
+					<p>
+						Testing whole system -- unit testing cannot catch interactions between components.
+					</p>
+				</div>
+				<div>
+					<p>TDD</p>
+				</div>
+				<div>
+					<p>
+						<b>Test driven Development</b> (TDD) is when tests are written first for an increment code, and then writing the code to pass the test. 
+					</p>
+				</div>
+				<div>
+					<p>User testing: stages</p>
+				</div>
+				<div>
+					<ul>
+						<li><b>Alpha testing</b> for selected users on very early versions of software</li>
+						<li><b>Beta testing</b> with a larger group of users with a more complete version</li>
+						<li><b>Acceptance testing</b> for customers, to decide if the system is ready.</li>
+					</ul>
+				</div>
+				<div>
+					<p>Acceptance testing</p>
+				</div>
+				<div>
+					<ul>
+						<li>
+							<b>Define acceptance criteria</b> first of all, before the contract. May be difficult if requirements not in pace. This makes a test criteria.  
+						</li>
+						<li>
+							<b>Plan acceptance testing</b> establishing testing schedule and resources, and coverage and order. This makes a test plan.
+						</li>
+						<li>
+							<b>Derive acceptance tests</b> which should be both functional and non-functional. Should cover all requirements. Carefully consider. This makes the tests.
+							<ul>
+								<li><b>Acceptance Tests</b> define a "user journey" -- a series of steps a user might take -- and then its expected output.  </li>
+							</ul>
+						</li>
+						<li>
+							<b>Run acceptance tests</b> ideally in the delopyment environment. Difficult to automate. Ideally involve users. This gets the test results. 
+						</li>
+						<li>
+							<b>Negotiate test results</b> since unlikely that all acceptance tests will pass. Determine if the failures are negligible or important. This makes a test report. 
+						</li>
+						<li>
+							<b>Accept or reject system</b> either go back for more development or done. 
+						</li>
+					</ul>
+				</div>
+			</div>
 		</div>
 
 		<footer>
