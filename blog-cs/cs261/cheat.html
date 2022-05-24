@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS261 Cheat Sheet</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all"> 
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0> 
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS261</h1>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Definitions Sheet</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			<div class="buttonwrapper"><a href="./ ">Back to the main page</a></div>
+		</div>
+
+
+		<div class="cbox">
+			<h2>Contents</h2>
+
+			<ol>
+				<li><a href="#dev">Dev Methodologies</a></li>
+				<li><a href="#req">Requirements</a></li>
+				<li><a href="#des">Design</a></li>
+				<li><a href="#pm">Project Management</a></li>
+				<li><a href="#imp">Implementation</a></li>
+			</ol>
+
+			<h2 id="dev">Dev Methodologies</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Waterfall</p>
+				</div>
+				<div>
+					<p>
+						Requirements -> design -> implementation -> verification -> maintenance
+					</p>
+					<p>
+						Replan on change
+					</p>
+				</div>
+				<div>
+					<p>
+						Agile principles
+					</p>
+				</div>
+				<div>
+					<ul>
+						<li><b>Customer involvement</b> - cannot respond rapidly to changes without rapid feedback</li>
+						<li><b>Incremental delivery</b> - have prototypes, and update spec for next iterations</li>
+						<li><b>People not process</b> - have highly skilled coders that know what they're doing. Share knowledge and improve processes</li>
+						<li><b>Embrace change</b> - open to additions, and design system to accommodate change (hard)</li>
+						<li><b>Maintain simplicity</b> - since there is a lack of good doucmentation, software must be simple and easy to understand for new members - "self commenting code" (lofty ideals)</li>
+					</ul>
+				</div>
+				<div>
+					<p>Agile -> XP</p>
+				</div>
+				<div>
+					<figure>
+						<img src="./extreme-programming.png" alt="" style="max-width: 500px;">
+					</figure>
+					<p>
+						Done around <b>story cards</b>, lots of customer involvement.
+					</p>
+				</div>
+				<div>
+					<p>Agile -> Scrum</p>
+				</div>
+				<div>
+					<p>
+						Planning stage -> sprint cycle -> project closure
+					</p>
+					<figure>
+						<img src="./scrumcycle.png" alt="" style="max-width: 240px;">
+						<figcaption><i>sprint cycle</i></figcaption>
+					</figure>
+				</div>
+			</div>
+
+			<h2 id="req">Requirements</h2>
+
+			<div class="cornell">
+				<div>
+					<p>Requirements engineering</p>
+				</div>
+				<div>
+					<figure>
+						<img src="./requirements-doc.png" alt="" style="max-width: 540px;"> 
+					</figure>
+				</div>
+				<div>
+					<p>C-facing, D-facing</p>
+				</div>
+				<div>
+					<table>
+						<tr>
+							<th>C-facing reqs</th>
+							<th>D-facing reqs</th>
+						</tr>
+						<tr>
+							<td><ul><li>System from user view</li><li>how it works in natural language</li><li>diagrams are always nice</li><li>list of constraints in operation</li></ul></td>
+							<td><ul><li>Detailed descriptions of functionality</li><li>Language, service, protocols, libraries, etc</li><li>Defines exactly waht must be implemented</li></ul></td>
+						</tr>
+					</table>
+				</div>
+				<div>
+					<p>Requirement elicitation</p>
+				</div>
+				<div>
+					<ol>
+						<li>Interact with stakeholders, gather info</li>
+						<li>Consider conflicts of interest</li>
+						<li>Negotiation and clarifications</li>
+						<li>Finalise document</li>
+					</ol>
+					<p>
+						<b>Prioritisation</b> done with <b>MoSCoW</b>: Must, Should, Could, Won't.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="des">Design</h2>
+
+			<div class="cornell">
+				<div>
+					<p>UML</p>
+				</div>
+				<div>
+					<p>
+						<b>Static</b> vs <b>behavioural</b> diagrams. Mathematical/logical system modelling language. 
+					</p>
+					<p>
+						Static is like class diagrams, and use case diagrams. Dynamic is like activity, and sequence.
+					</p>
+					<p>
+						Just read <a href="./#des-2">this bit for the diagrams</a>.
+					</p>
+				</div>
+			</div>
+
+			<h2 id="pm">Project Management</h2>
+
+			<div class="cornell">
+				<div>
+					<p>
+						Planning 
+					</p>
+				</div>
+				<div>
+					<figure>
+						<img src="./proj-plannign.png" alt="" 	>
+					</figure>
+				</div>
+			</div>
+
+			<h2 id="imp">Implementation</h2>
+
+			<button class="collapsible">Design Patterns... </button>
+			<div class="ccontent">
+				<div class="cornell">
+					<div>
+						<p>Design Patterns</p>
+					</div>
+					<div>
+						<p>
+							4 aspects: <b>(1)</b> a meaningful name, <b>(2)</b> a description of problem, <b>(3)</b> a solution, <b>(4)</b> statement of drawbacks
+						</p>
+					</div>
+					<div>
+						<p><b>Creation:</b> factory</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Deal with the tedium and sometimes inflexibility of manual object creation code. 
+						</p>
+						<p>
+							<i>Solution:</i> Delegate object creation to centralised <b>factory objects</b> (or methods), which essentially handles object creation internally, and returns a completed object. 
+						</p>
+						<ul style="color: green;">
+							<li>Cuts down on repeated code</li>
+							<li>Adding new variations and scenarios is easier</li>
+							<li>Making changes and testing is also easier</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Lots of new classes</li>
+							<li>Factory intrinsically linked to produced class -- when we update class, we must still update all associated factories</li>
+						</ul>
+					</div>
+					<div>
+						<p>
+							<b>Creation:</b> prototype
+						</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Same as above 
+						</p>
+						<p>
+							<i>Solution:</i> Create a <b>prototype object</b> and just clone it, with an internal clone method. 
+						</p>
+						<ul style="color: green;">
+							<li>Don't need to make subclass to create another object</li>
+							<li>Removes heavy initialisation code for cloning</li>
+							<li>Produces complex objects easily whilst keeping class heirarchy simple</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Circular references are difficult to deal with</li>
+							<li>Update code still has to be done over all objects</li>
+						</ul>
+					</div>
+					<div>
+						<p>
+							<b>Structural:</b> proxy
+						</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Certain objects take a lot of processing power, or memory, or network bandwidth to load, which impacts performance should it be repeatedly fetched.
+						</p>
+						<p>
+							<i>Solution:</i> Create a proxy object, that references an entity without loading the entire object. Only load on demand. 
+						</p>
+						<ul style="color: green;">
+							<li>Can hide away parts of service object we don't want accessed</li>
+							<li>Manages object life cycle</li>
+							<li>Provides availability even if object itself not available</li>
+							<li>New proxies can be made without changing service</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Added complexity</li>
+							<li>Another step between request and response -- overhead concerns</li>
+						</ul>
+					</div>
+					<div>
+						<p><b>Structural:</b> Decorator</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Adding multiple, often changing or diverse functionality to an object requres an often infeasible number of sublcasses.
+						</p>
+						<p>
+							<i>Solution:</i> Wrap classes in decorator classes, which effectively go "around" the base class and give it extra functionality, by doing extra logic around original class methods. We can thus change and add functionality dynamically.
+						</p>
+						<ul style="color: green;">
+							<li>Extend behaviour without subclasses</li>
+							<li>Responsibilities become dynamic at runtime</li>
+							<li>Combinable</li>
+							<li>Promotes single responsibility</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Removing wrappers later is difficult</li>
+							<li>Generally very order dependent, and hard to implement to make it not so</li>
+							<li>Initial code layout can look messy and the whole setup can be rather hard to understand (*ahem* Spring)</li>
+						</ul>
+					</div>
+					<div>
+						<p><b>Structural:</b> Adaptor</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> The output of one object cannot be used immediately by another.
+						</p>
+						<p>
+							<i>Solution:</i> Have a glue class that takes output from one class, transforms it into something that another class can take.
+						</p>
+						<ul style="color: green;">
+							<li>Promotes single responsibility</li>
+							<li>New adaptors can be introduced without heavy refactoring</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Increased code complexity</li>
+							<li>Depending on size of codebase, converting the original object may be easier</li>
+						</ul>
+					</div>
+					<div>
+						<p><b>Structural:</b> Flyweight</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Sometimes, many objects have very large assets (like textures), which take up a lot of memory, since each object has its own copy. 
+						</p>
+						<p>
+							<i>Solution:</i> Extract large objects into a single data object, and have all objects reference that one data store. 
+						</p>
+						<ul style="color: green;">
+							<li>Saves memory, sometimes drastically</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Some data may need to be recalculated for every call: tradeoff for increased CPU use</li>
+							<li>Increased complexity</li>
+						</ul>
+					</div>
+					<div>
+						<p><b>Behavioural:</b> Iterator </p>
+					</div>
+					<div>
+						<p>I don't think this needs to be explained?</p>
+						<p>But worth to mention that we can iterate multiple ways in parallel, and can even pause iteration.</p>
+					</div>
+					<div>
+						<p><b>Behavioural:</b> Observer</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Want some way of automatically notifying subscribers of some remote change.
+						</p>
+						<p>
+							<i>Solution:</i> either a <b>push model</b> (sender sends) or a <b>pull model</b> (receiver asks). Refer to sender as <b>publisher</b> and receiver as <b>subscriber</b>
+						</p>
+						<p>
+							Also has the ability for subscribers to be added and removed. <b>opt-in</b> functionality. 
+						</p>
+						<ul style="color: green;">
+							<li>New subs can be added without redesigning publisher</li>
+							<li>Relationships between objects change at runtime</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Subscribers notified in possibly random order</li>
+						</ul>
+					</div>
+					<div>
+						<p><b>Behavioural:</b> Memento</p>
+					</div>
+					<div>
+						<p>
+							<i>Problem:</i> Want to save and restore objects without revealing implementation details (and thus maintaining encapsulation)
+						</p>
+						<p>
+							<i>Solutution:</i> Have the object in question implement a "memento" method to return a snapshot of itself, to be stored in a caretaker class. 
+						</p>
+						<ul style="color: green;">
+							<li>Makes backups without violating encapsulation</li>
+							<li>Keep original object simple by extracting maintenance and restoration</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Heavy memory cost</li>
+							<li>Need caretakers to track lifecycles, more classes</li>
+							<li>Dynamic languages can't guarantee state is preserved</li>
+						</ul>
+					</div>
+					<div>
+						<p><b>Behavioural:</b> Strategy</p>
+					</div>
+					<div>
+						<p><i>Problem:</i> We want a program to change solutions dynamically for solving a problem.</p>
+	
+						<p>
+							<i>Solution:</i> Have <b>strategy</b> classes and a <b>context</b> controller object, which can dynamically pick strategies.
+						</p>
+						<ul style="color: green;">
+							<li>Can swap implementation at runtime</li>
+							<li>Separates algorithm from scaffolding code</li>
+							<li>Simplifies class heirarchy</li>
+						</ul>
+						<ul style="color: red;">
+							<li>Unnecessary when few choices</li>
+							<li>Requires clients to understand difference between strategies</li>
+							<li>Can just use lambda functions tbh</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			
+		</div>
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>
