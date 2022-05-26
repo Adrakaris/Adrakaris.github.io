@@ -790,7 +790,7 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 				<b>Cutset Conditioning</b> is conditioning done to a set of variables (nodes).
 			</p>
 
-			<h4>Variable Elimination</h4>
+			<h4>Variable Elimination and Cutset Conditioning</h4>
 
 			<p>
 				More generally, we can eliminate a variable by passing its effects off onto the constraints of its neighbours. 
@@ -819,6 +819,16 @@ csp2(\(V, dom, C\), paths \(toDo\)):
 
 			<p class="blue">
 				The <b>treewidth</b> is the number of vars in the <b>largest</b> relation. The <b>graph treewidth</b> is the minimum treewidth of any ordering. VE is exponential in treewidth.
+			</p>
+
+			<p>
+				Cutset conditioning is the process of doing this with <b>cutsets</b> (sets of variables) 
+			</p>
+			<p>
+				The efficiency of cutset elimination is O(number of cutsets &times; time per tree), that is,
+			</p>
+			<p class="blue">
+				Given domain size \(d\), number of nodes \(n\), and a cutset size \(c\), the efficiency of cutset conditioning is \(O(d^c (n-c) d^2 )\).
 			</p>
 
 		</div>
@@ -2516,6 +2526,8 @@ while not terminated:
 	\(s \longleftarrow s'\)
 	\(a \longleftarrow a'\)</div>
 			</div>
+
+
 			
 		</div>
 		
