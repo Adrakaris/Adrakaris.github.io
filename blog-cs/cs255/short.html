@@ -2507,7 +2507,12 @@ resolveThreats(plan):
 				<b>On-policy learning</b> learns the value of the policy, including exploration, in order to improve the policy. 
 			</p>
 			<p>
-				Modify the experience tuple to be \(\langle s, a, r, s', a' \rangle\) (hence the name) and the algorithm accordingly. 
+				Modify the experience tuple to be \(\langle s, a, r, s', a' \rangle\) (hence the name), the equation, and the algorithm accordingly. 
+			</p>
+			<p class="blue">
+				The <b>SARSA equation</b> is 
+				\[Q[s,a] \longleftarrow Q[s,a] + \alpha(r + \gamma Q[s', a'] - Q[s,a])\]
+				i.e. <b>consider the action taken and not the best possible action</b>
 			</p>
 			<button class="collapsible">Pseudocode (SARSA)... </button>
 			<div class="ccontent">
