@@ -103,7 +103,7 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 		<div class="cbox">
 			
 			<p>
-				Write a conjunction \(X_1 \land X_2 \land \cdots\) as an angle list \(\langle X_1, X_2, \cdots \rangle\) and a disjunction \(Y_1 \lor Y_2 \lor \cdots\) as a square list \([Y_1, Y_2, \cdots]\). X can be a complex formula, or a <i>literal</i> (\(\top, \bot, x, \lnot x\)). A <b>dis</b>junction of literals is a <b>clause</b> and it's <b>con</b>junction counterpart is a <b>dual clause</b>.
+				Write a conjunction \(X_1 \land X_2 \land \cdots\) as an angle list \(\langle X_1, X_2, \cdots \rangle\) and a disjunction \(Y_1 \lor Y_2 \lor \cdots\) as a square list \(([)Y_1, Y_2, \cdots]\). X can be a complex formula, or a <i>literal</i> (\(\top, \bot, x, \lnot x\)). A <b>dis</b>junction of literals is a <b>clause</b> and it's <b>con</b>junction counterpart is a <b>dual clause</b>.
 			</p>
 			<p>
 				The <b>conjunctive normal form</b> is a conjunction of disjunctions \(\langle [] \rangle\) of literals. And is associated with <b>alpha</b> \(\alpha\).
@@ -492,8 +492,82 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 			</ul>
 		</div>
 
-		<div class="colourbox">
+		<div class="colourband">
 			<h2 id="verif">Verification</h2>
+		</div>
+
+		
+		
+		<div class="cbox">
+			<p>
+				We want to verify properties about programs.\(\renewcommand{\phi}{\varphi} \) Let \(p\) be a program, and \(\phi\) be a property. If we can prove this property, we write \(p \vdash \phi\).
+			</p>
+
+			<h3>Programs and Hoare Triples</h3>
+
+			<p>
+				Syntax falls under domains (i.e. types): E for integer expressions, B for boolean expressions, and C for command expressions. "Expressions" mean you can combine stuff, its not atomic. 
+			</p>
+			<p>
+				Our given programming langauge is defined with the following syntax:
+				<ul>
+					<li>Assigment: <code>x = E</code> (for an E expression)</li>
+					<li>Sequential Composition: <code>C1; C2</code></li>
+					<li>Decision: <code>if B then { C1 } </code> (<code>else { C2 }</code>)
+					</li>
+					<li>Loop: <code>while B { C }</code></li>
+				</ul>
+				Undeclared variables are allowed, and assumed to have some constant / unknown value.
+			</p>
+			<p>
+				To formally prove certain conditions hold about programs, we define 
+				<ul>
+					<li>The <b>Postcondition</b> being a property that holds <b>after</b> the program executes,</li>
+					<li>The <b>Precondition</b> being properties that hold <b>before</b> the program executes, which can be \(\top\)</li>
+				</ul>
+			</p>
+			<div class="blue">
+				<p>
+					<b>Hoare triples</b> are triples containing a <b>precondition</b>, a <b>program</b>, and a <b>postcondition</b>. They are written 
+					\[
+					
+					⦇ Pre ⦈ \; Program \; ⦇ Post ⦈
+					\]
+				</p>
+				<p>
+					Hoare triples can be valid: <code>⦇y = 1⦈ x = y + 1 ⦇x = 2⦈</code> or invalid: <code>⦇y = 1⦈ x = y + 1 ⦇x < 1⦈</code>
+				</p>
+			</div>
+			<p>
+				The process of proving is basically finding intermediate conditions between lines of the program, which makes that specific line of a given program into a valid hoare triple.
+			</p>
+			<p>
+				Say we have <code>⦇?⦈ x + 3 ⦇x > 3⦈</code>, we can find many different preconditions that will satisfy this triple, but for the best effect, we want to mind the most general condition -- the weakest preconditon.
+			</p>
+
+			<h3>Weakest Preconditions</h3>
+
+			<p>
+				The <b>Weakest Precondition</b> is a valid precondition that is implied by <i>all other</i> valid preconditions. Given program \(P\) and postcondition \(Post\), we denote the weakest precondition as \(wp(P, Post)\).
+			</p>
+			<p>
+				We calculate it with the following rules:
+			</p>
+			<ul>
+				<li><span class="sc"><b>Assignment:</b></span> \(wp(\)<code>x = E</code>\(, Post) = Post[x/E]\) (using the same "replaces" notation as with FoL).</li>
+				<li><span class="sc"><b>Composition:</b></span> \(wp(\)<code>P; Q</code>\(, Post) = wp(P, wp(Q, Post))\)</li>
+				<li>
+					<span class="sc"><b>Conditional:</b></span> \(wp(\)<code>if B then { C1 } else { C2 }</code>\(, Post)=\)
+					\begin{align}
+						= \;&(B \implies wp(C_1, Post)) \land (\lnot B \implies wp(C_2, Post)) \\
+						\textrm{or } &(B \land wp(C_1, Post)) \lor (\lnot B \land wp(C_2, Post))
+					\end{align}
+				</li>
+			</ul>
+
+			<h3>Solving Rules</h3>
+
+			
 		</div>
 
 		<footer>
