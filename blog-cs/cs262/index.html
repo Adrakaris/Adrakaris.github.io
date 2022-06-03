@@ -48,7 +48,283 @@
 		</div> -->
 
 		<div class="cbox">
-			<div class="buttonwrapper"><a href="./cheat.html">Cheat Sheet</a></div>
+			<p>
+				There's not much time, so I'll just be writing down brief notes.
+			</p>
+			<ol>
+				<li><a href="#proplog">Propositional Logic</a></li>
+				<li><a href="#natform">Natural Forms</a></li>
+				<li><a href="#logproof">Logical Proofs</a></li>
+			</ol>
+		</div>
+
+		<div class="colourband">
+			<h2 id="proplog">Propositional Logic</h2>
+		</div>
+
+		<div class="cbox">
+
+			<p>
+				The notation for <b>NAND</b> and <b>NOR</b> can be thought of as \(\land, \lor\) with vertical bars through the middle of them - i.e. \(\uparrow, \downarrow\).
+			</p>
+			<p>
+				The notation for <b>XNOR</b> and <b>XOR</b> respectively are \(\equiv\) and \(\not \equiv\) (think about the truth tables.)
+			</p>
+			<p>
+				I use \(\implies\) with the double arrow, the exam uses \(\rightarrow\) the single arrow. Please bear in mind.
+			</p>
+			<p>
+				Top \(\top\) and bottom \(\bot\) are True and False respectively.
+			</p>
+			<p>
+				The <b>degree</b> of a parse tree is the number of <i>inner</i> nodes. 
+			</p>
+			<p>
+				A <b>valuation</b> is "a mapping of a formula to true or false" i.e. what it resolves to. Always true: <b>tautology</b>. Always false: <b>contradiction</b>. Sometimes true: <b>satisfiable</b>.
+			</p>
+			<p>
+				X is a <b>consequence</b> of S (set) \(S \models X\) if every formula in S is true \(\implies\) X is true. A tautology is a consequence of nothing \(\models X\).
+			</p>
+			<!-- <p>
+				Define valuation V as:
+				<pre><code class="lang-haskell">V T = T 
+V ⊥ = ⊥
+V (¬X) = ¬(V X)
+V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
+			</p> -->
+		</div>
+
+		<div class="colourband">
+			<h2 id="natform">Normal Forms</h2>
+		</div>
+
+		<div class="cbox">
+			
+			<p>
+				Write a conjunction \(X_1 \land X_2 \land \cdots\) as an angle list \(\langle X_1, X_2, \cdots \rangle\) and a disjunction \(Y_1 \lor Y_2 \lor \cdots\) as a square list \([Y_1, Y_2, \cdots]\). X can be a complex formula, or a <i>literal</i> (\(\top, \bot, x, \lnot x\)). A <b>dis</b>junction of literals is a <b>clause</b> and it's <b>con</b>junction counterpart is a <b>dual clause</b>.
+			</p>
+			<p>
+				The <b>conjunctive normal form</b> is a conjunction of disjunctions \(\langle [] \rangle\) of literals. And is associated with <b>alpha</b> \(\alpha\).
+			</p>
+			<p>
+				The <b>disjunctive normal form</b> is a disjunction of conjunctions \([ \langle \rangle ] \) of literals. Or is associated with <b>beta</b> \(\beta\).
+			</p>
+			<p>
+				Every binary formula under the sun <i>(except xor and xnor)</i> can be reduced to \(A \land B\) or \(A \lor B\), where \(A, B\) can be literals or other formulas, via a combination of simplifying formulas like \(\implies\) and <b>de-morgan's</b> law. 
+			</p>
+			<p class="grey">
+				Note \(A \nRightarrow A \equiv \lnot (A \Rightarrow A) \equiv \lnot (\lnot A \lor A) \equiv A \land \lnot A.\)
+			</p>
+			<p>
+				If a formula simplifies to \(A \land B\), it is an <b>alpha formula</b>. If it simplifies to \(A \lor B\), it is a <b>beta formula</b>.
+			</p>
+
+			<h3>Reduction to CNF</h3>
+
+			<p>
+				From a truth table, look at rows with <b>False</b> as output. Write the "inverse or", i.e. if a row is \(x=T, y=T, z=F \longrightarrow F\), then the clause for that row is \([\lnot x, \lnot y, z] \). Put all of these clauses together in a conjunction.
+			</p>
+
+			<p>
+				For a formula \(X\), start by writing \(\langle [X] \rangle\), then reduce via algorithm.
+			</p>
+
+			<p>
+				In short, the algorithm is represented as:
+
+				\[
+				\begin{array} {|r|r|}\hline \lnot \top &  & \lnot \bot &  & \lnot \lnot Z &  & \beta &  & \alpha &  \\ \hline \bot &  & \top &  & Z &  & \beta_1 &  & \alpha_1 & \alpha_2 \\ \hline  &  &  &  &  &  & \beta_2 &  &  &  \\ \hline  \end{array}
+				\]
+				Where \(\beta\) is a beta formula (\(\beta_1 \lor \beta_2\)), and \(\alpha\) is an alpha formula (\(\alpha_1 \land \alpha_2\)). <br>
+				In long:
+			</p>
+			<ul>
+				<li>
+					If beta: \(\langle \cdots [\beta_1 \lor \beta_2, \cdots] \cdots \rangle\), replace the \(\lor\) with a comma. 
+				</li>
+				<li>
+					If alpha: \(\langle \cdots [\alpha_1 \land \alpha_2, \cdots] \cdots \rangle\), <i>copy</i> the disjunction it's in, and in the place of \(\alpha_1 \land \alpha_2\) put \(\alpha_1\) in one and \(\alpha_2\) in the other.
+				</li>
+				<li>
+					Otherwise replace in place as shown.
+				</li>
+			</ul>
+			<p>
+				Repeat until all items are <b>literals</b>.
+			</p>
+
+			<h3>Reduction to DNF</h3>
+
+			<p>
+				From a truth table, look at the rows with <b>True</b> as output. Write the and of the literals, i.e. if a row is \(x=T, y=F, z=T \longrightarrow T\), write the dual clause \(\langle x, \lnot y, x \rangle\). Put all of these together in a disjunction.
+
+			</p>
+
+			<p>
+				For a formula start with \([\langle X \rangle] \). The algorithm is identical, except the role of the \(\alpha\) and \(\beta\) is swapped.
+				\[
+				\begin{array} {|r|r|}\hline \lnot \top &  & \lnot \bot &  & \lnot \lnot Z &  & \beta &  &  & \alpha \\ \hline \bot &  & \top &  & Z &  & \beta_1 & \beta_2 &  & \alpha_1 \\ \hline  &  &  &  &  &  &  &  &  & \alpha_2 \\ \hline  \end{array}
+				\]
+			</p>
+
+
+			
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="logproof">Logical Proofs</h2>
+		</div>
+		
+		<div class="cbox">
+			<p>
+				Two methods, <b>semantic tableau</b> (tree) ~ DNF, and <b>resolution</b> ~ CNF.
+			</p>
+			<p>
+				Both prove if a formula is a <b>tautology</b> by contradiction.
+			</p>
+
+			<h3>Semantic Tableau</h3>
+
+			<p>
+				Tree form. Branches (from root to tip) are conjunctions (ands), and the whole tree's "value" is a disjunction (ors) of branches. We prove by expanding branches. A node <i>can</i> be expanded multiple times, but in a <b>strict</b> tableau expand only once, but this is still sufficient. 
+			</p>
+
+			<p>
+				To prove a formula \(X\), start with the antiformula \(\lnot X\) as the root of the tree. Now look at the DNF table.
+			</p>
+			<ol>
+				<li>
+					If there is an alpha formula, add two nodes to the end of any branch it is on with those \(\alpha_1, \alpha_2\) values (like in table). 
+				</li>
+				<li>
+					If there is a beta formula, add a <b>split</b> onto the end of that branch, and make two new branches from it with the \(\beta_1, \beta_2\).
+				</li>
+				<li>
+					<b>Close</b> a branch if that branch, somewhere along it, has a formula \(X\), and its antiformula \(\lnot X\). This is an atomic closure if X, ¬X are atomic.
+
+				</li>
+			</ol>
+			<p> 
+				When all branches are closed, X is proved to be a tautology. Denote a tableau proof as \(\vdash_t X\).
+			</p>
+
+			<h3>Resolution</h3>
+
+			<p>
+				The dual to the tableau, this one is just written as a numbered list of disjunctions. Similarly it proves X is a tautology by contradiction. 
+			</p>
+			<p>
+				Make line 1 \([\lnot X] \). Then look at the CNF table
+			</p>
+			<ol>
+				<li>
+					If there is a beta forumla, replace that formula with \(\beta_1, \beta_2\) (comma). (Write the updated thing on a new line)
+				</li>
+				<li>
+					If there is an alpha formula, copy that line onto two new lines, one with the \(\alpha_1\), one with the \(\alpha_2\).
+				</li>
+				<li>
+					If one line has a formula X, and the other line has a formula ¬X, perform the <b>resolution rule</b>: make a new line with all the formulas from the prior two <i>except</i> any Xs and ¬Xs. <i>Do not try do this over multiple different formulas in one go</i>. 
+				</li>
+			</ol>
+			<p>
+				When [] is found then the resolution is considered proved. Denote as \(\vdash_r X\). A line can be "expanded" multiple times, and we also have the idea of "strictness" in resolution.
+			</p>
+
+			<h3>Proving Consequence</h3>
+
+			<p>
+				To prove \(S \models X\) (for a set S of formulas), add an <b>S-introduction</b> rule to both methods.
+			</p>
+			<ul>
+				<li>
+					<b>Tableau:</b> Add any formula from S onto the end of any branch at any time.
+				</li>
+				<li>
+					<b>Resolution:</b> Add any formula from S as a new line at any time.
+				</li>
+			</ul>
+			<p>
+				Denote these proofs as \(S \vdash_t X\) and \(S \vdash_r X\).
+			</p>
+
+			<h3>Natural Deduction</h3>
+
+			<p class="grey">
+				Note: all boxes here are done horizontally for easy formatting. They should be vertical in reality.
+			</p>
+
+			<p>
+				Two techniques to prove a formula: start with the antiformula, or work backwards (e.g. for \(x \implies y\) we must assume \(x\) and logically conclude \(y\)).
+			</p>
+			<p>
+				In proving only active formulas not in closed boxes can be used.
+			</p>
+
+			<h4>Assumptions and Premises</h4>
+
+			<p>
+				Assumptions <b>start</b> a box: \([x \cdots\). Premises are formulas S-introduced when proving consequence, and <b>do not</b> start a box. 
+			</p>
+
+			<h4>Standard Rules</h4>
+
+			<p class="grey">A double arrow is used for implies, a single arrow is used for "produces"</p>
+
+			<ul>
+				<li>
+					Constant rule: \(\bot \longrightarrow X\) (from false can introduce any X)
+				</li>
+				<li>
+					Constant rule: \(\longrightarrow \top\) (anthing can introduce true)
+				</li>
+				<li>
+					Negation rule: \(X, \lnot X \longrightarrow \bot\)
+				</li>
+				<li>
+					Negation rule: \([X \cdots \bot] \lnot X\) or \([\lnot X \cdots \bot] X\)
+				</li>
+				<li>
+					Alpha elim: \(\alpha \longrightarrow \alpha_1\) or \(\alpha \longrightarrow \alpha_2\)
+				</li>
+				<li>
+					Alpha introduction: \(\alpha_1, \alpha_2 \longrightarrow \alpha\)
+				</li>
+				<li>
+					Beta elim: \(\lnot \beta_1, \beta \longrightarrow \beta_2\) or \(\lnot \beta_2, \beta \longrightarrow \beta_1\)
+				</li>
+				<li>
+					Beta introduction: \([\lnot \beta_1 \cdots \beta] \beta_2\) or \([\lnot \beta_2 \cdots \beta] \beta_1\)
+				</li>
+			</ul>
+
+			<h4>Derived rules</h4>
+
+			<ul>
+				<li>
+					Double negation: \(\lnot \lnot X \longrightarrow X\) or \(X \longrightarrow \lnot \lnot X\)
+				</li>
+				<li>
+					Copy: \(X \longrightarrow X\)
+				</li>
+				<li>
+					Implication: \([X \cdots Y] (X \implies Y)\)
+				</li>
+				<li>
+					Excluded middle: \(\top \longrightarrow X \lor \lnot X\)
+				</li>
+				<li>
+					Modus ponens: \(X, X \implies Y \longrightarrow Y\)
+				</li>
+				<li>
+					Modus tollens: \(\lnot Y, X \implies Y \longrightarrow \lnot X\)
+				</li>
+			</ul>
+
+			<p>
+				Write as \(S \vdash_d X\) if S entails X has a deduction proof.
+			</p>
 		</div>
 
 		<!---
