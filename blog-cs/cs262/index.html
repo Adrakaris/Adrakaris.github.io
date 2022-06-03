@@ -55,6 +55,8 @@
 				<li><a href="#proplog">Propositional Logic</a></li>
 				<li><a href="#natform">Natural Forms</a></li>
 				<li><a href="#logproof">Logical Proofs</a></li>
+				<li><a href="#fol">First Order Logic</a></li>
+				<li><a href="#verif">Verification</a></li>
 			</ol>
 		</div>
 
@@ -327,11 +329,172 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 			</p>
 		</div>
 
-		<!---
+		
 		<div class="colourband">
-			<h2>Heading 2</h2>
+			<h2 id="fol">First Order Logic</h2>
 		</div>
-		--->
+		
+
+		<div class="cbox">
+
+			<h3>Definitions</h3>
+			<p>
+				<b>First Order Logic</b> contains the existing propositional logic connectives, as well as 
+			</p>
+			<ul>
+				<li><b>Quantifiers:</b> \(\forall, \exists\)</li>
+				<li><b>Variables</b> which don't have to be boolean</li>
+				<li><b>Relation Symbols:</b> \(&lt;, \leq, =, \geq, &gt;\) (which are like boolean functions)</li>
+				<li><b>Functions:</b> \(p(x), Succ(x), +(x,y)\), etc. (functions can be written infix \(x+y\))</li>
+				<li><b>Constants</b> like numbers</li>
+			</ul>
+			<p>
+				Define it as \(L(R,F,C)\) where <b>R</b> is a finite/countable set of relation/predicate symbols, <b>F</b> a set of functions, and <b>C</b> a set of constant symbols.
+			</p>
+			<p>
+				Define <b>Terms:</b>
+				<ul>
+					<li>A <b>variable</b>, or a constant is a term.</li>
+					<li>A <b>function</b> with \(n\) arguments: \(f(t_1, t_2, \dots, t_n)\) where each \(t\) is a term, is also a term.</li>
+				</ul>
+			</p>
+			<p>
+				Define <b>Atmoic formulas</b> as any <b>relation</b> \(R(t_1, \dots, t_n)\) where each \(t\) is a term; or \(\bot, \top\).
+			</p>
+			<p>
+				Thus define <b>Formulas:</b>
+				<ul>
+					<li>An atomic formula \(A\) or its negation \(\lnot A\)</li>
+					<li>A binary formula \(A \circ B\) with \(\circ\) as a binary connective</li>
+					<li>A first order formula \(\forall x, A\) and \(\exists x : A\) where \(A\) is a formula</li>
+				</ul>
+			</p>
+			<p>
+				A <b>bound variable</b> is a variable that appears with a quantifier, whilst a <b>free variable</b> does not.
+			</p>
+
+			<h3>Semantics</h3>
+
+			<p>
+				A <b>model</b> for \(L(R,F,C)\) is a pair \(M=(D,I)\) where 
+				<ul>
+					<li>D is the <b>domain</b> (\(\neq \varnothing\))</li>
+					<li>I is the mappiong <b>"interpretation"</b> that assigns every constant symbol a value, and defines what every function does. <br>If we have a constant \(c\), then \(c^I = 4\) means "\(c\) is set to 4 in the interpretation \(I\)". Similarly, \(f^I : D^n \longrightarrow D\) means \(f\) is a function with \(n\) parameters in interpretation \(I\)</li>
+				</ul>
+				An <b>assignment</b> under model \(M=(D,I)\) maps <b>variables</b> to domain values. \(x^A\) assigns a value to the variable \(x\).
+				<ul>
+					<li>We can combine these into \(c^{I,A} = c^I; x^{I,A} = x^A; [f(t_1, \dots)]^{I,A} = f^I (t_1^{I,A}, \dots)\)</li>
+				</ul>
+			</p>
+			<p>
+				The <b>truth value</b> of a formula \(\Phi\) is written \(\Phi^{I,A}\), whilst it has a lot of formal definition, literally just how you work out truth things normally. 
+			</p>
+			<p>
+				A formula is <b>valid</b>, if it is true for <i>every possible assignment of variables</i>, and formulas are <b>satisfiable</b> if there is at least one true assignment.
+			</p>
+
+			<h3>Proving</h3>
+
+			<div class="blue">
+				<p>
+					For FoL, we introduce <b>gamma</b> and <b>delta formulas</b> for \(\forall\) and \(\exists\) respectively
+				</p>
+				<div class="div" style="display: flex;">
+					<table>
+						<tr>
+							<th>\(\gamma\)</th>
+							<th>\(\gamma(t)\)</th>
+						</tr>
+						<tr>
+							<td>\(\forall x, \Phi\)</td>
+							<td>\(\Phi\{x / t\}\)</td>
+						</tr>
+						<tr>
+							<td>\(\lnot \exists x : \lnot \Phi\)</td>
+							<td>\(\lnot \Phi \{x / t\}\)</td>
+						</tr>
+					</table>
+
+					<table>
+						<tr>
+							<th>\(\delta\)</th>
+							<th>\(\delta(t)\)</th>
+						</tr>
+						<tr>
+							<td>\(\exists x : \Phi\)</td>
+							<td>\(\Phi \{x/t\} \)</td>
+						</tr>
+						<tr>
+							<td>\(\lnot \forall x , \lnot \Phi\)</td>
+							<td>\(\lnot \Phi \{ x / t \}\)</td>
+						</tr>
+					</table>
+				</div>
+				<p>
+					Where \(x / t\) means <b>free occurences</b> of the variable \(x\) is <b>replaced</b> by a term \(t\) (may be represented by a generic placeholder name).
+				</p>
+
+				
+				
+			</div>
+
+			<h4>Tableau</h4>
+
+			<p>
+				Define <b>par</b> as a set of <i>parameters</i> disjoint from C in \(L(R,F,C)\), and denote \(L(R,F,C \cup par)\) by \(L^{par}\)
+			</p>
+
+			<p>
+				The tableau rules are 
+			</p>
+			<div style="display:flex;">
+				<table><tr>
+					<td>\(\gamma\)</td>
+				</tr><tr>
+					<td>\(\gamma(t)\)</td>
+				</tr></table>
+				<table><tr>
+					<td>\(\delta\)</td>
+				</tr><tr>
+					<td>\(\delta(p)\)</td>
+				</tr></table>
+			</div>
+			<p>
+				Where \(t\) is any <b>closed term</b> (no variables), and \(p\) is any <b>new parameter</b>.
+			</p>
+			<p>
+				For example, \(\forall x (R(x) \implies Q(x,y))\) is gamma-replaced by \(R(t) \implies Q(t,y)\).
+			</p>
+			<p>
+				<span class="sc">Note:</span> <b>parameters can be used as closed terms <i>after</i> they are defined</b>.
+			</p>
+			<p>
+				Also, gamma and delta expansions <b>may need to be used more than once</b>. It may be absolutely necessary that gamma and delta needs to be repeated more than once, with different replacements.
+			</p>
+
+			<h4>Resolution</h4>
+
+			<p>
+				The rules are identical for resolution.
+			</p>
+			<p>
+				Note that for both of these, S-introduction also remains the same.
+			</p>
+
+			<h4>Natural Deduction</h4>
+
+			<p>
+				The rule is now called <b>\(\gamma\delta\)-elimination</b>, and is... pretty much the same. 
+			</p>
+			<ul>
+				<li>\(\gamma \longrightarrow \gamma(t)\)</li>
+				<li>\(\delta \longrightarrow \delta(p)\)</li>
+			</ul>
+		</div>
+
+		<div class="colourbox">
+			<h2 id="verif">Verification</h2>
+		</div>
 
 		<footer>
 			<div class="cbox">
