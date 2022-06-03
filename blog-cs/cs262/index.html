@@ -565,8 +565,114 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 				</li>
 			</ul>
 
-			<h3>Solving Rules</h3>
+			<h3>Hoare Logic</h3>
 
+			<p>
+				A program is a series of instructions: \(C_1, C_2, \dots, C_n\).
+			</p>
+			<p>
+				Proofs are laid out (vertically) as 
+				\[
+				⦇Pre⦈ \;C_1 \;⦇\phi_2⦈\; C_2 \;⦇\phi_3⦈\; \cdots \;⦇\phi_{n-1}⦈\; C_n \;⦇Post⦈
+				\]
+			</p>
+			<p>
+				The idea is to <i>work backwards</i> from the end, filling in the most appropriate weakest preconditions, until a full chain of valid hoare tuples can be built from the start to the end, via these following rules:
+			</p>
+			<div class="cornell">
+				<div>
+					<p><span class="sc"><b>Assigment Rule.</b></span></p>
+				</div>
+				<div>
+					<p>\(⦇Post[x/E]⦈\) <code>x=E</code> \(⦇Post⦈\)</p>
+					<p>
+						Ex. <code>⦇x + y = 10⦈ x = x + y ⦇x = 10⦈</code>
+					</p>
+					<p>
+						Assignment finds the weakest precondition. We can also always <b>strengthen the precondition</b> with zero problems, and also <b>weaken the postcondition</b> with no problems.
+					</p>
+				</div>
+				<div>
+					<p><span class="sc"><b>Implication Rule.</b></span></p>
+				</div>
+				<div>
+					
+					<p>
+						\(Pre \implies P \land ⦇P⦈\) <code>Program</code> \(⦇Q⦈ \land Q \implies Post\)
+						
+					</p>
+					<p>
+						<span class="grey">-></span> \(⦇Pre⦈\) <code>Program</code> \(⦇Post⦈\)
+					</p>
+				
+				</div>
+				<div>
+					<p><span class="sc"><b>Composition Rule.</b></span></p>
+				</div>
+				<div>
+					<p>
+						\(⦇Pre⦈\) <code>C1</code> \(⦇Mid⦈ \land ⦇Mid⦈\) <code>C2</code> \(⦇Post⦈\)
+					</p>
+					<p>
+						<span class="grey">-></span> \(⦇Pre⦈\) <code>C1; C2</code> \(⦇Post⦈\)
+					</p>
+				</div>
+				<div>
+					<p><span class="sc"><b>Conditional Rule.</b></span></p>
+				</div>
+				<div>
+					<p>
+						\(⦇Pre \land B⦈\) <code>C1</code> \(⦇Post⦈ \land ⦇Post \land \lnot B⦈\) <code>C2</code> \(⦇Post⦈\)
+					</p>
+					<p>
+						<span class="grey">-></span> \(⦇Pre⦈\) <code>if B then { C1 } else { C2 }</code> \(⦇Post⦈\)
+					</p>
+					<p>
+						Ex. 
+					</p>
+					<div class="codediv">		⦇\(\top\)⦈
+<code>if (x < y) then {</code>
+		⦇\(\top \land x < y\)⦈
+		⦇\(x \leq x \land x \leq y\)⦈
+	<code>z = x</code>
+		⦇\(z \leq x \land z leq y\)⦈
+<code>} else {</code>
+		⦇\(\top \land \lnot (x < y )\)⦈
+		⦇\(y \leq y \land y \leq x\)⦈
+	<code>z = y</code>
+		⦇\(z \leq x \land z leq y\)⦈
+<code>}</code>
+		⦇\(z \leq x \land x \leq y\)⦈</div>
+
+	</div>
+
+	<div>
+		<p><span class="sc"><b>Loop Rule.</b></span></p>
+	</div>
+	<div>
+		<p>
+			\(B \land L⦈\) <code>C</code> \(⦇L⦈\)
+		</p>
+		<p>
+			<span class="grey">-></span> \(⦇L⦈\) <code>while B { C }</code> \(⦇\lnot B \land L⦈\)
+		</p>
+		<p>
+			Where \(L\) is a first order logic <b>loop invariant</b> statement, which is something that holds true throughout the loop. Ex.
+		</p>
+		<div class="codediv">		⦇\(x \geq 0\)⦈
+<code>while (x > 0) {</code>
+		⦇\(x \geq 0 \land x > 0\)⦈
+		⦇\(x-1 \geq 0\)⦈
+	<code>x = x - 1</code>
+		⦇\(x \geq 0\)⦈
+<code>}</code>
+		⦇\(\lnot (x > 0) \land x \geq 0 \)⦈
+		⦇\(x = 0 \)⦈</div>
+		<p>
+			The loop invariant used is \(x \geq 0 \). When picking a loop invariant, pick something "useful", whatever that means.
+		</p>
+	</div>
+				</div>
 			
 		</div>
 
