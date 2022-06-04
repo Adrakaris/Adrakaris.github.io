@@ -487,8 +487,19 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 				The rule is now called <b>\(\gamma\delta\)-elimination</b>, and is... pretty much the same. 
 			</p>
 			<ul>
-				<li>\(\gamma \longrightarrow \gamma(t)\)</li>
-				<li>\(\delta \longrightarrow \delta(p)\)</li>
+				<li>\(\gamma \longrightarrow \gamma(t)\) or \(\forall x F(x) \longrightarrow F(t) \; [x/t] \)</li>
+				<li>\(\delta \longrightarrow \delta(p)\) or \(\exists x F(x) \longrightarrow F(p) \pod{\text{new } p}\)</li>
+			</ul>
+			<p>
+				There is also <b>\(\gamma\delta \)-introduction</b>:
+			</p>
+			<ul>
+				<li>
+					\(F(t) \longrightarrow \forall x F(x)\) provided \(t \) does not appear in any <b>non-closed</b> statement as a <b>free</b> variable.
+				</li>
+				<li>
+					\(F(p) \longrightarrow \exists x F(x) \) provided \(p \) doesn't clash with any bound terms in \(F \).
+				</li>
 			</ul>
 		</div>
 
@@ -635,7 +646,7 @@ V (A ∘ B) = V A ∘ V B</code></pre> (in haskell syntax)
 		⦇\(\top \land x < y\)⦈
 		⦇\(x \leq x \land x \leq y\)⦈
 	<code>z = x</code>
-		⦇\(z \leq x \land z leq y\)⦈
+		⦇\(z \leq x \land z \leq y\)⦈
 <code>} else {</code>
 		⦇\(\top \land \lnot (x < y )\)⦈
 		⦇\(y \leq y \land y \leq x\)⦈

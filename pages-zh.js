@@ -22,7 +22,7 @@ var pages = [
         "title": "Notes on CS261",
         "desc": "CS259：软件工程的笔记 (wah)</p>",
         "picture": "",
-        "tags": []
+        "tags": ["cs"]
     },
     {
         "date": new Date(Date.UTC(2022,05,02)),

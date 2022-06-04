@@ -22,7 +22,7 @@ var pages = [
         "title": "Notes on CS261",
         "desc": "Notes on CS261: Software Eng (wah)</p>",
         "picture": "",
-        "tags": []
+        "tags": ["cs"]
     },
     {
         "date": new Date(Date.UTC(2022,05,02)),
