@@ -1058,6 +1058,8 @@
 
 			<ol>
 				<li><a href="#cfl-1">Pushdown Automata</a></li>
+				<li><a href="#cfl-2">CFGs to PDAs</a></li>
+				<li><a href="#cfl-3">PDAs to CFGs</a></li>
 			</ol>
 
 
@@ -1168,6 +1170,104 @@
 				</p>
 			</div>
 			<blockquote>Pushdown Automata accept precisely the set of all context-free languages.</blockquote>
+
+			<h3 id="cfl-2">CFGs to PDAs</h3>
+
+			<p>
+				We have a non-deterministic algorithm to compute the leftmost derivation of a string, should it exist.
+			</p>
+			<ul class="side">
+				<li>Set <code>currentString</code> to \(s\)</li>
+				<li>
+					Do:
+					<ul>
+						<li>
+							<b>if</b> the leftmost element of <code>currentString</code> is a variable A, <b>then</b> select any grammar rule for A, replace A by the other side of this rule, and record.
+						</li>
+						<li>
+							<b>if</b> the leftmost is a terminal \(a\), <b>then</b> read next input, and check if is the same as \(a\). If so, remove \(a\). Else, <i>reject</i> the branch.
+						</li>
+						<li>
+							<b>if</b> string is now empty, <b>then</b> <i>accept</i>, output recorded rules.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<p>
+				Thus, we have an algorithm to make a string from a grammar. 
+			</p>
+			<p>
+				We can then convert this to a PDA compatible algorithm, namely:
+			</p>
+
+			<ul class="side">
+				<li>
+					Push \(s \cdot \$ \) onto the stack (last in first). 
+				</li>
+				<li>
+					Do:
+					<ul>
+						<li>
+							<b>If</b> top is a variable A, <b>then</b> select node for A, pop A and push right hand side. 
+						</li>
+						<li>
+							<b>If</b> top is a terminal \(a\), <b>then</b> read the next symbol. If it's the same, pop \(a\).
+						</li>
+						<li>
+							<b>If</b> top is \(\$\), <b>then</b> pop $ and accept.
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<p>
+				We can thus make a machine with three states: a start \(q_s\), a loop \(q_2\), and an accept \(q_f\).
+			</p>
+			<figure class="blue"><img src="./cfg-to-pda-generic.png" alt="" style="max-width: 540px;"></figure>
+
+			<p>
+				i.e. just write all the rules on the middle \(q_2\).
+			</p>
+
+			<button class="collapsible">Example 4... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> Take \(L = \{0^n 1^n : n \geq 0\}\) which gives 
+					\begin{align}
+					R := S &\longrightarrow 0S1 \\
+					S &\longrightarrow \epsilon
+					\end{align}
+					This makes a PDA which looks like 
+				</p>
+				<figure>
+					<img src="./cfg-to-pda-ex4.png" alt="" style="max-width: 630px;">
+				</figure>
+			</div>
+
+			<p>
+				This is effectively brute forcing, but we can convert the grammar into a specific form which makes this deterministic (which will be covered later.)
+			</p>
+
+			<h3 id="cfl-3">PDAs to CFGs</h3>
+			
+			<p>
+				To convert a PDA to a CFG, we want to first transform it into a <b>normalised</b> form:
+			</p>
+
+			<div class="blue">
+				<p>
+					A <b>normalised PDA</b> is:
+				</p>
+				<ul>
+					<li>Has a single accept state \(q_f\). <span class="grey">Epsilon transition to a single \(q_f\) </span></li>
+					<li>Never accept if the stack is non-empty <span class="grey">Have a state after original accepts which just empties the stack</span></li>
+					<li>Each transition either pushes or pops, <b>not both, not none</b> <span class="grey">Separate out a push and pop transition into two, separate out an empty transition into one that pushes and one that pops the same item</span></li>
+				</ul>
+			</div>
+
+			<p>
+				Thus \(\forall p, q \in Q\), we have a variable \(A_{pq}\) (p can equal q)
+			</p>
+
 		</div>
 
 		<footer>
