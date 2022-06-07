@@ -57,6 +57,7 @@
 				<li><a href="#regex">RegEx</a></li>
 				<li><a href="#nonreg">Non-Regular Languages</a></li>
 				<li><a href="#grammars">Grammars</a></li>
+				<li><a href="#cfl">Context Free Languages</a></li>
 			</ol>
 			<h3>Languages</h3>
 			<p class="blue">
@@ -1046,6 +1047,127 @@
 					\end{align}
 				</p>
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="cfl">Context Free Languages</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<ol>
+				<li><a href="#cfl-1">Pushdown Automata</a></li>
+			</ol>
+
+
+			<p>
+				A context free language (CFL) is simply one that is written using a <b>context free grammar</b>.
+			</p>
+			<p>
+				Some examples of CFLs are
+				\begin{align}
+					L &= \{0^n1^n : n \geq 0\} \\
+					L &= \{[(+)]*:\textrm{ brackets are balanced}\} \\
+					L &= \{w\#w^R\} \pod{w^R\textrm{ meaning w is reversed}}
+				\end{align}
+				And we want a way to be able to parse them.
+			</p>
+
+			<h3 id="cfl-1">Pushdown Automata</h3>
+			<p>
+				We already have DFA and NFA for regular languages, why not augment them with something? A lot of context free languages can be parsed if you have a LiFo data structure, so why not add a <b>stack</b>?
+			</p>
+			<p>
+				This makes a <b>push-down automaton</b>.
+			</p>
+
+			<div class="blue">
+				<p>
+					A <b>Pushdown Automaton (PDA)</b> is a machine \(M = (Q, \Sigma, \Gamma, \delta, q_0, F)\) where 
+					<ul>
+						<li>\(Q, \Sigma, q_0, F\) should all be things we've seen</li>
+						<li>
+							\(\Gamma\) is the <b>stack alphabet:</b> what symbols can be pushed to the stack. Usually includes all of \(\Sigma\) and a special \(\$\) symbol, which we'll use to represent <b>empty stack</b>.
+						</li>
+						<li>
+							\(\delta : Q \times \Sigma_\epsilon \times \Gamma_\epsilon \longrightarrow 2^{Q \times \Gamma_\epsilon}\)
+						</li>
+					</ul>
+					By default PDAs are <b>non-deterministic</b> -- we don't include dead states like NFAs.
+				</p>
+			</div>
+			<p>
+				PDA transitions are annotated \(a,c \longrightarrow b\), meaning <b>read</b> \(a\), <b>pop</b> \(c\), <b>push</b> \(b\):
+				<figure><img src="./pda-notation.png" alt="" style="max-width: 160px;"></figure>
+			</p>
+			<ul>
+				<li>
+					Any of \(a,b,c\) can be \(\epsilon\) (i.e. don't pop, don't push, etc.)
+				</li>
+				<li>
+					\(\epsilon,\epsilon \longrightarrow \$\) is what denotes the starting transition: "push $ and move".
+				</li>
+				<li>
+					\(\epsilon, \$ \longrightarrow \epsilon\) is what denotes the end transition: "pop $ and move".
+				</li>
+			</ul>
+			<p>
+				The reason why we use $ is that, like C and arrays, a PDA doesn't know the length of its stack, so it's helpful to have an indicator (like <code>\0</code>)
+			</p>
+
+			<button class="collapsible">Example 1...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> The PDA for \(L = \{0^n1^n : n \geq 0 \} \) is 
+					<figure><img src="./pda-1.png" alt="" style="max-width: 480px;"></figure>
+				</p>
+			</div>
+			<button class="collapsible">Example 2...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> The PDA for \(L = \{w\#w^R\} \pod{w^R\textrm{ meaning w is reversed}}\) is 
+					<figure><img src="./pda-2.png" alt="" style="max-width: 480px;"></figure>
+
+				</p>
+				<p class="grey">
+					The language  \(L = \{w\#w\}\) is actually much more difficult, and is not solvable with a stack.
+				</p>
+			</div>
+			<button class="collapsible">Example 3...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> The PDA for \(L = \{ww^R\}\) is slightly harder, since there's no indication of when they reverse. 
+					<figure><img src="./pda-3.png" alt="" style="max-width: 630px;"></figure>
+					Essentially at any time they could reverse, and we just non-deterministically move to the other state.s
+				</p>
+			</div>
+			<p>
+				Sometimes, we want to push a whole bunch of things for one input. The transition function can be <b>extended</b> to push a <b>string</b> instead: 
+				\[a, c \longrightarrow b_1b_2\cdots b_r\]
+				Which is equivalent to \(a,c \longrightarrow b_1\) followed by \(\epsilon,\epsilon \longrightarrow b_2\), ..., \(\epsilon, \epsilon \longrightarrow b_r\).
+			</p>
+
+			<div class="side">
+				<p>
+					A PDA \(M = (Q, \Sigma, \Gamma, q_0, F, \delta\) <b>accepts</b> a string \(w \in \Sigma*\) if 
+					\begin{align}
+						\exists w_1w_2 \cdots w_r &\in \Sigma_\epsilon \\ 
+						\exists x_1x_2 \cdots x_r &\in Q \\
+						\exists s_0s_1 \cdots s_r &\in \Gamma
+					\end{align}
+					such that \(x_0 = q_0, x_r \in F\); \(s_0 = \epsilon\), and 
+					\[\forall i \in [0..r-1]\;\delta(x_i, w_{i+1}, a) \ni (x_{i+1}, b) \]
+					where \(s_i = a \cdot t\) and \(s_{i+1} = b \cdot t\) for some \(a,b \in \Gamma_\epsilon\) and \(t \in \Gamma*\)
+				</p>
+				<p>
+					Which is a complex way of saying, well, pretty much what you'd think "accept" means.
+				</p>
+				<p>
+					But the thing to note somewhat is that the pairs of states and stack letters \((x_i, s_i)\) in sequence form the <b>run</b>.
+				</p>
+			</div>
+			<blockquote>Pushdown Automata accept precisely the set of all context-free languages.</blockquote>
 		</div>
 
 		<footer>
