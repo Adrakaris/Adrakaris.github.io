@@ -56,10 +56,11 @@
 				<li><a href="#nfa">Non-deterministic Finite Automata</a></li>
 				<li><a href="#regex">RegEx</a></li>
 				<li><a href="#nonreg">Non-Regular Languages</a></li>
+				<li><a href="#grammars">Grammars</a></li>
 			</ol>
 			<h3>Languages</h3>
 			<p class="blue">
-				An <b>alphabet</b> is a <b>non-empty</b> set of symbols, usually denoted \(\Sigma = \{a,b,c,\dots\}\). 
+				An <b>alphabet</b> is a <b>non-empty</b> set of symbols, usually denoted \(\Sigma = \{a,b,c,\dots\}\). \(\renewcommand{\epsilon}{\varepsilon}\)
 			</p>
 			<p class="blue">
 				A <b>language</b> is then a (potentially infinte) set of <b>finite strings</b> (words) over an alphabet. The set of <b>all</b> words is denoted \(\Sigma*\).
@@ -810,6 +811,239 @@
 				</ol>
 				<p>
 					Thus L is not regular by contrapositive of the pumping lemma. $$\tag*{$\Box$}$$
+				</p>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="grammars">Grammars</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ul>
+				<li><a href="#gra-1">Grammars</a></li>
+				<li><a href="#gra-2">Derivation</a></li>
+				<li><a href="#gra-3">Chomsky's Heirarchy</a></li>
+				<li><a href="#gra-4">DFA to Linear Grammars</a></li>
+			</ul>
+			<h3 id="gra-1">Grammars</h3>
+
+			<p>
+				A grammar is a series of rules to form words: <code>&lt;sentence&gt; -&gt; &lt;noun_phrase&gt; &lt;verb phrase&gt; &lt;noun phrase&gt;</code>
+			</p>
+			<p>
+				Recall <i>Backus-Naur form</i> from A level Comp Sci. 
+			</p>
+			<div class="blue">
+				<p>
+					A grammar is a tuple \((V, \Sigma, R, S)\) where
+					<ul>
+						<li>\(V\) is a finite set of <b>variables</b> or non-terminals</li>
+						<li>\(\Sigma\) is a finite alphabet (of <b>terminals</b>)</li>
+						<li>\(R\) is a finite set of "production rules": the things that go \(\alpha \longrightarrow \beta\) where if you have an \(\alpha\) you can apply the rule and replace it with \(\beta\)</li>
+						<li>
+							\(S \in V\) is the <b>start variable</b>
+						</li>
+					</ul>
+				</p>
+			</div>
+
+			<p>
+				If \(\alpha \implies \beta\) then \(\alpha\) <b>yields</b> \(\beta\) (it might be a single not a double arrow but what do I care -- it's just an arrow.)
+			</p>
+			<p>
+				If you can have a path of successive yields from the start variable, to a desired string \(w\), this is a <b>derivation</b> of \(w\) from G (the grammar). We write \(S \overset{*}{\implies} w\).
+			</p>
+			
+			<button class="collapsible ">Example 1...</button>
+			<div class="ccontent" >
+
+				<p>
+					<b><i>Example.</i></b> Let \(G = (\{S\}, \{0,1\}, R, S):\)
+					\begin{align}
+						R := S &\longrightarrow 0S1 \\
+						S &\longrightarrow \epsilon
+					\end{align}
+				</p>
+				<p>
+					We can have \(S \implies 0S1 \implies 00S11 \implies 000S111 \implies 000111\)
+				</p>
+				<p>
+					This path is a <b>derivation</b> of 000111 from G. S <b>yields</b> 0S1 which yields 00S11, etc. 
+				</p>
+				<p>
+					We can see that these grammars are more powerful than Regular languages already, since this is \(\{0^n1^n\} \).
+				</p>
+			</div>
+
+			<p class="blue">
+				The <b>language</b> of a grammar \(L(G) = \{w \in \Sigma* : s \overset{*}{\implies} w \}\) -- that is, all strings derivable via G.
+			</p>
+
+			<button class="collapsible">Example 2...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> Take \(G = (\{S\}, \Sigma, R, S) :\)
+					\[R := S \longrightarrow S\]
+					\(L(G) = \varnothing\), since this grammar can never yield anything (because it never terminates)
+				</p>
+			</div>
+
+			<h3 id="gra-2">Derivation</h3>
+
+			<p>
+				Take \(G = (\{S\}, \{0,1\}, R, S :\)
+				\begin{align}
+					R:= S &\longrightarrow 0S1S &\pod{r_1} \\
+					S &\longrightarrow 1S0S &\pod{r_2} \\ 
+					S &\longrightarrow \epsilon &\pod{r_0}
+				\end{align}
+			</p>
+			<p>
+				A <b>leftmost derivation</b> means always expanding the leftmost variable. 
+				\[S \implies 0S1S \implies 01S0S1S \implies 0010S1S0S1S \implies \cdots \implies 010101.\]
+				A rightmost derivation should thus be obvious.
+			</p>
+			<p>
+				A <b>parse tree</b> shows the order of derivation in, unsurprisingly, a tree.
+			</p>
+			<figure>
+				<img src="./cfgparsetree.png" alt="" style="max-width: 480px;">
+			</figure>
+			<p class="blue">
+				A grammar is <b>ambiguous</b> if it can be generated via multiple parse trees (of a single directional derivation).
+			</p>
+
+			<p>
+				Ambiguity is generally not desired, however it is a part of the <b>grammar</b>, and not the language itself.
+			</p>
+			<p>
+				Most grammars can be rewritten to be non-ambiguous, but there are some <i>"inherently ambiguous"</i> grammars. 
+			</p>
+
+			<h3 id="gra-3">Chomsky's Heirarchy of Grammars</h3>
+
+			<p>
+				Yes, <i>That</i> Chomsky, the guy who also wrote stuff like <i>Manufacturing Consent</i>. 
+			</p>
+			<p>
+				Chomsky puts grammars in a heirarchy, with each larger rank containing all the languages of the previous rank. 
+			</p>
+			<p>
+				Given \(G = (V, \Sigma, R, S)\) and \(A, B \in V, x \in \Sigma*, \alpha, \beta, \gamma, w \in (V \cup \Sigma*)\), if
+			</p>
+			<ul>
+				<li>
+					<b><i>Type 3.</i></b>  
+					\[
+					\begin{array}{} A \longrightarrow xB \\ A \longrightarrow x \end{array} \;\;\textrm{  xor  }\;\;
+					\begin{array}{} A \longrightarrow Bx \\ A \longrightarrow x \end{array}
+					\]
+					Are the only rule forms permitted, it is a <b>Regular language</b>, with the two forms being called <b>left</b> and <b>right</b> linear grammars respectively. 
+				</li>
+				<li>
+					<b><i>Type 2.</i></b>
+					\[A \longrightarrow w\]
+					where \(w\) is any comibnation of variables and terminals, the language is a <b>context free language</b>
+				</li>
+				<li>
+					<b><i>Type 1.</i></b>
+					\[\alpha A \gamma \longrightarrow \alpha \beta \gamma\]
+					i.e. we care what's around \(A\), then it is a <b>context sensitive language</b>.
+				</li>
+				<li>
+					<b><i>Type 0.</i></b>
+					\[\alpha \longrightarrow \beta\]
+					i.e. go nuts, then it is a <b>recursively enumerable language</b>.
+				</li>
+			</ul>
+			<p>
+				In summary, 
+				\[\textrm{Regular } \subset \textrm{ Cont. free } \subset \textrm{ Cont. Sens. } \subset \textrm{ Rec. Enumerable} \]
+			</p>
+
+			<h3 id="gra-4">DFA to L/R Linear Grammars</h3>
+
+			<p>
+				Whilst for a linear grammar \(x\) can be any string, in a <b>strictly</b> linear grammar, \(x\) has to be a single letter. This doesn't make the grammar any less powerful, just simpler to work with.
+			</p>
+
+			<h4>Right Linear</h4>
+
+			<p>
+				The general rule is
+				\[
+				\forall q, q' \in Q, a \in \Sigma,\textrm{ if } \delta(q,a) = q', \textrm{add rule } q \longrightarrow aq'
+				\]
+				\[
+				\forall q \in F, \textrm{ add rule } q \longrightarrow \epsilon\]
+			</p>
+			
+			<button class="collapsible">Example 3... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> Take the DFA shown with \(M = (Q = \{X,Y,S\}, \Sigma = \{a,b\}, S, F=\{S\}, \delta)\): 
+					<figure>
+						<img src="./dfa-to-linear-dfa.png" alt="" style="max-width: 300px;">
+					</figure>
+					This will make a grammar \(G = (V = \{S,X,Y\}, \Sigma, R, S)\) where the variables are just the states, however we now need to figure out what the production rules lead to. 
+				</p>
+				<p>
+					The idea is to find all strings which will take us from the given one to an accept state. But we can start with just rewriting the state transition function:
+					\begin{align}
+						S &\longrightarrow \epsilon | bS | aX \\
+						X &\longrightarrow bS | aY \\
+						Y &\longrightarrow aY | bY 
+					\end{align}
+					We can then strip away dead states (Y) to get 
+					\begin{align}
+						R := S &\longrightarrow \epsilon | bS | aX \\
+						X &\longrightarrow bS.
+					\end{align}
+					Which is a left linear grammar.
+				</p>
+			</div>
+			
+			<p>
+				Again, cleaning up dead states is helpful, but <b>not necessary in the exam</b>.
+			</p>
+
+			<h4>Left Linear</h4>
+
+			<p>
+				Left linear grammars are slightly more difficult, since we're effectively <i>working backwards</i> from end to beginning. Thus, our accept state is our starting variable. 
+			</p>
+			<p>
+				If there are multiple accept states, we can just \(\epsilon\)-transition all the accept states into one single state (since NFA \(\leq\) DFA, to use reducibility syntax)
+			</p>
+			<p>
+				The start state \(q_0\) must of course also yield \(\epsilon\).
+			</p>
+
+			<button class="collapsible">Example 4...</button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> Take the following DFA 
+					<figure>
+						<img src="./dfa-to-left-lienar.png" alt="" style="max-width: 300px;">
+					</figure>
+					Our grammar will be \(G = (\{A,B,C,D,E\}, \{0,1\}, R, E)\) and 
+					\begin{align}
+						R := E &\longrightarrow B1 | A0 \\
+						D &\longrightarrow E0 | E1 | C1 | D0 | D1 \\
+						C &\longrightarrow B0 \\
+						B &\longrightarrow A1 | C0 \\
+						A &\longrightarrow \epsilon | C0
+					\end{align}
+					And since D is a dead state, we can clean it up to get
+					\begin{align}
+						R := E &\longrightarrow B1 | A0 \\
+						C &\longrightarrow B0 \\
+						B &\longrightarrow A1 \\
+						A &\longrightarrow \epsilon | C0
+					\end{align}
 				</p>
 			</div>
 		</div>
