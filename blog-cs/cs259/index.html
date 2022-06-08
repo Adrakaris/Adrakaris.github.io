@@ -43,10 +43,6 @@
 			</div>
 		</header>
 
-		<!-- <div class="buttonwrapper beside" >
-			<a href="./index-zh.html">简体中文</a>
-		</div> -->
-		<!-- REMEMBER TO DO! -->
 
 		<div class="cbox">
 
@@ -58,6 +54,7 @@
 				<li><a href="#nonreg">Non-Regular Languages</a></li>
 				<li><a href="#grammars">Grammars</a></li>
 				<li><a href="#cfl">Context Free Languages</a></li>
+				<li><a href="#turing">Turing Machines</a></li>
 			</ol>
 			<h3>Languages</h3>
 			<p class="blue">
@@ -1763,6 +1760,343 @@
 					\overline{\overline{P} \cup \overline{Q}} \textrm{ closed } \implies P \cap Q \textrm{ closed. }
 					\]
 					which means CFLs are not closed under complement.
+				</p>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="turing">Turing Machines</h2>
+			<p class="subheading">Recursive Enumeration</p>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#tur-1">Turing Machines</a></li>
+				<li><a href="#tur-2">Turing Recognisability</a></li>
+				<li><a href="#tur-3">Recursive Enumerability</a></li>
+				<li><a href="#tur-4">Universal Turing Machines (Halting Problem)</a></li>
+			</ol>
+
+			<h3 id="tur-1">Turing Machines</h3>
+			<p>
+				A turing machine has a <b>tape</b> and a <b>moveable read-write head</b>, with an internal state machine. 
+			</p>
+			<p>
+				The tape is infinite, technically in both directions, but often it is easier for it only to be infinite in one.
+			</p>
+			<div class="blue">
+				<p>
+					A <b>Turing Machine</b> is a 7-tuple
+					\[T = (Q, \Sigma, \Gamma, \delta, q_0, q_{accept}, q_{reject})\]
+					where 
+				</p>
+				<ul>
+					<li>
+						\(Q\) is the set of states 
+					</li>
+					<li>
+						\(\Sigma\) is the <b>input alphabet</b> -- this excludes blank symbols (<code>␣</code>)
+					</li>
+					<li>
+						\(\Gamma\) is the <b>tape/writable alphabet</b> -- this includes all elements of \(\Sigma\) and the blank symbol ␣.
+					</li>
+					<li>
+						\(\delta: Q \times \Gamma \longrightarrow Q \times \Gamma \times \{L,R\}\) -- every delta takes a state and reads a symbol from the tape, and returns a new state, the letter to write on the tape, and whether to move the head to the left or right. 
+					</li>
+					<li>
+						\(q_0 \in Q\) is the start state 
+					</li>
+					<li>
+						\(q_{accept} \in Q\) is the <b>singular</b> accept state.
+					</li>
+					<li>
+						\(q_{reject} \in Q\) is teh <b>singular</b> reject state, and must not equal \(q_{accept}\).
+					</li>
+				</ul>
+			</div>
+			<p>
+				A turing machine is <b>deterministic</b> by default.
+			</p>
+			<p>
+				\(\vdash\) denotes the end / start of the tape to the left (for convenience), and ␣ is the blank "no characters here" symbol.
+			</p>
+			<p>
+				A state transition is described \(a \longrightarrow b, D\) where \(a\) is the <b>read in</b>, \(b\) is the <b>write out</b>, and \(D\) is the <b>direction</b>, which can be \(L, R\) or \(S\) (stay), which is a shorthand for convenience.
+			</p>
+			<p>
+				Input strings are generally <b>written to the start of the tape</b> in order.
+			</p>
+			<p>
+				Since all programming languages are turing complete, and can replicate a turing machine, it is sufficient to use <b>pseudocode</b> or <b>structured english</b> to describe a machine's operation, unless specified to draw the thing down.
+			</p>
+
+			<button class="collapsible">Example 1... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Exampe.</i></b> Take the language \(L = \{ w\#w : w \in \{0,1\}*\} \) (all binary strings, replicated, with a # between).
+				</p>
+				<p>
+					The machine's operation can be described as 
+				</p>
+				<div class="codediv">Mark the first symbol \(a \in \Sigma\)
+Go to the first unmarked symbol \(b\) after #
+If \(a = b\):  mark
+else:  REJECT
+Return to earlist unmarked symbol. 
+Repeat until all symbols marked, then ACCEPT</div>
+				
+				<p>
+					And can be represented by the following state diagram (where any missing transitions are implied to go to \(q_{reject}\))
+				</p>
+				<figure>
+					<img src="./turing-example-1.png" alt="">
+				</figure>
+			</div>
+
+			<h3 id="tur-2">Turing Recognisability</h3>
+
+			<p>
+				A <b>configuration</b> of a TM is a snapshot of the execution at any point. This includes the current state, tape contents, and reader position, denoted
+				\[x = (u, q, v)\]
+				Where \(q\) is the current state, and \(u \cdot v\) is the contents of the tape. The <b>first symbol</b> of \(v\) is where the reader is. 
+			</p>
+			<p>
+				A configuration <b>yields</b> another if it can be reached in 1 step.
+			</p>
+			<ul>
+				<li>
+					The <b>start</b> configuration is \((\vdash, q_0, w)\) for an input string \(w\)
+				</li>
+				<li>
+					The <b>accepting</b> configuration is \(u, q_{accept}, v\) for some \(u,v\)
+				</li>
+				<li>
+					The <b>rejecting</b> configuration is \(u, q_{reject}, v\) for some \(u,v\)
+				</li>
+			</ul>
+			<p>
+				The TM halts as soon as ACCEPT or REJECT is encountered.
+			</p>
+			<p>
+				The <b>run</b> of a turing machine on \(w\) is thus a series of configrations 
+				([c_1 c_2 \cdots c_n\)
+				where \(c_1\) is the start config, and \(c_i\) yields \(c_{i+1} \). it is accepting if \(c_n\) is an accepting configuration.
+			</p>
+			<p>
+				A TM run has three outcomes:
+				<ul>
+					<li>Accept</li>
+					<li>Reject</li>
+					<li>Never halts</li>
+				</ul>
+			</p>
+			<p>
+				The language \(L(M)\) is thus all words where \(M\) has an accepting run.
+			</p>
+
+			<p class="blue">
+				A language L is <b>turing recongnisable</b> if L is accepted by some machine M. 
+			</p>
+			<p>
+				<span class="sc"><b><i>Note.</i></b></span> For \(w \not \in L\), a TM can <b>either</b> reject <b>or</b> never halt.
+			</p>
+			<p>
+				This set of languages is also called <b>recursively enumerable</b>, and is Type 0 on Chomsky's heirarchy. 
+			</p>
+
+			<p class="blue">
+				<b>Decider/Total Turing Machines</b> are TMs that <b>always</b> halt with either accept or reject. 
+			</p>
+			<p>
+				For a turing machine M, \(L(M)\) is said to be <b>decided</b> by M. These languages are <b>turing decidable</b>. 
+				\[\textrm{turing decidable } \subset \textrm{ turing recognisable}. \]
+			</p>
+			<p>
+				A turing machine is <b>no more powerful</b> if you have more reader heads, more tapes, etc. It is thus <b>allowed</b> to design a TM with a more complex tape structure if easier. 
+			</p>
+
+			<h3 id="tur-3">Recursive Enumerability</h3>
+
+			<div class="blue">
+				<img src="./enummachine.png" alt=""  style="padding-top: 8px; padding-right: 8px; float: right;">
+				<p>
+					An <b>Enumeration machine</b> (EM) is a Turing machine with a printer, or <b>output tape</b>.
+				</p>
+				<p>
+					The enumerator has <b>no input</b>. When the EM enters an <i>enumeration state</i>, all symbols on the internal tape get printed out: "enumerated".
+				</p>
+				<p>
+					Thus \(L(M)\) is enumerable by an EM, thus "recursively enumerable".
+				</p>
+			</div>
+
+			<p class="side">
+				<b><i>Claim.</i></b> Enumerable machines are turing machines. 
+			</p>
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> This is a \(\iff\) proof. 
+				</p>
+				<p>
+					For \(\implies\): We have an enumerator. Let us make a turing machine M, where M =
+				</p>
+				<div class="codediv">on input \(w\):
+	run enumerator
+	when enumerator outputs a string \(a\):
+		if \(a = w\), ACCEPT. </div>
+				<p>
+					If \(w\) is not enumerable, the machine will never halt. 
+				</p>
+				<p>
+					For \(\impliedby\) we hav a turing machine M. Let us define an enumerator E such that:
+				</p>
+				<div class="codediv">for \(i = 1, 2, \dots\):
+	run M for \(i\) steps on input \(s_1, s_2, \dots, s_i\)
+	if any computations on \(s_j\) accepts:
+		print(\(s_j\))</div>
+				<p>
+					Eventually, if M accepts, E will print that string out.
+				</p>
+			</div>
+
+			<h3 id="tur-4">Universal Turing Machines (Halting Problem)</h3>
+
+			
+			<div class="blue">
+				<p class="">
+					A <b>Universal Turing Machine (UTM)</b> is a turing machine that takes the <b>encoding</b> of another machine, and a string \(w\): <code>"ENC(M)#w"</code>
+				</p>
+				<p>
+					Usually this input is denoted \(\langle M,w \rangle\).
+				</p>
+			</div>
+
+			<p class="side">
+				The <b>halting problem</b> is defined as 
+				\[HP = \{\langle M, x \rangle : M \textrm{ halts on }x\}\]
+			</p>
+			<p class="side">
+				The <b>membership problem</b> is defined as
+				\[MP = \{\langle M, x \rangle : x \in L(M)\}\]
+			</p>
+			<p>
+				The halting problem is turing recognisable: just simulate M on \(x\), and accept when it does.
+			</p>
+			<p>
+				The crucial point however is: <i>Is the halting problem decidable?</i>
+			</p>
+			<p class="small">well, no</p>
+			<p class="side">
+				<b><i>Theorem.</i></b> The Halting Problem is indecidable.
+			</p>
+
+			<button class="collapsible">Proof (plain english)... </button>
+			<div class="ccontent">
+				<p class="grey">
+					So the "given proof" was incredibly ??? when we first got it, so I went away and thought about it for ages, then wrote this down, which is an as-plain-english-as-possible way of expressing it, I hope.
+				</p>
+
+				<p><b><i>Proof.</i></b> Suppose we have all possible turing machines (there are countably infinitely many), and we match each machine up to a binary number (which are also countably infinite)</p>
+
+				<p>Machine \(M_n\) would then run over string \(n\). This machine can halt, or it can not. </p>
+
+				<p>Now this machine can run over any other string that's not \(n\), sure, and it could halt or not for them, but that isn't important. What is important is just \(n\). </p>
+
+				<p>Assume there is a decider \(N\) for the halting problem. We can use \(N\) to construct a new machine that is different from all machines. How?</p>
+
+				<p>This new machine, let's call it \(K\), when ran over all strings \(i = 1, 2, \dots\) forever, will halt when \(M_i\) loops, and loop when \(M_i\) halts. Thus, since it's different to every machine in at least one value (i.e. along the diagonal), it is different to all machines. </p>
+
+				<p>How do we construct \(K\)? Inside \(K\), we have a "subroutine", which is \(N\), the assumed decider. When \(K\) recieves an input \(y\), it constructs the encoding \(\langle M_y, y \rangle\) (i.e. gets the corresponding machine for string \(y\)), and passes it to \(N\).</p>
+
+				<p>If \(N\) accepts (\(M_y\) halts), then \(K\) will go into an infinite loop. If \(N\) does not accept (\(M_y\) loops), then \(K\) will accept (halt). Thus completes our construction.</p>
+
+				<p>\(K\) then contradicts the fact that we already have all machines M \(\implies\) by contradiction \(K\) cannot exist \(\implies\) \(N\) cannot exist </p>
+
+				$$\tag*{$\Box$}$$
+			</div>
+			<button class="collapsible">Proof (whatever I wrote down from the lecture)... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> So this proof will use <i>Cantor's diagonalisation theorem</i>. <span class="grey">real strong start huh</span>
+				</p>
+				<p>
+					If we treat <i>every</i> binary string as an encoding of a unique TM, we can create a table which has all the turing machines as binary on the axes. 
+				</p>
+				<p>
+					The cell on row \(i\) and column \(j\) means running machine \(i\) on string \(j\). We can mark this as a H if the machine halts, and a L if the machine loops. 
+				</p>
+				<p>
+					Every TM ever is present in this table. 
+				</p>
+				<p>
+					Suppose there exists a decider \(N\) for the halting problem. 
+				</p>
+				<ul>
+					<li>
+						Make a new machine \(k\) that <i>halts</i> when any existing machine loops, and <i>loops</i> when any existing machine halts. 
+					</li>
+					<li>
+						Which makes this machine not in the table. 
+					</li>
+					<li>
+						\(N\) when given \(\langle M, x \rangle\) will accept if M halts and reject if M loops. 
+					</li>
+					<li>
+						Construct \(K\) in the following way:
+						<figure>
+							<img src="./hpproofdiagram.png" alt="" style="max-width: 600px;">
+						</figure>
+					</li>
+					<li>
+						\(K\) is not the same as all machines for all binary values. If \(M_\epsilon\) halts, then \(K\) loops, etc, etc. 
+					</li>
+					<li>...</li>
+				</ul>
+				<p>
+					Proof by contradiction. $$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> Membership (MP) is not decidable. 
+			</p>
+
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> Suppose MP is decidable, and let N be a decider for MP. 
+				</p>
+				<p>
+					We claim that N can be used to construct a decider K for HP. 
+				</p>
+				<p>
+					Construct K by, on input \(\langle M, x \rangle\): 
+				</p>
+				<ol>
+					<li>
+						Alter \(M\) into \(M'\) by
+						<ul>
+							<li>Adding a new accept state to \(M'\)</li>
+							<li>Transitioning all accept/reject states of \(M\) to the new accept state of \(M'\)</li>
+						</ul>
+						meaning that if \(M'\) accepts, \(M\) halts. 
+					</li>
+					<li>
+						Simulate N on \(\langle M', x \rangle\)
+					</li>
+					<li>
+						Link up the machines like so:
+						<figure>
+							<img src="./mp-decidability.png" alt="" style="max-width: 500px;">
+						</figure>
+					</li>
+				</ol>
+				<p>
+					This is a decider for the halting problem (which is undecidable), thus MP must be undecidable. $$\tag*{$\Box$}$$
 				</p>
 			</div>
 		</div>
