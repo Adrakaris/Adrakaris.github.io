@@ -221,6 +221,7 @@ div.cornell > div:nth-child(odd) *{
 }
 
 .codediv {
+    color: var(--blue);
     font-family: JBMono;
     border-width: thin;
     border-style: solid;
