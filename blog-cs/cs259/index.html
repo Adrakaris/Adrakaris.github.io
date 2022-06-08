@@ -1097,6 +1097,7 @@
 				<li><a href="#cfl-4">Chomsky Normal Form</a></li>
 				<li><a href="#cfl-5">String Testing</a></li>
 				<li><a href="#cfl-6">Pumping Lemma</a></li>
+				<li><a href="#cfl-7">Properties of CFLs</a></li>
 			</ol>
 
 
@@ -1479,20 +1480,7 @@
 				Since from 1 start variable, we get to \(n\) variables in \(n-1\) steps, and each variable maps to one terminal, adding \(n\) steps, \(\therefore 2n-1\) steps exactly.
 			</p>
 
-			<p>
-				To test if a CFG generates anything at all, we can: 
-			</p>
-			<ol>
-				<li>
-					Mark all variables which produce a terminal on the RHS. 
-				</li>
-				<li>
-					Mark all variables which produce a combination of terminals and already marked variables on the RHS 
-				</li>
-				<li>
-					If S is not marked, then \(L(G) = \varnothing\).
-				</li>
-			</ol>
+			
 
 			<h3 id="cfl-5">String Testing</h3>
 
@@ -1644,6 +1632,138 @@
 					Thus the pumping lemma. \[\tag*{$\Box$}\]
 				</p>
 				
+			</div>
+			<h4>Using the Pumping Lemma</h4>
+
+				<div class="side">
+					<p>
+						Proof structure for lemma:
+					</p>
+					<ol>
+						<li>Suppose L is a CFL (for contrapositive)</li>
+						<li>
+							Let \(m\) be the pumping length of L
+						</li>
+						<li>
+							Choose any string \(w \in L : |w| \geq m\)
+						</li>
+						<li>
+							Take some decomposition \(uvxyz\) which meet the criteria of the lemma. 
+						</li>
+						<li>
+							Choose an \(i : uv^i xy^i z \not \in L\)
+						</li>
+					</ol>
+				</div>
+				<p></p>
+				<button class="collapsible">Example \(L = \{a^n b^n c^n : n \geq 0 \} \)</button>
+				<div class="ccontent">
+					<p>
+						<b><i>Proof.</i></b> Assume L is context free, and \(m\) is its pumping length
+					</p>
+					<ul>
+						<li>
+							Pick a string \(a^m b^m c^m \in L\)
+						</li>
+						<li>
+							Decompose the string into \(uvxyz\) -- this is not as straight forward as for regular languages, because there are <b>multiple possibilities</b> for where the \(vxy\) bit, the bit that matters, appears. 
+						</li>
+						<li>
+							All the cases (to use regex):
+							<ol>
+								<li>
+									\(vxy \in a*\)
+								</li>
+								<li>\(vxy \in b* \)</li>
+								<li>\(vxy \in c* \)</li>
+								<li>\(vxy \in a*b*\)</li>
+								<li>\(vxy \in b*c*\)</li>
+							</ol>
+							(Since \(|vxy| \leq m\) and so cannot contain all three numbers)
+						</li>
+						<li>
+							For all of these, simply set \(i\) to zero to disprove. $$\tag*{$\Box$}$$
+						</li>
+						
+					</ul>
+				</div>
+
+			<h3 id="cfl-7">Properties of CFLs</h3>
+				<hr>
+			<p>
+				To test if a CFG <b>generates an empty language</b>, we can: 
+			</p>
+			<ol>
+				<li>
+					Mark all variables which produce a terminal on the RHS. 
+				</li>
+				<li>
+					Mark all variables which produce a combination of terminals and already marked variables on the RHS 
+				</li>
+				<li>
+					If S is not marked, then \(L(G) = \varnothing\).
+				</li>
+			</ol>
+			<hr>
+			<p>
+				To test if a CFL is <b>finite</b> given its grammar, we
+			</p>
+			<ul>
+				<li>
+					Check for no reachable "grammar loops" ~ a parse tree with no same-branch repeats. 
+				</li>
+				<li>
+					i.e. The grammar is finite <b>if and only if</b> it cannot generate strings longer than the pumping length. 
+				</li>
+			</ul>
+			<hr>
+			<p>
+				CFLS are closed under <b>union, concactenation, and kleene (*) closure</b>
+			</p>
+			<p>
+				and are <span style="color: red;"><b>not closed</b></span> under intersection and complement.
+			</p>
+			<button class="collapsible">On intersection...</button>
+			<div class="ccontent">
+				<p>
+					Let \(P = \{a^i b^j c^j : i,j \geq 0\}\) and \(Q = \{a^i b^i c^j : i,j \geq 0\}\)
+					\[P \cup Q = \{a^i b^i c^i : i \geq 0 \}\]
+					which is obviously not context free.
+				</p>
+			</div>
+			<button class="collapsible">On union... </button>
+			<div class="ccontent">
+				<p>
+					Let \(G_1 = (V_1, \Sigma_1, R_1, S_1)\) and \(G_2 = (V_2, \Sigma_2, R_2, S_2\).
+				</p>
+				<p>
+					Simply create a new start variable \(S \longrightarrow S_1 | S_2\). Also assume \(V_1\) and \(V_2\) are disjoint (i.e. bag union, not set union).
+				</p>
+			</div>
+			<button class="collapsible">On concatenation... </button>
+			<div class="ccontent">
+				<p>
+					Simply create a new start variable \(S \longrightarrow S_1S_2\).
+				</p>
+			</div>
+			<button class="collapsible">On Kleene closure</button>
+			<div class="ccontent">
+				<p>
+					(This is the star in regex) this derives from concatenation. 
+				</p>
+				<p>
+					If we have a grammar \(G\) with start \(S_1\), simply create a new start variable \(S \longrightarrow S_1S | \epsilon\). 
+				</p>
+			</div>
+			<button class="collapsible">On complement... </button>
+			<div class="ccontent">
+				<p>
+					CFLs are <b>not</b> closed under intersection, and are closed under union. We know that if intersection were closed,
+					\[
+					\overline{\overline{P} \cup \overline{Q}} \textrm{ closed } \implies P \cap Q \textrm{ closed. }
+					\]
+					which means CFLs are not closed under complement.
+				</p>
 			</div>
 		</div>
 
