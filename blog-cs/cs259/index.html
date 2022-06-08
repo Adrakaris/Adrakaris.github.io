@@ -1060,7 +1060,7 @@
 				<li><a href="#cfl-1">Pushdown Automata</a></li>
 				<li><a href="#cfl-2">CFGs to PDAs</a></li>
 				<li><a href="#cfl-3">PDAs to CFGs</a></li>
-				<li><a href="#cfl-4">Chomsky Normal Form and String Testing</a></li>
+				<li><a href="#cfl-4">Chomsky Normal Form</a></li>
 				<li><a href="#cfl-5">String Testing</a></li>
 			</ol>
 
@@ -1307,9 +1307,157 @@
 					<li>\(A \longrightarrow BC\) where \((B, C \in V) \land (B, C \neq S)\)</li>
 				</ul>
 			</div>
-			<p>
-				<b>Any</b> CFG can be written as in CNF. 
+			<p class="side">
+				<b><i>Theorem</i> (Sipser).</b> <b>Any</b> CFG can be converted to CNF. 
 			</p>
+
+			<h4>Conversion into CNF</h4>
+
+			<p>
+				"See violation, change violation":
+			</p>
+			<ul class="side">
+				<li>
+					Create a new start \(S_0 \longrightarrow S\) (if needed for start restriction)
+					<button class="collapsible nul">Expand... </button>
+					<div class="ccontent cnul">
+						\[
+					\begin{array}{rl}
+						&S &\longrightarrow ASB \\
+						&A &\longrightarrow aAS | a | \epsilon \\
+						&B &\longrightarrow SbS | A | bb
+					\end{array}
+					\implies 
+					\begin{array}{rl}
+						&S_0 &\longrightarrow S \\
+						&S &\longrightarrow ASB \\
+						&A &\longrightarrow aAS | a | \epsilon \\
+						&B &\longrightarrow SbS | A | bb
+					\end{array}
+					\]
+					<!-- <hr> -->
+					</div>
+					
+				</li>
+				<li>
+					Eliminate all \(A \longrightarrow \epsilon : A \neq S_0\), by essentially creating an new rule for every other variable, removing \(A\) (and replacing into \(\epsilon\) if needed):
+					<button class="collapsible nul">Expand... </button>
+					<div class="ccontent cnul">
+						\[
+					\begin{array}{rl}
+						&S_0 &\longrightarrow S \\
+						&S &\longrightarrow ASB \\
+						&A &\longrightarrow aAS | a | \epsilon \\
+						&B &\longrightarrow SbS | A | bb
+					\end{array}
+					\implies 
+					\begin{array}{rl}
+						&S_0 &\longrightarrow S \\
+						&S &\longrightarrow ASB | SB \\
+						&A &\longrightarrow aAS | a | aS \\
+						&B &\longrightarrow SbS | A | bb | \epsilon
+					\end{array}
+					\implies 
+					\begin{array}{rl}
+						&S_0 &\longrightarrow S \\
+						&S &\longrightarrow ASB | SB | AS | S \\
+						&A &\longrightarrow aAS | a | aS \\
+						&B &\longrightarrow SbS | A | bb 
+					\end{array}
+					\]
+					</div>
+					
+					And repeat until all epsilons, including newly introduced ones, are gone (except on \(S_0\)). <b>Do not reintroduce \(\epsilon\) on variables that already had it eliminated.</b>
+				</li>
+				<li>
+					Eliminate unit variables \(A \longrightarrow B\). Replace with \(A \longrightarrow w\) for every \(B \longrightarrow w\) production. Delete self references. 
+					<button class="collapsible nul">Expand... </button>
+					<div class="ccontent cnul">
+						\[
+						\begin{array}{rl}
+						&S_0 &\longrightarrow S \\
+						&S &\longrightarrow ASB | SB | AS | S \\
+						&A &\longrightarrow aAS | a | aS \\
+						&B &\longrightarrow SbS | A | bb 
+					\end{array}
+						\implies 
+						\begin{array}{rl}
+							&S_0 &\longrightarrow S \\
+							&S &\longrightarrow ASB | SB | AS \\
+							&A &\longrightarrow aAS | a | aS \\
+							&B &\longrightarrow SbS | bb | aAS | a | aS
+						\end{array}
+						\implies 
+						\begin{array}{rl}
+						&S_0 &\longrightarrow ASB | SB | AS \\
+						&S &\longrightarrow ASB | SB | AS \\
+						&A &\longrightarrow aAS | a | aS \\
+						&B &\longrightarrow SbS | bb | aAS | a | aS
+					\end{array}
+						\]
+					</div>
+				</li>
+				<li>
+					Add variables and rules to remove occurences \(A \longrightarrow u\) where \(u\) is either a string longer than 1, or a mixture of terminals and non-terminals.
+
+					<button class="collapsible nul">Expand... </button>
+					<div class="ccontent cnul">
+						\[
+						\begin{array}{rl}
+							&S_0 &\longrightarrow ASB | SB | AS \\
+							&S &\longrightarrow ASB | SB | AS \\
+							&A &\longrightarrow aAS | a | aS \\
+							&B &\longrightarrow SbS | bb | aAS | a | aS
+						\end{array}
+						\implies
+						\begin{array}{rl}
+							&S_0 &\longrightarrow AU_1 | SB | AS \\
+							&S &\longrightarrow AU_1 | SB | AS \\
+							&A &\longrightarrow aU_2 | a | aS \\
+							&B &\longrightarrow SU_3 | bb | aU_2 | a | aS \\
+							&U_1 &\longrightarrow SB \\
+							&U_2 &\longrightarrow AS \\
+							&U_3 &\longrightarrow bS \\
+						\end{array}
+						\implies
+						\begin{array}{rl}
+							&S_0 &\longrightarrow AU_1 | SB | AS \\
+							&S &\longrightarrow AU_1 | SB | AS \\
+							&A &\longrightarrow V_1 U_2 | a | V_1 S \\
+							&B &\longrightarrow SU_3 | V_2 V_2 | V_1 U_2 | a | V_1 S \\
+							&U_1 &\longrightarrow SB \\
+							&U_2 &\longrightarrow AS \\
+							&U_3 &\longrightarrow V_2 S \\
+							&V_1 &\longrightarrow a \\
+							&V_2 &\longrightarrow b
+						\end{array}
+						\]
+						(The rule \(A \longrightarrow a\) is allowed.)
+					</div>
+				</li>
+			</ul>
+
+			<p >
+				In CNF every string of length \(n\) can be derived in <b>exactly</b> \(2n-1\) steps,
+			</p>
+			<p>
+				Since from 1 start variable, we get to \(n\) variables in \(n-1\) steps, and each variable maps to one terminal, adding \(n\) steps, \(\therefore 2n-1\) steps exactly.
+			</p>
+
+			<p>
+				To test if a CFG generates anything at all, we can: 
+			</p>
+			<ol>
+				<li>
+					Mark all variables which produce a terminal on the RHS. 
+				</li>
+				<li>
+					Mark all variables which produce a combination of terminals and already marked variables on the RHS 
+				</li>
+				<li>
+					If S is not marked, then \(L(G) = \varnothing\).
+				</li>
+			</ol>
 
 			<h3 id="cfl-5">String Testing</h3>
 
