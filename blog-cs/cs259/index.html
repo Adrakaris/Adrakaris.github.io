@@ -1778,6 +1778,7 @@
 				<li><a href="#tur-2">Turing Recognisability</a></li>
 				<li><a href="#tur-3">Recursive Enumerability</a></li>
 				<li><a href="#tur-4">Universal Turing Machines (Halting Problem)</a></li>
+				<li><a href="#tur-5">Mapping and Reductions</a></li>
 			</ol>
 
 			<h3 id="tur-1">Turing Machines</h3>
@@ -2099,6 +2100,148 @@ Repeat until all symbols marked, then ACCEPT</div>
 					This is a decider for the halting problem (which is undecidable), thus MP must be undecidable. $$\tag*{$\Box$}$$
 				</p>
 			</div>
+
+			<h3 id="tur-5">Mappings and Reductions</h3>
+
+			<div class="blue">
+				<p>
+					Given languages \(A \subseteq \Sigma *, B \subseteq \Delta *\) (note \(\Sigma, Delta\) are both alphabets),
+				</p>
+				<p>
+					There is a <b>Mapping Reduction</b> \(\sigma : \Sigma * \longrightarrow \Delta *\) if  
+				</p>
+				<ul>
+					<li>
+						\(\forall x \in \Sigma*, x \in A \iff \sigma(x) \in B\): all words in A map to a word in B, and all words not in A do not map to a word in B. 
+					</li>
+					<li>
+						\(\sigma\) is a <b>compatible</b> function. That is, there is a decider that can take \(x\) and halt with \(\sigma(x)\) on the tape.
+					</li>
+					<p class="grey">
+						This is, as far as I can see, means the mapping should be describable with an algorithm.
+					</p>
+				</ul>
+				<p>
+					If there is a mapping reduction from A to B, we write 
+					\[A \leq_m B\]
+					"A is no more complex than B", same as 260.
+				</p>
+			</div>
+			<p></p>
+			
+
+			<p></p>
+			<button class="collapsible">Example \(HP \leq_m MP\)...</button>
+			<div class="ccontent" >
+				<p>
+					<b><i>Example.</i></b> Let's show that HP reduces to MP. Consider \(\langle M, x \rangle\), which is an instance of HP.
+				</p>
+				<p>
+					Define a TM \(M'_x\) as
+				</p>
+				<div class="codediv">\(M'_x(y)\):
+	ignore \(y\)
+	run \(M\) on \(x\)
+	if \(M\) halts:
+		ACCEPT</div>
+				<p>
+					<b><i>Claim.</i></b> \(\langle M, x \rangle \in HP \iff \langle M'_x, x \rangle \in MP\).
+				</p>
+				<p>
+					<b><i>Proof.</i></b> \(\implies\): if \(\langle M,x \rangle \in HP\), then M halts on \(x\). Thus \(M'_x(x)\) accepts. Thus \(\langle M'_x, x \rangle \in MP\) by definition. \(\vartriangleright\)
+				</p>
+				<p>
+					\(\impliedby\): if \(\langle M'_x, x \rangle \in MP\), \(M'_x\) accepts \(x\). Thus \(M\) halts on \(x\). Thus \(\langle M, x \rangle\) in HP. $$\tag*{$\Box$}$$
+				</p>
+			</div>
+
+			<p>
+				Since \(HP \leq_m MP\), and HP is undecidable, we have another way to prove that MP is undecidable.
+			</p>
+			<p>
+				Other problems, like 
+				<ul>
+					<li>\(\epsilon\)-acceptance: \(|{\langle M \rangle : \epsilon \in L(M)\}|}\)</li>
+					<li>
+						\(\exists\)-acceptance: \(\{\langle M \rangle : L(M) \neq \varnothing\}\)
+					</li>
+					<li>
+						\(\forall\)-acceptance: \(\{ \langle M \rangle : L(M) = \Sigma * \} \)
+					</li>
+				</ul>
+				<b>all reduces HP</b> (by the exact same construction as for HP -> MP)
+			</p>
+			<p>
+				However, these problems are defined by default over turing machines. It is comparatively extremely easy to verify that a DFA is \(\epsilon\)-accept, or \(\exists\)-accept, etc. 
+			</p>
+
+			<div class="side">
+				<p>
+					<b><i>Theorem (a).</i></b> <b>If</b> \(A \leq_m B\) and B is decidable, then A is too.
+				</p>
+				<p>
+					<b><i>Theorem (b).</i></b> <b>If</b> \(A \leq_m B\) and <b>A</b> is <b>un</b>decidable, then B is too.
+				</p>
+			</div>
+
+			<p></p>
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b>
+				</p>
+				<ul>
+					<li>
+						Let M be a <i>recogniser</i> machine for B, and \(f\) be the mapping reduction A to B. 
+					</li>
+					<li>
+						We can describe a recogniser N for A where:
+						<div class="codediv">N(\(w\)):
+	compute \(f(w)\)
+	run M(\(f(w)\)) and output what M outputs</div>
+					</li>
+					<li>
+						Since \(f\) is a reduction, \(w \in A \iff f(w) \in B\), thus M accepts \(f(w)\) when \(w \in A\). 
+					</li>
+					<li>
+						Thus A is decidable when B is, and by that logic B can't be decidable when A isn't. $$\tag*{$\Box$}$$
+					</li>
+				</ul>
+			</div>
+
+			<p class="side">
+				<b><i>Theorem.</i></b> A language L is decidable <b>if and only if</b> both \(L\) and \(\overline{L} \) are turing recognisable.
+			</p>
+
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> <br>
+					\(\implies\): If L is decidable, then a decider for L is also a recogniser for L. 
+				</p>
+				<p>
+					Simply use the same decider for \(\overline{L}\), and complement the answer. $$\tag*{$\vartriangleright$}$$
+				</p>
+				<p>
+					<b><i>Corollary.</i></b> Decidable langauges are closed under complementation.
+				</p>
+				<p>
+					\(\impliedby\): If \(L, \overline{L} \) are both recognisable, \(\exists\) a machine P that recognises \(L\), and \(\exists\) a machine Q that recognises \(\overline{L}\)
+				</p>
+				<p>
+					Define a decider \(M\) for L that
+				</p>
+				<div class="codediv">M(\(x\)):
+	simulate P(\(x\), Q(\(x\))
+	simultaneously:
+		if P accepts first: ACCEPT
+		if Q accepts first: REJECT</div>
+				<p>
+					Which will always halt. $$\tag*{$\Box$}$$
+				</p>
+			</div>
+			
+
 		</div>
 
 		<footer>
