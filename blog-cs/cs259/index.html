@@ -808,7 +808,7 @@
 				<ul>
 					<li>L regular \(\implies\) pumpable strings</li>
 					<li>Contrapositively unpumpable strings \(\implies\) L irregular</li>
-					<li><b>but</b> pumpable strings \(\notimplies\) L regular. You <b>cannot</b> use the pumping lemma to prove something <i>is</i> regular.</li>
+					<li><b>but</b> pumpable strings \(\mathrel{\rlap{\hskip .75em/}}\implies\) L regular. You <b>cannot</b> use the pumping lemma to prove something <i>is</i> regular.</li>
 				</ul>
 			</p>
 			<p>
@@ -1541,6 +1541,110 @@
 
 
 			<h3 id="cfl-6">Pumping Lemma</h3>
+
+			<p>
+				The idea is to look at parse trees. If a derived string is too long, a non terminal R must <b>repeat</b> on the <b>same branch</b> of a parse tree. 
+			</p>
+
+			<p>
+				Thus we can define a \(w = uvxyz\), where \(x\) is created by the second R and \(v\) and \(y\) are the pre- and suffixes of \(x\) created by the first R:
+			</p>
+			<figure>
+				<img src="./cfg-pumplemma-tree.png" alt="" style="max-width: 480px;">
+			</figure>
+			<p>
+				Similar to the DFA loop, we can remove the second R, or reduplicate and add more Rs, giving us 
+			</p>
+			<div class="blue">
+				<p>
+					<b><i>Pumping Lemma.</i></b> Let L be a CFL. There exists a positive integer \(m : \forall w \in L \pod{|w| \geq m},\; \exists\) a <b>decomposition</b> \(uvxyz:\)
+				</p>
+				<ul>
+					<li>
+						\(|vxy| \leq m\) (\(vxy\) is short)
+					</li>
+					<li>\(|vy| \geq 1\)</li>
+					<li>\(\forall i \in \mathbb{N}_0,\; uv^ixy^iz \in L.\)</li>
+				</ul>
+			</div>
+			<p>
+				But what is the pumping number? 
+			</p>
+			<ul>
+				<li>
+					Let \(b\) be the longest RHS generation (the longest single rule on a RHS). \(b\) is generally a "small" number (mathematically speaking), like 10.
+				</li>
+				<li>
+					No leaf will have more than \(b\) children; the max degree is \(b\)
+				</li>
+				<li>
+					For a tree of height \(h\), the number of leaves is at most \(b^h\)
+				</li>
+				<li>
+					If a string is very long, and \(b\) is small, then the height must increase along with string length; longer string -> heigher height. 
+				</li>
+				<li>
+					If \(h &gt; |V|\) (no. variables) then there must be a repeat of a variable. Thus, we want a parse tree height \(\geq |V| + 1\).
+				</li>
+			</ul>
+			<p class="blue">
+				Thus the pumping number \(m = b^{|V| + 1}\).
+			</p>
+			<p class="grey">
+				This is by no means the smallest possible number -- it's an upper bound, which is sufficient.
+			</p>
+
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> Given L as a CFL, where \(\exists m &gt; 0 : \forall w \in L : |w| \geq m\), there is a decomposition \(w = uwxyz\) which satisfies the pumping lemma conditions. 
+				</p>
+				<ul>
+					<li>
+						Let \(G = (V,\Sigma, S, R)\) be the CFG generating L. 
+					</li>
+					<li>
+						Let \(b = \max_{\textrm{rule }X \longrightarrow Y} |Y|\) (longest RHS rule)
+					</li>
+					<li>
+						Let \(m = b^{|V| + 1} \)
+					</li>
+					<li>
+						By <b>pidgeonhole principle</b>, \(\exists A \in V,\; \exists\) nodes \(\alpha, \beta \in\) internal nodes of the tree T, such that 
+						<ul>
+							<li>
+								\(val(\alpha) = val(\beta) = A\)
+							</li>
+							<li>
+								\(\alpha\) is the ancestor of \(\beta\)
+							</li>
+						</ul>
+					</li>
+					<li>
+						<b>Claim</b> that the subtree of T rooted at \(\alpha\) has \(\leq b^{|V|+1} \) leaves. <b>Ensure</b> by picking \(\alpha\) such that its height \(\leq |V| + 1\).
+					</li>
+					<li>
+						Let string \(x\) be yield of subtree rooted at \(\beta\).
+					</li>
+					<li>
+						Let us have strings \(v,y : vxy\)  is yielded by subtree rooted at \(\alpha\).
+					</li>
+					<li>
+						Let strings \(u,z : uvxyz\) is the yield of the root T. 
+					</li>
+					<li>
+						\(\forall i \geq 0,\; uv^i xy^i z \in L\), since we can <b>pump up</b> by repeating \(\beta\), turning it into \(\beta \cdots \alpha\), and can <b>pump down</b> by removing \(\alpha\), and \(\alpha\) just having \(\beta\).
+						<figure>
+							<img src="./cfg-pumpup-pumpdown.png" alt="" style="max-width: 630px;">
+						</figure>
+					</li>
+					
+				</ul>
+				<p>
+					Thus the pumping lemma. \[\tag*{$\Box$}\]
+				</p>
+				
+			</div>
 		</div>
 
 		<footer>
