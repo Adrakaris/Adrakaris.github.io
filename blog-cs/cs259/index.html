@@ -2241,7 +2241,101 @@ Repeat until all symbols marked, then ACCEPT</div>
 				</p>
 			</div>
 			
+			<h3 id="tur-6">Closure of Turing Languages</h3>
 
+			<hr>
+
+			<p>
+				<b><i>Complement.</i></b> Is a turing recognisable (TR) language closed under complementation?
+			</p>
+			<p>
+				<b>No.</b> We know that HP is T.R. but not decidable. If \(\overline{HP}\) is decidable, then HP is decidable (because of our theorem) -- contradiction.
+			</p>
+			<p>
+				Complement is closed for <i>decidable</i> languages, however. 
+			</p>
+
+			<hr>
+
+			<p>
+				<b><i>Union.</i></b> Yes! See the machine:
+				<figure>
+					<img src="./turing-union.png" alt="">
+				</figure>
+			</p>
+
+			<hr>
+
+			<p>
+				<b><i>Intersection.</i></b> Also yes:
+				<figure>
+					<img src="./turing-intersection.png" alt="" >
+				</figure>
+			</p>
+
+			<hr>
+			<p>
+				<b><i>Kleene Star.</i></b> \(L* \) Yes. 
+			</p>
+			<ul>
+				<li>On input \(w\)</li>
+				<li>Go over every partition of \(w\) into substrings</li>
+				<li>For each substring run L</li>
+				<li>If \(\exists\) a partition : all substrings are accepted, then ACCEPT.</li>
+			</ul>
+
+			<hr>
+
+			<p>
+				We can also produce different languages by tring to combine different "types" of languages:
+			</p>
+
+			<table>
+				<tr>
+					<th>\(\cup\)</th>
+					<th>Reg</th>
+					<th>CFL</th>
+					<th>T. Dec</th>
+					<th>T. Rec</th>
+				</tr>
+				<tr>
+					<th>Reg</th>
+					<td>Reg</td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th>CFL</th>
+					<td>CFL</td>
+					<td><i>T. Dec</i></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th>T. Dec</th>
+					<td>T. Dec</td>
+					<td>T. Dec</td>
+					<td>T. Dec</td>
+					<td></td>
+				</tr>
+				<tr>
+					<th>T. Rec</th>
+					<td>T. Rec</td>
+					<td>T. Rec</td>
+					<td>T. Rec</td>
+					<td>T. Rec</td>
+				</tr>
+			</table>
+			<p>
+				In essense, the "strongest" langauge wins, <b>except</b> for the case of two CFLs, whch make a decidable language.
+			</p>
+			<p>
+				The complement of TR languages are called <b>co-turing recognisable</b>, and can be represented with this diagram:
+			</p>
+			<figure>
+				<img src="./coturingrecognisable.png" alt="">
+			</figure>
 		</div>
 
 		<footer>
