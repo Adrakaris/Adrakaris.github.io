@@ -764,10 +764,44 @@
 					Usually referred to as "xy is <b>short</b>, y is nonempty". \(y\) is the string being "pumped": able to be repeated infinitely (i.e. cycle in the DFA).
 				</p>
 			</div>
-
-			<p class="small">
-				\(\newcommand{\notimplies}{\;\not\!\!\!\implies}\) Proof is left as an excersise to the reader (until/unless I have time to write it).
-			</p>
+			<p></p>
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> Let \(M = (Q, \Sigma, q_0, F, \delta)\) be a DFA for a language L. Let \(m = |Q|\).
+				</p>
+				<ul>
+					<li>
+						Consider a <b>sufficiently long</b> word \(w \in L : |w| \geq m\) and the run of \(w\) on M: \[(r_0 r_1 \cdots r_{|w|}) : r_0 = q_0, r_{|w|} \in F, \forall j \in {0..|w|}\; r_j \in Q\]
+						i.e. A run of \(|w|\) states.
+					</li>
+					<li>
+						By the <b>pidgeonhole principle</b> (If you have \(n\) boxes and more than \(n\) items, at least one box will have two items in), there must be a loop in the list of states. That is, 
+						\[\exists j_1, j_2 : j_1 < j_2 \land r_{j_1} = r_{j_2}\]
+						Let's say this is the smallest possible \(j\)s; the earliest possible loop. This may be a self loop. 
+						<br>
+						<span class="grey">This is why we have to \(|w| \geq m\). There are only \(m-1\) "boxes" (\(q_0\) doesn't count the first time round, since we enter without reading) so we can pideonhole.</span>
+					</li>
+					<li>
+						Since we say \(j_1\) is the <b>smallest possible</b>, either \(j_1 = 0\) or the partial run \((r_0 \cdots r_{j_1})\) has no repeating states, \(\therefore j_1 \leq |Q| = m\). <br>
+						Also \((r_{j_1} \cdots r_{j_2})\) is a loop in the graph.
+					</li>
+					<li>
+						Let \(x\) be the substring that runs over \((r_0 \cdots r_{j_1})\). <br>
+						Let \(y\) be the substring that loops \((r_{j_1} \cdots r_{j_2})\).
+						<br>
+						Let \(z\) be the rest of \(w\). 
+					</li>
+					<li>
+						Thus \(|y| &gt; 0 \land |xy| \leq m\).
+					</li>
+					<li>
+						This loop of \(y\) can be repeated infinitely, or skipped entirely, thus it should be trivial that 
+						\[\forall i \geq 0,\; x y^i z \in L. \tag*{$\Box$}\]
+						
+					</li>
+				</ul>
+			</div>
 
 			<p>
 				<span style="color: red;"><b>NOTE WELL</b></span> that this is <b>not an if and only if</b>. , and , but <b>not</b> pumpable strings \(\implies\) L regular.
@@ -1062,6 +1096,7 @@
 				<li><a href="#cfl-3">PDAs to CFGs</a></li>
 				<li><a href="#cfl-4">Chomsky Normal Form</a></li>
 				<li><a href="#cfl-5">String Testing</a></li>
+				<li><a href="#cfl-6">Pumping Lemma</a></li>
 			</ol>
 
 
@@ -1503,6 +1538,9 @@
 			<p>	
 				With an efficiency of \(O(n^3 r)\) where \(n\) is the length of the string, and \(r\) is the number of grammar rules. 
 			</p>
+
+
+			<h3 id="cfl-6">Pumping Lemma</h3>
 		</div>
 
 		<footer>
