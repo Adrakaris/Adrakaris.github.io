@@ -1779,6 +1779,8 @@
 				<li><a href="#tur-3">Recursive Enumerability</a></li>
 				<li><a href="#tur-4">Universal Turing Machines (Halting Problem)</a></li>
 				<li><a href="#tur-5">Mapping and Reductions</a></li>
+				<li><a href="#tur-6">Closure of Turing Languages</a></li>
+				<li><a href="#tur-7">Assorted Questions</a></li>
 			</ol>
 
 			<h3 id="tur-1">Turing Machines</h3>
@@ -2336,6 +2338,208 @@ Repeat until all symbols marked, then ACCEPT</div>
 			<figure>
 				<img src="./coturingrecognisable.png" alt="">
 			</figure>
+
+			<h3 id="tur-7">Assorted Questions</h3>
+
+			<p>
+				These questions' answers will be collapsed as per usual, which allows one to have a go first (if they can be bothered).
+			</p>
+
+			<p>
+				<b><i>Q1.</i></b> Is there a decider D, when given a TM M, that decides whether
+				<ol type="A">
+					<li>
+						The TM has over 481 states?
+					</li>
+					
+					<li>
+						The TM takes \(\geq 481\) steps on the input \(\epsilon\)?
+					</li>
+					
+					<li>
+						The TM takes \(\geq 481\) steps for <i>some</i> input?
+					</li>
+					<li>
+						The TM takes \(\geq 481\) steps for <i>all</i> inputs?
+					</li>
+					<li>
+						The read head moves more than 481 cells from \(\vdash\) on \(\epsilon\)?
+					</li>
+					<li>
+						Accepts \(\epsilon\)?
+					</li>
+					<li>
+						Accepts any string? 
+					</li>
+					<li>
+						Accept every string?
+					</li>
+				</ol>
+			</p>
+
+			<button class="collapsible">Answer 1A... </button>
+			<div class="ccontent">
+				<p>
+					Yes... just count them.
+				</p>
+			</div>
+
+			<button class="collapsible">Answer 1B... </button>
+			<div class="ccontent">
+				<p>
+					Yes. Just run M on \(\epsilon\) for 481 steps.
+				</p>
+			</div>
+
+			<button class="collapsible">Answer 1C... </button>
+			<div class="ccontent">
+				<p>
+					Yes. Since \(\forall s \in \Sigma* : |s| \leq 481\), run M on \(s\) for 482 steps, or until it halts. 
+				</p>
+				<p>
+					If any go to 482, accept. Else, reject. 
+				</p>
+				<p>
+					Since for a string \(|s| &gt; 481\), only the first 481 symbols matter, since moving the reader head one space is one action (and thus state transition). Thus, we only need to consider the first 481 symbols of any string.
+				</p>
+			</div>
+
+			<button class="collapsible">Answer 1D... </button>
+			<div class="ccontent">
+				<p>
+					Yes. Run the machine on all strings 481 long and shorter. If any fail to take enough steps, reject.
+				</p>
+			</div>
+
+			<button class="collapsible">Answer 1E... </button>
+			<div class="ccontent">
+				<p>
+					<i>Observe</i> that if M never goes past cell 481, the machine can only ever be in a finitely many number of configurations (\(481\cdot |Q| \cdot |T|^{481}\))
+				</p>
+				<p>
+					Just run for that many steps.
+				</p>
+			</div>
+			<button class="collapsible">Answer 1F... </button>
+			<div class="ccontent">
+				<p>
+					No, that's a membership problem.
+				</p>
+			</div>
+			<button class="collapsible">Answer 1G...</button>
+			<div class="ccontent">
+				<p>
+					See F.
+				</p>
+			</div>
+			<button class="collapsible">Answer 1H...</button>
+			<div class="ccontent">
+				<p>
+					See F.
+				</p>
+			</div>
+
+			<p>
+				<b><i>Q2.</i></b> \(A \leq_m B\) and B is a CFL, is A a CFL?
+			</p>
+
+			<button class="collapsible">Answer 2...</button>
+			<div class="ccontent">
+				<p>
+					No. Let 
+					\begin{align}
+						A &= \{a^n b^n c^n : n \geq 0\} \\
+						B &= \{0\} \pod{\subseteq \{0,1\} }
+					\end{align}
+					Let a mapping from A to B be \(\sigma(w):\)
+				</p>
+				<div class="codediv">if \(w \in A\): output 1
+else: output 0</div>
+				<p>
+					Thus \(A \leq_m B\), and B is a CFL whilst A clearly is not. 
+				</p>
+			</div>
+
+			<p>
+				<b><i>Q3.</i></b> If \(A \leq_m B\) and B is regular, is A?
+			</p>
+			<button class="collapsible">Answer 3... </button>
+			<div class="ccontent">
+				<p>
+					No. Use the same proof as (2)
+				</p>
+			</div>
+
+			<p>
+				<b><i>Q4.</i></b> Are Turing Recognisable languages closed under set difference>?
+			</p>
+			<button class="collapsible">Answer 4... </button>
+			<div class="ccontent">
+				<p>
+					No. Take \(L_1 = \Sigma*, L_2 = HP\). \(L_1 \setminus L_2 = \overline{HP}\) which is not turing recognisable.
+				</p>
+			</div>
+
+			<p>
+				<b><i>Q5.</i></b> Is there a decider D, that given a <i>DFA</i> M with a binary alphabet, decides whether M accepts a string with more zeroes than ones?
+			</p>
+
+			<button class="collapsible">Answer 5... </button>
+			<div class="ccontent">
+				<p>
+					Yes. For the decider:
+				</p>
+				<ul>
+					<li>
+						Construct a PDA N, which accepts all words with more zeroes than ones. 
+					</li>
+					<li>
+						Construct the intersection PDA with M \(M' = M \cup N\), and check if this accepts \(\geq 1\) string.
+					</li>
+				</ul>
+			</div>
+
+			<p>
+				<b><i>Q6.</i></b> Is there a decider D for the problem, given a regex \(r\), is there another regex \(p\) that 
+				\begin{array}{} |p| < |r|, &L(r) = L(p) \end{array} 
+			</p>
+			<button class="collapsible">Answer 6... </button>
+			<div class="ccontent">
+				<p>
+					We essentially are detecting whether two regexes get the same language.
+				</p>
+				<p>
+					For two regexes (that match criteria), construct their DFAs. Then check if the DFAs both accept the same language, by checking if their symmetric difference \(L_1 \triangle L_2 (L_1 \setminus L_2 \cup L_2 \setminus L_1)\) doesn't accept a word. 
+				</p>
+				<p>
+					So yes.
+				</p>
+			</div>
+
+			<p>
+				<b><i>Q7.</i></b> Is \(L_c = \{\langle M \rangle : M \textrm{ is a TM, } L(M) \textrm{ is countable}\}\) decidable?
+			</p>
+
+			<button class="collapsible">Answer 7... </button>
+			<div class="ccontent">
+				<p>
+					Yes. \(\Sigma *\) is countable, and \(L(M) \subseteq \Sigma* \), thus \(L(M)\) is <b>always</b> coutnable. 
+				</p>
+				<p>
+					So this is just checking that M is a turing machine. 
+				</p>
+			</div>
+
+			<p>
+				<b><i>Q8.</i></b> Is \(L_h - \{\langle M, x \rangle : M \textrm{ is a } DFA,\; M \textrm{ halts on }x\) decidable? 
+			</p>
+
+			<button class="collapsible">Answer 8...</button>
+			<div class="ccontent">
+				<p>
+					Yes. DFAs always halt. 
+				</p>
+			</div>
 		</div>
 
 		<footer>
