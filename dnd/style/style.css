@@ -7,6 +7,7 @@
     --green: #3a6342;
     --greener: #348544;
     --yellowish: #f1f2e9;
+    --darkyellowish: #d8d8c3;
 }
 
 html, body {
@@ -338,5 +339,65 @@ button.nul {
 .buttonwrapper > a:hover {
     text-decoration: none;
     color: var(--yellowish);
+}
+
+/* SPECIAL */
+
+.juanku {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: flex-start;
+    margin-left: 220px;
+    max-height: 100vh;
+}
+
+.juanku > div {
+    /* display: block; */
+    margin: 10px;
+    padding: 10px;
+    writing-mode: vertical-rl;
+    width: 140px;
+    max-height: 400px;
+    z-index: 1;
+
+    background-color:  var(--darkyellowish);
+    border-top: 5px double var(--green);
+    border-bottom: 5px double var(--green);
+
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.15);
+}
+
+.juanku > div > h1, h2, h3 {
+    border: none;
+    margin: 0px;
+}
+
+.juanku > div > p {
+    letter-spacing: 2px;
+}
+
+.juanku > div > h1::before, h2::before, h3::before {
+    content: "《";
+}
+
+.juanku > div > h1::after, h2::after, h3::after {
+    content: "》";
+}
+
+.juanku > div > a{
+    color: var(--darkyellowish);
+    background-color: var(--green);
+    padding: 5px;
+}
+
+.juanku > div > a:visited {
+    color: var(--darkyellowish);
+}
+
+.juanku > div > a:hover {
+    color: lightcoral;
 }
 
