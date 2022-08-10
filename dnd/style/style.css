@@ -74,6 +74,12 @@ p.r-a {
     text-align: right;
 }
 
+p.c {
+    text-align: center;
+}
+
+
+
 /* HEADERS */
 
 h1 {
@@ -255,6 +261,36 @@ button.nul {
     padding-left: 1em;
 }
 
+header.bar {
+    width: 150vw;
+    background-color: var(--green);
+    color: var(--yellowish);
+    margin-bottom: 32px;
+    margin-left: -50px;
+    padding-left: 50px;
+    margin-top: -50px;
+    padding-top: 50px;
+}
+
+.juan-style {
+    /* display: block; */
+
+    background-color:  var(--darkyellowish);
+    border-top: 5px double var(--green);
+    border-bottom: 5px double var(--green);
+
+    box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.15);
+    padding: 1em;
+
+    font-size: 15pt;
+}
+
+.juan-style > p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+
+    text-indent: 2em;
+}
 
 /* SIDEBAR */
 
@@ -360,7 +396,7 @@ button.nul {
     padding: 10px;
     writing-mode: vertical-rl;
     width: 140px;
-    max-height: 400px;
+    max-height: 480px;
     z-index: 1;
 
     background-color:  var(--darkyellowish);
@@ -379,11 +415,11 @@ button.nul {
     letter-spacing: 2px;
 }
 
-.juanku > div > h1::before, h2::before, h3::before {
+.juanku > div > h1::before, .juanku > div > h2::before, .juanku > div > h3::before {
     content: "《";
 }
 
-.juanku > div > h1::after, h2::after, h3::after {
+.juanku > div > h1::after, .juanku > div > h2::after, .juanku > div > h3::after {
     content: "》";
 }
 
