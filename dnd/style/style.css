@@ -262,7 +262,7 @@ button.nul {
 }
 
 header.bar {
-    width: 150vw;
+    width: 200vw;
     background-color: var(--green);
     color: var(--yellowish);
     margin-bottom: 32px;
@@ -278,6 +278,7 @@ header.bar {
     background-color:  var(--darkyellowish);
     border-top: 5px double var(--green);
     border-bottom: 5px double var(--green);
+    margin-bottom: 1em;
 
     box-shadow: 0px 0px 5px 3px rgba(0, 0, 0, 0.15);
     padding: 1em;
