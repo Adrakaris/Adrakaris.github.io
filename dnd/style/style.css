@@ -13,7 +13,8 @@
 html, body {
     background-color: #dddddd;
     color: #222222;
-    font-family: Manrope, 'Noto Serif TC', 'Noto Serif SC', sans-serif;
+    /* font-family: Manrope, 'Noto Serif TC', 'Noto Serif SC', sans-serif; */
+    font-family: Manrope, 'Noto Serif SC', sans-serif;
     font-size: 12pt;
 }
 
