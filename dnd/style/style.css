@@ -263,7 +263,7 @@ button.nul {
 }
 
 header.bar {
-    width: 200vw;
+    width: 100vw;
     background-color: var(--green);
     color: var(--yellowish);
     margin-bottom: 32px;
@@ -271,6 +271,11 @@ header.bar {
     padding-left: 50px;
     margin-top: -50px;
     padding-top: 50px;
+    overflow-x: hidden;
+}
+
+header.bar > a {
+    position: absolute; color: var(--yellowish); padding: 5px; margin: 32px; top: 20px;
 }
 
 .juan-style {
@@ -287,11 +292,44 @@ header.bar {
     font-size: 15pt;
 }
 
+.juan-style.vertical {
+    width: 90vw;
+    /* margin-right: 10px; */
+    /* margin-left: auto; */
+    writing-mode: vertical-rl;
+    /* height: 60%; */
+    /* height: 69vh; */
+    overflow-wrap: normal;
+    margin: 0 auto;
+    overflow-x: scroll;
+
+    
+    /* text-align: justify; */
+    letter-spacing: 0.2em;
+}
+
 .juan-style > p {
     margin-top: 0px;
     margin-bottom: 0px;
 
     text-indent: 2em;
+}
+
+.juan-style.vertical > p{
+    margin-left: 0px;
+    margin-right: 0px;
+    line-height: 150%;
+    text-indent: 2.4em;
+
+    background: repeating-linear-gradient(
+        270deg,
+        var(--darkyellowish), var(--darkyellowish) 22pt,
+        #bda4a4 22pt, #bda4a4 22.5pt
+    );
+}
+
+.juan-style.vertical > h2 {
+    border-left: 1px solid #bda4a4;
 }
 
 /* SIDEBAR */
@@ -437,5 +475,30 @@ header.bar {
 
 .juanku > div > a:hover {
     color: lightcoral;
+}
+
+
+@media (max-width: 500px) {
+    .cbox {
+        margin-left: auto;
+    }
+
+    header.bar > a {
+        position: relative;
+        color: var(--yellowish); padding: 5px; 
+        margin-top: 20px;
+    }
+
+    .juanku {
+        margin-left: auto;
+    }
+
+    .sidebar {
+        position: static;
+        width: 99vw;
+        /* overflow-x: hidden; */
+        margin-top: -5px;
+        margin-left: -5px;
+    }
 }
 
