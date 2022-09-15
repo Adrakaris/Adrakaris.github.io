@@ -294,6 +294,8 @@ header.bar > a {
 
 .juan-style.vertical {
     width: 90vw;
+    /* margin-right: 10px; */
+    /* margin-left: auto; */
     writing-mode: vertical-rl;
     /* height: 60%; */
     /* height: 69vh; */
@@ -301,11 +303,7 @@ header.bar > a {
     margin: 0 auto;
     overflow-x: scroll;
 
-    background: repeating-linear-gradient(
-        270deg,
-        var(--darkyellowish), var(--darkyellowish) 22pt,
-        #bda4a4 26px, #bda4a4 22.5pt
-    );
+    
     /* text-align: justify; */
     letter-spacing: 0.2em;
 }
@@ -322,6 +320,16 @@ header.bar > a {
     margin-right: 0px;
     line-height: 150%;
     text-indent: 2.4em;
+
+    background: repeating-linear-gradient(
+        270deg,
+        var(--darkyellowish), var(--darkyellowish) 22pt,
+        #bda4a4 22pt, #bda4a4 22.5pt
+    );
+}
+
+.juan-style.vertical > h2 {
+    border-left: 1px solid #bda4a4;
 }
 
 /* SIDEBAR */
