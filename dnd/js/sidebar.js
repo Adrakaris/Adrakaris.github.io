@@ -12,7 +12,8 @@ const repo = [
         "name": "Lore Related",
         "links": [
             ["Main lore page", "./lore-main.html"],
-            ["Stories", "./stories.html"],
+            ["Saga", "./saga.html"],
+            ["Stories and Texts", "./stories.html"],
             ["Notes on the Twilight", "./twilight.html"],
             ["Map (East Aseron)", "./assets/ancient-empire.jpg"]
             
