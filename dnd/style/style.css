@@ -300,6 +300,14 @@ header.bar > a {
     overflow-wrap: normal;
     margin: 0 auto;
     overflow-x: scroll;
+
+    background: repeating-linear-gradient(
+        270deg,
+        var(--darkyellowish), var(--darkyellowish) 22pt,
+        #bda4a4 26px, #bda4a4 22.5pt
+    );
+    /* text-align: justify; */
+    letter-spacing: 0.2em;
 }
 
 .juan-style > p {
@@ -313,6 +321,7 @@ header.bar > a {
     margin-left: 0px;
     margin-right: 0px;
     line-height: 150%;
+    text-indent: 2.4em;
 }
 
 /* SIDEBAR */
