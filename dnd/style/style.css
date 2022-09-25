@@ -23,7 +23,7 @@ html, body {
 .cbox, #cfixed {
     display: block;
     /* flex-direction: column; */
-    width: 90%;
+    width: calc(95% - 220px);
     max-width: 840px;/*1200px;*/
     padding: 5px;
     /*padding-top: -5px;*/
@@ -340,7 +340,7 @@ header.bar > a {
     height: 100%; /* Full-height: remove this if you want "auto" height */
     width: 200px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-    z-index: 1; /* Stay on top */
+    z-index: 2; /* Stay on top */
     top: 0; /* Stay at the top */
     left: 0;
     background-color: var(--green); /* Black */
@@ -481,6 +481,7 @@ header.bar > a {
 @media (max-width: 500px) {
     .cbox {
         margin-left: auto;
+        width: 90%;
     }
 
     header.bar > a {
@@ -497,8 +498,8 @@ header.bar > a {
         position: static;
         width: 99vw;
         /* overflow-x: hidden; */
-        margin-top: -5px;
-        margin-left: -5px;
+        margin-top: -10px;
+        margin-left: -10px;
     }
 }
 
