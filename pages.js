@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2022,11,10)),
+        "link": "blog-cs/cs342",
+        "title": "Notes on CS342",
+        "desc": "Notes on CS342: Machine Learning. Thought this one was needed tbh.</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2022,05,05)),
         "link": "blog-cs/cs261/",
         "title": "Notes on CS261",

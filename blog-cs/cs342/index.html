@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS342</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="./" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="./blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="./about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS342</h1>
+					<p class="subheading">Machine Learning</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+			</div>
+		</header>
+
+		<!-- <div class="buttonwrapper beside" >
+			<a href="./index-zh.html">简体中文</a>
+		</div> -->
+		<!-- REMEMBER TO DO! -->
+
+		<div class="cbox">
+			<ol>
+				<li><a href="#basics">The Basics</a></li>
+			</ol>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="basics">The Basics</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Introduction</h3>
+
+			<p>
+				<b>Machine Learning</b> is the process of getting machines to learn to model stuff, that is, given experiences <i>E</i> to learn from, a set of tests <i>T</i> to measure against, for which we measure a performance <i>P</i>. 
+			</p>
+			<p>
+				Patterns are learned from <i>features</i>, qualities that describe the data, which change depending on the data in question. 
+			</p>
+			<p class="centre">
+				Input -> Extracting features (manual) -> Training and classification -> Results
+			</p>
+			<p>
+				Getting the machine to extract features itself is called <i>representation learning</i>, and is generally used in deep neural networks.
+			</p>
+
+			<h3>Recap</h3>
+
+			<p>
+				Machine learning takes basis on probability (and a lot of stats) - especially joint probability distributions (like \(p(A, B)\)).
+			</p>
+
+			<p>
+				Recall:
+			</p>
+			<ul>
+				<li>The <b>marginalisation rule</b> \(p(A) = \sum\limits_{\forall x} p(A, B=x)\)</li>
+				<li><b>Random Variables</b> X, with an event \(X = x\) which occurs with some probability, the sum of all possible events is 1.</li>
+				<li><b>Conditional probability</b> \(p(A|B) = \frac{p(A,B)}{p(B)} \)</li>
+				<li><b>Bayes Rule</b> \(p(A|B) = \frac{p(B|A)p(A)}{p(B)}\)</li>
+			</ul>
+
+			<p>
+				Datasets are collections of samples - the range of values are limited and probably in some sort of <i>distribution</i>, which can take many forms, such as uniform (straight line) or gaussian/normal (bell curve).
+			</p>
+			<p>
+				Datasets can have a <b>mean</b> \(\mu\) and <b>standard deviation</b> \(\sigma^2\) -- variance is stddev-squared.
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Distribution Functions</p>
+				</div>
+				<div>
+					<p>
+						<b>Probability density (PDF)</b>: probability of observing a value, i.e. \(p(X = x)\)
+
+						\[ p(x|\mu, \sigma^2 ) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp(-\frac{(x-\mu)^2}{\sigma^2}) \]
+					</p>
+					<p>
+						<b>Cumulative density (CDF)</b>: probility of observing &leq; the value \(p(X \leq x)\)
+
+						\[p(X \leq x|\mu, \sigma^2) = \int_0^x \textrm{(curve)} dx\]
+					</p>
+				</div>
+			</div>
+
+			<p>
+				<b>Expectation</b>, the expected value, is denoted \(\mathbb{E} \), and given as 
+				\[\mathbb{E}[x] = \sum_{\forall x} p(X = x) \cdot x\]
+			</p>
+
+			<p>
+				<i>Notation:</i> the module uses standard notations for everything: \(\renewcommand{\vec}{\mathbf}\)
+			</p>
+			<div class="cornell">
+				<div>
+					<p>Scalar</p>
+				</div>
+				<div>
+					<p>
+						\(x\): lowercase (or upper case) letter.
+					</p>
+				</div>
+				<div>
+					<p>Column Vector</p>
+				</div>
+				<div>
+					<p>
+						\(\vec{x}\): bold lowercase letter. Vectors are <i>always</i> columns, so row vectors are <i>always</i> represented as \(\vec{x}^\top\). Dot products between vectors are often represented \(\vec{w}^\top \vec{x}\) (a matrix multiplication), though I may also use \(\vec{w} \cdot \vec{x}\)
+					</p>
+				</div>
+				<div>
+					<p>Matrix</p>
+				</div>
+				<div>
+					<p>
+						\[\vec{X} = \begin{bmatrix} x_{11} & x_{12} \\ x_{21} & x_{22} \end{bmatrix}\]
+						Upper case bold letter. If a matrix is symmetric, \(\vec{X}^\top = \vec{X} \).
+					</p>
+				</div>
+			</div>
+
+			<p>
+				<b>Supervised learning</b> is when both questions and answers are given, and the model has to learn to predict answers from samples. 
+			</p>
+			<p>
+				<b>Unsupervised learning</b> is when no answers are given, and the model has to find relationships between samples.
+			</p>
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="./js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+</body>
+</html>
