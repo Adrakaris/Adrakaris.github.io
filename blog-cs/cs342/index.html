@@ -51,6 +51,7 @@
 		<div class="cbox">
 			<ol>
 				<li><a href="#basics">The Basics</a></li>
+				<li><a href="#desctree">Decision Trees</a></li>
 			</ol>
 		</div>
 
@@ -158,14 +159,271 @@
 			<p>
 				<b>Unsupervised learning</b> is when no answers are given, and the model has to find relationships between samples.
 			</p>
+
+			<h3>General Data Notation</h3>
+
+			<p>
+				\(\def\bb#1{{\mathbb{#1}}}\)
+				Samples are stored in a matrix, generally denoted \(\vec{X}\), where each row is a sample, a <b>feature vector</b>, and each column is an individual feature. \(\vec{X} \in \bb{R}^{n \times d}\), which means that X has \(n\) rows (for n samples) and \(d\) columns (for d features/dimensions)
+				
+				<ul>
+					<li>
+						\(\vec{x}_i\) is a sample row, represented as a column (as a row, it is consistently denoted \(\vec{x}_i^\top\)).
+					</li>
+					<li>
+						\(\vec{x}_j \) is a column of features. 
+					</li>
+					<li>
+						\(x_{ij}\) is feature \(j\) of column \(i\).
+					</li>
+				</ul>
+			</p>
+			<p>
+				Labels are stored in vector \(\vec{y}\), \(y_i\) being the label for an \(\vec{x}_i\). This is also called the <b>ground truth</b>
+			</p>
+			<p>
+				Given a new sample \(\tilde{\vec{x}}_i\) (tilde represents test data), we can make a prediction \(\hat{y}_i\) for it (the hat represents predicted). 
+			</p>
+		</div>
+
+		<div class="colourband">
+			<h2 id="desctree">Decision Trees</h2>
 		</div>
 		
+		<div class="cbox">
+			<h3>The Scenario</h3>
+
+			<p>
+				Suppose you start to frequently get upset stomachs, and worry that it is due to an allergy that you don't know about, perhaps to one food, perhaps to a combination. So, you decide to keep a food diary, detailing what allergen-inducing foods you consume each day, in what amounts, and whether or not you had an upset stomach that day. 
+			</p>
+
+			<table>
+				<tr>
+					<th>Milk</th>
+					<th>Eggs</th>
+					<th>Peanuts</th>
+					<th>Crustaceans</th>
+					<th>Upset?</th>
+				</tr>
+				<tr>
+					<td>0.3</td>
+					<td>0.2</td>
+					<td>0</td>
+					<td>0.7</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>...</td>
+					<td>...</td>
+					<td>...</td>
+					<td>...</td>
+					<td>...</td>
+				</tr>
+			</table>
+
+			<p>
+				This is a type of <i>supervised learning</i> problem, we have our features (foods and amounts) and our classes (upset stomach / not), and want to train a <i>classification</i> algorithm to predict things. 
+			</p>
+
+			<h3>The Decision Tree</h3>
+
+			<p>
+				A simple classifier is a <b>decision tree</b>
+			</p>
+
+			<p>
+				A decision tree is essentially a nested series of if-elif-elses, that split the dataset up -- these are <i>splitting rules</i>. 
+			</p>
+
+			<figure>
+				<img src="./assets/desctree-ex.png" alt="Decision tree with milk and eggs" style="max-width: 550px;">
+			</figure>
+
+			<p>
+				Our aim is then to find these rules, which can be done recursively:
+			</p>
+
+			<h3>Stumps</h3>
+
+			<p>
+				The most basic decision tree is a <b>stump</b>. A stump is just one single splitting rule, the smallest possible tree. 
+			</p>
+			<p>
+				To find a tree, we must first find a stump, but we need to find the stump that splits the best. How? With some scoring metric. 
+			</p>
+			<p>
+				Ex. Could use plain accuracy, take a rule like <code>eggs > 0.2</code> and set a True and False coming off it - we now have a stump that can predict data. Pick the rule with the highest amount of data correctly predicted. 
+			</p>
+			<p>
+				In our stump finding then, our training error would be just the percentage of \(\hat{y}_i \neq y_i\), i.e. the accuracy.
+			</p>
+
+			<h3>Greedy Recursive Splitting</h3>
+
+			<p>
+				A stump, however, can only split on one thing, and if we have \(d\) features we kinda want more splits, otherwise we're only ever using one of the features. 
+			</p>
+			<p>
+				A common algorithm is <b>greedy recursive splitting</b> (GRS), which goes as follows:
+			</p>
+			<ol>
+				<li>Find a stump with the best score metric, and split the dataset into two smaller ones at that stump. <span class="grey">(The new split datasets would probably still have a mix of \(y\)s, but hopefully are much more uniform than before)</span></li>
+				<li>
+					<i>Recurse:</i> "fit" (find) a new stump onto each of the smaller datasets, this is linked onto the previous stump.
+				</li>
+				<li>
+					Repeat until accuracy threshold reached <span class="grey">(or depth reached, or some other limit. Accuracy <i>can</i> be 100%, but this may result in an overcomplex tree and not always be helpful, "overfitting").</span>
+				</li>
+			</ol>
+			<p>
+				Currently, we have accuracy as a possible metric, but this may not always be good, especially when there's multiple possible stumps that increase accuracy by the same amount, or the data is spread in such a way that a single line does not do much for accuracy. 
+			</p>
+			<p>
+				A better way is if we could prioritise variance reduction, some sort of ... <i>information gain</i>:
+			</p>
+
+			<div class="cornell">
+				<div>
+					<p>Entropy</p>
+				</div>
+				<div>
+					<p>
+						<b>Entropy</b> of labels is essentially the randomness of their values. For a total of \(C\) categories, this can be calculated as
+						\[E = -\sum_{c=1}^C p_c \cdot \log_2 (p_c)\]
+						where \(p_c\) is the <i>proportion</i> of \(c\) out of all total labels in that (sub)set. Note that \(0\log_2 0\) is defined to just be 0.
+					</p>
+					<p>
+						A lower entropy (min. 0) means less randomness, which is better. A higher entropy (max. \(log_2 C\), or 1 for binary classes) is worse. 
+					</p>
+				</div>
+				<div>
+					<p>Information Gain</p>
+				</div>
+				<div>
+					<p>
+						The principle of <b>Information Gain</b> (IG), is that we want the biggest difference in entropy pre-split to post-split. 
+					</p>
+					<p>
+						For a single rule, we can split the set of \(n\) elements into \(n_{yes}\) (for the samples that match the rule) and \(n_{no}\) for the ones that don't. Thus IG is defined
+						\[
+						IG = E(\vec{y}) - \frac{n_{yes}}{n} E(\vec{y}_{yes}) - \frac{n_{no}}{n} E(\vec{y}_{no})
+						\]
+						i.e the entropy of combined labels \(\vec{y}\) minus the entropy of split labels individually.
+					</p>
+					<p>
+						The higher this difference is, the better the split is.
+					</p>
+				</div>
+			</div>
+
+			<h3>Overfitting and Learning Theory</h3>
+
+			<p>
+				If we have 100% accuracy on our training data, this does not imply that we have 100% accuracy on any new test data. 
+			</p>
+
+			<ul>
+				<li>
+					<b>Test Accuracy</b> is the accuracy on new data
+				</li>
+				<li>
+					<b>Overfitting</b> or <b>Optimisation Bias</b> is high accuracy on training data but low on test data 
+				</li>
+				<li>
+					<b>Underfitting</b> is low accuracy on training data.
+				</li>
+			</ul>
+			<p>
+				We naturally want the right amount of fitting, but this is difficult. 
+			</p>
+			<p>
+				We can use a test/verification set \(\tilde{\vec{X}}\) to verify, but we must ensure that we <i>do not train using the verification set</i>.
+			</p>
+			<p>
+				The <b>IID Assumption</b> (Independent and Identically Distributed) states that we assume that the training data is a good representation of all data - that is, it has the same distribution as test data. 
+			</p>
+			<p>
+				Whilst this is often not true, it is generally a good assumptuion. 
+			</p>
+			<p>
+				<b>Learning Theory</b> gives us a metric for measurement, \(E_{approx}\) the <b>approximation error</b>, the error between training and testing:
+				\[E_{test} = E_{approx} + E_{train}\]
+				where \(E_{approx} = E_{test} - E_{train}\). If this is small, then we can say that the training data is good for test data. It tends to go down as the training set gets larger, and up as the model gets more complex (and thus overfit). 
+			</p>
+
+			<p>
+				However, this approximation error leads to a <b>fundamental tradeoff</b>: minimise \(E_{approx}\) whilst minimising \(E_{train}\): make the model not overfit whilst having it be fit as well as possible. 
+			</p>
+
+			<h3>Validation</h3>
+
+			<p>
+				Usually, we split a training set into two: a larger <code>x_train</code> (the "training set"), and a smaller <code>x_test</code>, what's called the <b>validation</b> (or colloquially test) set. 
+			</p>
+
+			<p>
+				Once we train on <code>x_train</code>, we can compute the accuracy of predicting <code>x_test</code>, and use this to adjust our model, such as manually setting <i>hyperparameters</i>.
+			</p>
+
+			<p>
+				<b>Hyperparameters</b> are settings in a model which we <i>do not learn</i>. For decision trees, this may be the maximum depth of the tree, or the accuracy threshold. For more complex models like Neural Networks, the entire architecture is hyperparameter, whilst the weights and biases are learned, regular parameters.
+			</p>
+
+			<p>
+				With simpler models, it is often good to train it multiple times with different hyperparameter settings (like tree depth), and see which one minimises both training error and approximation error the best.
+			</p>
+			<p>
+				Sometimes, once hyperparameters are set, a model is trained again, with <code>x_test</code> merged back into the training set (no validation).
+			</p>
+
+			<p>
+				That said, we may end up overfitting the validation set. If we search too many and too specific hyperparameters, we may end up finding one that's really good for the validation set, but not so good for any new data. 
+			</p>
+
+			<ul>
+				<li>
+					Optimisation bias increases as we search for more model configurations 
+				</li>
+				<li>
+					It decreases as the training data gets larger.
+				</li>
+			</ul>
+
+			<p>
+				This leads to <b>another fundamental tradeoff</b>: increasing validation size means our model is less likely to be overfit. However, increasing validation size decreases test size, which makes our model train less well.
+			</p>
+
+			<h4>Cross Validation</h4>
+
+			<p>
+				Validation takes from test data, if test data is precious and hard to get, we may not want to waste it.
+			</p>
+			<div class="blue">
+				<span class="nopad">
+					<p>
+						<b>K-fold cross validation</b> gives a good estimate without wasting too much data.
+					</p>
+	
+					<p>
+						For K folds, we train K times, each time taking \(\frac{1}{k}
+						\) of \(\vec{X}\) as validation, and the rest \(\frac{k-1}{k}\) as train.
+					</p>
+					
+				</span>
+				
+			</div>
+
+			<p>
+				<i>Leave One Out (LOO)</i> is a special type of K-fold validation where \(k = n\).
+			</p>
+			
+		</div>
 
 		<footer>
 			<div class="cbox">
                 <div class="columncontainer ctwo" id="fc2">
                 </div>
-                <script type="text/javascript" src="./js/footerGen.js"></script>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
             </div>
 		</footer>
 
