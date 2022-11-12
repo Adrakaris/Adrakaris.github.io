@@ -52,6 +52,7 @@
 			<ol>
 				<li><a href="#basics">The Basics</a></li>
 				<li><a href="#desctree">Decision Trees</a></li>
+				<li><a href="#bayes">Naive Bayes</a></li>
 			</ol>
 		</div>
 
@@ -406,7 +407,7 @@
 	
 					<p>
 						For K folds, we train K times, each time taking \(\frac{1}{k}
-						\) of \(\vec{X}\) as validation, and the rest \(\frac{k-1}{k}\) as train.
+						\) of \(\vec{X}\) as validation, and the rest \(\frac{k-1}{k}\) as train. The average validation accuracy is taken as the overall accuracy
 					</p>
 					
 				</span>
@@ -415,6 +416,105 @@
 
 			<p>
 				<i>Leave One Out (LOO)</i> is a special type of K-fold validation where \(k = n\).
+			</p>
+			
+		</div>
+
+		<div class="colourband">
+			<h2 id="bayes">Naive Bayes</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>The Scenario</h3>
+
+			<p>
+				You want to filter out which emails incoming are spam or not. For this, you've collected many, many emails, and labelled them correctly.
+			</p>
+			<p>
+				Your features are going to be keywords in emails, thus, \(x_{ij} = 1\) if the word \(j\) is in email \(i\).
+			</p>
+
+			<h3>Probabilistic Classification</h3>
+
+			<p>
+				Traditional filtering/classification methods used something called <b>Naive Bayes</b> - a probability based classifier based on <i>bayes rule</i>. 
+			</p>
+			<p>
+				The idea is, we want to model \(p(y_i | \vec{x}_i)\): probability of it having that label, given those features. If \(y_i\) was binary, then we could classify \(\vec{x}_i\) as true if \(p(y_i | \vec{x}_i) > p(\lnot y_i | \vec{x}_i)\).
+			</p>
+			<p>
+				Given bayes rule, and a y-label \(spam, \; \lnot spam\), we can use Bayes rule:
+				\[
+				p(spam | \vec{x}_i) = \frac{p(\vec{x}_i | spam)p(spam)}{p(\vec{x_i})}
+				\]
+				(And similar for non-spam.) \(p(\vec{x}_i)\) is the probability that email \(i\) has those words in it.
+			</p>
+			<div class="cornell">
+				<div>
+					<p>\(p(spam)\)</p>
+				</div>
+				<div>
+					<p>
+						<b>Very easy</b> to calculate, it's just the proportion of positive to all \(p(spam) = \frac{\sum spam}{n}\)
+					</p>
+				</div>
+				<div>
+					<p>\(p(\vec{x})_i\)</p>
+				</div>
+				<div>
+					<p>
+						Very difficult to calculate, however due to the classification rule we use:
+						\begin{align}
+							p(y_i | \vec{x}_i) &> p(\lnot y_i | \vec{x}_i) \\
+							\implies \frac{p(\vec{x}_i | y_i)p(y_i)}{p(\vec{x_i})} &> \frac{p(\vec{x}_i | \lnot y_i)p(\lnot y_i)}{p(\vec{x_i})} \\
+							\implies p(\vec{x}_i | y_i)p(y_i) &> p(\vec{x}_i | \lnot y_i)p( \lnot y_i)
+						\end{align}
+						We can just <b>ignore</b> the term.
+					</p>
+				</div>
+				<div>
+					<p>\(p(\vec{x_i} | spam)\)</p>
+				</div>
+				<div>
+					<p>
+						Equals \(\frac{\sum \textrm{ spam emails with } \vec{x}_i}{\sum spam}\), which is very hard to work out, and no easy workaround:
+					</p>
+					<p>
+						Make a <b>conditionally independent assumption</b>: assume the occurence of every \(x_{ij}\) is independent from every other \(x_{ij'}\). This is why the Bayes is <i>naive</i>.
+					</p>
+					<p>
+						Thus \(p(\vec{x_i} | spam) \approx \prod\limits_{j=1}^{d} p(x_{ij} | spam)\). 
+					</p>
+					<p>
+						Whilst this is rarely true, it is in some cases a good enough approximation.
+					</p>
+				</div>
+			</div>
+
+			<p>
+				More generally, when predicting data, we find the class \(c\) of \(y\) that has the highest probability given an \(\tilde{\vec{x}}_i\).
+			</p>
+
+			<p>
+				There is one other problem: when data is missing from our set but we still want to account for it. For example, if you want to detect the chance an email containing "millionaire" is spam, but none of your collected spam emails have that word. 
+			</p>
+			<p>
+				We can use <b>laplace smoothing</b> to account for this: if a feature \(x_{ij}\) has \(k\) possible values, for some \(\beta \in \bb{R}\):
+				\[
+				\frac{p(x_{ij} = e) + \beta}{\textrm{total }+ k\beta}
+				\]
+				i.e. add a fake value to the proportion of emails that have the feature we want, but add everything else in the same proportion to the total, so proportions are kept consistent. 
+			</p>
+			<p>
+				For binary features (and \(\beta = 1\)), we can do
+				\[
+				
+				\frac{
+					\#\textrm{spam with 'millionaire' } + 1
+				}{
+					\#\textrm{total spam } + 2
+				}
+				\]
 			</p>
 			
 		</div>
