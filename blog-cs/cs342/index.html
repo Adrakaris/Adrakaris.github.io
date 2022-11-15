@@ -53,6 +53,7 @@
 				<li><a href="#basics">The Basics</a></li>
 				<li><a href="#desctree">Decision Trees</a></li>
 				<li><a href="#bayes">Naive Bayes</a></li>
+				<li><a href="#knn">K-nearest Neighbours</a></li>
 			</ol>
 		</div>
 
@@ -517,6 +518,151 @@
 				\]
 			</p>
 			
+		</div>
+
+		<div class="colourband">
+			<h2 id="knn">K-Nearest Neighbours</h2>
+		</div>
+
+		<div class="cbox">
+			<p>
+				The models looked at previously were <i>parametric</i> -- that is, they had a fixed number of parameters (fixed by hyperparmameters, the model size is O(1) w.r.t. data size)
+			</p>
+			<p>
+				<b>K-nearest neighbours</b> (KNN) is in the class of <i>non-parametric</i> models, that is, the larger the dataset, the larger the model gets. 
+			</p>
+			<p>
+				KNN is a classification model, that works by taking a new point \(\vec{\tilde{x}_i}\) and comparing it to its \(k\) "closest" neighbours from the training set, classifying it into the majority category.
+			</p>
+			<p>
+				It works off the <b>Lipschitzness Assumption</b>, that if two feature vectors are "close", they are likely to be similar. 
+			</p>
+			<p>
+				This closeness is most commonly done using <b>L2 Norm: euclidean distance</b> \(\lVert \vec{x}_i - \vec{\tilde{x}}_i \rVert\).
+			</p>
+			<p class="grey">
+				Note that euclidean distance is often written \(|\vec{a}|\) in mathematics, or with double bars and an explict L2-norm indicator \(||\vec{a}||_2\), seen in ML. 
+			</p>
+			<p>
+				The way KNN calculates its \(k\) nearest neighbours is simply by calculating euclidean distance to all \(\vec{x} \in \vec{X}\) and finding the closest ones. Thus,
+			</p>
+			<ul>
+				<li>There's no traditional learning (<b>lazy learning</b>), simply store the data</li>
+				<li>Non parametric size, size \(\propto O(nd)\) for \(n\) samples and \(d\) dimensions</li>
+				<li>Predicting is expensive, \(O(ndt)\) for \(t\) test samples</li>
+			</ul>
+
+			<p>
+				A <b>Norm</b> is a way of "calculating distance", so to say. There are three (maybe four) common norms:
+			</p>
+
+			<table>
+				<tr>
+					<th>L2</th>
+					<th>L1</th>
+					<th>(L0)</th>
+					<th>L\(\infty\)</th>
+				</tr>
+				<tr>
+					<td>\[\lVert \vec{r} \rVert_2 = \sqrt{r_1^2 + r_2^2}\]</td>
+					<td>\[\lVert \vec{r} \rVert_1 = |r_1| + |r_2|\]</td>
+					<td>\[\lVert \vec{r} \rVert_0 = nz(r_1) + nz(r_2)\] \[\textrm{s.t. }  nz(x) = \begin{cases} 1 & x \neq 0 \\ 0 & x = 0 \end{cases}\]</td>
+					<td>\[\lVert \vec{r} \rVert_\infty = \max(|r_1|, |r_2|)\]</td>
+				</tr>
+				<tr>
+					<td>Euclidean distance</td>
+					<td>Manhattan distance</td>
+					<td>Counts nonzero values</td>
+					<td>Max</td>
+				</tr>
+				<tr>
+					<td>Emphasises larger values</td>
+					<td>All values are equal</td>
+					<td>(Not actually a norm)</td>
+					<td>Only the largest component matters</td>
+				</tr>
+			</table>
+
+			<p>
+				The numbers are given with reason: the \(L_p\) norm for \(p\geq 1 : \lVert \vec{x} \rVert_p = \left( \sum\limits_{j=1}^d |x_j|^p \right)^{\frac{1}{p}}\)
+			</p>
+
+			<p>
+				A <b>1NN</b> classifier is just nearest neighbour, every point defines a cell, within which everything belongs to its category (a "voronoi tesselation"). Boundaries between cells are <b>decision boundaries</b>, assignment here can be arbitrary.
+			</p>
+
+			<figure>
+				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Euclidean_Voronoi_diagram.svg/1200px-Euclidean_Voronoi_diagram.svg.png" alt="Voronoi tesselation - wikipedia" style="max-width: 300px;">
+				<figcaption>Voronoi Tesselation (Wikipedia)</figcaption>
+			</figure>
+
+			<h3>Test Errors, and Optimal Bayes</h3>
+
+			<p>
+				We can compare the error of a KNN (or 1NN) classifier against the <b>Optimal Bayes Classifier</b>.
+			</p>
+			<p>
+				Recall <i>Naive Bayes</i>: we assume that all features are independent. <b>Optimal Bayes</b> is a theoretical Bayes classifier that does <i>not</i> make this assumption. \(\DeclareMathOperator*{\argmax}{argmax}
+				\DeclareMathOperator*{\argmin}{argmin}
+				\renewcommand{\epsilon}{\varepsilon}\)
+			</p>
+			<p>
+				Optimal Bayes will then predict \(\hat{y_i} = \argmax\limits_{y_i} p(y_i | \vec{x}_i)\), taking into account all conditional probabilities.
+			</p>
+			<p>
+				Note that Optimal Bayes is <i>not</i> a perfect classifier, it still has an error \(\epsilon_{bayes} = 1 - p(\hat{y}_i | \vec{x}_i)\), but this error is agood <b>lower bound</b> on potential error of classifier. 
+			</p>
+
+			<p class="side">
+				<b><i>Claim.</i></b> For a 1-NN classifier, as \(n \longrightarrow \infty\) its error \(\epsilon_{1NN} \longrightarrow 2\epsilon_{bayes}\)
+			</p>
+			<button class="collapsible">Proof... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Proof.</i></b> Assume a two class 1NN, with classes + and -.
+				</p>
+				<ul>
+					<li>
+						With more samples, the distance between \(\vec{\tilde{x}}_i\) and its closest neighbour tends to 0 (imagine the space filling up with points.)
+					</li>
+					<li>
+						We want to find the probability that it is a false classification, \(p(\hat{y} \neq \tilde{y} | \vec{\tilde{x}})\)
+					</li>
+					<li>
+						If positive \(p(+|\vec{x}_i)\), the classifier can predict rightly with probability \(p(+|\vec{x}_i) p(+|\vec{\tilde{x}}_i)\) or wrongly \(p(+|\vec{x}_i) (1-p(+|\vec{\tilde{x}}_i))\)
+					</li>
+					<li>
+						Similarly if negative it can get it correct \((1-p(+|\vec{\tilde{x}}_i))(1-p(+|\vec{\tilde{x}}_i))\) or wrong \( (1-p(+|\vec{\tilde{x}}_i))p(+|\vec{x}_i)\)
+					</li>
+					<li>
+						Note that there are two false probabilities,
+						\begin{align}
+							\epsilon_{1NN} &= p(\hat{y}_i|\vec{x}_i) (1-p(\hat{y}_i|\vec{\tilde{x}}_i)) + (1-p(\hat{y}_i|\vec{\tilde{x}}_i))p(\hat{y}_i|\vec{x}_i) \\
+							&\geq (1-p(\hat{y}_i)|\vec{x}_i) + (1-p(\hat{y}_i)|\vec{x}_i) \pod{\textrm{ignore tilde}} \\
+							&\geq 2(1-p(\hat{y}_i)|\vec{x}_i)\\
+							& \geq 2\epsilon_{bayes}
+						\end{align}
+
+						$$\tag*{$\Box$}$$
+					</li>
+				</ul>
+			</div>
+
+			<p>
+				The error of k-NN classification tends to \((i+\sqrt{\frac{2}{k}} ) \epsilon_{bayes}\). 
+			</p>
+
+			<h3>The Curse of Dimensionality (Runaway Exponents)</h3>
+
+			<p>
+				In practice though, we cannot get that good of an error. Because we need a very large \(n\), to get a crowded enough feature space.
+			</p>
+			<p>
+				In 2D, we can imagine our feature space to be a circle, with area \(O(r^2)\), thus \(n = O(r^2)\). In 3D, this increases to \(O(r^3)\) and realistically ML has way more than 3 dimensions, and so the amount of data we need \(n \approx c^d\), for \(d\) dimensions and a constant \(c\).
+			</p>
+			<p>
+				We also have an <b>upper bound</b> error: the <b>constant classifier</b>, that always returns the most common label: simply set \(k=n\). Naturally, our model is only a success if it does (significantly) better than n-NN. 
+			</p>
 		</div>
 
 		<footer>
