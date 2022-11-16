@@ -54,6 +54,7 @@
 				<li><a href="#desctree">Decision Trees</a></li>
 				<li><a href="#bayes">Naive Bayes</a></li>
 				<li><a href="#knn">K-nearest Neighbours</a></li>
+				<li><a href="#linreg">Linear Regression</a></li>
 			</ol>
 		</div>
 
@@ -662,6 +663,115 @@
 			</p>
 			<p>
 				We also have an <b>upper bound</b> error: the <b>constant classifier</b>, that always returns the most common label: simply set \(k=n\). Naturally, our model is only a success if it does (significantly) better than n-NN. 
+			</p>
+		</div>
+
+		<div class="colourband">
+			<h2 id="linreg">Linear Regression</h2>
+			<p class="subtitle">
+				Get ready for some Linear Algebra
+			</p>
+		</div>
+
+		<div class="cbox">
+			<p style="display: none;">
+				\(\newcommand{\cal}{\mathcal}\)
+			</p>
+			<p>
+				<b>Classification</b> predicts best classes, when labels are <i>discrete</i>. <b>Regression</b> predicts best fit, when labels are <i>continuous</i>.
+			</p>
+
+			<p>
+				<b>Linear Regression</b> is a tool for modelling linear relationships - literally a line of best fit. 
+			</p>
+			<p>
+				For training data \(\vec{X} \), labels \(\vec{y} \), we can define a regression function \(h:\vec{X} \longrightarrow \vec{y}\) as
+				\[\hat{y}_i = h(\vec{x}_i) = \vec{w} \cdot \vec{x_i}\]
+				Note that this is literally \(y = mx + c\) but without the \(+c\). \(\vec{w} \) (the weights) is the slope of the line, and this is what we want to find. 
+			</p>
+			<p>
+				We find this by <b>minimising a loss function</b>, a function that describes the error of our predictions w.r.t. the training data. 
+			</p>
+			<p>
+				The most common loss function used is <b>mean squared error</b> (MSE):
+				\[
+				\mathcal{L}(h) = \frac{1}{n} \sum_{i=1}^n (h(x_i | w) - y_i) ^ 2
+				\]
+				Basically, sum of the difference between predicted and actual \(y\), squared. Thus we find \(\argmin\limits_\vec{w} \cal{L}(h)\) 
+			</p>
+			<p class="grey">
+				Note that the loss function can be denoted \(\cal{L}(\cdot)\) or just \(f(\cdot)\), I often prefer the former when note taking but you see the latter used quite often. 
+			</p>
+			<p>
+				 The loss function is quadratic in \(\vec{w} \) (in this case), and so we can find a minimum easily. 
+			</p>
+			<p>
+				<b><i>Note.</i></b> Minimising \(\frac{1}{n} \sum(\cdots)\) is the same as minimising \(\sum(\cdots)\) or any other constant multiplier. \(1/2\) is often used for convenience of differentiation.
+			</p>
+
+			<h3>1D Regression</h3>
+
+			<p>
+				1D regression is the easiest case. We have a function \(\cal{L}(w) = \frac{1 }{2 } \sum\limits_{i=1}^n (wx_i - y_i)^2\) for a scalar \(w\).
+				\begin{align}
+					\therefore \cal{L}(w) &= \frac{1 }{2 }\sum_{i=1}^n (w^2x_i^2 - 2wx_iy_i + y_i^2) \\
+					&= \frac{w^2 }{2} (\sum x_i^2) - \frac{2w }{2 } (\sum x_i y_i) + \frac{1}{2} (\sum y_i^2) \\
+					&= \frac{a}{2} w^2 - bw + c 
+ 				\end{align}
+				(Since the sum terms are constant)
+			</p>
+			<p>
+				\(\cal{L}' (w) = wa-b\), set to 0 and solve for \(w\), \(w = \frac{b}{a}\)
+			</p>
+			<p>
+				We can also use the second derivative to make sure it is a minimum. 
+			</p>
+			<p>
+				This finds the best \(w\) ... for a line \(\hat{y}_i = wx_i\) that passes through 0, because we haven't accounted for <i>bias</i>.
+			</p>
+
+			<h3>Bias, Extending Dimensions</h3>
+
+			<p>
+				A <b>bias</b> is an extra constant added on, that shifts the result up or down. For 1D, we change the equation to \(\hat{y}_i = wx_i + w_0\) where \(w_0\) is the bias. 
+				<!-- \(\newcommand{\xtrain}{\vec{x}_i} \newcommand{\xtest}{\vec{\tilde{x}}_i \newcommand{\yhi}{\hat{y}_i} \) -->
+				\( \def\xtrain{{\vec{x}_i}}  \def\xtest{{\vec{\tilde{x}}_i}}  \def\ytrain{{y_i}} \def\ytest{{\tilde{y}_i}} \def\ypred{{\hat{y}_i}} \def\wtrans{{\vec{w}^\top}} \)
+			</p>
+			<p>
+				We can add bias by <i>changing basis</i>: we make a "fake feature", with 1 for all the values:
+				\[
+					\vec{X} = \begin{bmatrix}
+						x_i \\ x_2 \\ \vdots \\ x_n
+					\end{bmatrix} \longrightarrow
+					\vec{Z} = \begin{bmatrix}
+						1 & x_1 \\ 1 & x_2 \\ \vdots &\vdots \\ 1 & x_n
+					\end{bmatrix}
+				\]
+				Thus, we are effectively using \(\vec{Z}\) as our feature set, and have to solve
+				\[
+				y_i = v_1 z_{i1} + v_2 z_{i2} \equiv w_0 + w_1x_i\]
+				Note that because we changed basis, our transformed features are now denoted \(z\) and our transformed wieghts are denoted \(v\).
+			</p>
+			<p>
+				This creates 2D linear regression. 
+			</p>
+			<p>
+				When we learn in 1D, we are fitting a line of best fit. In 2D, then, we are fitting a <i>plane</i> of best fit. And the dimensions of the (hyper)plain just increases. 
+			</p>
+			<p>
+				For \(d\) features (ignoring bias), we have a
+				\begin{align}
+					\ypred &= w_1 x_{i1} + \cdots + w_d x_{id} \\
+					&= \sum_{j=1}^d w_j x_{ij} \\
+					&= \vec{w}^\top \xtrain \equiv \vec{w} \cdot \xtrain.
+				\end{align}
+				The loss is then the MSE:
+				\[
+				\cal{L} = \frac{1}{2} \sum_{i=1}^n (\wtrans \xtrain - y_i)^2
+				\]
+			</p>
+			<p>
+				Whilst finding derivatives for this can be difficult from a partial differentiation perspective, we can actually differentiate matrices fine, which we'll soon see.
 			</p>
 		</div>
 
