@@ -697,7 +697,7 @@
 				\[
 				\mathcal{L}(h) = \frac{1}{n} \sum_{i=1}^n (h(x_i | w) - y_i) ^ 2
 				\]
-				Basically, sum of the difference between predicted and actual \(y\), squared. Thus we find \(\argmin\limits_\vec{w} \cal{L}(h)\) 
+				Basically, sum of the difference between predicted and actual \(y\), squared. Thus we find \(\argmin\limits_\vec{w} \cal{L}(h)\). This is known as finding <b>least squares</b>.
 			</p>
 			<p class="grey">
 				Note that the loss function can be denoted \(\cal{L}(\cdot)\) or just \(f(\cdot)\), I often prefer the former when note taking but you see the latter used quite often. 
@@ -772,6 +772,133 @@
 			</p>
 			<p>
 				Whilst finding derivatives for this can be difficult from a partial differentiation perspective, we can actually differentiate matrices fine, which we'll soon see.
+			</p>
+
+			<h4>Matrix Magic</h4>
+
+			<p>
+				It is probably good now to mention the dimensions of the data.
+			</p>
+			<ul>
+				<li>
+					\(\vec{y}: n \times 1 \)
+				</li>
+				<li>
+					\(\xtrain : d \times 1\)
+				</li>
+				<li>
+					\(\vec{X} : n \times d\); can be thought of as rows of \(\xtrain^\top\) (transposed so coln -> row)
+				</li>
+			</ul>
+			<p>
+				A single prediction \(\ypred = \vec{w} \cdot \xtrain\). All \(n\) samples can then be gotten from \(\vec{\hat{y}} = \vec{X} \vec{w}\).
+			</p>
+			<p>
+				We say that \(\vec{\hat{y}} - \vec{y} = \vec{r}\), the <b>residual vector</b>, and being the error difference, we can write MSE using it:
+				\[
+				\cal{L}(\vec{w}) = \frac{1}{2} \lVert \vec{r}^2 \rVert^2 = \frac{1 }{2 }\lVert \vec{X} \vec{w} - \vec{y} \rVert^2
+				\]
+			</p>
+			<p>
+				Thus we can find an error using <i>matrix calculus</i>; a symbol will be used here called "nabla" \(\nabla\), which represents multi-dimensional differentiation. For the case of vectors, think of deriving each term element-wise. 
+			</p>
+
+			\begin{align}
+				\implies \cal{L}(\vec{w}) &= \frac{1 }{2 } \vec{w}^\top \vec{X}^\top \vec{X} \vec{w} - \vec{w}^\top \vec{X}^\top \vec{y} + \frac{1 }{2 }\vec{y}^\top \vec{y} \\
+
+				&= \frac{1 }{2 }\vec{A w^\top w} - \vec{b w^\top} + \frac{1 }{2 }c \pod{\vec{X^\top X, X^\top y, y^\top y} \textrm{ are constant}}  \\
+
+				\nabla \cal{L} (\vec{w}) &= \nabla(\frac{1 }{2 }\vec{A w^\top w}) - \nabla (\vec{bw^\top}) + \nabla(\frac{1 }{2 }c) \\ 
+
+				&= \vec{Aw-b}. \pod{\textrm{if } \vec{A} \textrm{ symmetric}}
+			\end{align}
+
+			<p>
+				Then, all we need to find is \(\vec{Aw - b} = 0\), or equivalently \(\vec{X^\top X w - x^\top y} = 0\)
+			</p>
+			\[
+			\implies \vec{w = (X^\top X)}^{-1} \vec{X^\top y}.
+			\]
+
+			<p>
+				MSE has some issues however.
+			</p>
+			<ul>
+				<li>
+					MSE is sensitive to outliers, as large differences are empasised more greatly.
+				</li>
+				<li>
+					Finding a model can be memory and time intensive - there are a lot of large matrix multiplications, and large systems of equations. 
+				</li>
+				<li>
+					May <i>extrapolate</i>: predicting values outside of the measured range.
+				</li>
+				<li>
+					Solution may not be unique: <i>colinear features</i>, where 2 features are identical for all samples, which means that both, say, \(y_i = w_1 x_1 + w_2 x_2 \equiv y_i = 0 x_1 + (w_1 + w_2)x_2\), are valid solutions.
+				</li>
+				<li>
+					And finally, linear regression assumes a <b>linear</b> relationship.
+				</li>
+			</ul>
+			
+			<p class="blue">
+				<b><i>Note.</i></b> The term <b>convex</b> refers to functions with a shape like \(\cup, \cap\), meaning they have only one minima (or maxima). It is easy to optimise these functions (not so for non-convex ones)
+			</p>
+
+			<h3>Polynomial Regression</h3>
+
+			<p>
+				Often, there is <i>not</i> a linear relationship. 
+			</p>
+
+			<p>
+				So what do we do? Well, we can very easily "hijack" least squares linear regression to do polynomial regression, in the same method that we use to add a bias. 
+			</p>
+
+			<p>
+				Suppose again 1D samples \(\vec{X}\), that we suspect has a polynomial relationship to \(\vec{y}\), we can also change the basis to account for squares:
+			</p>
+
+			\[
+				\vec{X} = \begin{bmatrix}
+					x_i \\ x_2 \\ \vdots \\ x_n
+				\end{bmatrix} \longrightarrow
+				\vec{Z} = \begin{bmatrix}
+					1 & x_1 & x_1^2 \\ 1 & x_2 & x_2^2 \\ \vdots &&\vdots \\ 1 & x_n & x_n^2
+				\end{bmatrix}
+			\]
+
+			<p>
+				And would you look at that, we now have the squared features as a separate feature. Now simply fit a line \(\ypred = v_1 z_{i1} + v_2 z_{i2} + v_3 z_{i3}\).
+			</p>
+			<p>
+				We can also naturally extend this to higher polynomials. <i>However</i>, too high polynomials leads to overfitting - whilst training error may go down, test error goes up. 
+			</p>
+			<p>
+				That is, fit new parameters \(\vec{V}\) on transformed featuers \(\vec{Z}\), by solving for \(\vec{ZZ^\top v = Z^\top y} \). 
+			</p>
+			<p>
+				To predict on a validation set \(\vec{\tilde{X}}\), first transform it into the polynomial form \(\vec{\tilde{Z}}\), then do \(\vec{y = \tilde{Z} v }\).
+			</p>
+
+			<h4>L2 Regularisation</h4>
+
+			<p>
+				Training a regression model may produce excessively large weights.Exessively large weights are very sensitive, thus are more likely to be overfit -> penalise large weights. 
+			</p>
+
+			<p>
+				<b>L2 Regularisation</b> is an extra bit we add to our MSE loss:
+				\[
+				\cal{L}(\vec{w}) = \frac{1}{2} \lVert \vec{Xw - y}\rVert^2 + \frac{\lambda}{2}\lVert \vec{w} \rVert^2 
+				\]
+				Note the new \(\frac{\lambda}{2}\lVert \vec{w} \rVert^2 \) term. This new lambda parameter controls how much emphasis we want on small weights. A high \(\lambda\) means that we want small weights more than least squares, whereas \(\lambda = 0\) removes the penalty altogether.
+			</p>
+			<p class="grey">
+				\(\frac{\lambda}{2 }\) is done for ease of differentiation.
+			</p>
+			<p>
+				Furthermore, the derivative \(\nabla \cal{L}(\vec{w}) = \vec{X^\top X w - X^\top y + } \lambda \vec{w}\) solves for the equation \((\vec{X^\top X + \lambda I}) \vec{ w = X^\top y}\), and the matrix that multiplies into \(\vec{w}\) is <i>always</i> invertible.
 			</p>
 		</div>
 
