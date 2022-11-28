@@ -55,7 +55,30 @@
 				<li><a href="#bayes">Naive Bayes</a></li>
 				<li><a href="#knn">K-nearest Neighbours</a></li>
 				<li><a href="#linreg">Linear Regression</a></li>
+				<li><a href="#robreg">Robust Regression</a></li>
 			</ol>
+			\( 
+				\renewcommand{\vec}{\mathbf}
+				\renewcommand{\epsilon}{\varepsilon}
+
+				\DeclareMathOperator*{\argmax}{argmax}
+				\DeclareMathOperator*{\argmin}{argmin}
+
+				\def\xtrain{{\vec{x}_i}}  
+				\def\xtest{{\vec{\tilde{x}}_i}}  
+				\def\ytrain{{y_i}} 
+				\def\ytest{{\tilde{y}_i}} 
+				\def\ypred{{\hat{y}_i}} 
+				\def\wtrans{{\vec{w}^\top}} 
+				\def\bb#1{{\mathbb{#1}}}
+				
+				\def\x{{\vec{x}}}
+				\def\X{{\vec{X}}}
+				\def\w{{\vec{w}}}
+				\def\W{{\vec{W}}}
+				\def\y{{\vec{y}}}
+				\def\t{{^\top}}
+			\)
 		</div>
 
 		
@@ -126,7 +149,7 @@
 			</p>
 
 			<p>
-				<i>Notation:</i> the module uses standard notations for everything: \(\renewcommand{\vec}{\mathbf}\)
+				<i>Notation:</i> the module uses standard notations for everything: \
 			</p>
 			<div class="cornell">
 				<div>
@@ -166,7 +189,7 @@
 			<h3>General Data Notation</h3>
 
 			<p>
-				\(\def\bb#1{{\mathbb{#1}}}\)
+				
 				Samples are stored in a matrix, generally denoted \(\vec{X}\), where each row is a sample, a <b>feature vector</b>, and each column is an individual feature. \(\vec{X} \in \bb{R}^{n \times d}\), which means that X has \(n\) rows (for n samples) and \(d\) columns (for d features/dimensions)
 				
 				<ul>
@@ -603,9 +626,7 @@
 				We can compare the error of a KNN (or 1NN) classifier against the <b>Optimal Bayes Classifier</b>.
 			</p>
 			<p>
-				Recall <i>Naive Bayes</i>: we assume that all features are independent. <b>Optimal Bayes</b> is a theoretical Bayes classifier that does <i>not</i> make this assumption. \(\DeclareMathOperator*{\argmax}{argmax}
-				\DeclareMathOperator*{\argmin}{argmin}
-				\renewcommand{\epsilon}{\varepsilon}\)
+				Recall <i>Naive Bayes</i>: we assume that all features are independent. <b>Optimal Bayes</b> is a theoretical Bayes classifier that does <i>not</i> make this assumption. 
 			</p>
 			<p>
 				Optimal Bayes will then predict \(\hat{y_i} = \argmax\limits_{y_i} p(y_i | \vec{x}_i)\), taking into account all conditional probabilities.
@@ -692,7 +713,7 @@
 			<p>
 				We find this by <b>minimising a loss function</b>, a function that describes the error of our predictions w.r.t. the training data. 
 			</p>
-			<p>
+			<p class="blue">
 				The most common loss function used is <b>mean squared error</b> (MSE):
 				\[
 				\mathcal{L}(h) = \frac{1}{n} \sum_{i=1}^n (h(x_i | w) - y_i) ^ 2
@@ -735,7 +756,7 @@
 			<p>
 				A <b>bias</b> is an extra constant added on, that shifts the result up or down. For 1D, we change the equation to \(\hat{y}_i = wx_i + w_0\) where \(w_0\) is the bias. 
 				<!-- \(\newcommand{\xtrain}{\vec{x}_i} \newcommand{\xtest}{\vec{\tilde{x}}_i \newcommand{\yhi}{\hat{y}_i} \) -->
-				\( \def\xtrain{{\vec{x}_i}}  \def\xtest{{\vec{\tilde{x}}_i}}  \def\ytrain{{y_i}} \def\ytest{{\tilde{y}_i}} \def\ypred{{\hat{y}_i}} \def\wtrans{{\vec{w}^\top}} \)
+				
 			</p>
 			<p>
 				We can add bias by <i>changing basis</i>: we make a "fake feature", with 1 for all the values:
@@ -887,7 +908,7 @@
 				Training a regression model may produce excessively large weights.Exessively large weights are very sensitive, thus are more likely to be overfit -> penalise large weights. 
 			</p>
 
-			<p>
+			<p class="blue">
 				<b>L2 Regularisation</b> is an extra bit we add to our MSE loss:
 				\[
 				\cal{L}(\vec{w}) = \frac{1}{2} \lVert \vec{Xw - y}\rVert^2 + \frac{\lambda}{2}\lVert \vec{w} \rVert^2 
@@ -900,6 +921,149 @@
 			<p>
 				Furthermore, the derivative \(\nabla \cal{L}(\vec{w}) = \vec{X^\top X w - X^\top y + } \lambda \vec{w}\) solves for the equation \((\vec{X^\top X + \lambda I}) \vec{ w = X^\top y}\), and the matrix that multiplies into \(\vec{w}\) is <i>always</i> invertible.
 			</p>
+		</div>
+
+		<div class="colourband">
+			<h2 id="robreg">Robust Regression</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Outliers and Loss</h3>
+
+			<p>
+				As mentioned, MSE is greatly affected by outliers, as large deviations are emphasised more. Instead, we can use absolute error (instead of squared error) to de-emphasise large deviations. 
+			</p>
+			<p>
+				Absolute (L1) loss is defined as 
+				\[
+				\cal{L}(\w) = \sum_{i=1}^n |\w\t \x_i - y_i|
+				\]
+			</p>
+			<p>
+				Minimising L1 though is much harder, as the absolute function is <i>non-differentiable</i> at \(x=0\), and the gradient is not smooth.
+			</p>
+			<p>
+				This poses problems for our minimisation equations, problems that L2 doesn't. Thus, we want a loss function that gets the best of both worlds.
+			</p>
+			<p class="blue">
+				The <b>Huber loss function</b> is defined
+				\[
+				\cal{L}(\w) = \sum_{i=1}^n h(\w\t \x_i - y_i) 
+				\]
+				Where
+				\[
+				h(r_i) = \begin{cases} \frac{1 }{2 }r_i^2 & |r_i| \leq \epsilon \\ \epsilon(|r_i| - \frac{1 }{2 }\epsilon) & \textrm{otherwise. } \end{cases}
+				\]
+				For a small number \(\epsilon\). 
+			</p>
+			<p>
+				Huber function is differentiable, becoming
+				\[
+				h'(r_i) = \begin{cases} r_i & |r_i| \leq \epsilon \\ \epsilon \cdot \textrm{sign}(r_i) & \textrm{otherwise} \end{cases}
+				\]
+				Where \(\textrm{sign}(x) = 1 \textrm{ if } x > 0 \textrm{ else } -1\).
+			</p>
+
+			<h3>Standardising Features</h3>
+
+			<p>
+				Standardising features involves rescaling features so that they're all proportional to each other. 
+			</p>
+			<p>
+				In some cases, we don't need to -- for basic models like Bayes and Decision Trees, we don't need to change. For least squares, though weights may be different, fundamentally the model is still the same. 
+			</p>
+			<p>
+				However, standardisation is important for KNN (as large numbers can skew distance unnecessarily) and for regularised least squares (as penalty must be proportional).
+			</p>
+			<p>
+				Data is standardised <b>feature-wise</b>; for each feature \(j\):
+			</p>
+			<ul>
+				<li>
+					Compute mean \(\mu_j = \frac{1}{n} \sum_{i=1}^n x_{ij}\)
+				</li>
+				<li>
+					Compute standard deviation \(\sigma_j = \sqrt{ \frac{1 }{n} \sum_{i=1}^n (x_{ij} - \mu_j)^2 }\)
+				</li>
+				<li>
+					Replace every \(x_{ij}\) by \(\frac{x_{ij} - \mu_j}{\sigma_j}\)
+				</li>
+			</ul>
+			<p class="side">
+				<b>HOWEVER</b>, when standardising test data, <b>do not use test data mean/stdev</b>s, because technically, we don't know test data, and our assumption is that the training set is a good representation of any new data.
+			</p>
+			<p>
+				Labels/targets/ground truths can also be standardised, in the same way. 
+			</p>
+
+			<h3>Feature Selection and Regularisation</h3>
+
+			<p>
+				Sometimes, we have a lot of features, but only a few of them matter. 
+			</p>
+			<p>
+				We'd like the model to learn which features of \(\X\) are important. 
+			</p>
+			<p>
+				One way we can do this is to look at the trained weights \(\w\), and take all features \(j : |w_j| >\) a predifined threshold. 
+			</p>
+			<p>
+				Unfortunately, this has some downsides:
+			</p>
+			<ul>
+				<li>
+					It struggles with coliniearily and may give wrong results then, as if \(x_1, x_2\) are coliniear, then \(w_1 x_1 + w_2 x_2 \sim (w_1 + w_2) x_1 + 0x_2\).
+				</li>
+				<li>
+					May pick up irrelevant features which happen to cancel: given irrelevant \(x_a, x_b\), then \(0x_a + 0x_b \sim -1000x_a + 1000x_b\).
+				</li>
+			</ul>
+
+			<p>
+				Alternatively we can use a tactic of <b>search and score</b>, by defining (or using a function) \(f\) that computes a "score" of how good this set of features is -- such as the loss function.
+			</p>
+			<p>
+				Of course, this risks overfitting, especially since we're iterating over all \(2^d\) subsets, the optimisation bias can be high. 
+			</p>
+
+			<p>
+				Instead, we modify the loss function to add a <b>complexity penalty</b>, such as
+				\[
+				\cal{L}(s) = \frac{1 }{2 }\sum_{i=1}^n (\w_s \cdot \x_{is} - y_i)^2 + \textrm{size}(s)
+				\]
+				for a <i>subset</i> of features \(s\). The size function counts the number of nonzero weights -- the <b>L<sub>0</sub> norm</b>;
+			</p>
+
+			<p>
+				Our Loss score becomes 
+				\[
+				\cal{L}(\w) = \frac{1}{2} \lVert \X\w - \y \rVert^2 + \lambda \lVert \w \rVert_0
+				\]
+				With a parameter lambda.
+			</p>
+
+			<p>
+				The problem is, L0 is not convex ... nor differentiable, whereas L2 was very nice indeed, so if we can find a best of both worlds:
+			</p>
+
+			<p class="blue">
+				Use the convex and (mostly) differentiable <b>L<sub>1</sub> loss</b>:
+
+				\[
+				\cal{L}(\w) = \frac{1}{2} \lVert \X\w - \y \rVert^2 + \lambda \lVert \w \rVert_1
+				\]
+
+				Also called <b>LASSO</b> regularisation.
+			</p>
+
+			<p>
+				A <b>sparse</b> matrix has many zeros: this is a good sign of feature selection.
+			</p>
+
+			<p>
+				Both L0 and L1 (LASSO) prefer sparsity, whilst L2 (Ridge) doesn't.
+			</p>
+			
 		</div>
 
 		<footer>
