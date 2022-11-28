@@ -56,6 +56,7 @@
 				<li><a href="#knn">K-nearest Neighbours</a></li>
 				<li><a href="#linreg">Linear Regression</a></li>
 				<li><a href="#robreg">Robust Regression</a></li>
+				<li><a href="#clustering">Clustering</a></li>
 			</ol>
 			\( 
 				\renewcommand{\vec}{\mathbf}
@@ -1064,6 +1065,136 @@
 				Both L0 and L1 (LASSO) prefer sparsity, whilst L2 (Ridge) doesn't.
 			</p>
 			
+		</div>
+
+		<div class="colourband">
+			<h2 id="clustering">Clustering</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Introduction</h3>
+
+			<p>
+				<b>Clustering</b> is a type of <b>unsupervised learning</b>.
+			</p>
+			<p>
+				In unsupervised learning, we are given no labels, and have to infer the underlying "latent" structure. 
+			</p>
+			<p>
+				This is especially useful for outlier detection, grouping, <i>latent factor models</i> (later), and visualisation, among others.
+			</p>
+
+			<p>
+				For clustering, we are trying to group data into clusters based on their "similarity", and discover the distribution of data. 
+			</p>
+			<p>
+				Often this data is <i>multimodal</i>, where there are more than one "peak" in its distribution (vs, say, a normal distribution, which has one mode).
+			</p>
+
+			<p>
+				Some assumptions:
+			</p>
+			<ul>
+				<li>The features \(\X = \{\x_1 \cdots \x_n\}\) are in <b>euclidean space</b>.</li>
+				<li>\(\X\) can be grouped into \(K\) groups or clusters (this <i>is</i> a hyperparameter);</li>
+			</ul>
+
+			<h3>K-Means Clustering</h3>
+
+			<p>
+				Assuming that there are K clusters, and that each sample is close to a cluster centre. <span class="grey">In the off chance you're like me and misread K-means, "means" refers to "averages" like of data, and not "methods".</span>
+			</p>
+
+			<p>
+				We use a <b>heuristic-based</b> improvement: starting with initial random means, and iterate by:
+			</p>
+			<ul>
+				<li><b>Fix means, optimise points.</b> Assigning each \(\x_i\) to its closest mean.</li>
+				<li><b>Fix points, optimise means.</b> Recompute means</li>
+				<li>Refine until convergence (the means do not move or do not move enough)</li>
+			</ul>
+			<p>
+				And our metric of goodness (i.e. loss function) will be defined as:
+			</p>
+			<p class="blue">
+				For cluster means \(\vec{m} \) and assignments \(\vec{r} \), the <b>mean squared distance</b>:
+
+				\[
+				\cal{L}(\{\vec{m}\}, \{\vec{r}\}) = \sum_{i=1}^n \sum_{j=1}^K r_j^i \lVert \vec{m}_j - \x_i \rVert^2 \pod{r^i_j \in \{0,1\}}
+				\]
+
+				Where \(r^i_j\) of data \(i\) to cluster \(j\) is 1 if that data is assigned to that cluster, or 0 otherwise. 
+			</p>
+			<p>
+				Note: thus each \(\x_i\) will have a \(\vec{r}\) being a <a href="https://en.wikipedia.org/wiki/One-hot"><i>one-hot-encoding</i></a> of its cluster.
+			</p>
+
+			<p>
+				The way a sample is assigned to a mean \(k\) is via euclidean distance \(k_i = \argmin\limits_k \lVert \vec{m}_k - \vec{x}_i \rVert^2\)
+			</p>
+			<p>
+				And means are adjusted via \(\vec{m}_k = \dfrac{\sum_i r^i_k \x_i}{\sum_i r^i_k }\)  -- we need to include \(r^i_k\) to ensure we don't include features not assigned to that mean currently.
+			</p>
+
+			<p>
+				While K-means' loss heuristic is non-convex (i.e. not guaranteed global minimum), we <i>are</i> guaranteed a <i>local</i> minimum, we won't diverge ever. 
+			</p>
+
+			<p>
+				Some issues though:
+			</p>
+			<ul>
+				<li>
+					\(K\) is a hyperparameter - if you don't know how many there should be, welp, sucks for you.
+				</li>
+				<li>
+					Each example can only be assinged to one cluster (fixable)
+				</li>
+				<li>
+					May converge to sub-optimal groups (can use methods such as random restart, non-local split and merge to fix)
+				</li>
+			</ul>
+
+			<h3>Soft K-means</h3>
+
+			<p>
+				Soft K-Means makes <b>partial assigments</b> -- a sample can have partial membership of two clusters. For example, if an \(\x\) is a point that is very close to mean A and further but still close to mean B, it could be given the assignment \(\vec{r} = \{A = 0.84, B = 0.16\}\), like a <i>probability</i>.
+			</p>
+			<p>
+				We also call this <i>fuzzy k-means</i>.
+			</p>
+			<p>
+				We must set that all assignments must sum to one, using an important function called <b>softMax</b>:
+
+				\[
+				r^i_k = \frac{\exp(-\beta \lVert \vec{m}_k -\x_i \rVert^2)}{
+					\sum\limits_{j=1}^K \exp(-\beta \lVert \vec{m}_j -\x_i \rVert^2))
+				}
+				\]
+
+				Where \(\exp(x)\) is the exponential function: \(e^x\). <br>
+				\(\beta\) is the <b>stiffness parameter</b>, controlling how "soft" assignments are -- emphasising one main class or allowing a more even spread.
+			</p>
+			<p>
+				If you plot the softMax curve, the stiffness controls how steep the center bit is. 
+			</p>
+			<p>
+				For Soft K-means, we alter the loss function slightly. We say that now \(r^i_j \in [0,1]\), that we can get a range of values. Then, for one mean the loss is \(\newcommand{\m}{\vec{m}} \m_l = \argmin_\m \sum\limits_{i=1}^n r^i_l \lVert \m - \x_i \rVert^2\), and overall
+				\[
+				\cal{L}(\m) = \sum_{l=1}^n \vec{r}^i \lVert \m - \x_i \rVert^2
+				\]
+			</p>
+			<p>
+				This loss function is actually quadratic - there is a unique solution. 
+			</p>
+			<p>
+				Said unique solution is given by solving the first derivative \(\nabla \cal{L} (\m) = \sum_{i=1}^n \vec{r}^i(2\m - 2\x_i).\)
+			</p>
+
+			<p>
+				What we can do with K-means is actually do a primitive form of data reduction - approximating the data onto a lower space. In this case, by replacing all data points with their closest means, we do <b>vector quantisation</b>, which has this effect.
+			</p>
 		</div>
 
 		<footer>
