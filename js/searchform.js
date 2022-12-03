@@ -39,6 +39,11 @@ function createDiv(block) {
     var date = block["date"];
     var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
     div.innerHTML += description;
+    var tags = "#" + block["tags"].join(" #")
+    var tagsp = document.createElement("p")
+    tagsp.setAttribute("style", "color: var(--band-col)")
+    tagsp.innerText = tags
+    div.appendChild(tagsp)
     div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink); margin-top: 5px; padding-bottom: 5px;")
 
     return div;

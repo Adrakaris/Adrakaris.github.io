@@ -9,10 +9,11 @@ var iText = document.querySelector("#se");  // gets the text box
 var iButton = document.querySelector("#sb");  // gets the button
 
 var allButtom = document.querySelector("#tall");
-var csButton = document.querySelector("#tcs");
-var origamiButton = document.querySelector("#torigami");
-var miscButton = document.querySelector("#tmisc");
+// var csButton = document.querySelector("#tcs");
+// var origamiButton = document.querySelector("#torigami");
+// var miscButton = document.querySelector("#tmisc");
 var loreButton = document.querySelector("#tlore");
+var histButton = document.querySelector("#thistory");
 
 // define functions
 function createDiv(block) {
@@ -39,6 +40,11 @@ function createDiv(block) {
     var date = block["date"];
     var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
     div.innerHTML += description;
+    var tags = "#" + block["tags"].join(" #")
+    var tagsp = document.createElement("p")
+    tagsp.setAttribute("style", "color: var(--green)")
+    tagsp.innerText = tags
+    div.appendChild(tagsp)
     div.setAttribute("style", "overflow: hidden; border-bottom: 1px solid var(--pink); margin-top: 5px; padding-bottom: 5px;")
 
     // set a styling on a
@@ -138,18 +144,21 @@ iText.addEventListener("keyup", function(event) {
 
 allButtom.addEventListener("click", function() {populatebox(mergedPages)})
 
-csButton.addEventListener("click", function() {
-    populatebox(getResults("cs"));
-})
+// csButton.addEventListener("click", function() {
+//     populatebox(getResults("cs"));
+// })
 
-origamiButton.addEventListener("click", function() {
-    populatebox(getResults("origami"));
-})
+// origamiButton.addEventListener("click", function() {
+//     populatebox(getResults("origami"));
+// })
 
-miscButton.addEventListener("click", function() {
-    populatebox(getResults("misc"));
-})
+// miscButton.addEventListener("click", function() {
+//     populatebox(getResults("misc"));
+// })
 
 loreButton.addEventListener("click", function() {
-    populatebox(getResults("lore"));
+    populatebox(getResults("legends"));
+})
+histButton.addEventListener("click", function() {
+    populatebox(getResults("records"));
 })
