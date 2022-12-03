@@ -13,6 +13,12 @@
     src: url("./font/jbmono/JetBrainsMono-Regular.woff2") format("woff2");
 }
 
+@font-face {
+    font-family: Rekharhakr;
+    src: url("./font/rekharhakr-minuscule.woff") format("woff");
+    src: url("./font/rekharhakr-minuscule.woff") format("woff2");
+}
+
 :root {
     --bg-col: #ffffff;
     --bg-active: #f1f2e9;
@@ -109,7 +115,8 @@ div.cornell > div:nth-child(odd) *{
 
 .homefan {
     min-height: 720px;
-    background-image: url("images/dragon-flute.png");
+    /* background-image: url("images/dragon-flute.png"); */
+    background-image: url("images/ouyangzhan.jpg");
 }
 
 .parsmaller {
@@ -680,6 +687,11 @@ ol.side, ul.side {
 .nopad {
     padding: 0px 0px;
     border-spacing: 0px 0px;
+}
+
+.draconic, h1.draconic, p.draconic, div.draconic, div.draconic > p {
+    font-family: Rekharhakr, serif;
+    font-style: normal;
 }
 
 /*-----------------------------------------------------------------------*/

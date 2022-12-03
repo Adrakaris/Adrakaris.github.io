@@ -26,4 +26,12 @@ var fanPages = [
         "picture": "",
         "tags": ["records"]
     },
+    {
+        "date": new Date(Date.UTC(2020, 5, 5)),
+        "link": "blog-cael/geni/",
+        "title": "Genesis",
+        "desc": "\"Gení\", a creation epic in Ancient Draconic, originating from the Land of Sun and Twisted Flax, long, long ago. It has been told as the creation of the world and of the draconic race</p>",
+        "picture": "",
+        "tags": ["legends"]
+    },
 ]
