@@ -11,7 +11,7 @@ var iButton = document.querySelector("#sb");  // gets the button
 var allButtom = document.querySelector("#tall");
 // var csButton = document.querySelector("#tcs");
 // var origamiButton = document.querySelector("#torigami");
-// var miscButton = document.querySelector("#tmisc");
+var miscButton = document.querySelector("#tmisc");
 var loreButton = document.querySelector("#tlore");
 var histButton = document.querySelector("#thistory");
 
@@ -152,9 +152,9 @@ allButtom.addEventListener("click", function() {populatebox(mergedPages)})
 //     populatebox(getResults("origami"));
 // })
 
-// miscButton.addEventListener("click", function() {
-//     populatebox(getResults("misc"));
-// })
+miscButton.addEventListener("click", function() {
+    populatebox(getResults("misc"));
+})
 
 loreButton.addEventListener("click", function() {
     populatebox(getResults("legends"));
