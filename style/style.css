@@ -15,9 +15,11 @@
 
 @font-face {
     font-family: Rekharhakr;
-    src: url("./font/rekharhakr-minuscule.woff") format("woff");
-    src: url("./font/rekharhakr-minuscule.woff") format("woff2");
+    src: url("./font/rekharhakr_minuscule.woff") format("woff");
+    /* src: url("./font/rekharhakr-minuscule.woff") format("woff2"); */
 }
+
+/* #region root */
 
 :root {
     --bg-col: #ffffff;
@@ -60,6 +62,10 @@ html.boxed .body {
     margin-top: 90px;
     z-index: 2;
 }
+
+/* #endregion */
+
+/* #region divs */
 
 .cbox, #cfixed {
     display: block;
@@ -116,7 +122,12 @@ div.cornell > div:nth-child(odd) *{
 .homefan {
     min-height: 720px;
     /* background-image: url("images/dragon-flute.png"); */
-    background-image: url("images/ouyangzhan.jpg");
+    background-image: var(--img, url("images/ouyangzhan.jpg"));
+}
+
+.smallfan {
+    max-height: 480px;
+    background-image: var(--img, url("images/ouyangzhan.jpg"));
 }
 
 .parsmaller {
@@ -131,24 +142,6 @@ div.cornell > div:nth-child(odd) *{
     position: relative;
     min-height: 100vh;
 }
-
-/*.shown {
-    position: relative;
-    min-height: 100vh;
-    display: contents;
-    overflow-x: auto;
-}*/
-
-/*.colourband:before {
-    border-left: 9999px solid var(--band-col);
-    box-shadow: 9999px 0 0 var(--band-col);
-    top: 0;
-    bottom: 0;
-    left: -9999px;
-    right: 0;
-    position: absolute;
-    content: "";  I hate css.
-}*/
 
 .colourband {
     background-color: var(--band-col);
@@ -198,6 +191,50 @@ div.cornell > div:nth-child(odd) *{
     max-width: 100px;
 }
 
+.codediv {
+    color: var(--blue);
+    font-family: JBMono;
+    border-width: thin;
+    border-style: solid;
+    border-color: var(--blue);
+    border-spacing: 10px 10px;
+    padding: 10px;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.boxdiv {
+    border-width: thin;
+    border-style: solid;
+    border-color: var(--pink);
+    border-spacing: 10px 10px;
+    padding: 10px;
+}
+
+.leftcol {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    column-gap: 40px;
+    padding-bottom: 40px;
+}
+.rightcol {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    column-gap: 40px;
+    padding-bottom: 40px;
+}
+
+.fitdiv > img {
+    object-fit: cover;
+    object-position: var(--off, 0) 0;
+    height: 100%;
+    width: 100%;
+}
+
+/* #endregion */
+
+/* #region button */
+
 .buttonwrapper {
     padding: 5px;
     background-color: var(--band-col);
@@ -227,25 +264,9 @@ div.cornell > div:nth-child(odd) *{
     margin-top: 20px;
 }
 
-.codediv {
-    color: var(--blue);
-    font-family: JBMono;
-    border-width: thin;
-    border-style: solid;
-    border-color: var(--blue);
-    border-spacing: 10px 10px;
-    padding: 10px;
-    white-space: pre;
-    tab-size: 4;
-}
+/* #endregion */
 
-.boxdiv {
-    border-width: thin;
-    border-style: solid;
-    border-color: var(--pink);
-    border-spacing: 10px 10px;
-    padding: 10px;
-}
+/* #region imgs and header bands */
 
 img {
     max-width: 100%;
@@ -304,7 +325,9 @@ footer.green {
     box-shadow: 0 50vh 0 50vh var(--green);
 }
 
+/* #endregion */
 
+/* #region as and buttons */
 
 a.nav {
     font-family: Urbanist;
@@ -430,6 +453,33 @@ button.nul {
     margin-left: 0px;
 }
 
+input[type=text].search {
+	background-color: var(--band-txt);
+	font-family: Manrope, sans-serif;
+	padding: 6px;
+ 	border: none;
+ 	margin-top: 8px;
+ 	/*margin-right: 16px;*/
+ 	font-size: 17px;	
+ 	width: 300px;
+}
+
+button.search {
+	background-color: var(--band-col);
+	padding: 6px;
+	margin-top: 8px;
+	margin-right: 16px;
+	font-size: 17px;
+	color: var(--band-txt);
+	font-family: Manrope, sans-serif;
+	border: none;
+	cursor: pointer;
+}
+
+/* #endregion */
+
+/* #region text headers */
+
 h1 {
     font-family: Urbanist;
     font-size: 36pt;
@@ -468,6 +518,10 @@ h3.c {
 .sc {
     font-variant: small-caps;
 }
+
+/* #endregion */
+
+/* #region p */
 
 p {
     font-family: "Manrope", sans-serif;
@@ -575,32 +629,9 @@ blockquote {
     font-style: italic;
 }
 
-.green {
-    background-color: var(--green);
-    color: var(--band-txt);
-}
+/* #endregion */
 
-.blue {
-    border-width: thin;
-    border-style: solid;
-    border-color: var(--blue);
-    border-spacing: 10px 10px;
-    /*padding: 10px;*/
-    padding-left: 10px;
-    margin-left: -10px;
-}
-
-.side {
-    border-left: 1px solid var(--pink);
-    border-spacing: 10px 0px;
-    padding-left: 10px;
-    margin-left: -10px;
-}
-
-.overlay {
-    background-color: var(--overlay);
-    box-shadow: 0 0 5px 5px var(--overlay);
-}
+/* #region figs */
 
 figcaption {
     text-align: center;
@@ -617,31 +648,16 @@ figure > img {
     max-width: min-content;
 }
 
-input[type=text].search {
-	background-color: var(--band-txt);
-	font-family: Manrope, sans-serif;
-	padding: 6px;
- 	border: none;
- 	margin-top: 8px;
- 	/*margin-right: 16px;*/
- 	font-size: 17px;	
- 	width: 300px;
-}
+/* #endregion */
 
-button.search {
-	background-color: var(--band-col);
-	padding: 6px;
-	margin-top: 8px;
-	margin-right: 16px;
-	font-size: 17px;
-	color: var(--band-txt);
-	font-family: Manrope, sans-serif;
-	border: none;
-	cursor: pointer;
-}
+/* #region lists tables */
 
 hr {
     color: var(--pink);
+}
+
+hr.green {
+    color: var(--green);
 }
 
 li {
@@ -684,6 +700,38 @@ ol.side, ul.side {
     margin-left: -24px;
 }
 
+/* #endregion */
+
+
+/* #region overrides */
+
+.green {
+    background-color: var(--green);
+    color: var(--band-txt);
+}
+
+.blue {
+    border-width: thin;
+    border-style: solid;
+    border-color: var(--blue);
+    border-spacing: 10px 10px;
+    /*padding: 10px;*/
+    padding-left: 10px;
+    margin-left: -10px;
+}
+
+.side {
+    border-left: 1px solid var(--pink);
+    border-spacing: 10px 0px;
+    padding-left: 10px;
+    margin-left: -10px;
+}
+
+.overlay {
+    background-color: var(--overlay);
+    box-shadow: 0 0 5px 5px var(--overlay);
+}
+
 .nopad {
     padding: 0px 0px;
     border-spacing: 0px 0px;
@@ -693,6 +741,8 @@ ol.side, ul.side {
     font-family: Rekharhakr, serif;
     font-style: normal;
 }
+
+/* #endregion */
 
 /*-----------------------------------------------------------------------*/
 
