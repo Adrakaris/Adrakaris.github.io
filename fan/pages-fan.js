@@ -16,7 +16,7 @@ var fanPages = [
         "title": "Three Dragons Are An Army",
         "desc": "During the era of long conflict, the western mountain kingdom of Luzan decided to attack the State of Ma in Taichuan, seeking to take advantage of the lack of a united ruler, but their entire army was defeated by Ma's three sons. This extract tells that story, and of the idiom <i>Three Dragons are an Army</i>.</p>",
         "picture": "",
-        "tags": ["records"]
+        "tags": ["records", "legends"]
     },
     {
         "date": new Date(Date.UTC(2021, 6, 10)),
@@ -31,6 +31,14 @@ var fanPages = [
         "link": "blog-cael/geni/",
         "title": "Genesis",
         "desc": "\"Gení\", a creation epic in Ancient Draconic, originating from the Land of Sun and Twisted Flax, long, long ago. It has been told as the creation of the world and of the draconic race</p>",
+        "picture": "",
+        "tags": ["legends"]
+    },
+    {
+        "date": new Date(Date.UTC(2020, 1, 1)),
+        "link": "blog-cael/lianglong/",
+        "title": "The Tale of Two Brothers",
+        "desc": "\"Yelvrekharon Aiser\", a poem that talks about the Rain Gods. \"They say there lives a dragon god, atop the holy peak. None have seen him though, yet we believe and pray, for the rains are kind.\"</p>",
         "picture": "",
         "tags": ["legends"]
     },
