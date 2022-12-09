@@ -57,6 +57,9 @@
 				<li><a href="#linreg">Linear Regression</a></li>
 				<li><a href="#robreg">Robust Regression</a></li>
 				<li><a href="#clustering">Clustering</a></li>
+				<li><a href="#pca">Principle Component Analysis (PCA)</a></li>
+				<li><a href="#linclass">Linear Classification (+ Perceptron)</a></li>
+				<li><a href="#kernel">The Kernel Trick</a></li>
 			</ol>
 			\( 
 				\renewcommand{\vec}{\mathbf}
@@ -79,6 +82,17 @@
 				\def\W{{\vec{W}}}
 				\def\y{{\vec{y}}}
 				\def\t{{^\top}}
+				\def\z{{\vec{z}}}
+				\def\Z{{\vec{Z}}}
+
+				\def\lra{{\longrightarrow}}
+				\def\lla{{\longleftarrow}}
+				\newcommand{\fr}{\frac}
+				\newcommand{\vecu}{\underline}
+				\newcommand{\rm}{\textrm}
+				\newcommand{\bb}{\mathbb}
+				\newcommand{\nm}{\overline}
+
 			\)
 		</div>
 
@@ -1164,7 +1178,7 @@
 			<p>
 				We also call this <i>fuzzy k-means</i>.
 			</p>
-			<p>
+			<p class="blue">
 				We must set that all assignments must sum to one, using an important function called <b>softMax</b>:
 
 				\[
@@ -1195,6 +1209,192 @@
 			<p>
 				What we can do with K-means is actually do a primitive form of data reduction - approximating the data onto a lower space. In this case, by replacing all data points with their closest means, we do <b>vector quantisation</b>, which has this effect.
 			</p>
+
+			<p>
+				Thus overall, the soft k-means algorithm is as thus:
+			</p>
+
+			<ol>
+				<li>
+					Assing points via \(r_k^i = \textrm{softMax}_\beta (\lVert \m_k - \x_i \rVert^2 \)
+				</li>
+				<li>
+					Update points via \(\m_k = \dfrac{\sum_{i=1}^n r_k^i \x_i}{\sum_{i=1}^n r_k^i }\)
+				</li>
+			</ol>
+		</div>
+
+		<div class="colourband">
+			<h2 id="pca">Principle Component Analysis (PCA)</h2>
+		</div>
+
+		<div class="cbox">
+
+			<h3>Introduction</h3>
+			<p>
+				<b>Principal Component Analysis</b> is fundamentally about approximating a feature set in a lower-dimensional <b>"latent space"</b> or <b>subspace</b>. i.e. reduce the dimensions, to extract higher level features, or to store less data overall.
+			</p>
+			<p>
+				One can think about images: images are comprised of possibly hundreds or thousands of pixels, but we can extract larger regions, to act as "components" to reconstruct said image. 
+			</p>
+			<p>
+				<b>Latent Factor Models</b> (LFMs) are ML models that convert data to latent spaces.
+			</p>
+			<p>
+				We call the original dataset \(\X\), and can call the transformed "latent" set \(\Z\).
+			</p>
+
+			<p>
+				One method of this is <b>vector quantisation</b> - by doing k-means and then replacing each feature with its mean, we have replaced a sample sized \(1 \times d\) (d features) with \(1 \times k\) (k means). Now of course, if \(k > d\), this is hardly helpful.
+			</p>
+			<p>
+				Instead, we want to somehow learn the <i>basic components</i> that make up a sample \(x\), and weight them appropriately to reconstruct the original sample (as well as possible).
+			</p>
+
+			<h3>PCA</h3>
+
+			<p>
+				The PCA algorithm takes an \(\X\), and produces two vectors, \(\Z, \W\), which are in the following form:
+			</p>
+
+			<figure>
+				<img src="./assets/pca-matrix.png" alt="PCA matrix" style="max-width: 500px;">
+				<figcaption>
+					Such that \(\X = \Z\W\), note the dimensions, \((n\times d) = (n \times k) \times (k \times d)\)
+				</figcaption>
+			</figure>
+
+			<ul>
+				<li>
+					\(\W\) are our <b>principal components</b>, the components needed to reconstruct the features of \(\X\), ranging from the most fundamental component at the top (the first <b>row</b>), to the least important component at the bottom. We have \(k\) of these. 
+				</li>
+				<li>
+					\(\Z\) are the <b>weights</b> that reconstruct \(\W\) into \(\X\) - each \(\x_i = \W\t \z_i\). One single feature of one sample, \(x_{ij} \) involves multiplying row \(i\) of <b>Z</b> with column \(j\) of <b>W</b>.
+				</li>
+				<li>
+					\(k \leq d\). Note that if \(k \ll d\), we can save a lot of storage space. <span class="grey"><i>The proof is trivial and left as an excersise to the reader.</i></span>
+				</li>
+			</ul>
+			<p>
+				PCA is a <b>linear</b> reduction - it can't extract non-linear features on its own. It's essentially just doing a matrix factorisation.
+			</p>
+			<p>
+				PCA is also useful especially to visualise high-dimensional data, as we only live in 3D. 
+			</p>
+
+			<h4>The Theory</h4>
+
+			<p>
+				[1] To do PCA, we must first <b>center</b> data. Given an \(\X = \{\x_1, \x_2, \dots, \x_d\}\), compute the mean of its <b>features</b>
+				\[
+				\vecu{\mu} = \fr{1}{n} \sum_{i=1}^n \x_i
+				\]
+				and then take it away from \(\X\) row-wise; \(X - \vecu{\mu}\). <span class="grey">I'm using underline vector notation for mu, since LaTeX doesn't boldface greek fonts.</span>
+			</p>
+
+			<p>
+				[2] To solve PCA, we need to learn weights, and adjust based on <b>reconstruction error</b>. We can use MSE for this:
+				
+				\begin{align}
+				\cal{L}(\W, \Z) &= \sum_{i=1}^n \lVert \W\t \z_i - \x_i \rVert^2 \\
+				&= \lVert \Z\W - \X \rVert^2_F
+				\end{align}
+
+				for two matrices, \(\W, \X\). Note the subscript F is the <b>frobenius norm</b> -- L2 norm but over matrices. 
+			</p>
+
+			<p>
+				[3] The PCA objective function is non-convex -- it doesn't have a unique global minimum. This makes finding a solution hard.
+			</p>
+			<p>
+				We can enforce a few constraints on each row/component to help us reduce bias and redundancy: 
+				<ol>
+					<li>Normalisation: enforce \(\lVert \w_c \rVert = 1\)</li>
+					<li>Orthogonality: enforce \(w_c \cdot w_{c'} = 0 \forall c \neq c'\)</li>
+					<li>Sequentially fit components (fit \(w_0\) first, and \(w_d\) last)</li>
+				</ol>
+				These constraints are important for our PCA to be effective. Below we can see what this does to a 2D space.
+			</p>
+
+			<figure>
+				<img src="https://miro.medium.com/max/900/1*_G3fNG6wHJMm9ZpJ7Mw9dg.png" alt="" style="max-width: 600px;" title="">
+				<figcaption>
+					PCA effectively finds new <i>basis</i> vectors for a set of data. At \(d\) vectors, we can use this to perfectly reconstruct the data -- though of course this no longer is dimension reducing. <a href="https://medium.com/@gaurav_bio/creating-visualizations-to-better-understand-your-data-and-models-part-1-a51e7e5af9c0">[img]</a>
+				</figcaption>
+			</figure>
+
+			<p>
+				It is easiest to find the first, or "main" axis of the data, and then find subsequent ones. We can also see all the data has been centered -- this ensures our components are not skewed one way or another, and originate from 0.
+			</p>
+
+			<p>
+				[4] Finally, to actually solve this, we use <b>Single Value Decomposition</b> (SVD).
+			</p>
+
+			<h4>SVD</h4>
+
+			<div class="blue">
+				<p>
+					Given an \(\X \in \bb{R}^{n \times d}\), SVD decomposes \(\X\) into the following:
+					\[
+					\X = \vec{U} \vec{\Sigma} \vec{V}\t
+					\]
+				</p>
+				<ul>
+					<li>
+						\(\vec{\Sigma} \in \bb{R}^{n \times d} \) is a diagonal matrix of eigenvalues
+					</li>
+					<li>
+						\(\vec{U} \in \bb{R}^{n \times n}\) is an orthonormal matrix (orthogonal* and normal columns)
+					</li>
+					<li>
+						\(\vec{V}\t \in \bb{R}^{d \times d}\) is our orthogonal matrix of components.
+					</li>
+				</ul>
+				<p>
+					In linear PCA, \(\vec{V}\t = \W\). We can then take the top \(k\) rows.
+				</p>
+				<p>
+					*a matrix <b>A</b> is orthogonal if \(\vec{A}^{-1} = \vec{A}\t\).
+				</p>
+			</div>
+
+			<p>
+				The eigenvalues in \(\vec{\Sigma}\) are <i>related</i> to \(\nm{\X}\t \nm{\X} \) (where \(\nm{\X}\) is the normalised matrix X). The actual eigenvalues are \(\fr{\vec{\Sigma}.^2}{n-1}\) (\(.^2 \) is element wise squared), though I have not found this to be useful.
+			</p>
+			<p>
+				\(\vec{U}\) is simply not useful. And \(\vec{V}\t \equiv \W\) is <b>very</b> useful.
+			</p>
+
+			<div class="side">
+
+				<p>
+					To approximate on test data, we need our mean \(\vecu{\mu_j}\) from the <i>training data</i>, and our components \(\W\).
+				</p>
+
+				<p>
+					Given \(\tilde{\X}\), center it using \(\vecu{\mu_j}\), then compute the new \(\tilde{\Z}\):
+
+					\[
+					\tilde{\Z} = \tilde{\X}\W\t
+					\]
+
+					And we can use \(\Z\). We can work out the reconstruction error by doing \(\lVert \tilde{\Z} \W - \tilde{\X} \rVert_F^2\)
+				</p>
+			</div>
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="linclass">Linear Classification</h2>
+		</div>
+
+		<div class="cbox">
+
+		</div>
+
+		<div class="colourband">
+			<h2 id="kernel">Kernel Trick</h2>
 		</div>
 
 		<footer>
