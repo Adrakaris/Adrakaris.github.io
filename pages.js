@@ -20,7 +20,7 @@ var pages = [
         "date": new Date(Date.UTC(2022,11,10)),
         "link": "blog-cs/cs342",
         "title": "Notes on CS342",
-        "desc": "Notes on CS342: Machine Learning. Thought this one was needed tbh.</p>",
+        "desc": "Notes on CS342: Machine Learning. Thought this one was needed tbh.</p><p>WARM REMIND: This page is very large, please allow for a while for loading.</p>",
         "picture": "",
         "tags": ["cs"]
     },

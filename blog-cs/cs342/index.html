@@ -16,14 +16,14 @@
 			<div class="parallax parsmaller">
 				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
 					<div class="column tinycolumn">
-						<a href="./" class="nav">Home</a>
+						<a href="../../" class="nav">Home</a>
 					</div>
 					<div class="column tinycolumn">
-						<a href="./blog.html" class="nav">Blog</a>
+						<a href="../../blog.html" class="nav">Blog</a>
 					</div>
 					<div class="column tinycolumn">
 						
-						<a href="./about.html" class="nav">About</a>
+						<a href="../../about.html" class="nav">About</a>
 					</div>
 					<div></div>
 					<div class="column">
@@ -1319,7 +1319,7 @@
 			<figure>
 				<img src="https://miro.medium.com/max/900/1*_G3fNG6wHJMm9ZpJ7Mw9dg.png" alt="" style="max-width: 600px;" title="">
 				<figcaption>
-					PCA effectively finds new <i>basis</i> vectors for a set of data. At \(d\) vectors, we can use this to perfectly reconstruct the data -- though of course this no longer is dimension reducing. <a href="https://medium.com/@gaurav_bio/creating-visualizations-to-better-understand-your-data-and-models-part-1-a51e7e5af9c0">[img]</a>
+					PCA effectively finds new <i>basis</i> vectors for a set of data. At \(d\) vectors, we can use this to perfectly reconstruct the data -- though of course this no longer is dimension reducing. <a href="https://medium.com/@gaurav_bio/creating-visualizations-to-better-understand-your-data-and-models-part-1-a51e7e5af9c0">[src]</a>
 				</figcaption>
 			</figure>
 
@@ -1391,6 +1391,127 @@
 
 		<div class="cbox">
 
+			<h2>Contents</h2>
+
+			<ol>
+				<li><a href="#lin-logistic">Linear Classification</a></li>
+				<li><a href="#lin-percep">The Perceptron Algorithm</a></li>
+				<li><a href="#lin-svm">Support Vector Machines</a></li>
+			</ol>
+
+		</div>
+
+		<div class="cbox">
+			<h2 id="lin-logistic">Linear Classification</h2>
+
+			<h3>Binary Linear Classification</h3>
+
+			<p>
+				Linear Classification is the idea of using regression models to do classification.
+			</p>
+
+			<p>
+				To do binary classification, we need to convert the class to a numerical value that we can compare to -- for positive and negative values of \(y_i\), <b>replace the positive with +1, and the negative with -1</b>. 
+			</p>
+			<p>
+				From our regression value we then determine a class using the <code>sign</code> function -- <code>sign</code> returns +1 if \(y_i > 0\), -1 if \(y_i < 0\), and 0 if \(y_i = 0\). The 0-result is a decision boundary, much like in KNN. <span class="grey">We'll just pretend these don't exist for now.</span>
+			</p>
+
+			<figure>
+				<img src="./assets/1d-decision-boundary.png" alt="1d decision boundary for regression" style="max-width: 400px;">
+				<figcaption>
+					The decision boundary is where the regression model "intersects" with the x axis, having \(y_i = 0\).
+				</figcaption>
+			</figure>
+			<p>
+				There are many lines which produce the same decision boundary, and so it may be difficult to immediately solve for an answer.
+			</p>
+
+			<p>
+				Often, it is better to just draw the decision boundary, and not necessarily the line itself. This also means that we don't need a dimension for y. 
+			</p>
+
+			<figure>
+				<img src="https://scipython.com/static/media/uploads/blog/logistic_regression/decision-boundary.png" alt="Linear (Logistic) classification decision boundary" style="max-width: 360px;">
+				<figcaption>
+					Decision boundary of Linear Classification for 2D features. <a href="https://scipython.com/blog/plotting-the-decision-boundary-of-a-logistic-regression-model/">[src]</a>
+				</figcaption>
+			</figure>
+
+			<p>
+				This splits the data into two <i>half-spaces</i>, for the two classes. 
+			</p>
+			<p>
+				If we can split the data into two with that straight line, we say it is <b>linearly separable</b>. 
+			</p>
+
+			<h4>Losses</h4>
+
+			<p>
+				One simple error to use is the <b>0-1 Loss</b> -- count the number of wrong predictions.
+				\[
+				\cal{L}_{0-1}(\ypred, y_i) = \begin{cases} 0 &\rm{if } \ypred = y_i \\ 1 &\rm{if } \ypred \neq y_i \end{cases} \pod{\textrm{ or simply } [\ypred \neq y_i]}
+				\]
+				However, the 0-1 loss is a <a href="https://en.wikipedia.org/wiki/Heaviside_step_function">step function</a>, and has a gradient of 0 everywhere -- rather inconvenient when doing the calculus. 
+			</p>
+			<p>
+				Thus what we want instead is a <i>convex approximation</i> that has the same effect as 0-1 loss:
+			</p>
+			<p>
+				If \(\w \cdot \x_i > 0 \land y > 0\), this is a correct prediction. <br>
+				If \(\w \cdot \x_i &lt; 0 \land y &lt; 0 \equiv -\w \cdot \x_i > 0 \land y &lt; 0\), this is a correct prediction. <br>
+				(Mismatched less than greater thans are incorrect)
+			</p>
+			<p>
+				Thus doing some rearranging a correct prediction is always if \(y_i \w \cdot x_i > 0\). A wrong prediction should always be 0 to approximate 0-1. However, we are trying to <i>minimise</i> errors, so we reverse everything with a minus:
+				
+				
+			</p>
+			<p>
+				Thus, we can have a loss function of 
+				\[
+				\cal{L}(\w) = \sum_{i=1}^n \max(0, -y_i\w \cdot \x_i)
+				\]
+			</p>
+			<p>
+				However, with this loss there is the chance that \(\cal{L}(\w = \vec{0}) = 0\): i.e. absolutely no weights gets 0 loss. In this case, we are not learning, and the solution is <b>degenerate</b>
+			</p>
+			<p>
+				We change this by adding an offset, s.t. instead of \(y_i \w \cdot \x_i > 0\), do \(y_i \w \cdot \x_i \geq 1\). This is called <b>hinge loss</b>. Whilst this penalises a small section of valid weights, it solves our degeneracy problem.
+
+				\[
+				\cal{L}(\w) = \sum_{i=1}^n \max(0, 1-y_i\w \cdot \x_i)
+				\]
+			</p>
+			<p>
+				Hinge loss is still not smooth, however (it has a fold), and we prefer smooth graphs, so we will "smooth out" the max by using a <i>log-sum-exp</i> method: \(\max(0, y_i \w \cdot \x_i) \approx \log(e^0+ e^{y_i \w \cdot \x_i} \), giving us the most popular loss function: <b>logistic loss</b>. 
+			</p>
+
+			<p class="blue">
+				<b>Logistic Loss</b> is given as 
+				\[
+				\cal{L}(\w) = \sum_{i=1}^n \log(1+ e^{y_i \w \cdot \x_i})
+				\]
+				and linear classification using this loss has another name: <b>Logicstic Regression [Classifier]</b>.
+			</p>
+
+			<figure>
+				<img src="./assets/logistic-loss.png" alt="Loss function" style="max-width: 600px;">
+				<figcaption>
+					<span style="color: darkred;" >Red</span>: Original 0-1 approximation <br>
+					<span style="color: darkblue;" >Blue</span>: Hinge loss <br>
+					<span style="color: darkgreen;" >Green</span>: Logistic Loss
+				</figcaption>
+			</figure>
+		</div>
+
+		<div class="cbox">
+			<h2 id="lin-percep">The Perceptron Algorithm</h2>
+		</div>
+
+		<div class="cbox">
+			<h2 id="lin-svm">Support Vector Machines</h2>
+			
 		</div>
 
 		<div class="colourband">
