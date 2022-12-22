@@ -1605,7 +1605,63 @@ for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
 
 		<div class="cbox">
 			<h2 id="lin-svm">Support Vector Machines</h2>
+
+			<div style="display: flex; align-content: center; align-items: center;">
+
+				<figure>
+					<img src="https://static.javatpoint.com/tutorial/machine-learning/images/support-vector-machine-algorithm.png" alt="SVMs" style="max-width: 300px; width: 300px;">
+					<figcaption>
+						Support Vector Machines <a href="https://www.javatpoint.com/machine-learning-support-vector-machine-algorithm">[img]</a>
+					</figcaption>
+				</figure>
+				<figure>
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/SVM_margin.png/300px-SVM_margin.png" alt="SVM detail" style="max-width: 300px; width: 300px;">
+					<figcaption>
+						Support Vector Machine - optimisation diagram [wikipedia]
+					</figcaption>
+				</figure>
+			</div>
+
 			
+			
+			<p>
+				Decision boundary of linear classifier is perpendicular to the line itself. There may be multiple permissible boundaries. 
+			</p>
+			<p>
+				The "best" boundary is one that maximises the difference between nearest points (vectors) -- maximises the margin between them. 
+			</p>
+			<p>
+				The points (vectors) closest to the line, that define the margin, are thus the <b>support vectors</b>. 
+			</p>
+
+			<p>
+				<b><i>Optimising.</i></b> Set the weights such that \(\w \cdot \x_i = +1,\; \w\cdot\x_j = -1\), for the two support vectors \(\x_i, \x_j\) (anything beyond that is more negative, and more positive). 
+			</p>
+			<p>
+				Thus given the distance between the two support vectors is \(d\), we know \(\w \cdot \x_i = 1\) is the same as \(\w  \cdot(\x_j + d \fr{\w}{|\w|}) = 1\). Rearranging this we get 
+				\[d |\w| = 2 \iff d = \fr{2}{\w}\]
+			</p>
+			<p>
+				Thus maximise \(d = \fr{2}{\w}\), which is the same as minimising \(\fr{1}{2}|\w|\), or \(\fr{1}{2}|\w|^2\).
+			</p>
+			<div class="side">
+
+				<p>
+					<b>Minimise</b> \(\fr{1}{2}\lVert\w\rVert^2\), subject to
+				</p>
+				\[
+				\begin{matrix}
+					\w \cdot \x_i \geq 1 & \rm{for } y_i = 1 \\ 
+					\w \cdot \x_i \leq -1 & \rm{for } y_i = -1
+				\end{matrix}
+				\]
+			</div>
+			<p>
+				The violation is how much "off" they are: for \(y_i = 1, \w \cdot \x_i = -0.5\), the violation is 1.5.
+			</p>
+			<p>
+				This is just <b>hinge loss</b> - <b>SVMs are L2 regularised hinge loss</b>.
+			</p>
 		</div>
 
 		<div class="colourband">
@@ -1732,6 +1788,7 @@ for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
 			</p>
 		</div>
 		
+
 
 		<footer>
 			<div class="cbox">
