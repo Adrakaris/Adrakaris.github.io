@@ -60,6 +60,7 @@
 				<li><a href="#pca">Principle Component Analysis (PCA)</a></li>
 				<li><a href="#linclass">Linear Classification (+ Perceptron)</a></li>
 				<li><a href="#kernel">The Kernel Trick</a></li>
+				<li><a href="#mle">MLE and MAP estimation</a></li>
 			</ol>
 			\( 
 				\renewcommand{\vec}{\mathbf}
@@ -1844,6 +1845,128 @@ $$
 		</div>
 		
 		<div class="colourband">
+			<h2 id="mle">MLE and MAP estimation</h2>
+			<p class="subheading">Maximum likelihood / Maximum <i>a-posteriori</i> estimation</p>
+		</div>
+
+		<div class="cbox">
+
+			<p>
+				To clarify notation:
+			</p>
+			<ul>
+				<li>
+					\(\max(\cdot)\) and \(\min(\cdot)\) return the maximum and minimum <i>value</i> of a function, w.r.t a parameter.
+				</li><li>
+					\(\argmax(\cdot)\) returns the *parameter* that achieves the maximum (or minimum) value
+				</li>
+				<li>
+					In some case, argmin, argmax return sets:
+$$
+\begin{align*}
+\argmin_w((w-1)^2) &\equiv \{1\}\\
+\argmax_w(\cos w) &\equiv \{\dots, -2\pi, 0, 2\pi, \dots\}
+\end{align*}
+$$
+				</li>
+			</ul>
+
+			<h3>MLE</h3>
+			<p>
+				Assume a dataset D with parameter \(w\). Ex. flip a coin 3 times and get HHT, parameter \(w\) is the likelihood that the probability lands on heads. 
+			</p>
+
+			<p>
+				The <b>likelihood</b> of D is a <i>probability mass function</i> \(p(D|w)\): prob of observing D given parameter \(w\)
+			</p>
+			<ul>
+				<li>
+					Given \(D = \{H,T,T\}\) and \(w=0.5\), then \(p(D|w) = 0.5 \times 0.5 \times 0.5 = 0.125\)
+				</li>
+				<li>
+					Given \(w=0\) then \(p(D|w) = 0\).
+				</li>
+			</ul>
+			<p>
+				You can plot \(p(D=\{\cdots\}|w)\) w.r.t. D and \(w\). If this is continous, you have a probability distribution. Since it's w.r.t D, the area under the dist does not sum to 1.
+			</p>
+
+			<p class="blue">
+				We get the <b>maximum likelihood estimation</b>:
+\[
+MLE  = \hat{w} \in \argmax_{w}(p(D|w))
+\]
+			</p>
+
+			<p>
+				To compute MLE, we can use argmin, and minimise the negative-log-likelihood:
+\[
+\argmax_\vec{w} (p(D|\vec{w})) \equiv \argmin_\vec{w}(-\log(p(D|\vec{w})))
+\]
+We want to switch it to minimise so we can integrate it as a normal log function, also log removes multiplications which makes things more efficient:
+\[
+\log(\alpha\beta) = \log\alpha + \log\beta
+\]
+			</p>
+
+			<p>
+				If our dataset D has \(n\) examples:
+\[
+p(D|\vec{w}) = \prod_{i=1}^n p(\vec{x}_i | \vec{w})
+\]
+Then MLE would be
+\[
+\vec{\hat{w}} \in \argmax_\vec{w} (p(D|\vec{w})) \equiv \argmin_\vec{w}(\sum\limits_{i=1}^n p(\vec{x_i}|\vec{w}))
+\]
+			</p>
+
+			<p>
+				<b><i>Least Squares is Gaussian MLE.</b></i> Recall least squares: minimise errors squared. If we grab the errors \(\epsilon_i\) and plot a histogram of error occurences, it forms a gaussian (normal) dist.
+			</p>
+
+			<p>
+				More generally, have \(y_i = \vec{w}\cdot \vec{x_i} + \epsilon_i\) where \(\epsilon_i\) follows a normal dist,
+\[
+p(\epsilon_i) = \frac{1}{\sqrt{2\pi}}\exp(-\frac{\epsilon_i^2}{2})
+\]
+we have a <b>gaussian likelihood</b> for \(y_i\): 
+\[
+p(y_i|\vec{x_i},\vec{w}) =  \frac{1}{\sqrt{2\pi}}\exp\left(-\frac{(\vec{w}\cdot\vec{x_i}-y_i)^2}{2}\right)\longrightarrow G(\vec{w, \vec{x_i}})
+\]
+Then we just find \(\argmin_\vec{w}(-\sum\limits_{i=1}^n \log(G(\vec{x_i,w}))\).
+			</p>
+
+			<p>
+				After simplifying, the inner function of the argmin leads to \(-\sum\limits \left[\log\frac{1}{\sqrt{2\pi}} - \frac{1}{2}(\vec{w} \cdot \vec{x_i} - y_i)^2 \right]\) (\(\log\exp\) cancels.)
+			</p>
+
+			<p>
+				Thus finally, we get a \(k + \frac{1}{2}\sum\limits_{i=1}^n (\vec{w}\cdot \vec{x_i}-y_i)^2\) for some constant \(k\), and to minimise this, is just to minimise least squares.
+			</p>
+
+			<button class="collapsible">Example... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</b></i> MLE for a normal dist. Assume that samples \(\vec{X} = \{\vec{x_i}\dots \vec{x_n}\}\) and their conditional probability is normal dist:
+\[
+p(\vec{X}|\mu, \sigma) = \left(\frac{1}{\sigma \sqrt{2\pi}}\right)^n \exp\left( -\frac{1}{2\sigma^2}  \sum\limits_{i=1}^n(\vec{x_i} - \mu^2)  \right)
+\]
+We want to find the MLE
+\[
+\hat{\mu}, \hat{\sigma} \in \argmin(-\log(p))
+\]
+Which is a quadratic function. To find the minima, we can compute partial derivatives w.r.t \(\mu, \sigma\).
+				</p>
+				<p>
+					Solving for \(\mu,\sigma\), we can get
+\[
+\begin{align*}
+\hat{\mu} &= \frac{1}{n}\sum\limits_{i=1}^n \vec{x_i} \\
+\hat{\sigma^2} &= \frac{1}{n}\sum\limits_{i=1}^n (\vec{\hat{x}_i} - \hat{\mu})^2
+\end{align*}
+\]
+				</p>
+			</div>
 
 		</div>
 
