@@ -92,6 +92,7 @@
 				\newcommand{\rm}{\textrm}
 				\newcommand{\bb}{\mathbb}
 				\newcommand{\nm}{\overline}
+				\newcommand{\tl}{\tilde}
 
 			\)
 		</div>
@@ -1610,6 +1611,127 @@ for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
 		<div class="colourband">
 			<h2 id="kernel">Kernel Trick</h2>
 		</div>
+
+		<div class="cbox">
+			<p>
+				Sometimes, your data is not linearly separable. But it is separable if you re-basis it, such as polynomial regression:
+			</p>
+			<ul>
+				<li>
+					By converting features from \(\X = \begin{bmatrix}
+					\x_1& \x_2
+					\end{bmatrix}\) to \(\Z = \begin{bmatrix}
+					1 & \x_1 & \x_2 & (\x_1)^2 & (\x_2)^2 & \x_1 \x_2 
+				\end{bmatrix}\)
+					we are separating with polynomials.
+				</li>
+				<li>
+					But note that we go from 2d to 6d, if we want to correctly do it, and this becomes a problem with high dimensions.
+				</li>
+			</ul>
+			<p>
+				We can merge L2 regularisation into our prediction formula, and get an equation 
+				\[
+				\vec{v} = \Z\t (\Z \Z\t + \lambda \vec{I})^{-1} \y
+				\]
+				for a new set of weights \(\vec{v}\) based on our new basis. 
+			</p>
+
+			<button class="collapsible">Derivation... </button>
+			<div class="ccontent">
+				<ul>
+					<li>
+						L2 Reg: \[\cal{L}(\vec{v}) = \fr{1}{2} \lVert \Z\vec{v} - \y \rVert^2 + \fr{\lambda}{2} \lVert \vec{v} \rVert\]
+					</li>
+					<li>
+						\[
+						\nabla \cal{L}(\vec{v}) = \Z\t\Z \vec{v} - \Z\t \y + \lambda\vec{v}
+						\]
+					</li>
+					<li>
+						\[
+						\implies \vec{v} = (\Z\t \Z + \lambda \vec{I})^{-1} (\Z\t \y)
+						\]
+						where \(Z_{(k \times k)}\) is always invertible
+					</li>
+					<li>
+						\[
+						\implies \vec{v} = \left[ \Z\t (\Z \Z\t + \lambda \vec{I})^{-1} \right]_{(n \times n)} \y
+						\]
+					</li>
+				</ul>
+			</div>
+
+			<p>
+				Now for test data \(\tl{\X}\) predict \(\hat{\y}\) by computing \(\tl{\Z}\):
+
+				\begin{align}
+					\hat{\y} &= \tl{\Z} \vec{v} \\
+					&= \tl{\Z} \Z\t (\Z \Z\t + \lambda \vec{I})^{-1} \y
+				\end{align}
+			</p>
+			<p>
+				This is however computationaly expensive, but we have the blocks \(\tl{\Z} \Z\t,\; \Z\Z\t\), and so let us call them \(\tl{\vec{K}}, \vec{K}\).
+			</p>
+
+			<p>
+				The \(\vec{K}\) is now the <b>kernel matrix</b>, and is an \(n \times n\) matrix <i>computed from</i> \(\Z\). Each cell \(k_{ij}\) is just \(\z_i \cdot \z_j\).
+			</p>
+			<p class="blue">
+				The <b>kernel trick</b> is to simply not: don't calculate \(\Z\),  calculate \(\vec{K}\) directly
+			</p>
+
+			<button class="collapsible">Example for quadratic regression... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Example.</i></b> Let \(\x_i = (a, b), \; \x_j = (c, d)\). 
+				</p>
+				<p>
+					To do quadratics, we can: get \(\z_i = (a^2, ab\sqrt{2}, b^2)\) and \(\z_j = (c^2, cd\sqrt{2}, d^2)\)
+				</p>
+				<p>
+					The dot product \(\z_i \cdot \z_j =\)
+					\begin{align}
+						&= a^2 c^2 + (ab\sqrt{2} )(cd\sqrt{2}) + b^2 d^2 \\
+						&= (ac + bd)^2 \\
+						&= (\x_i \cdot \x_j) ^2
+					\end{align}
+				</p>
+				<p>
+					i.e. there's no point to \(\z\), just have a <b>kernel function</b> \(\kappa(\x_i, \x_j) = (\x_i \cdot x_j)^2\) and skip the \(\z\).
+				</p>
+			</div>
+
+			<p class="blue">
+				We have a <b>kernel function</b> \(\kappa(\x_i, \x_j)\) that computes cell \(k_{ij}\) of the kernel, skipping the middleman. 
+			</p>
+			<p>
+				They're usually given to us. The kernel function must obey Mercer's Theorem. 
+			</p>
+			
+			<button class="collapsible">Mercer's Theorem... </button>
+			<div class="ccontent">
+				<p>
+					<b><i>Theorem.</i></b> Rather than first mapping from X to Z with a function \(\phi : \X \lra \Z\), we instead compute a <i>modified inner product</i> \(\kappa(\cdot, \cdot)\), which is a function that fits a bunch of formal stuff, but most importantly is <b>symmetric</b>: \(\kappa(a, b) = \kappa(b,a)\)
+				</p>
+			</div>
+
+			<p>
+				Now, the process becomes
+			</p>
+			<ul>
+				<li>
+					Form \(\vec{K}\) from \(\X\), compute \(\vec{u} = (\vec{K} + \lambda \vec{I}) ^{-1} \y\) (u are weights)
+				</li>
+				<li>
+					Form \(\tl{\vec{K}}\) from \(\tl{\X}\), and compute \(\hat{\y} = \tl{\vec{K}} \vec{u}\).
+				</li>
+			</ul>
+			<p>
+				Kernel trick can be extended to non vector data (like text, images), and can be used for multiple things, <b>including PCA</b>. 
+			</p>
+		</div>
+		
 
 		<footer>
 			<div class="cbox">
