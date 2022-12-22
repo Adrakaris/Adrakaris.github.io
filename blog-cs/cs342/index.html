@@ -1662,6 +1662,61 @@ for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
 			<p>
 				This is just <b>hinge loss</b> - <b>SVMs are L2 regularised hinge loss</b>.
 			</p>
+
+			<h3>Multiclass SVMs</h3>
+
+			<p>
+				We want to find a loss that encourages the largest \(\vec{w}_c \cdot \vec{x}_i\) to be the correct prediction, denoted \(\vec{w}_{y_i} \cdot \vec{x}_i\). Definable as 
+
+				$$
+				\vec{w}_{y_i} \cdot \vec{x}_i > \vec{w}_{c} \cdot \vec{x}_i \pod{\forall c \neq y_i}
+				$$
+
+				But penalising violations is "degenerate" (vecs equal to 0), thus can redefine as
+
+				\begin{align}
+				\vec{w}_{y_i} \cdot \vec{x}_i &\geq \vec{w}_{c} \cdot \vec{x}_i  +1\pod{\forall c \neq y_i}\\
+				\implies 0 &\geq 1 - \vec{w}_{y_i} \cdot \vec{x}_i +\vec{w}_{c}\cdot \vec{x}_i
+				\end{align}
+				
+				
+			</p>
+			<p>
+				Two ways to measure violation:
+			</p>
+			<ul>
+				<li>
+					The sum of all violations: $$
+\sum\limits_{c \neq y_i} \max(0, 1 - \vec{w}_{y_i} \cdot \vec{x}_i +\vec{w}_{c}\cdot \vec{x}_i) \longrightarrow SUM
+$$
+				</li>
+				<li>
+
+					The largest violation: $$
+\max_{c \neq y_i}(\max(0, 1 - \vec{w}_{y_i} \cdot \vec{x}_i +\vec{w}_{c}\cdot \vec{x}_i)) \longrightarrow MAX
+$$
+				</li>
+			</ul>
+			<p class="blue">
+				This gives us a loss function of 
+				$$
+
+\begin{matrix}\mathcal{L}(\vec{W}) = \sum\limits_{i=1}^n SUM + \frac{\lambda}{2}||\vec{W}||^2_F&
+\textrm{or}&
+\mathcal{L}(\vec{W}) = \sum\limits_{i=1}^n MAX\end{matrix} + \frac{\lambda}{2}||\vec{W}||_F^2
+$$
+			</p>
+			<p>
+				For \(k\) classes,
+			</p>
+			<ul>
+				<li>
+					SUM gives a penalty of \(k-1\) for \(\vec{w}_c = 0\)
+				</li>
+				<li>
+					MAX gives a penalty of 1 instead.
+				</li>
+			</ul>
 		</div>
 
 		<div class="colourband">
@@ -1788,7 +1843,9 @@ for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
 			</p>
 		</div>
 		
+		<div class="colourband">
 
+		</div>
 
 		<footer>
 			<div class="cbox">
