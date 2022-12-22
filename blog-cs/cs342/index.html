@@ -1503,10 +1503,103 @@
 					<span style="color: darkgreen;" >Green</span>: Logistic Loss
 				</figcaption>
 			</figure>
+
+			<h3>Multi-class Classification</h3>
+
+			<p>
+				We can extend logistic regression to multiple classes. 
+			</p>
+			<p>
+				<b><i>One vs All.</i></b> for \(k\) possible classes, train \(k\) binary classifiers, based on the two classes \(\in, \not\in\) (in that class or not)
+			</p>
+			<p>
+				Apply all classifiers to a feature, and return the highest scoring (argmax). 
+			</p>
+			<p>
+				We can even do this in one go - put all the weights of the different classifiers as rows in a matrix 
+				\[
+				\W_{(k \times d)} = \begin{bmatrix}
+					\lla \w_1 \lra \\ \vdots \\ \lla \w_k \lra
+				\end{bmatrix}
+				\]
+				Then just predict all classes \(\hat{\y}_i = \W\t \x_i\), or predict the entire set with \(\hat{\vec{Y}} = \X\W\t\).
+			</p>
+
+			<p>
+				<i>Problem:</i> this assumes all classes are independent (they are not).
+			</p>
+
+			<p>
+				<b><i>Softmax Loss.</i></b> We want to train the model dependently. It is sufficient to have our loss be that the correct class is predicted highest: 
+				\[
+				\w_c \cdot \x_i \geq \max_{\forall k} (\w_{k} \cdot \x_i)
+				\]
+				The value of \(\w \cdot \x_i\) for the <b>correct</b> class \(c\) is the largest value amongst all the possible \(k\) (including \(c\)).
+
+			</p>
+			<p>
+				Max is not smooth, and so we do the same log-sum-exp step like logistic:
+				\begin{align}
+				0 \geq &-\w_c \cdot \x_i + \log(\sum_{k=1}^K \exp(\w_k \cdot \x_i)) \\
+
+				\iff &-\log \left(\fr{ \exp{(y_{i}^{correct})} }{ \sum_{k=1}^K \exp(\w_
+				k \cdot \x_i )}\right)
+				\end{align}
+				Where \(y_{i}^{correct}\) is our \(\w_c \cdot \x_i\) from earlier. This is called <b>softmax loss</b>. From this, we assemble a full loss function, which is commonly called categorical cross-entropy:
+			</p>
+
+			<p class="grey">
+				Again, I'm using dot product notation, slides consistently use matrix notation \(\w_k\t \x_i\). Just bear this in mind.
+			</p>
+
+			<p class="blue">
+				<b><i>Categorical Cross-Entropy</i></b>, softmax loss with L2-reg, is thus given as
+				\[
+				\cal{L}(\W) = \sum_{i=1}^n \left( -\w_c \cdot \x_i + \log\left(\sum_{k=1}^K \exp(\w_k \cdot \x_i) \right) \right) + \fr{\lambda}{2} \lVert\W \rVert_F^2 	
+				\]
+			</p>
 		</div>
 
 		<div class="cbox">
 			<h2 id="lin-percep">The Perceptron Algorithm</h2>
+
+			<p>
+				The Perceptron is an alternate representation of a linear classifier, and also the basis to neural networks. 
+			</p>
+
+			<figure>
+				<img src="./assets/perceptron-diag.png" alt="Perceptron diagram" style="max-width: 600px;">
+			</figure>
+			<p>
+				It's graphical; individual features are represented as nodes, and links in the graph represent weights. Features &times; weights. In this way, it roughly mimics how (biological) neurons work (hence neural networks)
+			</p>
+
+			<p>
+				The idea is to find a vector of weights \(\w\) that linearly separate data, same as logistic regression. We iteratively improve the weights over <i>epochs</i> (iterations), with \(\w^0\) being initial wegihts, and \(\w^t\) being the weights at epoch \(t\).
+			</p>
+
+			<div class="codediv">\(\w \lla \vec{0}\) <span class="grey">// vector of zeros, doesn't have to be zeros</span>
+for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
+	for all \(\x_i\):
+		predict \(\ypred \lla \w \cdot \x_i\)
+		if \(\ypred \neq \ytest\):
+			\(\w \lla \w + \alpha\, y_i \x_i\) <span class="grey">[**]</span>
+			</div>
+
+			<p>
+				<code>[*]</code> Note: can replace with <code>while there are still errors</code>, but if the data is not linearly separable, this will loop.
+				<br>
+				<code>[**]</code> Note 2: original material doesn't include learning rate \(\alpha\) -- this means \(\alpha = 1\).
+			</p>
+			<p>
+				The use of \(y_i \x_i\) has the same idea as logistic loss - because y is -1 or +1. this encourages \(\w\) to tend towards the right prediction for those features \(x_i\) (and discourages tending to the wrong prediction), repeated enough, all the features should "smooth out" and get you a good \(\w\).
+			</p>
+			<p>
+				Adding a bias is the same as adding an extra input node with a constant value 1.
+			</p>
+			<p>
+				For multi-class perceptron, because there are multiple classes, you may have to do the encouraging (+) and discouraging (-) separately, because classes will be one-hot encoded.
+			</p>
 		</div>
 
 		<div class="cbox">
