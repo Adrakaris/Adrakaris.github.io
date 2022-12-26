@@ -231,6 +231,18 @@ div.cornell > div:nth-child(odd) *{
     width: 100%;
 }
 
+.banner {
+    width: 100%;
+    height: 160px;
+}
+
+.banner > img {
+    object-fit: cover;
+    object-position:  0 var(--off, 0);
+    height: 100%;
+    width: 100%;
+}
+
 /* #endregion */
 
 /* #region button */
@@ -281,6 +293,8 @@ img.except {
     background-color: #0000;
     filter: unset;
 }
+
+
 
 header {
     background-color: var(--band-col);
