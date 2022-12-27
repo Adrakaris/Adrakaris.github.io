@@ -756,7 +756,7 @@ ol.side, ul.side {
     border-spacing: 0px 0px;
 }
 
-.draconic, h1.draconic, p.draconic, div.draconic, div.draconic > p {
+.draconic, h1.draconic, p.draconic, div.draconic, div.draconic > p, e-drac {
     font-family: Rekharhakr, sans-serif;
     font-style: normal;
 }

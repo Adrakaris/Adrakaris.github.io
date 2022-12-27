@@ -32,32 +32,33 @@ var
 			type: BLOCK,
 		},
 		{
-			// <p>
-			// Any line surrounded by newlines that doesn't start with
-			// an HTML tag, asterisk or numeric value with dot following.
-			pattern: /\n(?!<\/?\w+>|\s?\*|\s?[0-9]+|>|\&gt;|-{5,})([^\n]+)/g,
-			replace: "<p>$1</p>",
-			type: BLOCK,
-		},
-		{
 			// <blockquote>
 			// A greater-than character preceding any characters.
-			pattern: /\n(?:&gt;|\>)\W*(.*)/g,
+			// \n (any number of tabs) > (words)
+			pattern: /\n(?:\s*(?:&gt;|\>))\W*(.*)/g,
 			replace: "<blockquote><p>$1</p></blockquote>",
 			type: BLOCK,
 		},
 		{
 			// <ul>
 			//
-			pattern: /\n\s?\*\s*(.*)/g,
+			pattern: /\n(?:\s?)*\*\s(.*)/g,
 			replace: "<ul>\n\t<li>$1</li>\n</ul>",
 			type: BLOCK,
 		},
 		{
 			// <ol>
 			//
-			pattern: /\n\s?[0-9]+\.\s*(.*)/g,
+			pattern: /\n(?:\s?)*[0-9]+\.\s*(.*)/g,
 			replace: "<ol>\n\t<li>$1</li>\n</ol>",
+			type: BLOCK,
+		},
+		{
+			// <p>
+			// Any line surrounded by newlines that doesn't start with
+			// an HTML tag, asterisk or numeric value with dot following.
+			pattern: /\n(?!<\/?\w+>|\s?\*|\s?[0-9]+|>|\&gt;|-{5,})([^\n]+)/g,
+			replace: "<p>$1</p>",
 			type: BLOCK,
 		},
 		{
