@@ -57,23 +57,42 @@ var
 			// <p>
 			// Any line surrounded by newlines that doesn't start with
 			// an HTML tag, asterisk or numeric value with dot following.
-			pattern: /\n(?!<\/?\w+>|\s?\*|\s?[0-9]+|>|\&gt;|-{5,})([^\n]+)/g,
+			//
+			//update: any line with two trailing newlines
+			pattern: /(?!<\/?\w+>|\s?\*|\s?[0-9]+|>|\&gt;|-{5,})((?:.|\n)+?)\n\s*?\n/g,  // /\n(?!<\/?\w+>|\s?\*|\s?[0-9]+|>|\&gt;|-{5,})([^\n]+)/g,
 			replace: "<p>$1</p>",
 			type: BLOCK,
 		},
 		{
+			// mathjax \[ \]
+			// works over multiple lines
+			pattern: /(\$\$)((?:.|\n)*?)\1/g,
+			replace: "\\[$2\\]",
+			type: INLINE,
+		},
+		{
+			// mathjax \( \)
+			// works over multiple lines
+			pattern: /(\$)((?:.|\n)*?)\1/g,
+			replace: "\\($2\\)",
+			type: INLINE,
+		},
+		
+		{
 			// <strong>
-			// Either two asterisks or two underscores, followed by any
+			// Two astericks, followed by any
 			// characters, followed by the same two starting characters.
-			pattern: /(\*\*|__)(.*?)\1/g,
+			// the asterick must immediately be followed by a non-space character
+			pattern: /(\*\*)(\S.*?)\1/g,
 			replace: "<strong>$2</strong>",
 			type: INLINE,
 		},
 		{
 			// <em>
-			// Either one asterisk or one underscore, followed by any
+			// One asterisk, followed by any
 			// characters, followed by the starting character.
-			pattern: /(\*|_)(.*?)\1/g,
+			// the asterick must immediately be followed by a non-space character
+			pattern: /(\*)(\S.*?)\1/g,
 			replace: "<em>$2</em>",
 			type: INLINE,
 		},
@@ -109,10 +128,19 @@ var
 			replace: "<code>$1</code>",
 			type: INLINE,
 		},
+		
 		{
 			// <hr>
 			//
-			pattern: /\n-{5,}\n/g,
+			pattern: /\n-{3,}\n/g,
+			replace: "<hr />",
+			type: BLOCK,
+		},
+		{
+			// <hr class="green">
+			// specifically for fantasy
+			//
+			pattern: /\n-{3,}green\n/g,
 			replace: "<hr />",
 			type: BLOCK,
 		},

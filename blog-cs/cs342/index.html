@@ -61,6 +61,7 @@
 				<li><a href="#linclass">Linear Classification (+ Perceptron)</a></li>
 				<li><a href="#kernel">The Kernel Trick</a></li>
 				<li><a href="#mle">MLE and MAP estimation</a></li>
+				<li><a href="#recom">Recommender Systems</a></li>
 			</ol>
 			\( 
 				\renewcommand{\vec}{\mathbf}
@@ -82,6 +83,7 @@
 				\def\w{{\vec{w}}}
 				\def\W{{\vec{W}}}
 				\def\y{{\vec{y}}}
+				\def\Y{{\vec{Y}}}
 				\def\t{{^\top}}
 				\def\z{{\vec{z}}}
 				\def\Z{{\vec{Z}}}
@@ -1851,6 +1853,10 @@ $$
 
 		<div class="cbox">
 
+			<p class="grey md-conv">
+				Okay, look, I don't *actually* have much of a clue what's going on here.
+			</p>
+
 			<p>
 				To clarify notation:
 			</p>
@@ -1920,7 +1926,7 @@ Then MLE would be
 \]
 			</p>
 
-			<p>
+			<p class="blue">
 				<b><i>Least Squares is Gaussian MLE.</b></i> Recall least squares: minimise errors squared. If we grab the errors \(\epsilon_i\) and plot a histogram of error occurences, it forms a gaussian (normal) dist.
 			</p>
 
@@ -1967,7 +1973,258 @@ Which is a quadratic function. To find the minima, we can compute partial deriva
 \]
 				</p>
 			</div>
+		</div>
 
+		<div class="cbox md-conv">
+			#### MAP
+
+			MLE can easily lead to overfitting with little observations -- a coin tossed three times gets {HHH}, the MLE would find $p_{heads}$ = 1.
+
+			Rather than finding a $\hat{w} \in \argmax_w(p(D|w))$, we want to find $\argmax_w(p(w|D))$.
+
+			<div class="blue">
+				The <b>maximum a-posteriori estimation</b> is finding
+				$$ \hat{\w} \in \argmax_\w (p(\w|D)) $$
+			</div>
+
+			MAP can be gotten by MLE using the *bayes rule*:
+
+			$$ 
+			p(\w | D) = \fr{p(D|\w)p(\w)}{p(D)} \propto p(D|\w)p(\w) 
+			$$
+
+			Thus MAP maximises MLE, but multiplies it with the *prior* of $\w$: the belief that $\w$ is correct before seeing D.
+
+			We can simplify MAP by using the **conditional independence assumption**:
+
+			$$
+			\argmax_\w (p(\w | \X)) = \argmax_\w \left( p(\w)\prod_{i=1}^n [p(\x_i|\w)]  \right) 
+			$$
+
+			And since machine learning algorithms want to minimise, we can take the *negative log*, and add a regulariser. The reason why we take the log is to convert a product into a sum (because of log laws).
+
+			<div class="blue">
+			$$
+			\hat{\w} \in \argmin_\w \left\{ -\sum_{i=1}^n [\log (p(\x_i | \w))] - \log(p(\w)) \right\}
+			$$
+		</div>
+
+			One can consider the minus log of the prior to be a regulariser for the weights. 
+
+			
+		</div>
+
+		<div class="cbox">
+			<button class="collapsible">MAP is just L2 Loss</button><div class="ccontent md-conv">
+				***MAP is just L2-loss***. Since each dimension of $\w$ comes from the gaussian curve with $\mu = 0$, and is independent, we know the following:
+
+				$$ 
+				p(\w) = \prod_{j=1}^d p(w_j) \propto \prod_{j=1}^d \exp(-\fr{\lambda}{2} w_j^2) \propto \exp(-\fr{\lambda}{2} \sum_{j=1}^d w_j^2).
+				$$
+
+				Take the negative log like before, for minimisation, and we get
+				$$
+				\fr{\lambda}{2} \lVert  \w \rVert^2.
+				$$
+
+				The MAP esitmate **for all y** of the training examples is given as 
+				\begin{align}
+				\hat{\w} &\in \argmin_\w \{ -\log(p(\y | \X, \w)) - \log(p(\w)) \} \\ 
+				&\equiv \argmin_\w \left\{ -\sum_{i=1}^n [\log (p(y_i | \x_i, \w))] - \fr{\lambda}{2} \lVert  \w \rVert^2 \right\}
+				\end{align}
+
+				Given that $p(y_i | \x_i, \w) \propto \exp(-\fr{(\w \cdot \x_i - y_i)^2}{2}$, and $p(w_j) \propto \exp(-\fr{\lambda}{2}) w_j^2)$, putting this all together MAP is equivalent to minimising
+				$$
+				\cal{L}(\w) = \frac{1}{2} \lVert \X\w - \y \rVert^2 + \fr{\lambda}{2} \lVert \w \rVert^2 
+				$$ 
+				Where the first part is MLE, and the second part is the prior. Thus MLE is just non-regularised L2 loss. 
+
+				This assumes a **gaussian** distribution ($\mu = 0, \sigma = 1$).
+			</div>
+			<p></p>
+		</div>
+
+		<div class="colourband">
+			<h2 id="recom">Recommender Systems</h2>
+		</div>
+
+		<div class="cbox">
+
+			<div class="md-conv">
+
+				**Recommender Systems** are systems that suggest things to users that are liely to interest them. User's interests are predicted as *ratings*, based on their previous interactions.
+
+				There are two main approaches:
+
+				* Content-based learning (supervised)
+				* Collaborative Filtering (unsupervised)
+				
+				### Collaborative Filtering
+
+				We have an item/user matrix \(\Y\), with n rows of *users* and d columns of *items* (let's call them movies). Each entry is then a specific user's rating for a specific movie.
+
+				This matrix is **sparse**: it has many blank entries. Thus, a row of \(\Y\) may look like `[? 2 3 ? ? 1 ?]` (numbers are ratings).
+
+				The idea is to complete the matrix, based on similarities to other users. 
+
+				We can use a *latent space*, $\Y = \Z\W$. Each **row** of $\Z, \z_i$ are the latent features of user \(i\). Each **column** of $\W, \w^j$ are the latent features of a movie \(j\). Thus, a single entry \(y_{ij} = \w^j \cdot \z_i\). 
+				
+				By encoding data into a latent space, we can then sample values from the space that we never had in the original dataset, and *decode* this into a predicted rating.
+				
+			</div>
+
+			<div class="blue md-conv">
+				We can use L2-loss PCA, for **all available** ratings R: 
+
+				$$ 
+				\cal{L}(\W, \Z) = \sum_{\forall i, j \in R}\left[ \w^j \cdot \z_i - y_{ij} \right] + \fr{\lambda_1}{2} \lVert \Z \rVert_F^2 + \fr{\lambda_2}{2}\lVert \W\rVert^2_F
+				$$
+
+				Note we now need two lambdas. (These are Hyperparameters)
+			</div>
+
+			<div class="md-conv">
+				This model only uses the information we currently have, skipping over blanks, but the two matrices it constructs can be reconstructed into a full matrix, thus naturally filling in the blanks. 
+
+				An individual cell is given as $\hat{y}_{ij} = \w^j \cdot \z_i$.
+
+				However, we must consider that we must consider that some users rate lower or higher on average, and so we need to add all appropriate biases to our prediction:
+
+				$$ 
+				\hat{y}_{ij} = \w^j \cdot \z_i + \beta + \beta_i + \beta_j
+				$$ 
+
+				Where:
+				* $\beta$ is the **global** bias 
+				* $\beta_i$ is the **user-specific** bias
+				* $\beta_j$ is the **item-specific** bias
+
+				Collaborative filtering predicts the rating of each item for each user in the system -- it *cannot* predict new users.
+
+				### Content-Based Learning
+
+				Content-based learning uses a simple linear model, with the two matrices \(\X, \Y\). 
+
+				$\X$ contains **rows** $\x_ij$, which are the <b>joint features</b> of user i and item j. \(y_{ij}\) is of course the rating. 
+
+				Simply predict \(\hat{y}_{ij} = \w \cdot \x_{ij}\) with a (global) set of weights.
+
+				This is useful for predicting ratings for *new users/items*, but cannot learn features. 
+
+				### Hybrid System 
+
+				Both systems have their uses and their lack of uses, and so would it be not good to combine them? 
+
+				Well, the good thing is we can:
+			</div>
+
+			<div class="blue md-conv">
+				Use the **hybrid prediction**
+
+				$$ 
+				\hat{y}_{ij} = \w^j \cdot \z_i + \beta + \beta_i + \beta_j + \w \cdot \x_{ij}
+				$$
+
+				Where 
+				* $\w^j \cdot \z_i + \beta + \beta_i + \beta_j$ is the collaborative filtering
+				* $\w \cdot \x_{ij}$ is the linear regression, the same $\beta$ as before can be used as this bias
+				* $\beta_i + \beta_j$ are the specific item biases
+				* $\w, \w^j$ are **different biases**. The \(\w^j\) is part of the bigger matrix \(\W\) for collaborative filtering, whilst small \(\w\) is the linear regression.
+			</div>
+
+			<div class="md-conv">
+				This is solved using **stochastic gradient descent**.
+
+				### Gradient Descent
+
+				Given a loss function, want to find a *minimiser* $\vec{w}^*$. E.g. for least squares
+
+				$$
+				\argmin_{\vec{w} \in \mathbb{R}^d} \frac{1}{2} \sum\limits_{i=1}^n (\vec{w \cdot x}_i - y_i)
+				$$
+
+				Least squares is convex, but often functions are non-convex -- has multiple local minima. In this case, it suffices to find a local minimum (since it's hard to guarantee a global minimum).
+				
+				Gradient descent: iterative optimisation
+				* Start with random solution $\vec{w}^0$
+				* Use gradient $\nabla f(\vec{w}^0)$ to refine the solution into $\vec{w}^1$
+				* ...
+				* As $t \longrightarrow \infty$, $\nabla f(\vec{w}^t) \longrightarrow 0$
+
+				Gradient descent converges to global minimum in case of convex, and some local minimum stationary point in non-convex. 
+
+				Given a $\vec{w}^0, \nabla f(\vec{w}^0)$, we get more information about how to get closer to the minium value. The gradient "points up" away from minimiser, so we make a step in the direction of the negative gradient, thus we refine by doing $\newcommand{\w}{\vec{w}}$
+				$$
+				\w^1 = \w^0 - \nabla f (\w^0)
+				$$
+				This performs a "step". As we get nearer to the minimum, the gradient gets shallower, so our steps naturally get smaller.$\renewcommand{\epsilon}{\varepsilon}$
+				
+				We can alter our step size:
+				* Start with solution $\w^0$
+				* Use gradient $\nabla f(\w^0)$ to find $\w^1$, stepping with a (possibly decaying) *learning rate* $\alpha$:
+				$$
+				\w^{t+1} = \w^t - \alpha^t \nabla f(\w^t)
+				$$
+				* Repeat, and stop iff no progress is made, or if $|\nabla f(\w^t)| \leq \epsilon$ for some small value $\epsilon$.
+				
+				For least squares, using grad-desc is less complex than solving it straight up.
+				<!-- ($\cal{O}(nd^2 + d^3$), the gradient descent iteration complexity is $\cal{O}(nd)$. -->
+
+				### Stochastic Gradient Descent
+
+				Grad Descent is complex and still long for large datasets, so we use SGD, which uses the gradient of a **random (selection of) sample(s)**:
+				$$
+				\w^{t+1} = \w^t - \alpha^t \nabla f_i(\w^t)
+				$$
+				Where
+				$$
+				\nabla f_i(\w^t) = \vec{x}_i (\w \cdot \vec{x}_i - y_i)
+				$$
+				A *single* sample. 
+				
+				Complexity is now independent of $n$, but suited to loss funcs which require summing over all $n$. 
+				
+				* Start with random soln.
+				* Use gradient of a random sample $i$ to refine the solution, with a learning rate.
+
+				**Disadvantaages:**
+				* We use the gradient of a random sample - that sample's function might not be equal to objective function and even may point in the *wrong* way. 
+				* But *on average* SGD is expected to move $\w$ in the right direction, over a large set of samples.
+				$\newcommand{\x}{\vec{x}} \newcommand{\y}{\vec{y}} \newcommand{\X}{\vec{X}} \newcommand{\tr}{^\top}$
+				Whilst each sample will still define a function of the same *shape* (naturally, since they're all MSE), they will be shifted in position from the actual objective function. Thus you get a random path that's not always going the right way (stochastic).
+				
+				But because of the shifting, far away from $\w^\ast$ every graident points towards the right direction. However in the middle there's a no-man's land (*challenging region*) where we can't guarantee movement in the right direction. 
+				<figure>
+					<img src="https://blog.paperspace.com/content/images/2018/05/fastlr.png" alt="" style="max-width: 400px;">
+					<figcaption>
+						Challenigng Region: Where stochastic gradient descent starts flip flopping around. <a href="https://blog.paperspace.com/intro-to-optimization-in-deep-learning-gradient-descent/">[src]</a>
+					</figcaption>
+				</figure>
+				
+				We want to minimise the challenging region.
+
+				The challenging region very related to **variance** of gradients, it can be detected by
+				$$
+				\frac{1}{n}\sum\limits_{i=1}^n \lVert \nabla f_i (\w) - \nabla f (\w^t) \rVert^2
+				$$
+				* If the variance is 0, we are always going in the right direction
+				* If variance $\approx$ 0, we are just in the challenging boundary
+				* If variance $\gg$ 0, then we're in the challenging region, and probably close to the minimum.
+
+				The *learning rate* is associated to size of challenging region, that is, $\alpha \propto$ challenging region. Large $\alpha$ makes fast convergence, but a larger stochastic challenging region. The opposite is true. 
+
+				Thus use **learning rate decay**. Decreasing too quickly -> not fast enough to reach ball, decreasing too slowly -> more stochasticity. 
+				
+				SGD converges to local minimum if
+				$$
+				\frac{\sum\limits_{t=1}^\infty (\alpha^t)^2}{\sum\limits_{t=1}^\infty \alpha^t} \approx 0
+				$$
+				Calculating the ratio of alpha squared to alpha "effect of variance to how much we can move"
+				
+				Commonly we define $\alpha = \cal{O}(\frac{1}{t})$. However in practice this tends to make alpha decay too quickly, so better $\alpha^t = \frac{a}{\sqrt{t}} : \alpha \ll 1$. But this is all trial and error.
+
+				**For recomender systems**, use gradient descent with objective function, update based on random $i,j$ and LR $\alpha$, where $r_{ij}$ is the *residual error* $\hat{y}_{ij} - y_{ij}$.
+			</div>
 		</div>
 
 		<footer>
@@ -1983,5 +2240,6 @@ Which is a quadratic function. To find the minima, we can compute partial deriva
 	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
 	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
 	<script type="text/javascript" src="../../js/prism.js"></script>
+	<script type="text/javascript" src="../../js/markdown.js"></script>
 </body>
 </html>
