@@ -132,7 +132,7 @@ var
 		{
 			// <hr>
 			//
-			pattern: /\n-{3,}\n/g,
+			pattern: /\n[-_]{3,}\n/g,
 			replace: "<hr />",
 			type: BLOCK,
 		},
@@ -140,7 +140,7 @@ var
 			// <hr class="green">
 			// specifically for fantasy
 			//
-			pattern: /\n-{3,}green\n/g,
+			pattern: /\n[-_]{3,}green\n/g,
 			replace: "<hr />",
 			type: BLOCK,
 		},

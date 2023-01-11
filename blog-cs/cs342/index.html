@@ -62,6 +62,7 @@
 				<li><a href="#kernel">The Kernel Trick</a></li>
 				<li><a href="#mle">MLE and MAP estimation</a></li>
 				<li><a href="#recom">Recommender Systems</a></li>
+				<li><a href="#nns">Neural Networks</a></li>
 			</ol>
 			\( 
 				\renewcommand{\vec}{\mathbf}
@@ -75,6 +76,7 @@
 				\def\ytrain{{y_i}} 
 				\def\ytest{{\tilde{y}_i}} 
 				\def\ypred{{\hat{y}_i}} 
+				\def\yhat{{\hat{y}}} 
 				\def\wtrans{{\vec{w}^\top}} 
 				\def\bb#1{{\mathbb{#1}}}
 				
@@ -87,6 +89,7 @@
 				\def\t{{^\top}}
 				\def\z{{\vec{z}}}
 				\def\Z{{\vec{Z}}}
+				\def\v{{\vec{v}}}
 
 				\def\lra{{\longrightarrow}}
 				\def\lla{{\longleftarrow}}
@@ -2225,6 +2228,191 @@ Which is a quadratic function. To find the minima, we can compute partial deriva
 
 				**For recomender systems**, use gradient descent with objective function, update based on random $i,j$ and LR $\alpha$, where $r_{ij}$ is the *residual error* $\hat{y}_{ij} - y_{ij}$.
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="nns">Neural Networks</h2>
+		</div>
+
+		<div class="cbox">
+			<h2>Contents</h2>
+
+			<ol>
+				<li><a href="#nn1">Neural Networks</a></li>
+				<li><a href="#nn2">Autoencoders</a></li>
+			</ol>
+
+			<h2 id="nn1">Neural Networks</h2>
+
+			<div class="md-conv">
+
+				Neural Networks (NNs) can learn important features as well as labels. 
+
+				They are based on linear regression -- specifically, the *perceptron* can be thought of as the most basic neural network -- NNs are just stacked perceptrons, fundamentally. 
+
+				They also take concepts from PCAs, because we need to extract features and then use the extracted features.
+
+				<figure>
+					<img src="http://nicolamanzini.com/wp-content/uploads/2017/11/single_hidden_layer.jpg" alt="Neural Network" style="max-width: 400px;">
+					<figcaption>A neural network with one "hidden layer"</figcaption>
+				</figure>
+
+				The input layer is our $\x_i$, our set of input data. For the case of images, these might just be the pixel values, flattened into 1D.
+
+				The middle *(hidden)* layer is our extracted features $\z_i$, and we get from $\x_i \longrightarrow \z_i$ via a set of weights \(\W\): $$\underset{(a \times 1)}{\z_i} = \underset{(a \times d)}{\W} \underset{(d \times 1)}{\x_i}$$
+
+				The dimensions are shown <span class="grey">even if the W is now wonky</span>.
+
+				We can get our \(y_i\) (output) from the middle layer by doing a linear regression \(y_i = \vec{v}\t \z_i\), with a new set of weights $\vec{v}$.
+
+				These basic neural netowrks are called **multi-layer perceptrons** (MLPs)
+
+				The fundamental idea is, a NN can approximate **any** function, given enough complexity.
+
+				#### Linearity
+
+				Note that the x to z part, the "PCA" part, are really just several overlapping perceptrons. Thus, it is a linear PCA. 
+
+				However, a linear function into a linear function makes a linear function: $y_i = \vec{v}\t \W \x_i \equiv y_i = \vec{A} \x_i$, and so what we've done is just a linear regression with extra steps.
+
+				Thus, the crux of a neural netowrk is to **introduce non-linearity**:
+
+				* At the end of every layer, include a non-linear **activation function** $h(\cdot)$, which transforms the data such that you cannot reduce the NN to a linear regression.
+			</div>
+
+			<p class="side md-conv">
+				One of these is **sigmoid**:
+
+				$$ h(x) = \fr{1}{1 + e^{-x}} $$
+
+				Which maps $x \longrightarrow [0, 1]$
+			</p>
+
+			<div class="md-conv">
+				So now, after every layer (except the input) we add an activation function layer, so now $\x_i \longrightarrow \z_i \longrightarrow h(\z_i) \longrightarrow \hat{y}_i \longrightarrow h(\hat{y}_i)$. In diagrams, these activation functions are often ommitted for clarity. 
+			</div>
+
+			<p class="side md-conv">
+				An activation function that may be used for \(y_i\), for classification could be the **step** function:
+
+				$$ h(x) = \begin{cases} 1 & x > 0 \\ -1 & x  < 0 \end{cases} $$ 
+			</p>
+
+			<div class="md-conv">
+				One more thing is that PCAs will enforce orthogonal and normalised features -- we do no such thing for NNs. 
+
+				The idea is to let them work it out on their own. 
+
+				NNs use the same losses as everything else -- MSE, as an example.
+			</div>
+
+			<div class="md-conv">
+				### Classification
+
+				NNs can be thought of like multi-class logistic regression classifiers. 
+			</div>
+
+			<div class="side md-conv">
+				A commonly used classification loss is **categorical cross-entropy**:
+
+				$$ \cal{L} = \fr{1}{n} \sum_{i=1}^n \sum_{c=1}^C (y_{ic} \log (y_{ic})) $$ 
+
+				Where big C is the number of classes (one hot encoding). This is also called log-loss. 
+			</div>
+
+			<div class="md-conv">
+				Categorical Cross-Entropy emphasises the loss of the correct class only.
+				
+				Usually, outputs use the activation function **softmax**, to convert its preditions to probabilities. 
+			</div>
+			
+			<div class="md-conv">
+				### Training
+
+				The full equation of a two hidden-layer network is like follows: $\yhat_i = \v\t h_2 ( \W^{(2)} h_1 ( \W^{(1)} \x_i))$. $h_1, h_2$ are activation functions, and can be the same, or different. We will treat them as the same. 
+
+				There are now two sets of hidden layer weights, and one final regression weight. 
+
+				A **bias** is usually implicit, and can be added to only the output, or often to every single layer.
+
+				Graphically, we can represent this bias as being the weight of a new node on that layer which is always 1, just like a perceptron.
+
+				<hr>
+
+				NNs are trained with **stochastic gradient descent**. 
+
+				For one hidden layer, an MSE loss is given as 
+				$$ \cal{L}(\W, \v) = \fr{1}{n} \sum_{i=1}^n (\v\t h(\W\t \x_i) - y_i)^2 $$
+
+				The gradient of a random sample is calculated, and is propagated back through the network and incrementally update weights -- **backpropagation**.
+
+				Rather than using one sample, we can take a random subset of samples, a **minibatch**.
+
+				$$ \w^{t+1} = \w^t - \alpha^t \fr{1}{|B^t|} \sum_{i \in B^t} \left(\nabla \cal{L}_i (\w^t) \right) $$
+
+				The challenging region of SGD is *inversely proportional* to batch size. 
+
+				Note on terminology:
+				* **Epoch**: a full pass through the training set.
+				* **Iteration**: a single SGD update (i.e. batch number)
+
+			</div>
+
+			<button class="collapsible">Backpropogation Calculus (In Detail)...</button>
+			<div class="ccontent">
+				<div class="md-conv">
+					I'll get to it sometime.
+				</div>
+			</div>
+
+			<div class="md-conv">
+				Thus,
+				* **Forward propagate** features, to get predictions and loss
+				* **Backward propagagte** losses, to update weights
+
+				Parameter initialisation is also important:
+				* If the starting values are too large, learning takes a long time
+				* Thus commonly use random, small weights
+				* The bias is often initialised to 0
+
+				In SGD, the step size (learning rate) is also very sensitive. 
+				* Decreasing step size decreases stochastic effect 
+				* LR can be manually monitored and decreased, or put on a scheduler to slowly decay
+
+				***Momentum.*** In better optimisers like Adam, something called momentum is used. 
+				* Think of a heavy ball rolling down a hill. If it encounters a small bump, it has enough momentum to roll over. 
+				* This is what momentum does in SGD, adding "intertia" to the descent.
+				* The "ball" "accelerates" and "rolls" around.
+
+				We add a beta \(\beta_t \in [0, 1]\) for momentum, making 
+				$$ \w^{t+1} - \alpha^t \nabla\cal{L}_i (\w^t) + \beta^t (\w^t - \w^{t-1}) $$
+
+				***Vanishing Gradient Problem.*** 
+				* Given that we are using sigmoid as our activation function, more layers of network stacks on more sigmoid functions
+				* Since sigmoids have flat gradients far away, we can get an issue where the gradient "vanishes" to zero. 
+
+				This issue is also true with other activation functions for large enough networks, but for our case, really, no one ever uses sigmoid. 
+
+				
+			</div>
+
+			<div class="side md-conv">
+				Rather, the most common activation function used is **ReLU: Rectified Linear Unit**. 
+
+				$$ h(x) = \max(0, x) $$
+			</div>
+
+			<div class="md-conv">
+				ReLU provides sparser activations, and also happens to be differentiable (which is kinda needed)
+
+				**tanh** is also a function, though it is rarely used.
+
+				NNs also have the fundamental tradeoff of more complex -> more accuracy -> more chance to overfit. 
+
+				We can also still use regularisations for neural networks, for all the various weights.
+			</div>
+
+			<h2 id="nn2">Autoencoders</h2>
 		</div>
 
 		<footer>
