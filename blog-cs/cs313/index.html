@@ -49,6 +49,7 @@
 
 			<ol>
 				<li><a href="#sensing">Sensing</a></li>
+				<li><a href="#vision">Vision</a></li>
 			</ol>
 
 			<h2>Introduction</h2>
@@ -81,16 +82,16 @@
 				\def\wtrans{{\vec{w}^\top}} 
 				\def\bb#1{{\mathbb{#1}}} -->
 				
-				<!-- \def\x{{\vec{x}}}
-				\def\X{{\vec{X}}}
-				\def\w{{\vec{w}}}
-				\def\W{{\vec{W}}}
-				\def\y{{\vec{y}}}
-				\def\Y{{\vec{Y}}}
+				<!-- \def\x{{\vec{x}}} -->
+				<!-- \def\X{{\vec{X}}} -->
+				<!-- \def\w{{\vec{w}}} -->
+				<!-- \def\W{{\vec{W}}} -->
+				<!-- \def\y{{\vec{y}}} -->
+				<!-- \def\Y{{\vec{Y}}} -->
 				\def\t{{^\top}}
-				\def\z{{\vec{z}}}
-				\def\Z{{\vec{Z}}}
-				\def\v{{\vec{v}}} -->
+				<!-- \def\z{{\vec{z}}} -->
+				<!-- \def\Z{{\vec{Z}}} -->
+				<!-- \def\v{{\vec{v}}} -->
 
 				\def\lra{{\longrightarrow}}
 				\def\lla{{\longleftarrow}}
@@ -357,6 +358,167 @@
 			<button class="collapsible">Answer... </button>
 			<div class="ccontent md-conv">
 				Any sensor + suitable justification, e.g. Lidar sensor to detect objects around it, and make sure it is not running into any obstacles/people/staying on the road.
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="vision">Vision</h2>
+		</div>
+
+		<div class="cbox">
+			<h3>Contents</h3>
+
+			<ol>
+				<li><a href="#v1">Beacons and GPS</a></li>
+				<li><a href="#v2">Digital Imaging</a></li>
+				<li><a href="#v3">Image Processing</a></li>
+			</ol>
+
+			<p>
+				Digital imaging and image processing have a significant amount of overlap with Digital Forensics.
+			</p>
+
+
+			<h3 id="v1">Beacons and GPS</h3>
+
+			<div class="md-conv">
+				Beacons are basically known points of reference.
+
+				***Trilateration*** is the process of finding out a robot's psition using at least 3 beacons (hence tri-).
+
+				<figure>
+					<img src="./assets/trilat.png" alt="" style="max-width: 600px;">
+					<figcaption>Trilateration - need to do a lot of simultaneous equation solving</figcaption>.
+				</figure>
+
+				We always base (0,0) off one of our beacons, for simplicity. Having two beacons aligned to an axis also makes solving the simultaneous equations easier.
+
+				Note, you may have to work this out in 3D: $r_1^2 = x^2 + y^2 + z^2$, but in this case we align all three beacons to the plane $z$, preventing us from having any offsets there.
+
+				***GPS*** is a common use of trilateration, though
+
+				* GPS uses *at least **4*** beacons (satellites)
+				* Each beacon sends out both a *position* and a *time*
+				* Both are used to determine location.
+
+				Even in 3D, only three spheres are needed to complete trilateration. However, GPS receivers do not tend to have expensive ultra-accurate atomic clocks inside them, and because of the distance between and the speed of the satellites, milliseconds of difference can be 100s of metres out.
+
+				Thus the fourth satellite is a redundancy.
+
+				There are some downsides - notably that it may be difficult to see 4 satellites simultaneously if sky view is limited, like in cities.
+
+				To solve this, *differential GPS* also uses ground-based beacons, which allow direct line of sight to it even within cities.
+			</div>
+
+			<h3 id="v2">Digital Imaging</h3>
+
+			<div class="md-conv">
+				Digital images are captured through sensors, which receive photons. 
+
+				There are different designs of image sensors, two popular ones being CMOS and CCD.
+
+				A sensor can only receive light, not colour, so we could (a) use three times the sensors (3+ times the cost) or (b) use an RGB filter pattern.
+
+				The resulting RGB image mix is then put through **demosaicing**, where the missing R, G, B information is filled in through interpolation.
+
+				The **RGB colour space** can be represented as a 3D cube, with the $x, y, z$ axes being R,G,B respectively. We can see more colours than RGB, but it's good enough.
+
+				***CYMK colour space*** is for print, and is made of cyan, yellow, magenta, and black.
+
+				***HSV*** is Hue, saturation, value, and makes a kind of pie. Going 360&deg; round the pie gets you all your hues. Going out from the middle of the pie increases saturation (how colourful), whilst going up from the bottom of the pie increases value (brightness).
+
+				<hr>
+
+				Often don't need so much resolution or colour depth -- waste data that just takes up processing time.
+
+				-> Remove said data. Can:
+
+				* decrease pixels/resolution 
+				* reduce colour depth - often times, binary (1 bit) is sufficient.
+
+				Binary images are produced by some threshold function (0 below, 1 above), based on some characteristic (not necessarily brightness! Often the threshold is about change in intensity, i.e. edge detection.)
+
+				If binary is not enough, then can store in greyscale, since it only takes one channel instead of three. 
+
+				<hr>
+
+				The **pinhole camera** is one of the first imaging devices, and uses the principle of letting light pass through a small hole (**aperture**), and focusing on a back plate, which makes the image in focus. It's a simple model to approximate the imaging process. 
+
+				A **lens** works in a similar way, taking rays and concentrating them onto a focal point. 
+
+				The ***Thin lens equation*** $\fr{1}{f} = \fr{1}{u} + \fr{1}{v}$ is an equation that must be satisfied for an object to be in focus.
+
+				<figure>
+					<img src="./assets/thinlen[s.png" alt="Thin lens eqn" style="max-width: 500px;">
+				</figure>
+
+				We can use a changing focus to generate a depth map of the image.
+
+				We can also add an aperture in front of the lens, to control our range of *approximate focus*. The smaller the aperture, the wider range of distances will be in "good enough" focus.
+
+				<figure>
+					<img src="./assets/aperturelens.png" alt="" style="max-width: 500px;">
+				</figure>
+
+				The FoV (field of view) is an angular measure of how much of the space you can capture. 
+
+
+				<hr>
+				Images behind the lens are upside down, which is annoying for calculations. ***Perspective Projection*** reverses the focus to in front of the screen -- we have an "image plane" onto which 3D objects are projected. 
+
+				<figure>
+					<img src="./assets/imageprojection.png" alt="" style="max-width: 600px;">
+				</figure>
+
+				We project from **3D world coordiates** $P:(x,y,z)$ onto a **2D image plane** $\Pi:(u,v)$. This can be done using the *similarity of triangles*. World coordiates have origin at the camera, and image coordinates have origin at some point on the image. 
+
+				Note the purple triangle (from $f$ along the $u$ axis) is (mathematically) **similar** to the pink extended triangle (from $z $ along the $x$ axis). Same applies for $v, y$.
+
+				Thus by similarity of triangles,
+				$$ \fr{f}{z} = \fr{u}{x} = \fr{v}{y} $$ 
+
+				And we can convert scene coordinate to image coordinate via 
+
+				$$ 
+				(x,y,z) \; \lra \;(\fr{f}{z}x, \fr{f}{z}y)
+				$$
+
+				Mapping from 3D to 2D is non-linear (thus it loses depth): (1,1) image could be (1,1,1), (2,2,2), (3,3,3), ... scene.
+
+				We can use **homogenous coordiates** with a homogenising coordinate $w = 1$:
+
+				\begin{matrix}
+				\tilde{\vec{p}}\t = (u, v, 1) &\tilde{\vec{P}}\t = (x, y, z, 1)
+				\end{matrix}
+
+				And converting down, 
+				\begin{matrix}
+					\tilde{\vec{p}}\t = (x, y, w) \implies p = (\fr{x}{w}, \fr{y}{w})
+					&
+					&\tilde{\vec{P}}\t = (x, y, z, w) \implies P = (\fr{x}{w}, \fr{y}{w}, \fr{z}{w})
+				\end{matrix}
+
+				We are convertig "4D" to "3D", and if $w$ changes, we scale as appropriate.
+
+				<hr>
+
+				Since going to 2D loses depth information, there are several ways we can reconstruct that depth information.
+
+				***Stereo cameras*** work like triangulation by having two cameras a known distance apart. (**important**)
+
+				<figure>
+					<img src="./assets/stereocamera.png" alt="Stereo camera equations">
+				</figure>
+
+				Cameras $C_1, C_2$ measure the same spot at slightly different coordinates -- using the similarity of triangles rule we can work out how far away $z$ that spot is.
+
+				***Structure from motion*** builds depth by moving around and taking multiple photos -- it basically is just stereo cameras, but extended.
+			</div>
+
+			<h3 id="v3">Image Processing</h3>
+
+			<div class="md-conv">
+				
 			</div>
 		</div>
 
