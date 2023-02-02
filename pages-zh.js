@@ -17,6 +17,22 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2023, 01, 25)),
+        "link": "blog-cs/cs313",
+        "title": "Notes on CS313",
+        "desc": "Notes on CS313: Robotics</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
+        "date": new Date(Date.UTC(2022,11,10)),
+        "link": "blog-cs/cs342",
+        "title": "Notes on CS342",
+        "desc": "Notes on CS342: Machine Learning. 我觉得这个挺重要的。</p><p>此页很长，加载需要一会。</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2022,05,05)),
         "link": "blog-cs/cs261/",
         "title": "Notes on CS261",

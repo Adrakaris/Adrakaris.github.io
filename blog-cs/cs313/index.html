@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS313</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS313</h1>
+					<p class="subheading">Mobile Robotics</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Introduction</h1>
+			</div>
+		</header>
+		<!-- REMEMBER TO DO! -->
+
+		<div class="cbox">
+			<h2>Contents</h2>
+
+			<ol>
+				<li><a href="#sensing">Sensing</a></li>
+			</ol>
+
+			<h2>Introduction</h2>
+
+			<div class="md-conv">
+				A robot; but specifically, an *embodied* robot that can move, and make its own decisions.
+
+				It takes in input from sensors, and processes those inputs, and sens outputs to components - whether they be for actioning or locomotion.
+
+				Robots have their benefits, like repeatability and reliability, but also their downsides, such as job replacement, cost, and inabilities in certain tasks.
+
+				We want robots to be **autonomous** -- this is different to *automatic*, which is just carrying out present events, but *autonomous* means it can make decisions. Robots vary in autonomy, from the remote-controlled to fully autonomous.
+
+				Robots also have to consider limited processing power, and also energy consumption in their mobile bodies.
+			</div>
+			<div>
+			\( 
+				\renewcommand{\vec}{\mathbf}
+				\renewcommand{\epsilon}{\varepsilon}
+
+				\DeclareMathOperator*{\argmax}{argmax}
+				\DeclareMathOperator*{\argmin}{argmin}
+
+				<!-- \def\xtrain{{\vec{x}_i}}  
+				\def\xtest{{\vec{\tilde{x}}_i}}  
+				\def\ytrain{{y_i}} 
+				\def\ytest{{\tilde{y}_i}} 
+				\def\ypred{{\hat{y}_i}} 
+				\def\yhat{{\hat{y}}} 
+				\def\wtrans{{\vec{w}^\top}} 
+				\def\bb#1{{\mathbb{#1}}} -->
+				
+				<!-- \def\x{{\vec{x}}}
+				\def\X{{\vec{X}}}
+				\def\w{{\vec{w}}}
+				\def\W{{\vec{W}}}
+				\def\y{{\vec{y}}}
+				\def\Y{{\vec{Y}}}
+				\def\t{{^\top}}
+				\def\z{{\vec{z}}}
+				\def\Z{{\vec{Z}}}
+				\def\v{{\vec{v}}} -->
+
+				\def\lra{{\longrightarrow}}
+				\def\lla{{\longleftarrow}}
+				\newcommand{\fr}{\frac}
+				\newcommand{\vecu}{\underline}
+				\newcommand{\rm}{\textrm}
+				\newcommand{\bb}{\mathbb}
+				\newcommand{\nm}{\overline}
+				\newcommand{\tl}{\tilde}
+
+			\)
+			</div>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="sensing">Sensing</h2>
+		</div>
+		
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Introduction
+
+				Sensing three fundamental questions:
+
+				* Where are we? 
+				* Where do we want to go?
+				* How do we get there?
+
+				Tend towards *probabilistic methods*, as they scale well, but they tend to come with increasing computational complexity to simulate. 
+
+				* <a href="#s1">Characterising</a>
+				* <a href="#s2">Commonly Used</a>
+				* <a href="#sq">Sensing Questions</a>
+			</div>
+			<div class="md-conv" id="s1">
+				
+
+				### Characterising Sensing 
+
+				The sensing process goes:
+
+				1. **Transducer**: converts the physical/chemical signal into electric 
+				2. **Signal Conditioning**: wanting signal to be linear and proportional to detection (amplification may be needed)
+				3. **Computer Interface** 
+				4. **Data Reduction, Analysis**: data compressed if required, then used
+				5. **Perception**: Analysis of models.
+
+				Sensors can be classified based on things:
+
+				* **Internal <--> External** (Proprioceptive <--> Exteroceptive): Either measure internal values, like wheel speed, load, heading, etc. Or measure information about environment, like distances, light, etc. Can be debatable sometimes which one a sensor belongs to.
+
+				* **Passive <--> Active**: Just listening, like light detector. Or actively emitting energy, like radar.
+
+				Other things to consider include:
+
+				* **Bandwidth/Frequency**: the speed of the sensor. Hz. 
+				* **Accuracy**: Defined as $1-(\fr{\rm{measured val} - \rm{true val}}{\rm{true val}})$ -- the percentage correctness. The top of that fraction is **error rate**
+				* **Precision/Repeatability**: Reliability of results. $\rm{precision} = \fr{\rm{range of values}}{\sigma}$ for stdev sigma.
+				* **Resolution**: The smallest possible difference that can be detected. 【例】A sensor range of 5V, stored in 8 bits, would have a resolution of $\fr{5}{2^8} = 0.0195\rm{V} = 19.5\rm{mV}$
+				* **Linearity (because we like linear signals)**: Variation of output to input signal. Not as important if data postprocessed.
+				* **Sensitivity**: How sensitive sensor is to desired property and how *insensitive* it is to undesired properties. Ratio of output to input change. **Cross sensitivity** is sensitivity to things that actively interfere in your desired thing - e.g. compass and magnets. 
+				* **Measurement range**: self explanatory
+				* **Power, weight, size, cost.**: self explanatory
+
+				**Calibration** is the process of finding limits, fixing reference points, so that we know what the sensor is measuring. 
+			</div>
+
+			<div class="md-conv" id="s2">
+				### Common Sensors
+
+				***Wheel/Motor encoders.*** wheel has holes in, shine a light beam through, and by counting the number of times the beam is broken in a second, the wheel RPM is found. 
+
+				Can use this to find the distance travelled, *but*-- there will be error if the wheel spins but does not travel, and there will be error from the width of the slats, which can build up a lot. This error decreases with more smaller slats (A, B, C)
+
+				<figure>
+					<img src="./assets/wheelencoder.png" alt="Wheel encoder">
+					<figcaption>Wheel slat configurations</figcaption>
+				</figure>
+
+				But often the *quadrature* (D) encoder is used, with two rows offset at 90&deg;, thus giving a better reading and the travel direction.
+
+				<hr>
+
+				***Heading Sensors.*** determine robot orientation and inclination. Can be internal, like a gyroscope, or external, like a compass. 
+
+				This along with velocity can estimate position -- this is **dead reckoning**
+
+				<hr>
+
+				***Accelerometers.*** Various methods. Simplest is a weight with mass $m$ on a spring with constant $k$. When accelerate, displacement $x$ is recorded. Can use $F=ma=kx$ to work out $a$.
+
+				Directional and limited depth of field, but cheap. 
+
+				<hr>
+
+				***Gyroscope.*** Measure and maintain orientation and angular velocity. Degrees per second.
+
+				<hr>
+
+				***Inclinometer.*** Measures inclination (noooo, you don't say?). Two types: **mercury switch** (binary) and **electrolyte sensor** (analogue)
+
+				<figure>
+					<img src="./assets/tilt.png" alt="Mercury switch: switches on if tilted, binary signal. Electrolyte Sensor: based on level of conductive fluid, provides different signal strength" style="max-width: 500px;">
+				</figure>
+
+				<hr>
+
+				All of these can be combined into an **inertial measurement unit** (IMU)
+
+				<hr>
+
+				***Light/Temp Sensor.*** Done with resistors. Photoresistors change resistance to light, and thermal resistors change to heat.
+
+				<hr>
+
+				***Touch Sensor.*** There are two types: Contact (binary isTouching sensor) and tactile (detects the surface shape).
+
+				<figure>
+					<img src="./assets/touchsensor.png" alt="Whisker sensors: binary touch. Piezoelectric/Tactile sensors: analogue tough" style="max-width: 680px;">
+				</figure>
+
+				Whisker sensors/binary sensors are cheaper, but have some limitations and problems. It's not pressure sensitive, and especially for whisker sensors, you must consider *switch bounce*. 
+
+				Tactile sensors use piezoelectric material, whcih changes resistance based on pressure, and so can get shape, force, surface texture, etc.
+
+				<hr>
+
+				***Passive Infra-Red Sensor.*** (PIR) used in motion detectors, monitors two different rays of infra-red light levels next to each other. When a living object passes through the sensor range, there is a heat differential between the two beams, and the sensor will trip.
+
+				<hr>
+
+				***Hall effect sensor.*** Measures external magnetic fields. Can be used with known magnetic fields to infer dstance. 
+
+				### Range Sensors
+
+				Range sensors are very important for mobile robotics, and can be used with internal sensors to calculate position.
+
+				<hr>
+
+				***Time of Flight Ranging.*** (ToF) 
+
+				Sending a signal out, waiting for a bounce back, and getting a range distance, because you know how quick the signal goes.
+
+				Bats do this (echolocation), as well as other **sonar** devices. **Lidar** is also used. 
+
+				Since light is much quicker than sound, it requires more accuracte sensors and computers, and so hobbyist equipment tends to stick to sonar.
+
+				The sensing quality may not be great depending on factors such as angle of facing wall, or interference or other factors.
+
+				<hr>
+
+				***Phase Shift Measurement.*** Measuring difference in wavelength (phase) between a sent and received signal. L	ike the system used to detect gravitational waves. 
+
+				<figure>
+					<img src="https://www.researchgate.net/publication/269108642/figure/fig1/AS:295434892398592@1447448575200/Laser-rangefinder-principal-scheme.png" alt="Phase shift">
+				</figure>
+
+				However, this only works where the distance is less than the wavelength of the beam -- otherwise it just doesn't work, since 360&deg; wavelengths are not able to be told apart.
+
+				<hr>
+
+				***Triangulation ranging.*** Send two beams set a known distance apart to a common target, and use the angles of the beams to calculate the distance. **(important)**
+
+				<figure>
+					<img src="./assets/triangulation.png" alt="" style="max-width: 600px;">
+					<figcaption>Triangulation Process (Remmber: Sine Rule)</figcaption>
+				</figure>
+
+				<hr>
+
+				***Active Infrared.*** Sends out an infrared beam, just below the frequency of ambient infrared. Fairly cheap.
+
+				<hr>
+
+				***Sonar.*** Using ultrasonic sound waves, far above human hearing.
+
+				Speed of sound dependent on temperature and humidity, and so it is really only good at low ranges, up to ~ 5m.
+
+				Very simple to do, but:
+
+				Sound doesn't travel in rays exactly, and you can also get *crosstalk* (interference between different robots / sounds from the environment). It is still ultimately quite slow too, because sound is really not that quick.
+
+				<hr>
+
+				***Radar.*** Does the same as sonar but uses radio signals. They are long range and relatively accurate, but are also supceptible to interference.
+
+				<hr>
+
+				***Laser Rangefinding/Lidar.*** Using laser light. Fast, accurate, but has a limited range to a few hundred metres, is power hungry, and is also *very expensive*. 
+
+				2D lidar is expensive, 3D is even more expensive, but you can imitate a 3D lidar by using a 2D one, and manually moving it perpendicular to the plane it can see in ("Push-broom lidar").
+			</div>
+
+			<h3 id="sq">Sensing Questions</h3>
+
+			<p>
+				<b>[1]</b> Describe the layers in the sensing process -- which one is most important for decision making?
+			</p>
+
+			<button class="collapsible">Answer... </button>
+			<div class="ccontent md-conv">
+				The five stages:
+				* Transducer (converting physical quantity to electric signal)
+				* Signal Conditioning (preprocessing)
+				* Computer interface 
+				* Modelling 
+				* Perception 
+				
+				Perception is directly responsible for decision making, but it bases its decisions on each of the previous layers.
+				
+			</div>
+
+			<p>
+				<b>[2]</b> State 4 main characteristics of sensors. (There are more than 4)
+			</p>
+
+			<button class="collapsible">Answer... </button>
+			<div class="md-conv ccontent ">
+				Any 4 of:
+
+				Response time/bandwidth; cost; error rate; robustness/noise tolerance; sensitivity; linearity; dynamic range; resolution; accuracy; precision.
+			</div>
+
+			<p>
+				<b>[3]</b> What are wheel encoders used for? 
+			</p>
+
+			<button class="collapsible">Answer... </button>
+			<div class="ccontent md-conv">
+				A popular device for controlling the position and speed of wheels and other motor-driven parts. Wheel movements can be used to get an estimate of position/distance.
+
+				Simple and widely accessible. 
+
+				However, because they are internal, their estimation of position is in reference frame of the robot and may not best reflect what is actually going on, which may cause errors.
+			</div>
+
+			<p>
+				<b>[4]</b> A robot tries to move to landmark C using triangulation. Suppose the robot moves from A to B, travelling distance \(l_{AB}\), if angles \(\alpha, \beta\) are known, work out \(l_{AC}, l_{BC}\)
+			</p>
+			<figure>
+				<img src="./assets/sens-q1.png" alt="" style="max-width: 400px;">
+			</figure>
+
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent md-conv">
+				Take the sine rule: 
+
+				$$ \fr{l_{AB}}{\sin(180^\circ - \alpha - \beta)} = \fr{l_{AC}}{\sin\beta} = \fr{l_{BC}}{\sin\alpha} $$
+
+				Rearranging,
+
+				\begin{align}
+					l_{AC} &= \fr{l_{AB} \cdot \sin\beta }{\sin(180^\circ - \alpha - \beta)}\\
+					l_{BC} &= \fr{l_{AB} \cdot \sin\alpha }{\sin(180^\circ - \alpha - \beta)}
+				\end{align}
+			</div>
+
+			<p>
+				<b>[5]</b> What type of sensors may be required for an autonomous patrol security car around a university campus?
+			</p>
+
+			<button class="collapsible">Answer... </button>
+			<div class="ccontent md-conv">
+				Any sensor + suitable justification, e.g. Lidar sensor to detect objects around it, and make sure it is not running into any obstacles/people/staying on the road.
+			</div>
+		</div>
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="./js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+	<script type="text/javascript" src="../../js/markdown.js"></script>
+</body>
+</html>
