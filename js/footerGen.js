@@ -1,6 +1,6 @@
 // stored details
 
-fc = ["© 2020-2022 Yijun Hu, all rights reserved.", "Designed by Yijun Hu"]
+fc = ["© 2020-2023 Yijun Hu, all rights reserved.", "Designed by Yijun Hu"]
 
 // code
 
