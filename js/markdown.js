@@ -27,7 +27,7 @@ var
 		{
 			// <h1>
 			// A line starting with 1-6 hashes.
-			pattern: /(#{1,6})([^\n]+)/g,
+			pattern: /(#{1,6} )([^\n]+)/g,
 			replace: "<h$L1>$2</h$L1>",
 			type: BLOCK,
 		},
