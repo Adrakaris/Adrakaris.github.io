@@ -15,7 +15,7 @@ const repo = [
             ["Saga", "./saga.html"],
             ["Stories and Texts", "./stories.html"],
             ["Notes on the Twilight", "./twilight.html"],
-            ["Map (East Aseron)", "./assets/ancient-empire.jpg"]
+            ["Map (East Aseron)", "./assets/ancient-empire-liao.jpg"]
             
         ]
     }
