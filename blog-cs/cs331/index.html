@@ -445,6 +445,183 @@
 		<div class="colourband">
 			<h2 id="prop">Activations and Backpropagations</h2>
 		</div>
+
+		<div class="cbox">
+
+			<div class="md-conv">
+				### Activation Functions
+
+				Fundamentally neural networks are function approximators. Activation functions are there to add non-linearity to our networks, to allow them to approximate non-linear functions.
+
+				\[
+				y = h(z)
+				\]
+
+				Where $y$ is the **activation value** and $z$ is the **pre-activation value**.
+
+				We have so far been using the step function for the perceptron. But here are a few more:
+
+				(Formulas are provided in the exam paper, but not derivatives, etc.)
+
+				**Linear Function.** 
+				
+				$$L(x) = c x \pod{c \in \bb{R}}$$
+
+				Literally ruins the point of why we have activations in the first place. It outputs more values than step but the output of any number of linear functions is still a linear function.
+
+				<hr>
+
+				**Sigmoid Function.** 
+
+				\[
+				\sigma(x) = \fr{1}{1+e^-x}
+				\]
+
+				Which handily satisfies (**remember**)
+
+				\[
+				\sigma'(x) = \sigma(x) (1 - \sigma(x))
+				\]
+
+				And is nonlinear. 
+
+				Though, the max gradient is at $\sigma'(0) = \fr{1}{4}$, which implies that 75% of error gradient is lost during each backpropagation. 
+
+				Naturally with enough layers, our gradient can vanish to near zero, and it'd be very hard to learn: **vanishing gradient function** 
+
+				<hr>
+
+				**tanh.** 
+
+				$$\tanh(x) = \fr{e^x - e^{-x}}{e^x + e^{-x}} = 2\sigma(2x)-1$$
+
+				Is a rescaled version of sigmoid (**remember**). And has the derivative (**remember**)
+
+				\[
+				\tanh'(x) = 1 - \tanh^2(x)
+				\]
+
+				And can also be considered a smooth version of step, as it goes from -1 to 1 but smoothly. And it is centred around 0, which is helpful.
+
+				tanh also has vanishing gradient problems as a rescaled sigmoid and even more costly to compute.
+
+				<hr>
+
+				**ReLU.** Rectified linear unit
+
+				\[
+				\rm{ReLU}(x) = \max(0, x)
+				\]
+
+				i.e. 0 if $x \leq 0$.
+				
+				It is easy to compute, and has no vanishing gradient ... at least for positive values. For negative values, all gradient dies immediately.
+
+				It is not zero centred, and if a neuron goes below zero, it may just die -- **Dying ReLU**
+
+				<hr>
+
+				**LeakyReLU.** Solves the dying relu problem by letting a little bit "leak" through the negative side. It is defined
+
+				\[
+				\textrm{LReLU}(x) = \begin{cases} x & x \geq 0 \\ \alpha x & x &lt; 0 \end{cases}  \pod{a \in \bb{R}}
+				\]
+
+				$\alpha$ becomes a hyperparameter.
+
+				<hr>
+
+				**Parametric ReLU**. Leaky relu except the $\alpha$ is learned rather than preset. Compared to leaky relu, parametric relu can have a higher accuracy at little extra cost.
+
+				<hr>
+
+				**SoftMax.** Usually used in output. It takes a vector and normalises it into weighted probability values. 
+
+				\[
+				y_i = \fr{e^{z_i}}{\sum_{j=1}^N e^{z_j}}
+				\]
+
+				For a vector of inputs $\vec{z}$ and an output $\y$.
+			</div>
+
+			<div class="md-conv">
+
+				### Forward Propagation
+
+				Going from $\x \lra \z \lra y$. i.e. pushing data forward through a network. 
+
+				This can be done element-wise, but is often better done matrix-wise. 
+
+				<img src="./assets/forward-prop-mlp.png" alt="" style="max-width: 500px; float:right">
+				Given the image on the right, given that the first layer uses **ReLU** and second uses **sigmoid** Let:
+
+				\begin{align}
+					\x &= \begin{bmatrix}
+						x_1 \\ x_2
+					\end{bmatrix} \\
+					\z &= \begin{bmatrix}
+						z_1 \\ z_2\\ z_3
+					\end{bmatrix} \\ 
+					\W &= \begin{bmatrix}
+						w_{11} & w_{21} \\
+						w_{12} & w_{22} \\ 
+						w_{13} & w_{23} 
+					\end{bmatrix} \\
+					\vec{b}_1 &= \begin{bmatrix}
+						0 \\ 0 \\ b_1
+					\end{bmatrix}
+				\end{align}
+
+				Thus $\z = \W \x + \vec{b}_1$, and $\vec{a} = \rm{ReLU}(\z)$.
+
+				Let 
+
+				\begin{align}
+					\vec{v} &= \begin{bmatrix}
+						v_1 \\ v_2 \\ v_3
+					\end{bmatrix} \\
+					b_2 &= b_2
+				\end{align}
+
+				Thus $\hat{y} = \sigma(\vec{v}\t \vec{a} + b_2)$.
+
+				For multiple layers we may see $\W^{[1]}, \W^{[2]}, \dots $ for the weights of different layers.
+
+				Multiple inputs $\x_1, \x_2, \dots$ can be feed-forwarded **together**, by making an $\X = [\x_1, \x_2, \dots, \x_n]$.
+			</div>
+
+			<div class="md-conv">
+				### Loss Functions and Regularisation
+
+				The predicted $\hat{y}$ and the ground truth $y$ can be different. We want a metric to measure the badness of this difference -- a **loss function**.
+
+				We'd like it to 
+
+				* Be minimised when $\hat{y} \lra y$
+				* Increases as $\lla \hat{y} \; \; \; \; \; y$
+				* Globally continuous and differentiable 
+				* Convex (one global minimum)
+
+				... though it is usually very difficult to satisfy all of these, especially the last two and especially especially the last one.
+
+				Note: the term **lost function** and **cost function** are often interchangeable. However, loss function is technically per sample, whilst cost function is averaged over dataset, and can include regularisation.
+				
+				Common losses for regression are $L_1$ (mean absolute error) and $L_2$ (mean squared error) loss, whilst for classification it often is entropy / log loss / hinge loss. (also see cs342)
+
+				The norms $L_1$ and $L_2$ satisfy a norm inequality:
+				$$ L_\infty \leq \cdots \leq L_2 \leq L_1 $$
+				and a norm equivalence: $L_p \equiv L_2 \iff$
+				\[
+				\exists c, C \in \bb{R} : c &lt; C : cL_p \leq L_q \leq CL_p
+				\]
+			</div>
+
+			<div class="md-conv">
+				## Backpropagation 
+
+				
+			</div>
+		</div>
 		
 
 		<footer>
