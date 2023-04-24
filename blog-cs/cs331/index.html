@@ -226,6 +226,8 @@
 				</figure>
 
 				The latter is not called feed-forward, rather feed-back.
+
+				ANNs use high performance hardware which are very fast and parallel (i.e. graphics cards). Because of the intense computing power needed for large NNs, it is very hard to scale up. They have limited fault tolerance capacity.  
 			</div>
 
 			<div class="md-conv">
@@ -233,7 +235,62 @@
 
 				An MP neuron is one of the simplest models. It has one neuron, which accepts binary inputs, and gives binary outputs, based on a user-set threshold $\theta$.
 
-				
+				<figure>
+					<img src="./assets/mp-nulong.png" alt="MP-neuron" style="max-width: 350px;">
+					<figcaption>MP Neuron. It first sums the inputs, then will output if it is $\geq$ a set threshold.</figcaption>
+				</figure>
+
+				We can extend the MP neuron with two types of inputs: excitatory and inhibitory. Excitatory inputs add to the value, and there must be enough excitatory neurons activated to meet the threshold before activation.
+
+				Inhibitory neurons however have **absolute veto power**.
+
+				We can also draw the MP neuron in **Rojas Diagram** form. 
+
+				<figure>
+					<img src="./assets/mp-rojas.png" alt="" style="max-width: 350px;">
+					<figcaption>Rojas diagram.</figcaption>
+				</figure>
+
+				Where the $\theta$ still refers to the threshold, and inhibitory neurons are indicated by a circle after the arrow (see $x_3$). One half of the neuron is black. 
+
+				We can also write the MP neuron in **vector representation**:
+			</div>
+
+			<div class="md-conv side">
+				Let $\vec{1} = (1, 1, \dots 1)$. Let inputs $\x = (x_1, x_2, \dots x_n)$. 
+
+				The sum $z = \vec{1} \cdot \x$.
+
+				The **haviside function** $H_\theta(z) = \begin{cases} 1 & z \geq \theta \\ 0 & z \leq \theta \end{cases}$
+
+				Thus $y = H_\theta(\vec{1} \cdot \x)$
+			</div>
+
+			<div class="md-conv">
+				### To simulate logic gates
+
+				We have basic gates AND, OR, NOT; and derived gates NAND, NOR, XOR, IMPLY.
+
+				We can use an MP neuron to represent the basic gates, by writing out the truth table and finding threshold. 
+
+				<figure>
+					<img src="./assets/mp-logic-basic.png" alt="AND OR NOT gates in mp gate" style="max-width: 600px;">
+					<figcaption>Basic logic gates as MP neurons</figcaption>
+				</figure>
+			</div>
+
+			<div class="md-conv side">
+				***Exercise.*** Consider the function $f: \{0,1\}^3 \lra \{0,1\}$, given as
+
+				\[
+				f(x_1, x_2, x_3) = \begin{cases} 0 & \rm{if } (x_1, x_2, x_3) = (0,0,0) \\
+				1 & \rm{otherwise.} \end{cases}
+				\]
+			</div>
+
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent md-conv">
+				Hint: This is a 3-input OR gate. The rest is left to the reader (because I cba rn).
 			</div>
 		</div>
 		
