@@ -619,7 +619,147 @@
 			<div class="md-conv">
 				## Backpropagation 
 
+				The derivative of a function $f$ is a vector of the partial derivatives of its variables.
+
+				**Notation.** For a function $f(x, \dots)$ let $f_x$ denote $\fr{\partial f}{\partial x}$.
+
+				The whole derivative of a function can be expressed using the multi-dimensional derivative "nabla" operator: $\nabla f$.
+
+				<div class="side">
+					<b><i>Example.</i></b> Given $f(x, y) = x^2 + y^2$;
+
+					\begin{align}
+					\nabla f &= \begin{cases} 
+					f_x = \fr{\partial f}{\partial x} = 2x \\ 
+					f_y = \fr{\partial f}{\partial y} = 2y \end{cases} \\
+					&= \begin{bmatrix}
+						2x \\ 2y
+					\end{bmatrix}
+					\end{align}
+				</div>
+
+				Because $\nabla f$ gives the direction of fastest increase, $-\nabla f$ is the direction of fastest descent. 
+
+				<b><i>Gradient Descent</i></b> is an algorithm that finds the (a) minimum of a function using this method.
+
+				Iteratively, until $x_{t+1} \approx x_t$, 
+
+				\[
+				x_{t+1} = x_t - \alpha \nabla f(x_t)
+				\]
+
+				Where $\alpha$ is the learning rate. 
+
+				Backpropagation uses gradient descent to optimise weights and biases.
+
+				#### Necessary Calculus.
+
+				**This is very necessary.** This is a very easy way to work out the chain rule of partial derivatives, using **dependency graphs**.
+
+				A dependency graph is a graph between nodes, where there is an arc $x \lra y$ if $x$ affects $y$ (i.e. $y = f(x)$ where the $f$ may have some other variables.). 
+
+				On these arcs can be written the partial derivatives $y_x$. Then to get a partial derivative from two ends of the graph, just **multiply every arc back** (and **add** multiple paths).
+
+				See these simple examples:
+
+				<figure>
+					<img src="./assets/partial-dep-graph.png" alt="" style="max-width: 500px;">
+				</figure>
+
+				And this more complicated example:
+
+				<figure>
+					<img src="./assets/partial-complex.png" alt="">
+				</figure>
+
+				Note that the dependency graphs for backpropagation are usually fairly linear. Though remember your standard loss function derivatives.
+
+				#### Backpropagation
+
+				In training, we
+			</div>
+			<div class="codediv">loop:
+	predict \( \hat{y} \) through forward pass
+	use loss function to measure error(\( \hat{y}, y \))
+	backpropagate error to update weights via gradient descent</div>
+
+			<div class="md-conv side">
+				<img src="./assets/backprop-simple-example.png" alt="" style="max-width: 200px; float:right;">
+				Given a network with one input, and sigmoid function, with learning rate $\alpha$ (see right), using binary cross-entropy (log loss):
+
+				\[
+				\cal{L} = -\left( y \log \hat{y} + \left(1-y \right) \log\left(1-\hat{y} \right) \right)
+				\]
+
+				Write the learning rules for training. (For $w$ and $b$)
+			</div>
+
+			<p>
+				<b>NOTE</b> that \[ \cal{L}_y = \fr{\partial \cal{L}}{\partial \hat{y}} = \fr{\hat{y} - y}{(1-\hat{y})\hat{y}}  \]
+				The proof is left as an exercise to the reader
+			</p>
+
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent md-conv">
+				<img src="./assets/backprop-grad-rules-example-soln.png" alt="">
+			</div>
+
+			<div class="md-conv">
+				**Caching.** (read the answer yet?) You may notice that there are many terms which are repeated, e.g. $\cal{L}_\hat{y} \cdot \hat{y}_z = \cal{L}_z$ were used for both $w$ and $b$. 
+
+				Caching is the process of storing these terms and not computing them over and over. 
+
+				Caching is essential to not having O(horrible) backpropagation.
+			</div>
+
+			<div class="md-conv side">
+				<img src="./assets/backprop-partial-harder-netwk.png" alt="" style="max-width: 400px; float:right">
+				***Example.*** Bigger example now, take the network on the right, compute $$\fr{\partial \cal{L}}{\partial w_3}$$ given that the inputs $(x_1, x_2, x_3) = (-1, 0, 1)$, the ground truth $y=1$, and the loss
 				
+				$$\cal{L} = \fr{1}{2}(y-\hat{y})^2$$.
+			</div>
+
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent md-conv">
+				<img src="./assets/backprop-hard-soln.png" alt="">
+			</div>
+
+			<div class="md-conv">
+
+				### Variations of Gradient Descent
+
+				**Momentum.** Gradient descent often gets stuck on very small local minima. Rather than it stopping, why not, like a ball rolling down the hill, give it some momentum to get over a small peak and reach a lower minimum?
+
+				Add a parameter $\beta$, which exponential-weighted-averages in iterations before the current one, where:
+				\[
+				x_{t+1} = x_t - av_t
+				\]
+				Where
+				\[
+				v_t = \beta v_{t-1} + (1-\beta) \nabla f (x_t)
+				\]
+				i.e. every update at time $t$ also takes into account the updates at previous times with exponentially less importance. 
+
+				This equation unravels into
+				\[
+				S(\beta \nabla f(x_t) + \beta^2 \nabla f(x_{t-1}) + \beta^3 \nabla f(x_{t-2}) + \cdots)
+				\]
+				Where 
+				\[
+				S = \fr{1}{\beta + \beta^2 + \beta^3 + \cdots}
+				\]
+
+				**RMSProp.** Root mean square propagation. This method helps prevent vanishing and exploding gradients.
+
+				Replace $\alpha$ with $\fr{\alpha}{\sqrt{w_t} + \varepsilon}$, where $w_t = \beta{w_{t-1}} + (1-\beta) (\nabla f(x_t) )^2$ for a (new and different) hyperparameter $\beta$. 
+
+				This decreases the step for very large gradients and increases the step for small gradients.
+
+				**ADAM.** Putting both of these together, we have adaptive movement estimation, or ADAM. 
+
+				We have momentum parameter $\beta_1$ and RMS parameter $\beta_2$.
+
+				**SGD.** Stochastic Gradient Descent. Rather than updating once for every piece of data in the dataset, update for every individual piece of data, or every minibatch of a portion of the dataset. 
 			</div>
 		</div>
 		
