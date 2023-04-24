@@ -46,6 +46,13 @@
 		<!-- REMEMBER TO DO! -->
 
 		<div class="cbox">
+			<ol>
+				<li><a href="#learn">Learning</a></li>
+				<li><a href="#anns">Artificial Neural Networks (inc. MP Neuron)</a></li>
+				<li><a href="#perceptron">Perceptron</a></li>
+				<li><a href="#prop">Activations and Backpropagations</a></li>
+			</ol>
+
 			\( 
 				\renewcommand{\vec}{\mathbf}
 				\renewcommand{\epsilon}{\varepsilon}
@@ -92,6 +99,14 @@
 
 		<div class="cbox">
 			<div class="md-conv">
+				### AI 
+
+				AI is a very broad category. It describes everything from tree search to deep learning.
+
+				Good old fashioned AI (**GOFAI**) describes anything which does not use neuron-based models to learn: that is, statistical machine learning models, constraint satisfaction, etc. 
+
+				Neural computing then further encompasses deep learning.
+				
 				### Learning paradigms
 
 				There are three learning paradigms:
@@ -100,11 +115,13 @@
 				* Unsupervised learning, where there are no labels
 				* Reinforcement learning, where model has states and actions, and feedback given based on that
 
-				Supervised learning tries to approximate a function $f:X \lra Y$
+				Supervised learning tries to approximate a function $f:X \lra Y$. Example is classification.
 
-				Unsupervised learning tries to *find* a function given an $X$ 
+				Unsupervised learning tries to *find* a function given an $X$. Example is clustering.
 
 				Reinforcement learning is like [Little Albert and the Rat](https://www.simplypsychology.org/little-albert.html)
+
+				This is a form of **pavlovian conditioning** (associative learning) e.g. Albert being conditioned to fear the rat. 
 
 				### Transfer Learning 
 
@@ -136,8 +153,8 @@
 
 			</div>
 				<figure>
-					<img src="https://www.researchgate.net/publication/324136610/figure/fig3/AS:610484441079808@1522562241822/The-diagram-shows-neuron-the-basic-unit-of-human-neurobiological-system-The-parts-are.png" alt="Labelled neuron diagram" style="max-width: 500px;">
-					<figcaption>Diagram of a neuron</figcaption>
+					<img src="./assets/neuron-diagram-researchgate.png" alt="Labelled neuron diagram" style="max-width: 500px;">
+					<figcaption>Diagram of a neuron (ResearchGate)</figcaption>
 				</figure>
 
 			<div class="md-conv">
@@ -175,8 +192,8 @@
 			</div>
 
 			<figure>
-				<img src="https://content.byui.edu/file/a236934c-3c60-4fe9-90aa-d343b3e3a640/1/module5/images/Action_Potential2.jpg" alt="Membrane potential diagram during activation">
-				<figcaption>Voltage graph during stages of activation</figcaption>
+				<img src="./assets/neuron-action-potential.jpg" alt="Membrane potential diagram during activation">
+				<figcaption>Voltage graph during stages of activation (byui.edu)</figcaption>
 			</figure>
 
 			<div class="md-conv">
@@ -261,7 +278,7 @@
 
 				The sum $z = \vec{1} \cdot \x$.
 
-				The **haviside function** $H_\theta(z) = \begin{cases} 1 & z \geq \theta \\ 0 & z \leq \theta \end{cases}$
+				The **haviside function** $H_\theta(z) = \begin{cases} 1 & z \geq \theta \\ 0 & z &lt; \theta \end{cases}$
 
 				Thus $y = H_\theta(\vec{1} \cdot \x)$
 			</div>
@@ -292,6 +309,141 @@
 			<div class="ccontent md-conv">
 				Hint: This is a 3-input OR gate. The rest is left to the reader (because I cba rn).
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="perceptron">Perceptron</h2>
+		</div>
+
+		<div class="cbox">
+
+			<div class="md-conv">
+				### Introduction 
+
+				The MP Neuron is limited: 
+
+				* It only accepts binary ins and outs 
+				* Every input is equally important / no weighting
+				* $\theta$ must always be set manually / no learning
+
+				A advancement of this is the Rosenblatt **perceptron:**
+
+				<figure>
+					<img src="./assets/rosenblatt-perceptron-1.png" alt="" style="max-width: 600px;">
+					<figcaption>Rosenblatt perceptron. $\theta$ is learned.</figcaption>
+				</figure>
+
+				We can move the $\theta$ from being a part of the perceptron node, and into a **bias**, so that we can use a standard Haviside "step" function: 
+
+				\[
+				H = \begin{cases} 1 & z \geq 0 \\ 0 & z &lt; 0 \end{cases}
+				\]
+
+				Thus getting 
+
+				<figure>
+					<img src="./assets/rosenblatt-perceptron-2.png" alt="" style="max-width: 600px;">
+					<figcaption>Bias is moved outside and set to $-\theta$. The step looking thing is the step function.</figcaption>
+				</figure>
+
+				Which is representable as 
+				\[y = H(\w \cdot \x + b)\]
+
+				We can even pretend the bias is another weight on a constant 1 input, i.e.
+				\begin{align}
+					\x &= (x_1, x_2, \dots, x_n, 1) \\
+					\w &= (w_1, w_2, \dots, w_n, b) \\ 
+					y &= H(\vec{w} \cdot \vec{x})
+				\end{align}
+			</div>
+
+			<div class="md-conv side">
+				**Exercise.** A perceptron has two inputs, which have weights $[3,1]$, and a bias of $-3$. Draw the diagram of the perceptron, and predict the output on $\x = [0,1]$ and $\x = [1,1]$
+			</div>
+
+			<div class="md-conv">
+				### The Perceptron Learning Rule
+
+				(This may not be part of the exam)
+
+				In general:
+			</div>
+			<div class="codediv">LABEL start:
+	choose random \(\w, b : \w\t\x + b = 0\)
+	if $\exists$ misclassified node:
+		update $\w, b$ 
+		GOTO start
+	output $\w, b$</div>
+				
+			<div class="md-conv">
+				Recall: Given two vectors $\vec{a}, \vec{b}$:
+
+				\[
+				\vec{a} \cdot \vec{b} \begin{cases} = 0 & \rm{Orthogonal } (90^\circ) \\ &gt; 0 & \rm{Acute} \\ &lt; 0 & \rm{Obtuse or reflex} \end{cases}
+				\]
+
+				Given $\w \cdot \x$, and a vector $\vec{v}$, $\w \cdot \vec{v} \geq 0 \iff \rm{Angle}(\w, \vec{v}) \leq 90^\circ$.
+
+				We can use this property to detect misclassified nodes, if a $\vec{v}$ has an angle greater than 90. 
+
+				For any vector $\vec{v}$ that is misclassified, we do $\w \lla \w + \alpha y \vec{v}$, where $\alpha$ is the learning rate, and $y$ is 1 or -1 based on which category they're supposed to be in. i.e. add misclassified + node, minus misclassified - node.
+			</div>
+
+			<div class="md-conv">
+
+				### Non-linear separability 
+
+				A perceptron can only separate things linearly: it can only draw a straight line in a plane, or a straight plane in a 3D space. 
+
+				XOR is a logic gate which is not linearly separable in 2D. 
+
+				We can solve this by:
+
+				* Replacing the threshold with a more complex function (defeats the point of simplifying it in the first place)
+				* Increase the number of layers
+
+				Generally we prefer the second option.
+
+				Since we know that $x_1 \oplus x_2 = (x_1 \lor x_2) \land \lnot (x_1 \land x_2)$, we can split this into two layers:
+
+				<figure>
+					<img src="./assets/xor-mlp.png" alt="">
+					<figcaption>The XOR gate</figcaption>
+				</figure>
+
+				Since we have multiple layers, this is a **Multi-layer Perceptron** (MLP).
+
+				Since a perceptron draws a straight line in 2D space, any polygon can be decomposed into an MLP.
+			</div>
+
+			<div class="md-conv left">
+				<img src="./assets/mlp-shape-bound.png" alt="" style="float: right; max-width: 200px;">
+				***Excersise.*** Given the picture on the right;
+
+				Represent the shape $R$ as a multi-layer perceptron.
+
+				The axes are $x_1$ and $x_2$ respectively.
+			</div>
+
+			<button class="collapsible">Answer...</button>
+			<div class="ccontent md-conv">
+				***Answer.*** This can be decomposed into four lines, going anticlockwise from the top-right:
+
+				\begin{align}
+					(1) \; \; 0 &\leq -3x_1 -2x_2 + 6 \\ 
+					(2) \; \; 0 &\leq 3x_1 - x_2 + 3 \\ 
+					(3) \; \; 0 &\leq x_2 + 2 \\
+					(4) \; \; 0 &\leq -x_1 + x_2 + 2
+				\end{align}
+
+				They are intersected (ANDed) together. 
+
+				Draw the MLP as appropriate.
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="prop">Activations and Backpropagations</h2>
 		</div>
 		
 
