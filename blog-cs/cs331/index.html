@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Scaffold</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="./" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="./blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="./about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS331</h1>
+					<p class="subheading">Neural Computing</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+			</div>
+		</header>
+
+		<!-- REMEMBER TO DO! -->
+
+		<div class="cbox">
+			\( 
+				\renewcommand{\vec}{\mathbf}
+				\renewcommand{\epsilon}{\varepsilon}
+
+				\DeclareMathOperator*{\argmax}{argmax}
+				\DeclareMathOperator*{\argmin}{argmin}
+
+				\def\xtrain{{\vec{x}_i}}  
+				\def\xtest{{\vec{\tilde{x}}_i}}  
+				\def\ytrain{{y_i}} 
+				\def\ytest{{\tilde{y}_i}} 
+				\def\ypred{{\hat{y}_i}} 
+				\def\yhat{{\hat{y}}} 
+				\def\wtrans{{\vec{w}^\top}} 
+				\def\bb#1{{\mathbb{#1}}}
+				
+				\def\x{{\vec{x}}}
+				\def\X{{\vec{X}}}
+				\def\w{{\vec{w}}}
+				\def\W{{\vec{W}}}
+				\def\y{{\vec{y}}}
+				\def\Y{{\vec{Y}}}
+				\def\t{{^\top}}
+				\def\z{{\vec{z}}}
+				\def\Z{{\vec{Z}}}
+				\def\v{{\vec{v}}}
+
+				\def\lra{{\longrightarrow}}
+				\def\lla{{\longleftarrow}}
+				\newcommand{\fr}{\frac}
+				\newcommand{\vecu}{\underline}
+				\newcommand{\rm}{\textrm}
+				\newcommand{\bb}{\mathbb}
+				\newcommand{\nm}{\overline}
+				\newcommand{\tl}{\tilde}
+
+			\)
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="learn">Learning</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Learning paradigms
+
+				There are three learning paradigms:
+
+				* Supervised learning, where you have labelled data and model tries to find correct labels 
+				* Unsupervised learning, where there are no labels
+				* Reinforcement learning, where model has states and actions, and feedback given based on that
+
+				Supervised learning tries to approximate a function $f:X \lra Y$
+
+				Unsupervised learning tries to *find* a function given an $X$ 
+
+				Reinforcement learning is like [Little Albert and the Rat](https://www.simplypsychology.org/little-albert.html)
+
+				### Transfer Learning 
+
+				Transfer learning is taking a pre-trained model, and retraining it to perform a similar task. I.e. taking an ImageNet classifier (knows 1000 types of objects) and training it further to recognise new categories of your own choosing. 
+
+				This concept of "incremental learning" builds on previous work done, and is faster and less effort than going from zero.
+
+				Advantage:
+
+				* Allows training with less data since you reuse models
+				* Takes less time
+				* Takes advantage of existing good architecture (not reinvent the wheel)
+
+				The idea is to modify and retrain only the later stages/later layers. Naturally you have to set your own learning parameters still. 
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="biology">Biology Class</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Neurons 
+
+				Your central nervous system (Brain, spine) has neurons. Neurons make think. Yes, this is relevant and examined. 
+				
+				Neurons generate signals (**action potentials**), which pass to other neurons.
+
+			</div>
+				<figure>
+					<img src="https://www.researchgate.net/publication/324136610/figure/fig3/AS:610484441079808@1522562241822/The-diagram-shows-neuron-the-basic-unit-of-human-neurobiological-system-The-parts-are.png" alt="Labelled neuron diagram" style="max-width: 500px;">
+					<figcaption>Diagram of a neuron</figcaption>
+				</figure>
+
+			<div class="md-conv">
+				**Dendrites** are tree-like structures with small spines which the synapses (ends) of other neurons connect to. They receive information.
+
+				The **Soma** is the cell body, and is where all the signals (charges) received go. They are put in the **axon hillock**, and if the signal exceeds a threshold, the neuron passes on the signal. 
+
+				The **axon** is the long thing which connects the axon terminals (synapses) to the rest of the cell. The larger the diameter the axon has, the fast it transmits data. Axons have a fatty myalin sheath insulating it, and if this is degraded axon transmission effectiveness worsens. 
+
+				Altogether, a neuron takes in input, has an **activation function** which transforms the signal, and then makes output. 
+
+				There are three classes of neurons: **sensory, motor, relay/inter**.
+
+				Sensory neurons take input, motor neurons make output, and relay neurons relay data between them. 
+
+
+				### Signal propagation
+
+				Signals are propagated electrically, called "membrane potential". 
+
+				It comes from the voltage potential across the nerve fibre -- the cell membrane. 
+
+				Inside the cell are lots of $K^+$ ions. Outside are a lot of $Na^+$ ions. Their inequality forms the voltage potential, which is at rest around -70 mV. This is the **resting potential**.
+
+				Across the cell membrane there are **channels** and **pumps**:
+
+				* The **leaky channels**, which allows the free travel of $Na^+$ and $K^+$ through (is not gated)
+				* The **volt-gated channels**, which only opens at certain voltages, and are generally closed at resting potential.
+				* The **Sodium-Potassium Pump**, which removes 3$Na^+$ and takes in 2$K^+$.
+
+				Neurons obey the "all or nothing" principle of firing; any stimulus under the threshold, no matter how big, does not fire, but anything that reaches it produces a full response. 
+
+				See the graph for the phases.
+				
+			</div>
+
+			<figure>
+				<img src="https://content.byui.edu/file/a236934c-3c60-4fe9-90aa-d343b3e3a640/1/module5/images/Action_Potential2.jpg" alt="Membrane potential diagram during activation">
+				<figcaption>Voltage graph during stages of activation</figcaption>
+			</figure>
+
+			<div class="md-conv">
+				A neuron is **polarised** if it is more negative on the inside. **hyperpolarisation** is when the membrane potential is below resting potential, whilst **depolarisation** is when it's above. 
+
+				The threshold is around -55 mV. 
+
+				A stimulus causes some Na+ volt-gated gates to open, but if it's not enough it'll go back again. 
+				
+				When the threshold is reached it causes a rush of volt-gated gates to open, giving a spike of voltage up to 30 +mV.
+				
+				When it closes it hyperpolarises, and corrects itself. 
+
+				### Synaptic transmission
+
+				Synapses transfer chemically, via **neurotransmitters**, which are released from vesicles, and travel to receptors on the opposing synapse/dendrite.
+
+				They can either be **excitatory** (causing action) or **inhibitory** (preventing action)
+
+				Note that axon terminals don't have to connect to dendrites. They can connect to dendrites, somas, and other axons. Dendrites can also connect to dendrites. 
+			</div>
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="./js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+	<script type="text/javascript" src="../../js/markdown.js"></script>
+</body>
+</html>
