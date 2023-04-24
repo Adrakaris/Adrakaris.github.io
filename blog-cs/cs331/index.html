@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Scaffold</title>
+	<title>CS331</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
 	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
@@ -197,6 +197,43 @@
 				They can either be **excitatory** (causing action) or **inhibitory** (preventing action)
 
 				Note that axon terminals don't have to connect to dendrites. They can connect to dendrites, somas, and other axons. Dendrites can also connect to dendrites. 
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="anns">Artificial Neural Networks</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Introduction
+
+				Artificial Neural Networks are computer algorithms which are modelled off biological neuron learning. 
+
+				Neurons are arranged in layers, which connect through to one another. (Note the input layer is not counted)
+
+				Propagation of data goes in one direction, from input to output. This is called a **feed-forward NN**. 
+
+				Of course there are many varieties, 
+				
+				like the convolutional neural net CNN, which works off filters (think: a function over an $n\times n$ block of an image);
+
+				or a recurrent neural network, with a feedback system that allows it to deal with time-series or sequential data (see image).
+
+				<figure>
+					<img src="https://images.ctfassets.net/3viuren4us1n/fTI7OlJ6DrkeE05St3uf0/810c6207f985495c2b1b37cb7fc2d9db/2020-02-21_difference-between-cnn-rnn-1.webp" alt="RNN and expansion" style="max-width: 400px;">
+					<figcaption>A RNN, and its expanded form through time.</figcaption>
+				</figure>
+
+				The latter is not called feed-forward, rather feed-back.
+			</div>
+
+			<div class="md-conv">
+				### MP-Neuron
+
+				An MP neuron is one of the simplest models. It has one neuron, which accepts binary inputs, and gives binary outputs, based on a user-set threshold $\theta$.
+
+				
 			</div>
 		</div>
 		
