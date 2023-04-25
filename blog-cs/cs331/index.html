@@ -51,6 +51,7 @@
 				<li><a href="#anns">Artificial Neural Networks (inc. MP Neuron)</a></li>
 				<li><a href="#perceptron">Perceptron</a></li>
 				<li><a href="#prop">Activations and Backpropagations</a></li>
+				<li><a href="#hopfield">Hopfield Network</a></li>
 			</ol>
 
 			\( 
@@ -227,6 +228,16 @@
 
 				Artificial Neural Networks are computer algorithms which are modelled off biological neuron learning. 
 
+				<hr>
+
+				Beginning in 1943 with the MP neuron, ANN technology has developed quickly, with Perceptron being invented in 1958, and backpropagation in 1986. 
+
+				Naturally, theoretical developments came quicker than computing power at the time.
+
+				The limitations of a single layer Perceptron are apparent (see: the inability of even emulating an XOR gate), and lead to an **AI Winter** in the 1970s, where research in the field declined.
+
+				<hr>
+
 				Neurons are arranged in layers, which connect through to one another. (Note the input layer is not counted)
 
 				Propagation of data goes in one direction, from input to output. This is called a **feed-forward NN**. 
@@ -245,6 +256,8 @@
 				The latter is not called feed-forward, rather feed-back.
 
 				ANNs use high performance hardware which are very fast and parallel (i.e. graphics cards). Because of the intense computing power needed for large NNs, it is very hard to scale up. They have limited fault tolerance capacity.  
+
+				
 			</div>
 
 			<div class="md-conv">
@@ -591,7 +604,7 @@
 			</div>
 
 			<div class="md-conv">
-				### Loss Functions and Regularisation
+				#### Loss Functions and Regularisation
 
 				The predicted $\hat{y}$ and the ground truth $y$ can be different. We want a metric to measure the badness of this difference -- a **loss function**.
 
@@ -617,7 +630,7 @@
 			</div>
 
 			<div class="md-conv">
-				## Backpropagation 
+				### Backpropagation 
 
 				The derivative of a function $f$ is a vector of the partial derivatives of its variables.
 
@@ -760,6 +773,181 @@
 				We have momentum parameter $\beta_1$ and RMS parameter $\beta_2$.
 
 				**SGD.** Stochastic Gradient Descent. Rather than updating once for every piece of data in the dataset, update for every individual piece of data, or every minibatch of a portion of the dataset. 
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="hopfield">Hopfield Networks</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Introduction
+
+				**Fixed point iteration** is a method of solving an equation of form $x = f(x)$ by using a starting guess $x_0$ and repeatedly iterating until convergence ($x_k = f(x_{k-1})$).
+
+				We can think of $x_0$ as a "noisy" incomplete guess, and the process of iteration as refining that guess until we get convergence.
+
+				This is what a Hopfield Network does. It is usually used for image reconstruction, starting from a corrupted (partial) pattern $\x_0$, trying to reconstruct an optimal (memorised) pattern $\x^*$, by passing it through the hopfield network $F$ via $\x_{k+1} = F(\x_k)$.
+
+				<hr>
+
+				Hopfield networks work off **Associative Learning**. 
+
+				**Associative learning** encodes relationships between items cf. pavlovian conditioning. Hopfield is an **unsupervised** learning method using **associative memory** to link together partial and full images.
+
+				**Associative memory** (**content addressable memory**) is the ability to access an item by knowing only part of its content.
+
+				i.e. retrieve the most similar pre-memorised pattern based on similar points of the inputs.
+
+				<hr>
+
+				Let an $n \times n$ image pattern be represented as a vector $\x\; n^2$ elements long.
+
+				Each element of $\x$ can either be: 1 or -1, in which case we have a *bipolar HN*; or 1 or 0. i.e. our image is binary.
+
+				We have one neuron per pixel.
+
+				### The Hopfield Network	
+
+				HNs are a special type of recurrent networks (RNNs). 
+				
+				It is a **feedback** network, meaning it has feedback (cyclical) edges, unlike a feed-forward NN which doesn't have cycles. 
+
+				It has a single, fully connected "auto-associative" layer (i.e. a complete graph), where every neuron is connected to every other neuron (but not itself).
+
+				Neurons have a binary threshold for I/O.
+
+				It is **energy-based**, with "energy" that decreases with each evolution (iteration). Seems to be like a learning rate. 
+
+				<figure>
+					<img src="./assets/hopfield-k4.png" alt="" style="max-width: 200px;">
+					<figcaption>Hopfield network of 4 nodes.</figcaption>
+				</figure>
+
+				They are represented as a complete graph $G = (V,E)$, where 
+
+				* Each node $i \in V$ is a **perceptual node** with set states $x_i \in \{1,-1\}$ or $\{1,0\}$.
+				* Each edge $(i,j) \in E$ has a weight $w_{ij}$
+				* Symmetrical, bidirectional edges
+				* No self loops
+
+				### Learning 
+
+				HNs learn via the **Hebbian Learning Rule**:
+
+				> Neurons that fire together wire together 
+				> Neurons that fire out of sync fail to link
+
+				If the states of $i, j$ are the same, then $w_{ij}$ makes positive (1). Else, makes negative (-1).
+
+				***Single Pattern.*** Given a bipolar network, and a single memorised pattern $\x$, the **weight matrix** $W$ for $\x$ is defined as
+				\[
+				\begin{matrix}
+					W_{ij} = x_i x_j \pod{i \neq j} & & W_{ii} = 0
+				\end{matrix}
+				\]
+				\[
+				\iff W = \x \cdot \x\t - \vec{I}
+				\]
+				We can do this because the network is bipolar. If the numbers are different, weights are -1, else, weights are 1.
+
+				***Multiple Patterns.*** Given N bipolar patterns $\x^{(1)} .. \x^{(n)}$, where each $\x^{(p)} = [x_1^{(p)} .. x_n^{(p)}]$;
+
+				We define the weight matrix
+				\begin{align}
+					W_{ij} &= \fr{1}{N} \sum_{p=1}^N x_i^{(p)} x_j^{(p)} \pod{ i \neq j} & W_{ii} = 0 \\ 
+					W &= \fr{1}{N} \sum_{p=1}^N \left( \x^{(p)} (\x^{(p)})\t  \right) - \vec{I}
+				\end{align}
+
+				i.e the element-wise averages of all the individual image weight matrices.
+
+				***Binary States.*** To maintain the +1/-1 weight numbers, we can work out weights for binary 1/0 states using 
+				\[
+				W_{ij} = (2x_i - 1)(2x_j - 1)
+				\]
+
+				Thus given N binary patterns, we do the same thing except we replace the middle with the above equation.
+
+				***Activation Function***. 
+
+				When training, we want all neurons to have stable states. Our training function is given as 
+				\[
+				\vec{s}({t+1}) = F(W \vec{s}(t))
+				\]
+				Where $\vec{s}(t)$ is the state of the neurons at time $t$; where $F(\cdot)$ is the activation function, and for bipolar HNs is given as 
+				\[
+				F(x) = \rm{sgn}(x) = \begin{cases} 1 & x \geq 0 \\ -1 & x &lt; 0 \end{cases}
+				\]
+				i.e. the new state of every neuron is the sign of the weighted sum of its neighbouring states. 
+
+				***Stability.*** To make sure that our memorised pattern $\x$ is an **attractor** (i.e. a fixed point) we need to make sure 
+				\[
+				\x = \rm{sgn} (W \x)
+				\]
+				
+				For a single pattern, $W = \x \x\t - \vec{I}$, we can verify that it's stable, by checking it in our update function:
+
+				\begin{align}
+					\vec{s}_i(t+1) = \rm{sgn}\left(\sum_{j=1}^n W_{ij} s_j(t)\right) &= \rm{sgn}\left(\sum_{j=1}^n W_{ij} x_j\right) \\
+					&= \rm{sgn} \left(\sum_{j \neq i} (x_i x_j) x_j\right) \\ 
+					&= \rm{sgn} \left(\sum_{j \neq i} x_i \cdot 1\right) \\
+					&= \rm{sgn} \left(x_i \sum_{j \neq i}1\right) \\
+					&= \rm{sgn}\left(x_1(n-1)\right) \geq 0 \\
+					&= x_i\\
+					\therefore \x &= \rm{sgn}(W\x) 
+					\tag*{$\Box$}
+				\end{align}
+
+				In essence, given a set of weights and an $\x$ sub it in and see if you get $x$ out.
+
+				Note that multiple patters **are not** unconditionally stable. In fact, (proof is very long)
+			</div>
+
+			<button class="collapsible">Proof...</button>
+			<div class="ccontent md-conv">
+				\( \def\bp{{^{(p)}}}
+				\def\bq{{^{(q)}}}
+				\def\sgn{{\rm{sgn}}}
+				\)
+				***Proof.*** Given $ W = \fr{1}{N} \sum_{p=1}^N \x\bp (\x\bp)\t - \vec{I}$;
+
+				Want: verify that each $\x\bq$ is an attractor of the HN $\vec{s}(t+1) = sgn(W\vec{s}(t))$
+
+				\begin{align}
+s_i(t+1) &= \sgn\left(\sum_{j=1}^n  W_{ij} s_j(t)\right) = \sgn\left(\sum_{j=1}^n  W_{ij} x_j\bq\right)\\
+&= \sgn\left( \sum_{j \neq i} \left[  \fr{1}{N} \sum_{p=1}^N x_i\bp \cdot x_j\bp \cdot x_j\bq  \right] \right) \\
+&= \sgn\left(  \fr{n+1}{N}x_i\bq + \sum_{j \neq i}  \fr{1}{N} \sum_{p\neq q} x_i\bp \cdot x_j\bp \cdot x_j\bq   \right) \\
+				\end{align}
+				\[
+				\rm{Where } \sum_{j\neq i} \fr{1}{N} \sum_{p \neq q} x_i\bp \cdot x_j\bp \cdot x_j\bq = \fr{x_i\bq \cdot x_i\bq}{N} \sum_{j\neq i}\sum_{p\neq q} x_i\bp \cdot x_j\bp \cdot x_j\bq
+				\]
+				\begin{align}
+					\rm{So } s_i(t+1) &= \sgn\left(  \fr{n+1}{N}x_i\bq + \fr{x_i\bq \cdot x_i\bq}{N}  \sum_{j \neq i} \sum_{p\neq q} x_i\bp \cdot x_j\bp \cdot x_j\bq   \right) \\ 
+					&= x_i\bq \cdot \sgn\left(  \fr{n+1}{N} + \fr{x_i\bq}{N}  \sum_{j \neq i} \sum_{p\neq q} x_i\bp \cdot x_j\bp \cdot x_j\bq  \right) \\ 
+					&= x_i\bq \cdot \sgn(\varepsilon_i)
+				\end{align}
+			</div>
+
+			<div class="md-conv">
+				TLDR We have a constant $\varepsilon_i$ which equals this thing: $\fr{n+1}{N} + \fr{x_i\bq}{N}  \sum_{j \neq i} \sum_{p\neq q} x_i\bp \cdot x_j\bp \cdot x_j\bq$ which is important as:
+
+				The fixed point $\x\bq = \sgn(W\x\bq)$ exists only if $\varepsilon_i &gt; 0$ for all neurons $i$.
+
+				***Energy.*** Energy is the capacity of the network to evolve. HN evolves until the energy reaches a local minimum.
+
+				The global energy $E$ is given as
+				\[
+				E = - \sum_{j &gt; i}\sum_{i=1}^n s_i W_{ij} s_j
+				\]
+				I.e. the sum of all edges (counted **once**), multiplied to their neighbouring (bipolar) states, and made negative.
+
+				The matrix form is given 
+				\[
+				E = -\fr{1}{2} \vec{s}\t W \vec{s}
+				\]
+
+				It is a given theorem that energy is a decreasing function.
 			</div>
 		</div>
 		
