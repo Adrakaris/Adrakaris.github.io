@@ -52,6 +52,7 @@
 				<li><a href="#perceptron">Perceptron</a></li>
 				<li><a href="#prop">Activations and Backpropagations</a></li>
 				<li><a href="#hopfield">Hopfield Network</a></li>
+				<li><a href="#rnn">Recurrent Neural Networks</a></li>
 			</ol>
 
 			\( 
@@ -949,6 +950,221 @@ s_i(t+1) &= \sgn\left(\sum_{j=1}^n  W_{ij} s_j(t)\right) = \sgn\left(\sum_{j=1}^
 
 				It is a given theorem that energy is a decreasing function.
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="rnn">Recurrent Neural Networks</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Introduction 
+
+				A neural network that can deal with **sequential** data. 
+
+				It has internal states (called memory).
+
+				<figure>
+					<img src="./assets/rnn.png" alt="" style="max-width: 500px;">
+					<figcaption>RNN network, and its unravelled equivalent along time.</figcaption>
+				</figure>
+
+				It has many uses, including sentiment analysis, speech recognition, and machine translation.
+
+				One common example is *named entity recognition*: go through a piece of text and pick out the proper nouns, putting them in predefined categories like Person, Place, Date... etc. 
+
+				This may require extra context from before (and after) the word in the sentence.
+
+				<hr>
+
+				In more detail, an unravelled RNN in more detail as follows:
+
+				<figure>
+					<img src="./assets/rnn-detail.png" alt="" style="max-width: 600px;">
+				</figure>
+
+				There is a memory cell which acts as a hidden state that is carried through time. Information from the past is used for the present.
+
+				The RNN has three weights: $w_i, w_o, w_h$ for input weight, output weight, and hidden weight respectively.
+
+				Both hidden and output cells all have an activation function.
+
+				<hr>
+
+				***Types.***
+
+				The **Elman** network has feedback from internal nodes.
+
+				<figure>
+					<img src="./assets/rnn-elman.png" alt="" style="max-width: 500px;">
+				</figure>
+
+				The process is given 
+				\begin{align}
+					a_0 &= \tanh(w_i x_0) \\
+					\hat{y}_0 &= \sigma(w_o a_0) \\
+					&\cdots \\
+					a_t &= \tanh(w_i x_t + w_h a_{t-1}) \\ 
+					\hat{y}_t &= \sigma(w_o a_t) \\
+				\end{align}
+
+				The **Jordan** network has feedback from the output post-activation. 
+
+				<figure>
+					<img src="./assets/rnn-jordan.png" alt="" style="max-width: 460px;">
+				</figure>
+
+				The recurrent process is given 
+				\begin{align}
+					a_t &= \tanh (w_i x_t + w_h y_{t-1}) \\
+					\hat{y}_t &= \sigma (w_o a_t)
+				\end{align}
+
+				Optionally, we can also add input and output biases $b_i, b_o$.
+			</div>
+
+			<div class="md-conv side">
+				<img src="./assets/rnn-elman-example.png" alt="" style="max-width: 300px; float: right;">
+				***Example.*** Given an Elman RNN (right), with weights and biases 
+
+				\begin{align}
+					(w_i, w_h, w_o) &= (2, 4, 1) \\ 
+					(b_i, b_o) &= (-2, 2)
+				\end{align}
+
+				Predict the output given $\x = \{1, 2, 3\}$.
+			</div>
+
+			<div class="md-conv">
+				### Deep RNNs
+			
+				A simple RNN only has *one, unidirectional* hidden layer, with no memory control.
+	
+				Deep RNNs (DRNN) is deep with respect to both time and space. 
+	
+				Such as stacking hidden recurrent layers:
+	
+				<figure>
+					<img src="./assets/deep-rnn-stack.png" alt="" style="max-width: 400px;">
+				</figure>
+
+				Or increasing time depth:
+				
+				<figure>
+					<img src="./assets/deep-rnn-long.png" alt="" style="max-width: 300px;">
+				</figure>
+
+				<hr>
+
+				***Bidirectional RNN.*** combined from two unidirectional RNNs, a bidirectional RNN can use context from both the past and the future. 
+
+				<figure>
+					<img src="./assets/bidir-rnn.png" alt="" style="max-width: 450px;">
+				</figure>
+
+				It is accurate, but has high complexity in training.
+
+				### LSTM
+
+				
+				LSTM is long short term memory, and is aimed to solve the vanishing gradient problem.
+
+				Since a vanilla RNN expands a lot in time, it is supceptible to exponential decay (or blow up)
+
+				Since weights over time are multiplicative.
+
+				For exploding gradients we can do *gradient clipping* -- maxing out the gradient.
+
+				But for vanishing gradients, this is harder. This is what LSTM is for. 
+
+				It introduces three **gates** for data passage:
+
+				* An **input gate** $i$; 1 allows data entry
+				* An **output gate** $o$; 1 allows data exit 
+				* A **forget gate** (remember gate) $f$; 1 means **remember** values.
+				
+				<figure>
+					<img src="./assets/lstm-gate.png" alt="" style="max-width: 500px;">
+					<figcaption>Example LSTM RNN </figcaption>
+				</figure>
+
+				The gates depend on time $t$. 
+
+				Technically, they are sigmoid probability values, but for simplicity we treat as binary.
+
+				<figure>
+					<img src="./assets/lstm-gate-examples.png" alt="" style="max-width: 600px;">
+					<figcaption>Examples of what gate changes do what</figcaption>
+				</figure>
+
+				* When $i=0$, the value from the memory cell at time previous to the current one gets carried over.
+				* When $o=0$, the item in the memory cell cannot affect the next input
+				* When $f=0$, the item in the previous memory cell is overwritten by the incoming output. This is like a vanilla RNN.
+				* When $f=1$, the item in the previous memory cell is combined with the current one, such as via addition.
+
+				Thus, a **vanilla RNN** calculates the hidden state $h_t$ by the following:
+				\[
+				h_t = \tanh (W \begin{bmatrix}
+					h_{t-1} \\ x_t
+				\end{bmatrix}  )
+				\]
+				Where $W$ are the weights $\begin{bmatrix}
+					w_h & w_i
+				\end{bmatrix}$
+
+				Whereas an LSTM calculates the hidden state $h_t$ using the memory cell state $c_t$ and the current activated value $a_t$, via
+				\begin{align}
+					c_t &= f_t * c_{t-1} + i_t * a_t \\
+					a_t &= \tanh\left(W \begin{bmatrix}
+						h_{t-1} \\ x_t
+					\end{bmatrix}\right) \\
+					h_t &= o_t * \tanh c_t
+				\end{align}
+				And 
+				\[
+				\begin{bmatrix}
+					f_t \\ i_t \\ o_t 
+				\end{bmatrix} = 
+				\sigma \left( 
+					\begin{bmatrix}
+						\w_f \\ \w_i \\ \w_o
+					\end{bmatrix} \begin{bmatrix}
+						h_{t-1} \\ x_t
+					\end{bmatrix}	
+				\right)
+				\]
+				Where $\w_f, \w_i, \w_o$ describe a pair of weights each, which are initialised randomly, and then learned (via a **sigmoid layer**) to refine the value of the three gates.
+
+				**Note:** $c_t \in (-\infty, \infty)$, but we want the $h_t$ value to be $\in (-1, 1)$. Thus, rather than just doing $h_t = o_t c_t$ directly we squeeze $c_t$ down using tanh. $a_t$ is naturally $\in (-1, 1)$ anyway.
+
+				**Note 2:** The star $*$ operator denotes "Hadarmard multiplication", multiplying element wise ... <span class="grey">which I'm not sure why it's included since we've been referring to them as scalars.</span>
+
+				***LSTM Internal Diagram.* (Important)** 
+
+				<figure>
+					<img src="./assets/lstm-internals.png" alt="">
+					<figcaption>LSTM Internals (left) compared to a vanilla RNN (right)</figcaption>
+				</figure>
+
+				### Other RNNs
+
+				Different types of RNNs can be used for different mappings, such as 1:1, 1:Many, Many:1, and Many:Many
+
+				1:Many takes one input, and chains down many outputs. The reverse is for Many:1. Many:Many has multiple inputs to multiple outputs.
+
+				The networks we've drawn which unravel are many to many, **but** they only are many to many in that $|X| = |Y|$.
+
+				When $|X| \neq |Y|$, then we many need an encoder-decoder structure for our RNN.
+
+				<figure>
+					<img src="./assets/rnn-encoder-decoder.png" alt="" style="max-width: 400px;">
+					<figcaption>An encoder decoder RNN used for language translation</figcaption>
+				</figure>
+
+				而已矣。
+			</div>
+
+			
 		</div>
 		
 
