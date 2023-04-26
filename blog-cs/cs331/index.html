@@ -53,6 +53,7 @@
 				<li><a href="#prop">Activations and Backpropagations</a></li>
 				<li><a href="#hopfield">Hopfield Network</a></li>
 				<li><a href="#rnn">Recurrent Neural Networks</a></li>
+				<li><a href="#graphs">Graphs</a></li>
 			</ol>
 
 			\( 
@@ -1166,7 +1167,329 @@ s_i(t+1) &= \sgn\left(\sum_{j=1}^n  W_{ij} s_j(t)\right) = \sgn\left(\sum_{j=1}^
 
 			
 		</div>
+
+		<div class="colourband">
+			<h2 id="graphs">Graphs</h2>
+		</div>
 		
+		<div class="cbox">
+			<div class="md-conv">
+				### Introduction 
+
+				Graphs $G= (V,E)$ are non-linear data structures. 
+	
+				There are directed and undirected graphs.
+	
+				* Undirected graphs have neighbours $N(v)$. Directed graphs have **in-neighbours** $I(v)$ and **out-neighbours** $O(v)$
+				* Directed graphs have **indegree** $d_{in}(v)$, and **outdegree** $d_{out}(v)$.
+
+				The **handshake theorem** is 
+				\[
+				|E| = \sum_{v \in V} d_{in}(v) = \sum_{v \in V} d{out}(v)
+				\]
+
+				The average degree $d = \fr{|E|}{|V|}$ determines the sparsity of the graph. 
+
+				* G is sparse if $|E| \approx O(|V|)$; $d \ll |V|$
+				* G is dense if $|E| \approx O(|V|^2)$; $d \approx |V|$
+
+				* G is disconnected if $|E| \ll |V|$ 
+				* G is a tree if $|E| = |V|-1$ 
+				* G is complete if $|E| = \fr{1}{2} |V| (|V|-1)$ 
+
+				<hr>
+
+				Graphs can be displayed in several ways, such as an adjacency matrix (for dense graphs), an adjacency list (for sparse ones).
+
+				The **adjacency matrix** $\vec{A}$ takes a lot of space $O(|V|^2)$, but is very fast for connectivity lookup. 
+
+				It has other good properties, such as $[\vec{A}^k]_{ij}$ describing the number of paths of length $k$ from $i$ to $j$.
+
+				Transposed and the paths are reversed. 
+
+				The **Laplacian matrix** is a matrix $\vec{L}$ such that 
+				\[
+				\vec{L} = \begin{cases} d(i) & i = j \\ 
+				-1 & \exists \rm{edge } \{i,j\} \in E \\ 
+				0 & \rm{otherwise.} \end{cases}
+				\]
+				So $\vec{L} = \vec{D} - \vec{A}$ where $\vec{D}$ is a diagonal matrix where every entry $i$ is the degree of vector $i$
+
+				The **Adjacency list** is a list of linked lists of outneighbours. 
+
+				It is space efficient but not as lookup efficient, so better for sparse matrices.
+
+				The **Yale/CSK Format** (Compressed sparse row) is a compact way of representing a graph by three vectors: offset, column index, and ones (or weights). It can be converted from an adjacency matrix as follows:
+				
+				<figure>
+					<img src="./assets/graph-csk-format.png" alt="">
+				</figure>
+
+				* We go row by row, writing the indexes of connections in `column index`. 
+				* `offset` indices separate `column index`s for each vertex. 
+				* `ones` just indicate there is a connection. This is not so useful for unweighted graphs.
+
+				It is useful for efficiently representing dense graphs.
+
+
+				The **COO Coordinate List** representation is a simple way to represent a graph in a list of vectors: row, column, and ones. 
+
+				<img src="./assets/graph-coo-format.png" alt="">
+
+				* Simply, every edge $\langle i, j\rangle \in E$ is represented by the pair `(rows[i], columns[i])`. 
+
+				
+
+			</div>
+
+			<div class="md-conv">
+				### PageRank 
+
+				PageRank is a google algorithm that ranks the importance of webpages based on other other pages pointing to it. 
+
+				Let $PR(x)$ be the rank of node $x$, and the rank of the node is the aggregate (**sum**) of its in-neighbours. 
+
+				Thus pagerank captures a cascading rank value.
+
+				<figure>
+					<img src="./assets/pagerank-example.png" alt="">
+					<figcaption>Examples of some pageranks.</figcaption>
+				</figure>
+
+				Pagerank also penalises nodes who point to too many nodes: each node gets an equal share of its rank.
+
+				<figure>
+					<img src="./assets/pagerank-penalise.png" alt="" style="max-width: 600px;">
+					<figcaption>3 has four out-neighbours, and so its rank is divided by 4</figcaption>
+				</figure>
+
+				More generally the **simplified pagerank algorithm** goes as:, 
+				\[
+				PR(y) = \sum_{x \in I(y)} \fr{1}{|O(x)|} PR(x)
+				\]
+
+			</div>
+
+			<div class="md-conv side">
+				<img src="./assets/pagerank-worked-square.png" alt="" style="max-width: 240px; float: right;">
+				***Example.*** Take the graph shown, evaluate PageRank.
+
+				This can be done as a series of simultaneous equations:
+
+				\begin{align}
+					PR(1) &= \fr{PR(2)}{3} + PR(3) + \fr{PR(5)}{2} \\
+					PR(2) &= 0 \pod{\rm{base case}} \\
+					PR(3) &= \fr{PR(2)}{3} + \fr{PR(5)}{2} \\
+					PR(4) &= PR(1) + \fr{PR(2)}{3} \\ 
+					PR(5) &= PR(4)
+				\end{align}
+
+				Solve this to get 
+				\[
+				PR[1,2,3,4,5] = [0.6, 0, 0.3, 0.6, 0.6]
+				\]
+			</div>
+
+			<div class="md-conv">
+
+				Problems with simplified pagerank include
+				* nodes with no in-neighbours are zero even if they are important
+				* in cyclic graphs the cycle accumulates rank and nothing else gets rank. 
+
+				-> Introduce constant **damping factor** $c$:
+
+				A hypothetical web server will have a probability of $c$ to follow links (follow edges), and a probability of $1-c$ to "get bored" and go somewhere else (jump to random node).
+
+				This hyperparameter is usually set to 0.8~0.9.
+
+				Thus **classic pagerank algorithm** goes as
+
+				\[
+				PR(y) = c \sum_{x \in I(y)} \fr{PR(x)}{|O(x)|} + (1-c) \fr{1}{|V|}
+				\]
+
+				<hr>
+
+				***Matrix Form.*** since simultaneous equations are impractical for large scales / always formed into matrices. 
+
+				For the previous example, let a vector $\vec{p}$ be the pageranks;
+
+				\[
+				\vec{p} = \begin{bmatrix}
+					PR(1) \\ PR(2) \\ \vdots \\ PR(5)
+				\end{bmatrix}
+				\]
+				Let an $5 \times 5$ transition matrix $\W$ be the weights of the pageranks;
+
+				\begin{align}
+				\W &= \begin{bmatrix}
+					0 & \fr{1}{3} & 1 & \cdots \\ 
+					0 & 0 & & \\
+					\vdots & & \ddots
+				\end{bmatrix}
+				& \W_{ij} = \begin{cases} 
+				\fr{1}{|O(j)|} & \rm{if } \exists \rm{edge} \langle j, i \rangle \\
+				0 & \rm{otherwise.}
+				\end{cases}
+				\end{align}
+
+				Let $\vec{1}$ be a vertical vector of ones $|V|$ items long.
+
+				Thus 
+				\begin{align}
+					\vec{p} &= c\W \vec{p} + \fr{1 - c}{|V|} \vec{1}\; ; &
+					\vec{p} &= 0.8\W \vec{p} + \fr{1-0.8}{5} \vec{1} \pod{c=0.8}
+				\end{align}
+				And our goal is to find $\vec{p}$.
+
+				To get $\W$, all we need to do is take the adjacency matrix $\vec{A}$, take $\vec{A}\t$, and then normalise every column *individually*.
+
+				Methods:
+
+				* **Fixed-point iteration**; initialise $\vec{p}_i = \fr{1}{|V|} \; \forall i$ (to equal numbers)				$\def\p{{\vec{p}}}$
+
+				We can work out that for $k$ iterations the error $\lVert \p_k-\p \rVert_1 \leq 2c^k$ ($\p$ is the ideal pagerank).
+
+				Thus for a desired accuracy level $\varepsilon > 0$ we can work out that the number of iterations required is $k \geq \log_c (\fr{\varepsilon}{2})$.
+
+				The complexity of iteration will be \(O(k(|E| + |V|))\). Since real graphs tend to be sparse though this is roughly equal to $O(k|V|)$.
+
+				The proof of these are omitted.
+
+				Fixed point iteration is a fast, efficient way of working out pagerank. If we want exact $\p$ though, there's another way.
+
+				* **Matrix Inversion**, by just solving for $\p$ 
+
+				\begin{align}
+					\p &= c\W\p + \fr{1-c}{|V|} \vec{1} \\ 
+					\p - c\W\p &= \fr{1-c}{|V|} \vec{1} \\ 
+					(\vec{I} - c\W)\p &= \fr{1-c}{|V|} \vec{1} \\ 
+					\p &= \fr{1-c}{|V|} (\vec{I} - c\W)^{-1} \vec{1}
+				\end{align}
+
+				*But* matrix inversion is very costly, requiring $O(|V|^3)$ time, and so we usually don't.
+
+				* **Dominant Eigenvector**, another method of solving for $\p$, giving us the **Google matrix** $\vec{G}$
+
+				Given that $\lVert \p \rVert_1 = 1 \implies \vec{1}\t \p = 1$;
+
+				\begin{align}
+					\p &= c\W\p + \fr{1-c}{|V|} \vec{1} \cdot 1 \\
+					\p &= c\W\p + \fr{1-c}{|V|} \vec{1} \vec{1}\t \p \\ 
+					\p &= \left(c\W + \fr{1-c}{|V|} \vec{1} \vec{1}\t\right) \p \\ 
+					\p &= \vec{G}\p
+				\end{align}
+
+				Where $\vec{G}$ the google matrix is the thing in the brackets. 
+
+				The pagerank vector is the dominant eigenvector (`eigs(G, 1)`) of the google matrix.
+			</div>
+			
+			<div class="md-conv">
+				### Graph-based Similarity Search 
+
+				Talks about the similarity of two objects based on their graph topology. 
+
+				Can be content based or link based. 
+
+				<hr>
+
+				***Jaccard Similarity.***
+
+				The **Jaccard string similarity** is given for two strings $s_1, s_2$:
+				\[
+				\rm{sim}_J(s_1, s_2) = \fr{|s_1 \cap s_2|}{|s_1 \cup s_2|}
+				\]
+
+				The **Jaccard node-pair similarity** is an extension of text similarity, given for two nodes $a, b$ 
+
+				\[
+				\rm{sim}_J (a,b) = \fr{ | I(a) \cap I(b) |}{|I(a) \cup I(b)|}
+				\]
+
+				The jaccard similarities are reflexive ($\rm{sim}(a,a) = 1$), symmetrical, and bounded $[0,1]$. 
+
+				Limitations:
+				* Similarity doesn't take into account how many inneighbours two nodes have. If two nodes are connected to by the same node, compared to two nodes that are connected to by the same *three* nodes, which pair are more similar? Jaccard says neither.
+				* Doesn't take into account grandparents and other ancestors, if two nodes share no parents they are automatically 0.
+
+				<hr>
+
+				***SimRank.*** An improvement to jaccard. 
+				
+				* Two nodes are similar if pointed to by similar nodes. 
+				* Ever node is most similar to itself.
+
+				\[
+				s(a,b) = \begin{cases} 
+				0 & I(a) = \varnothing \lor I(b) = \varnothing \\ 
+				\fr{c}{|I(a)||I(b)|} \sum\limits_{x \in I(a)}^{} \sum\limits_{y \in I(b)} s(x,y) & a \neq b \\
+				1 & a = b
+				\end{cases}
+				\]
+
+				Where $c$ is a damping factor which is typically 0.6 ~ 0.8.
+
+				<figure>
+					<img src="./assets/simrank-example.png" alt="" style="max-width: 700px;">
+					<figcaption>Example of a SimRank question</figcaption>
+				</figure>
+
+				<hr>
+
+				**SimRank** is a *pairwise* similarity measure for node pairs. 
+
+				* It is **query-dependent**: $s(*, a)$ depends on a specific query object $a$ to measure similarity. 
+
+				**PageRank** is a *single* similarity measure.
+
+				* It is **query-independent**: $PR(*)$ is just done on its own.
+
+				SimRank is also reflexive, symmetrical, and bounded. 
+
+				#### Searching
+
+				***Distance.*** Define the distance between two nodes $d(x,y) = 1 - s(x,y)$. 
+
+				A metric is a "distance metric" if and only if 
+				* $d(x,x) = 0$ 
+				* $d(x,y) = d(y,x)$
+				* $d(x,y) + d(y,z) \geq d(x,z)$ (triangle inequality)
+
+				Both jaccard and simrank are transitive ($x \sim y$ and $y \sim z$ means $x \sim z$), and conform to all the distance metric requirements. 
+
+				There are two types of searches that can be used by SimRank.
+				
+				**Single pair simrank search**, that given a graph $G = (V,E)$, given one pair of nodes $(a,b)$, retrieve a single similarity $s(a,b)$.
+
+				**All-pairs simrank search**, that given a graph retrieves $|V|^2$ pairs of similarities $s(*,*)$ between all nodes.
+
+				All-pairs will make many duplicate calculations, and so it is good to optimise them by memorising intermediate calculations, partial similarities.
+
+				SimRank can also be represented in matrix form:
+				\[
+				\vec{S} = \max(c \vec{Q}\t \vec{S} \vec{Q}, \vec{I})
+				\]
+				Where 
+				\[
+				\vec{Q}_{ij} = \begin{cases} \fr{1}{|I(j)} & \rm{if } \exists (i,j) \in E \\ 
+				0 & \rm{otherwise} \end{cases} \;\;\; = \rm{col_norm}(\vec{A})
+				\]
+				$\vec{S}$ is the SimRank, and $\max$ is the **element-wise** maximum. 
+
+				The algorithm is done doing fixed point iteration, as:
+			</div>
+
+			<div class="codediv">get adjacency matrix \(\vec{A}\) 
+\( \vec{Q} \lla \) col_norm(\( \vec{A} \))
+\( \vec{S}_0 \lla \vec{I} \) 
+repeat: 
+	\( \vec{S}_{k+1} \lla \max(c\vec{Q}\t \vec{S}_k \vec{Q}, \vec{I}) \)
+until \( \vec{S}_k \) converges to \( \vec{S} \) 
+return \( \vec{S} \)</div>
+
+			而己矣。
+		</div>
 
 		<footer>
 			<div class="cbox">
