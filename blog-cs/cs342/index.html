@@ -65,6 +65,18 @@
 				<li><a href="#nns">Neural Networks</a></li>
 				<li><a href="#ensemble">Ensemble Methods</a></li>
 			</ol>
+
+			<p>
+				For reference: these chapters are where I know what's going on:
+				\[
+					1、2、3、4、5、6、7、8、9、10\sim、13
+				\]
+				And these uh nah.
+				\[
+					11、12、14
+				\]
+			</p>
+
 			\( 
 				\renewcommand{\vec}{\mathbf}
 				\renewcommand{\epsilon}{\varepsilon}
@@ -2502,6 +2514,343 @@ Which is a quadratic function. To find the minima, we can compute partial deriva
 
 		<div class="colourband">
 			<h2 id="ensemble">Ensemble Methods</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents
+
+				1. [Introduction](#ens-intro)
+				1. [Bagging](#ens-bagging)
+				1. [Boosting](#ens-boost)
+				1. [XGBoost](#ens-cascade)
+			</div>
+
+			<div class="md-conv" id="ens-intro">
+				### Introduction 
+
+				Ensemble methods work by combining classifiers, into an "ensemble".
+
+				<figure>
+					<img src="./assets/ensemble.png" alt="" style="max-width: 350px;">
+					<figcaption>Ensemble methods diagram</figcaption>
+				</figure>
+
+				By combining weak classifiers together (who are better than random guessing but not significantly good), we can get a better overall performance. 
+
+				This is called *"meta-learning"*, as it's models taking other models as inputs.
+
+				The general approach goes:
+				
+				1. Train multiple (different) classifiers 
+				2. Use majority vote as decision
+
+				For best use of these methods, the weak classifiers should:
+
+				* Have an accuracy better than 50% (be better than guessing)
+				* Have similar accuracies, without any being significantly stronger (otherwise what's the point of using anything else?)
+				* Have **independent errors** -- different models make unrelated errors.
+
+				Last point is important -- suppose we have $N$ classifiers with independent errors $\epsilon$, the probability that $k$ out of $N$ are wrong is given 
+				\[
+				p(\rm{wrong classifiers } = k) = {N \choose k} \epsilon^k (1-\epsilon)^{N-k}
+				\]
+
+				The probability of an overall wrong classification is then $p(k \geq \fr{N}{2})$.
+
+				We want $p(k \geq \fr{N}{2}) \ll \epsilon$. 
+
+				For large numbers of $N$, this error gets very small, but there are diminishing returns.
+
+				<hr>
+
+				So far, we've been talking about majority vote. Other ensemble methods include 
+
+				* Averaging 
+				* Stacking 
+				* Bagging / Bootstrap 
+				* Random forest 
+				* Boosting / cascading 
+
+				<hr>
+
+				***Averaging.*** Technically, majority vote is a type of averaging, for classification ensemble models.
+
+				For regression ensemble methods we can take the mean instead. 
+
+				If classifiers are overfit, we can still consider that they are overfit in different ways and thus mitigate the effect.
+
+				<hr>
+
+				***Stacking.*** Using a separate, different classfier to compile together the results of your ensemble. 
+
+				<figure>
+					<img src="./assets/stacking.png" alt="" style="max-width: 350px;">
+					<figcaption>Stacking diagram</figcaption>
+				</figure>
+
+				In the first layer, we have many different types of weak classifiers, who produce a vector of "intermediate results", which are then passed through a separate classifer (e.g. a linear classifier) to produce a final answer.
+
+				<hr>
+
+				#### Bias-Variance Decomposition 
+
+				***Bagging.*** The general idea is to train the same type of classifier **several times** over **different subsets** of the training data. 
+
+				i.e. you get a set of models over the same source, but different training data.
+
+				This reduces the **variance** in expected error. 
+
+				<figure>
+					<img src="./assets/variance-comparison.png" alt="" style="max-width: 480px;">
+				</figure>
+
+				<div class="blue">
+
+					**TL;DR:**  When predicting, we have bias <span class="grey">(how wrong something is)</span>, variance <span class="grey">(how spread out something is)</span>, and bayes error <span class="grey">(the innate unpredictibility of the data distribution)</span>.
+
+					Bias corresponds to accuracy, and the lower the bias the more underfit the model is.
+
+					Variance corresponds to spread, and the lower the variance the more overfit the model is. 
+
+					Bayes error corresponds to the error we'd get from an ideal bayes classifier -- something that just is.
+				</div>
+
+				Training on different samples gives us varying results. This comes from the fact that the training set is meant to represent a random distribution.
+
+				<figure>
+					<img src="./assets/bias-variance.png" alt="" style="max-width: 500px;">
+					<figcaption>
+						Diagram of how data is sampled. The training $(\x_i, y_i)$ and test $(\tilde{\x}_i, \tilde{y}_i)$ data is sampled from the same distribution $p_{data}$ (**IID**), but are otherwise independent.
+					</figcaption>
+				</figure>
+
+				$\hat{y}_i$ is independent of $\tilde{y}_i$. 
+
+				So there's a distribution, a variability in expected loss for each $\tilde{\x}_i$.
+
+				We'd like to **minimise** this variability.
+
+				Because $\tilde{y}_i$ comes from a distribution, we can treat it as a random variable. 
+
+				The best prediction we could get from a model is our expected value of $\tilde{y}_i$ given $\tilde{\x}_i$, denoted 
+				\[
+				\hat{y}_i^* = \bb{E}[\tilde{y}_i | \tilde{\x}_i]
+				\]
+
+				Suppose we get a prediction $\hat{y}_i$. If we use L2 Loss, we can work out the expected loss using 
+				\[
+				
+				\]
+
+				Which, due to the properties of expectation (see collapsible for recap), can derive down to
+				\[
+				= (\hat{y}_i - \hat{y}_i^*)^2 + Var[\tilde{y}_i | \tilde{\x}_i]
+				\]
+
+				
+			</div>
+
+			<button class="collapsible">Properties of  \(\bb{E}\)...</button>
+			<div class="ccontent md-conv">
+				These rules apply to the front in $\cdot|Y$ situations too.
+
+
+				* Addition and subtraction can split:				
+				\[
+				\bb{E}[x_1 + \cdots + x_n] = \bb{E}[x_1] + \cdots + \bb{E}[x_n]
+				\]
+				* Constants can be taken out:				
+				\[
+				\bb{E}[\alpha X] = \alpha\bb{E}[X]
+				\]
+				* Squares can be extracted:
+				\[
+				\bb{E}[X^2] = \bb{E}[X]^2 + Var[X]
+				\]
+
+				
+				
+			</div>
+
+			<div class="md-conv">
+
+				If our prediction is our ideal prediction $\hat{y}_i = \hat{y}_i^*$, then all we are left with is the variance term -- the **Bayes Error**, the inherent noise in the distribution.
+
+				Now if we take this, and treat $\hat{y}_i$ as a random variable again, we get the equation 
+				\[
+				\bb{E} [(\hat{y}_i - \tilde{y}_i)^2 | \tilde{\x}_i] = (\hat{y}_i^* - \bb{E}[\hat{y}_i])^2 + Var(\hat{y}_i) + Var(\tilde{y}_i)
+				\]
+				Where $ Var(\hat{y}_i) $ is the **variance**, and $Var(\tilde{y}_i)$ is the **bayes error**.
+
+				The first term is the **bias**.
+
+				* The bias is how wrong the prediction is ($\propto$ underfitting)
+				* The variance is the amount of variability ($\propto$ overfitting)
+				* The bayes error is just inherent noise. 
+
+				Remember that even with an ideal bayes classifier, we still have bayes error.
+			</div>
+
+			<div class="md-conv" id="ens-bagging">
+				### Bagging, Bootstrap
+
+				Assuming we can sample $M$ independent training sets from the data source $p_{data}$ (very likely /s);
+
+				* Compute the prediction $\hat{y}_i^{(m)}$ for each model trained on each dataset $m \in M$.
+				* Take the average. 
+
+				This reduces variance by a factor of $M$ pretty much. 
+
+				But in reality we can hardly just sample training sets -- getting access to $p_{data}$ may be impossible. 
+
+				Thus comes **bagging**/**bootstrap aggregation**:
+
+				* Take a dataset $\X$ with $n$ examples 
+				* Generate $M$ new datasets, by sampling $n$ training samples from $\X$ with replacement &dagger;
+				* Average predictions on these datasets
+
+				&dagger;Think: taking a pack of cards, picking and replacing a card 52 times. 
+
+				This generates datasets that *roughly* maintain the original distribution.
+
+				For a sufficiently large $n$, only about 63% of samples from $X$ will be included per set (due to probability theory - if you do something $x$ times with a $\fr{1}{x}$ chance of success, you will succeed with $1 - \fr{1}{e} \approx $ 63% probability.)
+
+				<hr>
+
+				***Random Forest.*** (actually one of my favourite models before I did this damn module)
+
+				Bagged decision trees, but also:
+
+				* When defining a node, only use a small proportion (e.g. $\sqrt{d}$) of the total $d$ features to split on.
+
+				So whilst a particular tree may overfit, the overall will be much more independent. 
+
+				It happens to be one of the best "black box" no-tuning ML algorithms. 
+			</div>
+
+			<div class="md-conv" id="ens-boost">
+
+				### Boosting 
+
+				Given a training set and a weak classifier, which is only correct with probability $0.5+\epsilon$, we can make a strong classifier by "boosting".
+
+				***AdaBoost.*** Adaptive Boost:
+
+				Does weird things with training set, and an initial weak classifier, to sequentially create stronger classifiers. 
+
+				And the final model is a weighted sum of these stronger classifiers.
+				
+				Process:
+
+				1. Train base classifier on training data with equal weights for all data.
+				2. Re-weight training data to emphasise hard (wrong) samples and train a second 
+				3. Repeat 
+				4. ???
+				5. Use a weighted sum of these trained classifiers.
+				5. Profit
+
+				For training:
+
+				* Take input $\X$, ground truth $\y \in \{-1, +1\}$ 
+				* Let $w_i^{(m)}$ be the weight for sample $\x_i$ for classifier number $m$
+				* Let the cost function for the $m$th weak classifer be 				\[				J_m = \sum_{i=1}^n w_i^{(m)} \left[ \hat{y}_i^{(m)} \neq y_i \right] = \sum \rm{weighted errors}				\]				Where $[a \neq b] = \begin{cases} 0 & a = b \\ 1 & a \neq b \end{cases}$
+				* Fit classifier with weighted samples.
+
+				For reweighting:
+
+				* Compute weighted error rate for $m$th weak classifier: $$ \epsilon_m = \fr{J_m}{\sum_{i=1}^n w_i^{(m)}} $$
+				* Let $\alpha_m$ be the **quality** of the $m$th weak classifier $$\alpha_m = \log(\fr{1 - \epsilon_m}{\epsilon_m})$$ where $\alpha_m = 0$ means error is 0.5 (only guessing) and $\alpha_m = \infty$ if error is none (perfect).
+				* Let the new weight for sample $i$ for the next classifier $m+1$ be 
+				\[
+				w_i^{(m+1)} = w_i^{(m)} \exp \left( -\fr{1}{2} \cdot y_i \cdot \alpha_m \cdot \hat{y}_i^{(m)} \right)
+				\]
+
+				Thus weights get exponentially larger if classifiers get them wrong, and exponentially smaller otherwise.
+
+				Testing:
+
+				* Given test data, weight the prediction of the $m$th classifier by its quality $\alpha_m$ (divided by 2 to make it similar to "exponential loss")
+			</div>
+
+			<button class="collapsible">AdaBoost algorithm...</button>
+			<div class="ccontent">
+				<div class="codediv">TRAIN_ADABOOST(\(\{ \X, \y \}_{i=1}^n\), weakClassifier):
+	\(\w^{(m)} \lla \forall i\):
+		initialise weights \(w_i^{(1)} \lla \fr{1}{n}\) <span class="grey">or \(w_i^{(1)} \lla 1\)</span>
+	FOR \(m\) from \(1..M\) classifiers:
+		\(\hat{y}^{(m)} \lla\) weakClassifier(\(\X, \y, \w^{(m)}\)).fitWithCost(\(J_m\))
+		compute error \(\epsilon_m \lla \fr{J_m}{\sum_{i=1}^n w_i^{(m)}}\)
+		compute quality \(\alpha_m \lla \log(\fr{1 - \epsilon_m}{\epsilon_m}) \)
+		update weights \(\forall i \; w_i^{(m+1)} \lla w_i^{(m)} \exp \left( -\fr{1}{2} \cdot y_i \cdot \alpha_m \cdot \hat{y}_i^{(m)} \right)\)	</div>
+
+				<p>And </p>
+
+				<div class="codediv">TEST_ADABOOST(\(\{\X,\y\}_{i=1}^n\), \(M\) trained classifiers):
+	compute predictions \( \hat{\y} \lla \rm{sign} (\sum_{m=1}^M \fr{1}{2} \alpha_m \hat{\y}^{(m)} )\)
+	compute test error</div>
+			</div>
+
+			<div class="md-conv">
+
+				***ROC Curve.*** For a trained classifier, the bias can change how it predicts things. 
+
+				We can graph the number of true to false positives on a curve against changing biases, called a **Receiver Operating Characteristics** curve.
+
+				<figure>
+					<img src="./assets/boosting-roc.png" alt="" style="max-width: 800px;">
+					<figcaption>The ROC curve when a linear classifier is shifted. We measure true positives (TP) against false positives (FP)</figcaption>
+				</figure>
+
+				The closer the curve is to going through all true positives and no false positives, the better.
+
+				Boosting pushes us up towards that (right, grey line)
+
+				***Cascading.***
+
+				e.g. face recognition before deep learning is a thing.
+
+				Going back to local feature extraction -> weak classifiers -> target (face in image)
+
+				Features are strategically extacted using certain templates: i.e. a face has dark and light bits. We say that something with a dark bit here and a light bit there is a face. 
+
+				Naturally this works for faces, but also for many things which are not faces -> weak classifier. 
+
+				ADAboost can then boost these. 
+
+				
+			</div>
+
+			<div class="md-conv" id="ens-cascade">
+
+				#### XG Boost 
+
+				Related to ADA, stands for extreme gradient boosting.
+
+				Basically, ADA is made redundant by deep learning. 
+
+				XG boost boosts deep leraning. 
+
+				By using "regularised regression trees". 
+
+				Regression trees are decision trees which predict values. 
+
+				XG boost uses $M$ regression trees, and the final predicition is done by a support vector machine SVM over these regression trees. 
+
+				Intuition: first tree tries to predict values, subsequent trees try to correct for the error of their forecomers.
+
+				It is iterative training, for $M$ regression trees:
+				\begin{align}
+				[\hat{\y}^{(1)}, \rm{Tree}_1] &= \rm{fit}(\X, \y) & \hat{\y} &= \hat{y}^{(1)}\\
+				[\hat{\y}^{(2)}, \rm{Tree}_2] &= \rm{fit}(\X, \y) & \hat{\y} &= \hat{y}^{(1)} + \hat{y}^{(2)} \\
+				&\cdots && \\
+				[\hat{\y}^{(m)}, \rm{Tree}_m] &= \rm{fit}(\X, \y) & \hat{\y} &= \sum_{i=1}^M \hat{y}^{(i)}
+				\end{align}
+
+				To restrict overfitting, an L0 penalty on depth is usually added.
+
+
+			</div>
 		</div>
 
 		<footer>
