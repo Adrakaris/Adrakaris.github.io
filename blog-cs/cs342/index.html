@@ -63,6 +63,7 @@
 				<li><a href="#mle">MLE and MAP estimation</a></li>
 				<li><a href="#recom">Recommender Systems</a></li>
 				<li><a href="#nns">Neural Networks</a></li>
+				<li><a href="#ensemble">Ensemble Methods</a></li>
 			</ol>
 			\( 
 				\renewcommand{\vec}{\mathbf}
@@ -364,6 +365,29 @@
 				</div>
 			</div>
 
+			<p>
+				The final algorithm (the <b>ID3</b> algorithm, is given as follows:)
+			</p>
+
+			<div class="codediv">ID3(observations, targets, attributes):
+	if all observations are \(yes\):
+		return single leaf node with label \(1\) 
+	elif all observations are \(no\): 
+		return single leaf node with label \(-1\)
+	elif attributes are empty:
+		return single leaf node with label mode(targets.labels)
+	
+	\(A \lla\) best attribute from IG(attributes)  <span class="grey"># \(A\) is the decision attribute</span>
+	root \(\lla\) new node with splitting rule on \(A\)
+	for each \(u_i \in A\):  <span class="grey">for all possible values existing in \(A\)</span>
+		add new branch below root for \(A = u_i\)
+		\(S_{u_i} \lla\) all observations \(\in A:A = u_i\)
+		if \(S_{u_i}\) empty:
+			add below branch a leaf with label mode(targets.labels)
+		else:
+			add below branch ID3(\(S_{u_i}\), targets, attributes - \(\{A\}\))
+	return root</div>
+
 			<h3>Overfitting and Learning Theory</h3>
 
 			<p>
@@ -387,7 +411,7 @@
 			<p>
 				We can use a test/verification set \(\tilde{\vec{X}}\) to verify, but we must ensure that we <i>do not train using the verification set</i>.
 			</p>
-			<p>
+			<p class="blue">
 				The <b>IID Assumption</b> (Independent and Identically Distributed) states that we assume that the training data is a good representation of all data - that is, it has the same distribution as test data. 
 			</p>
 			<p>
@@ -630,7 +654,7 @@
 			</table>
 
 			<p>
-				The numbers are given with reason: the \(L_p\) norm for \(p\geq 1 : \lVert \vec{x} \rVert_p = \left( \sum\limits_{j=1}^d |x_j|^p \right)^{\frac{1}{p}}\)
+				The numbers are given with reason: the \(L_p\) norm for \(p\geq 1 : \lVert \vec{x} \rVert_p = \sqrt[\fr{1}{p}]{  \sum\limits_{j=1}^d |x_j|^p }\)
 			</p>
 
 			<p>
@@ -1511,6 +1535,23 @@
 				</figcaption>
 			</figure>
 
+			<h4>Confusion Matrix</h4>
+
+			<div class="md-conv">
+				The **confusion matrix** is a matrix we can use to represent the performance of a classifier.
+
+				It is a 2 by 2 matrix that represents:
+
+				\[				
+				\begin{bmatrix}
+					\rm{True Positive} & \rm{False Positive} \\ 
+					\rm{False Negative} & \rm{True Negative}
+				\end{bmatrix}
+				\]
+
+				It is useful in finding where the problems in the model are, and if they need to be addressed (ex. in some situations, false positives are much less serious than false negatives).
+			</div>
+
 			<h3>Multi-class Classification</h3>
 
 			<p>
@@ -2361,7 +2402,7 @@ Which is a quadratic function. To find the minima, we can compute partial deriva
 			<button class="collapsible">Backpropogation Calculus (In Detail)...</button>
 			<div class="ccontent">
 				<div class="md-conv">
-					I'll get to it sometime.
+					Go look at CS331.
 				</div>
 			</div>
 
@@ -2426,8 +2467,41 @@ Which is a quadratic function. To find the minima, we can compute partial deriva
 					</figcaption>
 				</figure>
 
+				A linear autoencoder has one hidden layer -- the inputs go direct to the hidden latent space. 
+				\[
+				\hat{\x}_i = \W_{dec}(\W_{enc}\x_i)
+				\]
 				
+
+				Measuring the quality of an autoencoder can be done via MSE/L2 loss:
+				\[
+				\cal{L}(\x_i, \hat{\x}_i) = \lVert \x_i - \hat{\x}_i\rVert_2^2
+				\]
+
+				In fact, a PCA is really just a single layer autoencoder -- that is, it works out the latent space to use for reconstruction.
+
+				But the whole point we use NN autoencoders is for **non-linearity**, to find non-linear mappings automatically without having to kernelise.
+
+				This is done with a non-linear activation function $h(x)$. These can be functions like ReLU and Sigmoid. 
+
+				Other losses include **binary cross-entropy** for data which is in $\{0,1\}$:
+				\[
+				\cal{L}(\x_i, \hat{\x}_i) = - \sum_{j=1}^d \left( x_{ij} \log \hat{x}_{ij} + (1-x_{ij}) \log (1-\hat{x}_{ij}) \right)
+				\]
+
+				***Denoising Autoencoders*** are autoencoders trained on noisy inputs, which are "corrupted" based on a Probabilistic proecss.
+
+				The job of a denoising autoencoder is to remove the corruption and reconstruct the original image. 
+
+				e.g. we apply gaussian noise over an image, and train an AE to remove that noise.
+
+				Denoising AEs are also useful for preventing overfitting.
+
 			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="ensemble">Ensemble Methods</h2>
 		</div>
 
 		<footer>
