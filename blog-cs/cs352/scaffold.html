@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS352</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS352</h1>
+					<p class="subheading">Project Management</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+				<p class="subheading">This is not a business school module, promise</p>
+			</div>
+		</header>
+
+		<div class="cbox md-conv">
+			Contents;
+
+			1. [Initiation](#init)
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="init">Initiation</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="blue md-conv">
+
+				**BOOK.** PMBOK (Project Management Book of Knowledge)
+
+			</div>
+
+			<div class="md-conv">
+				Project management, to use a cyclic definition, is about managing projects. 
+
+				It is about making plans, managing costs and deadlines. 
+
+				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Project-triangle-en.svg/1200px-Project-triangle-en.svg.png" alt="pm triangle" title="Iron Triangle (wikipedia)" style="float: right; max-width: 200px;">
+
+				A project is constrained by the **iron triangle** (right). <span class="grey">You can hover on these images</span>
+
+				I.e. your project can be up to 2 of good (big scope), quick (big time), or cheap (big cost [saving]), but not all 3.
+
+				Depending on where your customer priorities are on that triangle, you do what you do. 
+
+				**The triangle is rigid and non-negotiable**, no matter what the customer says.
+
+				There are higher level "shapes" that you can get by adding more points, such as the "Titanium tetrahedron" (+quality), "hard hexagram" (+risk, resources), and the "difficult dodecahedron" (+procurement, stakeholders, communication, integration).
+
+				They tried really hard with the shape names, but fundamentally there are 10 knowledge areas for PM:
+
+				<div class="ctwo blue">
+					<div>
+						* Scope
+						* Time
+						* Cost 
+						* Quality 
+						* Risk 
+					</div>
+					<div>
+						* Resources 
+					* Procurement 
+					* Stakeholders 
+					* communication
+					* Integration.
+					</div>
+				</div>
+				
+
+				These are formalised in PMBOK, and like good business people, abbreviated to **KA**s. 
+
+				<hr>
+
+
+				<img src="./assets/pmbok-pgs.png" alt="" title="Progress group diagram (Ian Saunders)" style="float:right;max-width: 200px; border-right: 1px solid var(--blue);border-top: 1px solid var(--blue);">
+
+				PMBOK by the project management institute is a PM framework. 
+
+				
+
+				A project is split into 10 **KA**s (as above), and 5 process groups (**PG**s). <span class="grey">Get used to the acronyms; as we mentioned this is not a business module /s</span> 
+
+				5 times 10 makes ... 49 individual **processes** (yes I know)
+
+				The five PGs, or *stages*, are:
+
+				
+
+				<div class="blue">
+
+					
+					
+					1. **Initiation** -- business case (why do the project?)
+					2. **Planning** -- Balancing time, cost, scope, risk... 
+					3. **Execution** -- Doing 
+					4. **Monitoring/Controlling** -- making sure progress is made/project on track 
+					5. **Closing** -- delivery and reflections.
+				</div>
+
+				And thus the 49 processes are given as follows:
+
+				<figure>
+					<img src="./assets/pmbok-processes.png" alt="">
+					<figcaption>Individual Processes. (Ian Saunders)</figcaption>
+				</figure>
+			</div>
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="./js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+	<script type="text/javascript" src="../../js/markdown.js"></script>
+</body>
+</html>
