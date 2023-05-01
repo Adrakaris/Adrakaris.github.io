@@ -43,11 +43,54 @@
 				<p class="subheading">This is not a business school module, promise</p>
 			</div>
 		</header>
+		
 
 		<div class="cbox md-conv">
 			Contents;
+			
 
 			1. [Initiation](#init)
+			2. [Scoping](#planning)
+		</div>
+
+		<div>
+			\( 
+				\renewcommand{\vec}{\mathbf}
+				\renewcommand{\epsilon}{\varepsilon}
+
+				\DeclareMathOperator*{\argmax}{argmax}
+				\DeclareMathOperator*{\argmin}{argmin}
+
+				<!-- \def\xtrain{{\vec{x}_i}}  
+				\def\xtest{{\vec{\tilde{x}}_i}}  
+				\def\ytrain{{y_i}} 
+				\def\ytest{{\tilde{y}_i}} 
+				\def\ypred{{\hat{y}_i}} 
+				\def\yhat{{\hat{y}}} 
+				\def\wtrans{{\vec{w}^\top}} 
+				\def\bb#1{{\mathbb{#1}}} -->
+				
+				<!-- \def\x{{\vec{x}}}
+				\def\X{{\vec{X}}}
+				\def\w{{\vec{w}}}
+				\def\W{{\vec{W}}}
+				\def\y{{\vec{y}}}
+				\def\Y{{\vec{Y}}}
+				\def\t{{^\top}}
+				\def\z{{\vec{z}}}
+				\def\Z{{\vec{Z}}}
+				\def\v{{\vec{v}}} -->
+
+				\def\lra{{\longrightarrow}}
+				\def\lla{{\longleftarrow}}
+				\newcommand{\fr}{\frac}
+				\newcommand{\vecu}{\underline}
+				\newcommand{\rm}{\textrm}
+				\newcommand{\bb}{\mathbb}
+				\newcommand{\nm}{\overline}
+				\newcommand{\tl}{\tilde}
+
+			\)
 		</div>
 
 		
@@ -56,6 +99,8 @@
 		</div>
 
 		<div class="cbox">
+			<h3>The Project</h3>
+
 			<div class="blue md-conv">
 
 				**BOOK.** PMBOK (Project Management Book of Knowledge)
@@ -63,13 +108,16 @@
 			</div>
 
 			<div class="md-conv">
-				Project management, to use a cyclic definition, is about managing projects. 
+
+
+
+				Project management, to use a cyclic definition, is about managing projects. A balancing act.
 
 				It is about making plans, managing costs and deadlines. 
 
 				<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Project-triangle-en.svg/1200px-Project-triangle-en.svg.png" alt="pm triangle" title="Iron Triangle (wikipedia)" style="float: right; max-width: 200px;">
 
-				A project is constrained by the **iron triangle** (right). <span class="grey">You can hover on these images</span>
+				A project is constrained by the **iron triangle** (right). <span class="grey">You can hover on these images if they're unfigured</span>
 
 				I.e. your project can be up to 2 of good (big scope), quick (big time), or cheap (big cost [saving]), but not all 3.
 
@@ -104,11 +152,11 @@
 				<hr>
 
 
-				<img src="./assets/pmbok-pgs.png" alt="" title="Progress group diagram (Ian Saunders)" style="float:right;max-width: 200px; border-right: 1px solid var(--blue);border-top: 1px solid var(--blue);">
+				
 
 				PMBOK by the project management institute is a PM framework. 
 
-				
+				<img src="./assets/pmbok-pgs.png" alt="" title="Progress group diagram (Ian Saunders)" style="float:right;max-width: 200px; border-right: 1px solid var(--blue);border-top: 1px solid var(--blue);">
 
 				A project is split into 10 **KA**s (as above), and 5 process groups (**PG**s). <span class="grey">Get used to the acronyms; as we mentioned this is not a business module /s</span> 
 
@@ -136,6 +184,248 @@
 					<figcaption>Individual Processes. (Ian Saunders)</figcaption>
 				</figure>
 			</div>
+
+			<div class="md-conv">
+				### Initiation
+
+				The **Project Mandate** (or statement of work) is a document that details 
+				* What the project is exactly,
+				* The scope of the project,
+				* Any constraints,
+				* Any assumptions, 
+				* Any known risks/issues.
+
+				The **Business case** is a justification of why the project should be done, what benefits it gives, etc, etc, as well as the timeline. 
+
+				In the "Initiation" stage, we take the project mandate and business case, and **develop a project charter**.
+
+				We also identify stakeholders.
+
+				<div class="blue">
+
+					The ***Project charter*** formally authorises the start of the project. 
+
+					It requires:
+					<div class="ctwo">
+						<div>
+							* Project mandate, 
+							* business case, 
+							* agreements and contracts, 
+						</div>
+						<div>
+							* quality standards, 
+							* and organisational processes and lessons learned from previous projects.
+						</div>
+					</div>
+					And creates as output:
+					<div class="ctwo">
+						<div>
+							* Project justification 
+							* Measurable objectives, success criteria 
+							* High level requirements, risks, constraints
+						</div>
+						<div>
+							* Summary schedule and budget 
+							* Stakeholder list, *assigned project manager*, authorities
+						</div>
+					</div>
+					
+				</div>
+
+				Outputs are different from outcomes are different from benefits.
+
+				**Outputs** detail what is produces, **Outcomes** detail immediate effects, and **benefits** detail what good those effects do for the company/client.
+
+				Objectives should be **SMART**. That is, Specific, Measurable, Achievable, Relevant, Time-bound.
+			</div>
+
+			<div class="md-conv">
+				### Stakeholders 
+
+				Stakeholders are anyone with involvement in the project. 
+
+				This includes the sponsor, customers/users, sellers, partners, HR, etc, etc.
+
+				Stakeholders can be put in a power-interest grid, based on Interest in the $x$ axis, and Power/Influence in the $y$ axis.
+
+				<figure>
+					<img src="./assets/stakeholder-grid.png" alt="" style="max-width: 350px;">
+					<figcaption>Power/Interest grid (Ian Saunders)</figcaption>
+				</figure>
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="planning">Planning</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents
+
+				1. [Project Plans](#pla-1)
+				1. [Work Breakdown Structure](#pla-2)
+				1. [Time Management](#pla-3)
+				1. [PERT](#pla-4)
+			</div>
+
+			<div class="md-conv" id="pla-1">
+				### Project Plans
+
+				This is where the appointed project manager takes over.
+
+				Planning is continuous.
+
+				To make a plan, we must 
+				* break down work required and timeline 
+				* set out milestones and bottlenecks 
+				* plan the budget and allocate resources.
+
+				We can also go back and iterate on these points.
+
+				This falls under the "Planning" PG of PMBOK. 
+			</div>
+
+			<div class="md-conv" id="pla-2">
+				<img src="" alt="">
+				### Work Breakdown Structure (WBS)
+
+				And we say this isn't a business module.
+
+				A WBS is a way **manage scope**. By decomposing the package into **deliverables**. 
+
+				<figure>
+					<img src="./assets/wbs.png" alt="" style="max-width: 600px;">
+					<figcaption>Work breakdown structure (Yijun Hu)</figcaption>
+				</figure>
+
+				It is structured in a tree that breaks down a project into deliverable stages (and not processes!)
+
+				From the top level project, we can decompose it into different **components** (top yellow)
+
+				These components decompose into **work packages** (bottom yellow), and these work package decompose into **subtasks**.
+
+				<hr>
+
+				A **work package** (WP) is a mostly self-contained task, with clearly defined interactions and objectives. It can be thought of as the smallest whole unit to a WBS.
+
+				Each work package can be thought of as its own milestone.
+
+				The sizes of the work packages can vary, with different benefits and downsides.
+
+				* A **small** WP is more able to be estimated and can be more easily worked on in parallel, but means there are more inter-WP interactions, they may be harder to define, or there may be duplication of work between WPs.
+				* A **large** WP can make more efficient use of and easier to manage your team (as small WPs = micromanaging), but are harder to break down and has greater risk of overrun. Also, you can't micromanage as much. 
+
+				A WBS is deliverable based -- that is, it relates to **work** rather than **purpose** (which would be objectives based). 
+
+				It details WHAT, and not WHY or HOW. 
+
+				This makes them easier to estimate and to manage scope properly, but it may lose sight of objectives, and restricts creativity, and does not consider processes.
+
+				*We want to stay focused on objectives:* can break the runes of WBS a bit, and break down logically process-wise.
+
+				*We want to plan schedule and budget:* can annotate that on after on the WBS 
+
+				*We want to encourage creativity:* This is a you problem (as the PM), and not a WBS problem.
+			</div>
+
+			<div class="md-conv" id="pla-3">
+				### Time Management
+
+				We want to estimate the duration of each of our activities. 
+
+				* We can use **analogy**, seeing how long a similar project took, adjusted to these conditions.
+				* **Parametrics**, doing the same but with statistical models, 
+				* **Team based**, ask your team who are doing the work, or
+				* we can pretend this is more mathematically rigorous than it actually is by using the **Three-Point method**:
+
+				<div class="side">
+					Given a mean (estimated time) $m$, a minimum $a$, and a maximum $b$, there are two functions we can use to estimate time:
+
+					\begin{align}
+						t_\rm{triangular} &= \fr{a+m+b}{3} \\ 
+						t_\rm{beta} &= \fr{a + 4m + b}{6}
+					\end{align}
+				</div>
+
+				We then need to **sequence** these activities to try to parallelise. 
+
+				This is invariably done using a **gantt chart**!
+
+				<figure>
+					<img src="./assets/gantt-chart.png" alt="">
+					<figcaption>A Gantt Chart (Ian Saunders)</figcaption>
+				</figure>
+
+				The gantt chart shows task duration, and you can draw arrows to show dependencies.
+
+				You can even partial-fill in the bars to show progress.
+
+				<hr>
+
+				We can also show dependencies using a **project network diagram (PND)**, a graph which you then use critical path analysis on.
+
+				There are two ways of representing it: either activities on nodes, or activities on edges. Personally I find the former easier.
+
+				<figure>
+				<img src="./assets/pnd.png" alt="">
+				<figcaption>Two ways of doing project diagrams. (Ian Saunders)</figcaption>
+				</figure>
+
+				The **critical path** is the path from start to end, where none of the activities can be delayed without delaying the final ending time of the project. 
+
+				There are six properties:
+				* **Duration** $D$: The duration of the activity 
+				* **Earliest start** $ES$, earliest time the activity can start -- the latest $EF$ from all its parents 
+				* The **earliest finish** $EF = ES + D$
+				* The **latest finish** $LF$, the latest time the activity can finish without delaying project -- the earliest $LS$ from its children 
+				* The **latest start** $LS = LF - D$
+				* The **total float** $TF$, which is the amount of delay time for the activity until the project is delayed.$TF = LS - ES = LF - EF$.
+
+				**Free float** is the amount of delay time until the *following activity* is delayed. $FF \leq TF$.
+
+				The critical path analysis method goes as follows:
+				1. Construct the diagram. Mark on all the durations.
+				2. Go **forward** through the graph. Mark $ES = \max_{EF}($immediate parents$)$, and $EF = ES +D$.
+				4. It can be helpful to make the "end" node an activity, with 0 duration. Then mark $LS = LF = EF$. 
+				3. Go **backward** through the graph, and mark $LF = \min_{LS}($immediate successors$)$, then $LS = LF - D$, then $TF = LS - ES$.
+
+				The **critical paths** are the paths from start to finish, where all floats are **zero**.
+
+				**Drag time** is the amount of time a critical task holds up the project. i.e. it is the amount of time its duration needs to be reduced by, to make it no longer critical. This is either the **duration** $D$, or the **minimums of floats** $\min(TF)$ of parallel tasks, whichever is **lower**.
+
+				**Crashing** is forcibly reducing an activity's time to speed up the project. This really only has to be done on the critical path. 
+			</div>
+
+			<div class="md-conv" id="pla-4">
+				### Program Evaluation and Review Technique (PERT) 
+
+				<img src="./assets/beta-triangle.png" alt="" style="float:right; " title="Beta and triangle distributions (Ian Saunders)">
+
+				A modification on the regular duration measures, to allow for pessimistic and optimistic time estimates. 
+
+				Using the triangle and beta distributions (pictured right). 
+
+				As a reminder, given the most likely time $m$ (previously used for $D$), the shortest estimate $a$, and the longest estimate $b$,
+
+				The mean
+
+				\[
+				\begin{align}
+					t_\rm{tri} &= \fr{a+b+m}{3} & t_\beta &= \fr{a+4m+b}{6}
+				\end{align}
+				\]
+
+				The variance 
+				\[\begin{align}
+					\sigma^2_\rm{tri} &= \fr{a^2 + b^2 + m^2 - ab - am - bm}{18} &
+					\sigma^2_\beta &= \left( \fr{b-a}{6} \right)^2 
+				\end{align}\]
+
+				Thus rather than using a fixed duration, we use three durations $a, m, b$.
+
+				Then, for critical path we can work out the mean $t$ and variance $\sigma^2$
+			</div>
 		</div>
 		
 
@@ -143,7 +433,7 @@
 			<div class="cbox">
                 <div class="columncontainer ctwo" id="fc2">
                 </div>
-                <script type="text/javascript" src="./js/footerGen.js"></script>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
             </div>
 		</footer>
 
