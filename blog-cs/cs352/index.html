@@ -40,7 +40,7 @@
 		<header>
 			<div class="cbox">
 				<h1>Contents</h1>
-				<p class="subheading">This is not a business school module, promise</p>
+				<p class="subheading">This is not a business school module -- Ian Saunders, famous last words</p>
 			</div>
 		</header>
 		
@@ -53,6 +53,8 @@
 			2. [Scoping](#planning)
 			3. [Prince2](#prince2)
 			4. [Budgeting and Forecasting](#budget)
+			4. [Lean and AAHHHgile](#agile)
+			5. [Risk Management](#risk)
 		</div>
 
 		<div>
@@ -1004,6 +1006,227 @@
 				* Work comes in small discrete pieces (like tickets)
 				* No overall long-term objective
 				* Planning is irrelevant
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="risk">Risk Management</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents
+
+				1. [Introduction](#risk-1)
+				1. [Risks in Technology Development](#risk-tech)
+				1. [Risk Identification and Management](#risk-manage)
+			</div>
+
+			<div class="md-conv" id="risk-1">
+				### Introduction 
+
+				**Risk** is the effect of uncertainty on objectives. 
+
+				There are many ways to deal with risk; 
+				<div class="ctwo">
+					<div>
+						* avoid doing it 
+						* removing the risk source 
+						* change likelihood, or consequences
+					</div>
+					<div>
+						* share risk around 
+						* give up and accept it 
+						* increase risk for better reward.
+					</div>
+				</div>
+				
+				**Uncertainty** is something not definite. This can be in time, in cost, quality, health & safety, etc. 
+
+				An **issue** is what arises if a risk materialises. 
+
+				There are different attitudes to risk, from **risk-averse** to **risk-seeking**.
+
+				Different methodologies have different approaches to risk: 
+				* PMBOK has a specific risks KA, to avoid missing risk. 
+				* Prince2 has a board of directors, and avoids the risk of losing control, of failure to meet expectations 
+				* Agile with iterative avoids the risk of delivering wrong things and benefits from opportunities from customer engagement 
+				* Lean avoids the wastes, and takes all opportunities to maximise value.
+			</div>
+
+			<div class="md-conv" id="risk-tech">
+				### Risks in Technology Development
+
+				In tech development, there are many risks.
+
+				* Risks from the **user**: resistance to change, conflicts, negative attitudes towards project, lack of commitment/cooperation. 
+				* From the **team**: inexperience, lack of specialised skills.
+				* From the **organisational environment**: change in management, corporate politics, unstable environment, acquisition by Elon Musk.
+				* From **planning and control**: lack of effective management and monitoring, poor planning, bad estimation of resources, unclear milestones, ineffective communication.
+				* From **system requirements**: continuously changing, unclear and ambiguous <span class="grey">*cough* 261 2022/23</span>, or even just incorrect. 
+				* From **complexity**: from new tech, incomplete tech, or just technical complexity of project. 
+
+				Each of these can be solved by various methods, such as 
+				* use agile 
+				* use agile 
+				* prince2?
+				* use agile
+				(There's kinda a reason why agile was invented in the first place)
+
+				Technology innovation is bumpy, and one must overcome the bumps to see it succeed. 
+
+				<figure>
+					<img src="./assets/trough-of-sorrow.png" alt="" style="max-width: 440px;">
+					<figcaption>The "trough of sorrow" (Paul Graham)</figcaption>
+				</figure>
+
+				Of course, it may still just crash at any time, even if you've stabled out.
+
+				Such is risk.
+			</div>
+
+			<div class="md-conv" id="risk-manage">
+				### Risk Identification and Management
+
+				***Responsibilities.*** 
+
+				Assign accountabilities beforehand. <strike>Thus, you know who to blame when things go wrong.</strike>
+
+				A **Responsibility Assignment (RACI) Matrix** is not a somewhat inappropriate matrix, but rather a table to assign roles and responsibilities of each WP. 
+
+				Records who is **R**esponsible, **A**ccountable, **C**onsulted, **I**nformed. 
+
+				All tasks should have **at least** one person marked R, and each task should have **only one** person marked A.
+
+				<figure>
+					<img src="./assets/raci.png" alt="">
+					<figcaption>RACI matrix. Can you see what's wrong with it? (Ian Saunders)</figcaption>
+				</figure>
+
+				<hr>
+
+				***Identification.***
+
+				Analyse **SWOT - Strengths Weaknesses Opportunities Threats**. 
+
+				* S and W are internal, O and T are external.
+
+				Make a risk breakdown structure, and identify causes of risks. 
+
+				<figure>
+					<img src="./assets/rbs.png" alt="">
+					<figcaption>Risk breakdown structure (Ian Saunders)</figcaption>
+				</figure>
+
+				Make a decision tree, and analyse the expected payoff for taking risk (also see CS255).
+
+				<figure>
+					<img src="./assets/decisiontree.png" alt="" style="max-width: 640px;">
+					<figcaption>Decision tree expected value (Ian Saunders)</figcaption>
+				</figure>
+
+
+				The **Ishikawa (Fishbone) Diagram** (JP. 特性要因図 CN. 石川图), named after its inventor Ishikawa Kaoru (石川 馨), is a diagram that identifies risks and their causes. 
+
+				It looks vaguely like fishbones, or a fern.
+
+				On the main branches are the areas where risk can arise. Being originally made for manufacturing, there are four areas: **policies, procedures, people, plant(1)**
+
+				Branching off these are individual risks, and branching off risks are causes to those risks 
+
+				(1) plant = technology
+
+				<figure>
+					<img src="./assets/fishbone.png" alt="" style="max-width:540px;">
+					<figcaption>Fishbone diagram (Ian Saunders)</figcaption>
+				</figure>
+
+				<hr>
+
+
+				***Sensitivity analysis*** is done to determine how adjusting the value of a variable impacts other dependent variables under set assumptions.
+
+				<div style="float:right">
+					<img src="./assets/sensitivity-curve.png" alt=""  title="spider graph (Ian Saunders)">
+
+					<img src="./assets/tornado.png" alt="" title="tornado diagram (Ian Saunders)">
+				</div>
+
+				
+
+				We can make a **spider graph** (first right), a graph of curves, modelling differences in adjustment. A straight line denotes the independent variable, and the other line denotes how the dependent changes. 
+
+				We can summarise these changes in a **tornado diagram** (second right), showing the total variability of a dependent from several independent variables. 
+
+				<hr>
+
+				***Risk Responses***
+
+				We should make a **risk management plan** for what to do for different risks.
+
+				Risk response depends on **probability** and **impact**, for example (Probability/Impact), 
+				* High/High: **Avoid**: plan around it 
+				* Low/High: **Transfer** risk: such as by buying insurance
+				* High/Low: **Mitigate** the probability, or impact
+				* Low/Low: **Accept**: detail a response but let it be.
+
+				A **risk matrix** categorises risk severity according to probability and impact. Ultimately this is subjective and down to the individual.
+
+				<figure>
+					<img src="./assets/riskmat.png" alt="" style="max-width: 440px;">
+					<figcaption>Risk Matrix (Ian Saunders)</figcaption>
+				</figure>
+
+				The **20/80** rule describes a lot of things in life. Such as: "20% of the code has 80% of the errors", or "20% of the work takes 80% of the time".
+
+				Thus we must **prioritise**.
+
+				***FEMA.*** **Failure mode effects analysis** is a table consisting of:
+				* Failure modes (what can go wrong)
+				* Failure effects (what going wrong would do)
+				* Possible causes 
+				* Detection measures.
+
+				
+
+				<div class="ctwo">
+					<div>
+						We assign the following scores, from 1 being least severe to 10 being most:
+						* Severity $S$
+						* Probability of occurrence $O$ 
+						* Difficulty of detection $D$
+					</div>
+					<div>
+						And then calcuate 
+						* Criticality $C = S \times O$ 
+						* Risk priority number $RPN = C \times D$
+
+						The highest RPN means the worst risk. Should probably plan to skirt around that if possible.
+					</div>
+				</div>
+
+				<figure>
+					<img src="./assets/fema.png" alt="">
+					<figcaption>FEMA for an ATM (Ian Saunders)</figcaption>
+				</figure>
+
+				***Extended FEMA*** extends regular FEMA by 
+				* adding **corrective actions**, 
+				* deciding **feasibility**
+				* choosing the corrective action with the most feasible reduction of risk.
+
+				For each failure mode we give **one or several** corrective actions. 
+
+				For each action taken, 
+				* **Re-evaluate** $S,O,D,RPN$ for that failure mode under that action 
+				* Assign a (in)feasibility score $F$ (1-10)
+				* Compute the scaled reduction in risk $= \fr{\Delta RPN}{F}$ where $\Delta RPN$ is the change in RPN from before and after the action.
+
+				<figure>
+					<img src="./assets/fema-ext.png" alt="">
+					<figcaption>FEMA Extended from before (Ian Saunders)</figcaption>
+				</figure>
+
 			</div>
 		</div>
 
