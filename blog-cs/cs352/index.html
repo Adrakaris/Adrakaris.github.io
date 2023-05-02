@@ -52,6 +52,7 @@
 			1. [Initiation](#init)
 			2. [Scoping](#planning)
 			3. [Prince2](#prince2)
+			4. [Budgeting and Forecasting](#budget)
 		</div>
 
 		<div>
@@ -61,26 +62,6 @@
 
 				\DeclareMathOperator*{\argmax}{argmax}
 				\DeclareMathOperator*{\argmin}{argmin}
-
-				<!-- \def\xtrain{{\vec{x}_i}}  
-				\def\xtest{{\vec{\tilde{x}}_i}}  
-				\def\ytrain{{y_i}} 
-				\def\ytest{{\tilde{y}_i}} 
-				\def\ypred{{\hat{y}_i}} 
-				\def\yhat{{\hat{y}}} 
-				\def\wtrans{{\vec{w}^\top}} 
-				\def\bb#1{{\mathbb{#1}}} -->
-				
-				<!-- \def\x{{\vec{x}}}
-				\def\X{{\vec{X}}}
-				\def\w{{\vec{w}}}
-				\def\W{{\vec{W}}}
-				\def\y{{\vec{y}}}
-				\def\Y{{\vec{Y}}}
-				\def\t{{^\top}}
-				\def\z{{\vec{z}}}
-				\def\Z{{\vec{Z}}}
-				\def\v{{\vec{v}}} -->
 
 				\def\lra{{\longrightarrow}}
 				\def\lla{{\longleftarrow}}
@@ -565,6 +546,225 @@
 
 		</div>
 		
+		<div class="colourband">
+			<h2 id="budget">Budgeting and Forecasting</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents 
+
+				1. [Budgeting](#budg-1)
+				2. [Monitoring](#budg-2)
+				3. [Forecasting](#budg-3)
+				4. [Why projects fail](#budg-4)
+			</div>
+
+			<div class="md-conv" id="budg-1">
+				### Budgeting
+
+				A **budget** is an *estimate* over a *period* of costs, revenues and resources.
+
+				PMBOK cost -> planning. 
+
+				Plan cost management, estimate costs, determine budget, control costs.
+
+				Estimating:
+				* Consider cost per unit time
+				* Cost per use (venue, cleaning, etc)
+				* Cost per material consumption (cost per brick, etc)
+
+				Can use
+				* Via *analogy*, how much it cost last time, adjusted for context
+				* *Parametric*, analogy with a stats model applied
+				* Via *experts*
+				* Via *team members*, since they are doing all the work.
+				Can put into a three point *a, b, m* model. 
+
+				Must consider
+				* *Vendor bids*: compare competitive bids from vendors, should settle on a sensible price, but:
+				* *Cost of (poor) quality*: Failure and poor quality can cost more over the lifetime. 
+				* Management and contingency *reserves*, for just in case.
+			</div>
+
+			<div class="md-conv" id="budg-2">
+				### Monitoring / Measuring
+
+				Cash may not always be easily accessible. Insufficient to just know how much, but also *when*. Considering
+				* Staggered fund incomes
+				* Invoicing (when people need to be paid)
+				* Paying for materials. 
+
+				Cash can be *scheduled* like anything else.
+
+				A project often has most activity in the middle. Thus expense over time often forms a bell curve, or a cumulative S-curve.
+
+				The **Performance Measurement Baseline (PMB)** is a time-phased plan of costs. 
+
+				The cumulative curve is the value curve - the **planned value (PV)** of a project is how much budget has been **assigned** towards that period of time. I.e. the value of the cumulative graph at that time.
+
+				The **Actual Cost (AC)** is what's actually spent. This can be analysed against the PMB. If we're below, either (a) we're under budget, nice, or (b) we're running late.
+
+				**Earned Value (EV)** is what proportion of the plan value has actually been achieved - a half finished house of 100k is 50k EV. Indicator of progress measured in units of money.
+
+				The **Budget at Completion (BAC)** is what the whole project is planned to cost (the PV at the end of the project)
+
+				<figure>
+					<img src="./assets/bac-curve.png" alt="" style="max-width: 640px;">
+					<figcaption>BAC curve (Ian Saunders)</figcaption>
+				</figure>
+
+				**Earned Value Analysis (EVA)** is can be to evaluate a budget. Calculating these variables give a picture of a project *at a given time*
+
+				***YOU HAVE TO REMEMBER THIS***
+
+				<table>
+					<tr>
+						<th>Variable</th>
+						<th>Formula</th>
+					</tr>
+					<tr>
+						<td>*Budget at Completion* $BAC$</td>
+						<td>just the budget; precalculated</td>
+					</tr>
+					<tr>
+						<td>*Planned Value* $PV$</td>
+						<td>$BAC \times \%planned$.  Budget cost of work scheduled at that time.</td>
+					</tr>
+					<tr>
+						<td>*Actual Cost* $AC$</td>
+						<td>measured</td>
+					</tr>
+					<tr>
+						<td>*Earned Value* $EV$</td>
+						<td>$BAC \times \%done$. Cost of work performed.</td>
+					</tr>
+					<tr>
+						<td>*Schedule Variance* $SV$</td>
+						<td>$EV - PV$. Are we on schedule or not</td>
+					</tr>
+					<tr>
+						<td>*Cost Variance* $CV$</td>
+						<td>$EV-AC$. Are we on budget or not</td>
+					</tr>
+					<tr>
+						<td>*Schedule Performance Index* $SPI$</td>
+						<td>$\frac{EV}{PV}$. Are we working quickly enough</td>
+					</tr>
+					<tr>
+						<td>*Cost Performance Index* $CPI$</td>
+						<td>$\frac{EV}{AC}$. Are we working cost-effectively enough</td>
+					</tr>
+					<tr>
+						<td>*Cost Schedule Index* $CSI$</td>
+						<td>$SPI \times CPI$. Overall efficiency.</td>
+					</tr>
+				</table>
+				
+
+				$SV &lt; 0$: not on schedule. $CV &lt;0$: overbudget. And vice-versa.
+
+				Read Vertically to read over budget and under budget in units of money. Horizontally we can read this in units of time. 
+
+				What we're doing is asking will the work be finished on time. This is a *forecasting* question, asking about the future. To do this, we need to make assumptions: constant rate of work? Constant rate of resource consumption? How do we measure percentage-done?
+			</div>
+
+			<div class="md-conv" id="budg-3">
+				### Forecasting
+
+				We want to estimate an end date and end project cost.
+
+				The **Estimate at Completion (EAC)** is the estimated final total cost, can get by:
+				1. Assume the original plan is well planned and just take that.
+				2. Assume performance to date (cost efficiency) is consistent, and extrapolate based on this. 
+				3. Assume both cost- and schedule-efficiency is good to extrapolate from.
+
+				Ex. We have a planned delivery of 6 thing, and at this point we've done 2 thing but need 3 thing.
+
+				<figure>
+					<img src="./assets/different-estimates.png" alt="" style="max-width: 480px;">
+					<figure>Examples of different estimations (Ian Saunders)</figure>
+				</figure>
+
+				However this fucks up if the WPs are not uniform (like above) and are then not done in-order. Thus we like WP to be uniform.
+
+				**EVA Forecasting** gives us some more variables to work with
+
+				***YOU HAVE TO REMEMBER THIS***
+
+				<table>
+					<tr>
+						<th>Variable</th>
+						<th>Description</th>
+						<th>Formula</th>
+					</tr>
+					<tr>
+						<td rowspan="3">Estimate at completion $EAC$</td>
+						<td>est. cost on progress, est. of final total cost</td>
+						<td>$\fr{BAC}{CPI}$</td>
+					</tr>
+					<tr>
+						
+						<td>Est. cost on original estimation</td>
+						<td>$AC + (BAC - EV)$</td>
+					</tr>
+					<tr>
+						<td>Est cost on overall efficiency</td>
+						<td>$AC + \frac{BAC-EV}{CSI}$ </td>
+					</tr>
+					<tr>
+						<td>Estimate to complete $ETC$</td>
+						<td>est. remaining cost of work, how much left to spend</td>
+						<td>$EAC-AC$</td>
+					</tr>
+					<tr>
+						<td>Variance at completion $VAC$</td>
+						<td>deviation from budget, expected overspend/savings</td>
+						<td>$BAC-EAC$</td>
+					</tr>
+					<tr>
+						<td>To-complete performance index (Estimated) $TCPI_{EAC}$</td>
+						<td>cost efficiency required to achieve EAC</td>
+						<td>$\frac{BAC-EV}{EAC-AC}$</td>
+					</tr>
+					<tr>
+						<td>To-complete performance index (Planned) $TCPI_{BAC}$</td>
+						<td>cost efficiency required to achieve **B**AC</td>
+						<td>$\frac{BAC-EV}{BAC-AC}$</td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="md-conv" id="budg-4">
+				### Why projects fail 
+
+				Why projects fail:
+				<div class="ctwo">
+					<div>
+						* Bad requirements
+						* **Stakeholders** not involved
+						* Insufficient resources
+						* Expectations too high
+					</div>
+					<div>
+						* **Support from above** insufficient
+						* Requirement change, scope change
+						* Bad planning
+						* Bad **management**s
+					</div>
+				</div>
+				
+				
+
+				A project is successful if it gives a *benefit* to its stakeholders - whether that be cold hard capitalism or something else. 
+
+				We can look at **key performance indicators (KPI)**, which are high level measurable metrics, that correlate to stakeholder objectives, such as 
+				* % tasks complete / tasks on todo list
+				* Customer satisfaction / stakeholder satisfaction
+				* Budgetary constraints
+				* Return on investment / £££££££
+			</div>
+		</div>
 
 		<footer>
 			<div class="cbox">
