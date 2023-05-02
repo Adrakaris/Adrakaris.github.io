@@ -766,6 +766,247 @@
 			</div>
 		</div>
 
+		<div class="colourband">
+			<h2 id="agile">Lean and Agile</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents 
+
+				1. [Lean](#agile-lean)
+				1. [Kanban](#agile-lh)
+				2. [Waterfall](#agile-wf)
+				1. [Agile](#agile-ag)
+			</div>
+
+			<div class="md-conv" id="agile-lean">
+				### Lean
+
+				<span class="grey">With how "hip" mystifying Japanese words is in the west, be prepared for some Japanese buzzwords! <strike>Being able to read 漢字 some of these buzzwords are genuinely painful.</strike></span>
+
+				**Lean** is a manufacturing methodology developed by Toyota. 
+
+				It is based on (again) seven principles:
+				<div class="ctwo">
+					<div>
+						* Eliminate waste 
+						* Amplify learning 
+						* Defer commitment
+						* Deliver fast
+					</div>
+					<div>
+						* Empower the team 
+						* Build integrity in 
+						* See the whole
+					</div>
+				</div>
+
+				<hr>
+
+				***Waste.*** There are three types of waste described:
+
+				* 【無理】Muri, **Overburden**, talking about overwork and unsustainability. Working people into the ground and machines until they break. 
+				* 【無駄】Muda, **Uselessness/Wastefulness**, talking about activities that do not provide value. 
+				* 【斑】Mura, **Unevenness**, talking about irregularity in work, variability in flow and throughput.
+
+				These can appear in many areas, such as: transport, inventory, motion (between steps), waiting (on things), overprocessing, overproducing, defects, (lack of) skills
+				#### The Lean House 
+
+				<figure>
+					<img src="./assets/leanhouse.png" alt="" style="max-width: 440px;">
+					<figcaption>The lean house (Ian saunders)</figcaption>
+				</figure>
+
+				Efficiency, production, minimise waste. Fundamental to the lean house:
+
+				Goal: highest quality, low cost, short lead time
+					Pillar: Just in Time - last minute pull system
+					Pillar: Jidoka - improving process through automation
+						Foundation: Heijunka, Kaizen - standardized work
+
+				*Just in time.* Pull rather than plan in advance <br>
+				【自働化】*Jidoka.* Evolve towards automation - and self-monitoring automation. Stop on faults and intelligent intervention.  <br>
+				【平凖化】*Heijunka.* Production levelling, smooth even batches <br>
+				【改善】*Kaizen.* Continuous improvement; reducing waste 
+
+				#### 5 pillars of lean *thinking*
+				Of (Womack and Jones 1995)
+
+				1. Identify **value**. value created by producer, can only be defined by ultimate consumer
+				2. Map **value stream**. work out how value gets from here to customer
+				3. Create **flow**. (Heijunka)
+				4. Establish **pull**. (JIT)
+				5. Seek **perfection.**
+
+				<hr>
+
+				The **minimum viable product** (MVP) is the bare essentials: useful and workable as a product but *no more than the bare essentials*. 
+
+				This can then be iterated on later, and make the customer feel as if they have got their money's worth. 
+
+				This especially represents the theme of deliver fast.
+			</div>
+
+			<div class="md-conv" id="agile-lh">
+				### Kanban Development 
+
+				***Kanban.*** 【看板】, lit. *Look-board*, is the central part of the methodology of the same name. 
+
+				Kanban methodology is a "**Work-in-progress Limited Pull System**". Make *what's needed* rather than making extra just in case. 
+
+				It is **just-in-time**, meaning there's very small buffers ("regulators") between steps, and everything is done last-minute, on demand. <span class="grey">Much like coursework</span>
+
+				The central part of kanban, as the name implies, is the board; To use the [pleonasm](https://en.wikipedia.org/wiki/Pleonasm#Foreign_words), the **Kanban board**.
+
+				<figure>
+					<img src="https://upload.wikimedia.org/wikipedia/commons/f/f5/Kanban_board_example.jpg" alt="" style="max-width: 400px;">
+					<figcaption>Kanban (wikipedia)</figcaption>
+				</figure>
+
+				Each column is a step of the process, and the idea is that people pull from previous columns. Kanban boards can also be limited so only $n$ number of items can be in each column at a time, to prevent overburden.
+
+				<hr>
+
+				Kanban is WIP:
+				* Work in progress
+				* Forces team/individual to work on limited number of tasks.
+				* Reduces overburden and overhead of task switching (difficult to switch focus) and its waste
+				* "Leaner to finish one thing rather than doing 2 things to 50%"
+				It is a pull system:
+				* Start new work only when there's *demand*. Don't overproduce.
+				* No to-do list, work overload, complete one thing, pull the next.
+				* Team focuses on *prioritising*, and not planning. 
+
+				To migrate to Kanban, Start with what you do now, pursue incremental, evolutionary change, respect current conventions, encourage at all levels.
+
+				Visualise workflow, and limit work in progress. Make sure nothing gets blocked. 
+				
+				When one section has nothing done, and another section is waiting on things to do, this is **blocked flow**.
+
+				#### Blockers and Idlers
+
+				Being *blocked*, waiting on someone else. You're then *idle*, and not having work to do. There is then a waste of time. 
+
+				IRL, most people just work on something else (but this is very naughty and not lean)
+
+				【改善】Improvement:
+				* Regular, incremental imrpvements, to all processes and at all levels. 
+				* Try to engage all employees, have a culture where everyone is actively engaged in self-improvement. People trust that they can talk to anyone at any level.
+				* Trust, respect, and empower people. Events focused on improving company. 
+
+				【平準化 Heijunka】Production *levelling* 
+				* Uneveness (mura) leads to waste (muda)
+				* Smaller, more regular batches achieves steady flow to next stage, greater predictability, and flexibility to changing demand. 
+
+				In a kanban once the person has idled, they can use the idle time to look at the process, and where the system flow can be improved. 
+
+				Because it's a pull system, no requirement for synchrony. Each team focuses on getting value through flow, but kanban doesn't solve resource utilisation. 
+
+				#### Lean Principles for Software Dev
+
+				Toyota's lean principles translate 1:1 to software. 
+
+				Waste though is less physical and more digital and in performance. Since software is not manufacturing.
+
+				Kanban is meant to be pull (doing is limited) -- but typically people push onto the todo list - overburden, and hard to flow.
+
+				Typical board is (Todo) (Doing) (Done)
+
+				Can expand doing into something like (Design)(Implement)(Test)(Validate), to help visualise flow.
+
+				But there's no signalling.
+
+				Can break each section into then (Doing | Done), then someone can take from the done pile. "Not my to-do list, someone else's done list"
+
+				But load-balancing, balancing workload etc etc might become hard. So you can make the board even more complex.
+
+				Can have flow lanes: high priority / mid priority / blocked, etc. 
+			</div>
+
+			<div class="md-conv" id="agile-wf">
+				### Waterfall
+
+				Waterfall is the "good old method" that no one ever properly does because it's too inflexible.
+
+				See [CS261 Explanation for more details.](../cs261/#dev-1)
+
+				This section will be very short.
+			</div>
+
+			<div class="md-conv" id="agile-ag">
+				### Agile
+
+				<span class="grey">[See this font](https://www.sansbullshitsans.com/), though unfortunately it catches less than would be ideal.</span>
+
+				Also [see CS261](../cs261/#dev-3).
+
+				Agile is the "hip" one. It describes a class of methodologies. It:
+				* focuses on requirements over methodologies 
+				* fixes budget and time, and estimates scope -- thus risking scope over risking budget or time (unlike waterfall which fixes scope) 
+				* iterative development 
+				* gradual progress
+				* risk declines the more progress you make.
+
+				[Agile has a manifesto](https://agilemanifesto.org/), which values:
+				* individuals > processes 
+				* working software > extensive documentation 
+				* customer involvement > contract negotiation 
+				* responding to change > sticking to a plan
+
+				#### Scrum
+
+				***Scrum.*** is an agile methodology. 
+
+				We define **"user stories"** of what a user wants to do, and group them into "epics" of stories.
+				
+				These stories are often of the form
+				> As a [some user] I want [some goal] so that [some reason]
+
+				We can then add priorities, and estimation of size and effort, as well what counts as done.
+
+				Every iteration is a **sprint** of 1-4 weeks, and in each sprint we pick the most important user stories to do.
+
+				Scrum has several roles, 
+				* The **product owner** that represents stakeholders, communicates what they want for the project (in user stories), and gives priorities to the team. 
+				* The **development team** a small team of 3 ~ 9 full-stacking the whole process 
+				* The **scrum master*, a "servant leader" that makes sure everything runs smoothly and keeps communications, hosting meetings, etc. 
+
+				Scrum values "commitment, courage, focus, openness, respect"
+
+				Every day there is a quick **Daily Standup,** a daily meeting in scrum/agile between the team, talking about problems and what we've done, and about the *artefacts:* 
+
+				An **artefact** is a product or a thing that is produced. Like "management products" but less bureaucratic. 
+
+				These include user stories, tasks, product backlog, sprint backlog, product increment, extensions.
+
+				One can use a **burndown chart** to show the remaining effort of the sprint, and shows progress.
+				<figure>
+					<img src="./assets/burndown.png" alt="" style="max-width: 400px;">
+					<figcaption>Burndown chart (Ian saunders)</figcaption>
+				</figure>
+
+				The daily standup might not work so well - if people get anxious/not listening & thinking abt what to say, etc, etc. Unless teams very open/relaxed/etc (big *if*), very difficult. If people have all said, then they tune out and are bored. 
+
+				Thus, lots of scrum teams have a task board (kanban board), and talk about what's on that. 
+
+				#### Scrum vs Kanban 
+
+				Scrum: 5 values, do team stuff. Using sprints to do stuff. Iterations, servant leader, empowered team.
+				Kanban: kanban board. Continuous flow, pulling, lean
+
+				Scrum:
+				* Work comes in substantial chunks that can be broke down
+				* Work forms part of bigger long term goals
+				* Regular fixed timeboxes that allow monitoring rate of progress
+
+				Kanban:
+				* Work comes in small discrete pieces (like tickets)
+				* No overall long-term objective
+				* Planning is irrelevant
+			</div>
+		</div>
+
 		<footer>
 			<div class="cbox">
                 <div class="columncontainer ctwo" id="fc2">
