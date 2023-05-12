@@ -45,6 +45,10 @@
 		<!-- REMEMBER TO DO! -->
 
 		<div class="cbox">
+			<div class="buttonwrapper">
+				<a href="./questions.html">Questions</a>
+			</div>
+
 			<h2>Contents</h2>
 
 			<ol>
@@ -72,26 +76,6 @@
 
 				\DeclareMathOperator*{\argmax}{argmax}
 				\DeclareMathOperator*{\argmin}{argmin}
-
-				<!-- \def\xtrain{{\vec{x}_i}}  
-				\def\xtest{{\vec{\tilde{x}}_i}}  
-				\def\ytrain{{y_i}} 
-				\def\ytest{{\tilde{y}_i}} 
-				\def\ypred{{\hat{y}_i}} 
-				\def\yhat{{\hat{y}}} 
-				\def\wtrans{{\vec{w}^\top}} 
-				\def\bb#1{{\mathbb{#1}}} -->
-				
-				<!-- \def\x{{\vec{x}}} -->
-				<!-- \def\X{{\vec{X}}} -->
-				<!-- \def\w{{\vec{w}}} -->
-				<!-- \def\W{{\vec{W}}} -->
-				<!-- \def\y{{\vec{y}}} -->
-				<!-- \def\Y{{\vec{Y}}} -->
-				\def\t{{^\top}}
-				<!-- \def\z{{\vec{z}}} -->
-				<!-- \def\Z{{\vec{Z}}} -->
-				<!-- \def\v{{\vec{v}}} -->
 
 				\def\lra{{\longrightarrow}}
 				\def\lla{{\longleftarrow}}
@@ -126,7 +110,6 @@
 
 				* <a href="#s1">Characterising</a>
 				* <a href="#s2">Commonly Used</a>
-				* <a href="#sq">Sensing Questions</a>
 			</div>
 			<div class="md-conv" id="s1">
 				
@@ -165,6 +148,8 @@
 				### Common Sensors
 
 				***Wheel/Motor encoders.*** wheel has holes in, shine a light beam through, and by counting the number of times the beam is broken in a second, the wheel RPM is found. 
+
+				
 
 				Can use this to find the distance travelled, *but*-- there will be error if the wheel spins but does not travel, and there will be error from the width of the slats, which can build up a lot. This error decreases with more smaller slats (A, B, C)
 
@@ -287,78 +272,7 @@
 				2D lidar is expensive, 3D is even more expensive, but you can imitate a 3D lidar by using a 2D one, and manually moving it perpendicular to the plane it can see in ("Push-broom lidar").
 			</div>
 
-			<h3 id="sq">Sensing Questions</h3>
 
-			<p>
-				<b>[1]</b> Describe the layers in the sensing process -- which one is most important for decision making?
-			</p>
-
-			<button class="collapsible">Answer... </button>
-			<div class="ccontent md-conv">
-				The five stages:
-				* Transducer (converting physical quantity to electric signal)
-				* Signal Conditioning (preprocessing)
-				* Computer interface 
-				* Modelling 
-				* Perception 
-				
-				Perception is directly responsible for decision making, but it bases its decisions on each of the previous layers.
-				
-			</div>
-
-			<p>
-				<b>[2]</b> State 4 main characteristics of sensors. (There are more than 4)
-			</p>
-
-			<button class="collapsible">Answer... </button>
-			<div class="md-conv ccontent ">
-				Any 4 of:
-
-				Response time/bandwidth; cost; error rate; robustness/noise tolerance; sensitivity; linearity; dynamic range; resolution; accuracy; precision.
-			</div>
-
-			<p>
-				<b>[3]</b> What are wheel encoders used for? 
-			</p>
-
-			<button class="collapsible">Answer... </button>
-			<div class="ccontent md-conv">
-				A popular device for controlling the position and speed of wheels and other motor-driven parts. Wheel movements can be used to get an estimate of position/distance.
-
-				Simple and widely accessible. 
-
-				However, because they are internal, their estimation of position is in reference frame of the robot and may not best reflect what is actually going on, which may cause errors.
-			</div>
-
-			<p>
-				<b>[4]</b> A robot tries to move to landmark C using triangulation. Suppose the robot moves from A to B, travelling distance \(l_{AB}\), if angles \(\alpha, \beta\) are known, work out \(l_{AC}, l_{BC}\)
-			</p>
-			<figure>
-				<img src="./assets/sens-q1.png" alt="" style="max-width: 400px;">
-			</figure>
-
-			<button class="collapsible">Answer...</button>
-			<div class="ccontent md-conv">
-				Take the sine rule: 
-
-				$$ \fr{l_{AB}}{\sin(180^\circ - \alpha - \beta)} = \fr{l_{AC}}{\sin\beta} = \fr{l_{BC}}{\sin\alpha} $$
-
-				Rearranging,
-
-				\begin{align}
-					l_{AC} &= \fr{l_{AB} \cdot \sin\beta }{\sin(180^\circ - \alpha - \beta)}\\
-					l_{BC} &= \fr{l_{AB} \cdot \sin\alpha }{\sin(180^\circ - \alpha - \beta)}
-				\end{align}
-			</div>
-
-			<p>
-				<b>[5]</b> What type of sensors may be required for an autonomous patrol security car around a university campus?
-			</p>
-
-			<button class="collapsible">Answer... </button>
-			<div class="ccontent md-conv">
-				Any sensor + suitable justification, e.g. Lidar sensor to detect objects around it, and make sure it is not running into any obstacles/people/staying on the road.
-			</div>
 		</div>
 
 		<div class="colourband">
@@ -518,7 +432,165 @@
 			<h3 id="v3">Image Processing</h3>
 
 			<div class="md-conv">
+				#### Pixel Processing
+
+				***LSIS.*** Linear shift invariant systems:
+
+				> A function that transforms one function into another `(LSIS : func -> func)`
+
+				* It is **linear**: any linear combination results in the same linear coefficients: $Af_1(x) + Bf_2 (x) \;\lra \; \rm{LSIS}\; \lra\; Ag_1(x) + Bg_2(x)$.
+				* It is **shift invariant**: $f(x) \lra \rm{LSIS} \lra g(x) \implies f(x-a) \lra \rm{LSIS} \lra g(x-a)$.
+
+				I.e. it is a **convolution** of two functions $f(x) * h(x)$ for some **kernel function/kernel filter** $h(x)$.
+
+				For images a convolution basically involves taking a $k \times k$ grid of coefficients, multiply with image pixel values and sum them to get one output pixel. The kernel is then shifted and this is repeated.
+
+				<figure>
+					<img src="./assets/convolution-foster.png" alt="" style="max-width: 640px;">
+					<figcaption>A convolution operation (David Foster, in the context of CNNs)</figcaption>
+				</figure>
+
+				As shown the image can be padded so that the output of the convolution is the same size as the input. 
+
+				There are many different convolution kernels, which can be represented as matrices.
+
+				<hr>
+
+				**Smoothing** filters can come in many forms, such as the 
 				
+				* box filter, which is uniform
+				$$h(u,v) = \fr{1}{9} \begin{bmatrix}
+					1&1&1\\1&1&1\\1&1&1
+				\end{bmatrix}$$
+				* gaussian filter, which is 
+				$$h(u,v) = \fr{1}{2\pi\sigma^2} \exp(-\fr{u^2 + v^2}{2}) \approx \fr{1}{16} \begin{bmatrix}
+					1&2&1 \\ 2&4&2 \\ 1&2&1
+				\end{bmatrix}
+				$$ 
+				(where the width of the kernel is $ 2\pi\sigma^2$, or basically anything not in that matrix is zero)
+				 <hr>
+
+				**Line detection** filters come in four different angles, to detect lines running in those four directions. The falling diagonal one is shown:
+				$$ 
+				\begin{bmatrix}
+					2 & -1 & -1 \\ -1 & 2 & -1 \\ -1 & -1 & 2
+				\end{bmatrix}
+				$$ 
+				And the others simply have the twos oriented differently.
+
+				<hr>
+
+				**Median** filter removes salt and pepper noise by taken the median of all pixels in the kernel. It also blurs edges.
+
+				For more information see CS355 Forensics.
+
+				<hr>
+
+				**Edge filters** are generally rather important. 
+
+				Edges are defined as significant changes in brightness (intensity). Since we treat an image as a function $I(x,y)$, edges are where the gradient of that function $\nabla I(x,y) = [I_x, I_y]$ (dimension-wise partial derivatives) are large.  
+
+				From $\nabla I(x,y)$ we can find the magnitude $\sqrt{I_x^2 + I_y^2}$ and the direction $\tan^{-1}\left({\fr{I_x}{I_y}}\right)$ of the gradient.
+
+				Naturally though we approximate this through discrete kernels, which for each direction is 
+				\begin{matrix}
+				\begin{bmatrix}
+					-1 &-1&-1 \\ 0&0&0 \\ 1&1&1
+				\end{bmatrix} & 
+				\begin{bmatrix}
+					-1&0&1 \\ -1&0&1 \\ -1&0&1 
+				\end{bmatrix} & 
+				\begin{bmatrix}
+					0 & 1 & 1 \\ -1 & 0 & 1 \\ -1 & -1 & 0
+				\end{bmatrix}
+				& \rm{etc.}
+				\end{matrix}
+
+				We can also get the **second derivative** (the **laplacian**) for more localised edge info, but they tend to be noisier and doesn't include orientation:
+				\begin{matrix}
+					\begin{bmatrix}
+						0 & -1 & 0 \\ -1 & 4 & -1 \\ 0 & -1 & 0
+					\end{bmatrix}
+					&
+					\begin{bmatrix}
+					-1 & -1 & -1 \\ -1 & 8 & -1 \\ -1 & -1 & -1
+					\end{bmatrix}
+					& 
+					\begin{bmatrix}
+					1 & 4 & 1 \\ 4 & -20 & 4 \\ 1 & 4 & 1
+					\end{bmatrix}
+				\end{matrix}
+
+				<hr>
+
+				The **canny edge detector** is a method of edge detection that resists noise, by 
+				* smoothing image with gaussian filter 
+				* computing its gradient 
+				* finding the gradient magnitude and orientation 
+				* **hysteresis thresholding**: ignoring edges with magnitudes less than a set lower bound
+				* Select a single maximum pixel across the width of an edge.
+
+				If the lower bound is high, then "weaker" edges may be lost. 
+				
+				**Edge linking** addresses this by making two thresholded images $I_{low}$ and $I_{high}$, for two different bounds.
+
+				Use $I_{low}$ to link up $I_{high}$ by: for a pixel in $I_{low}$, if any of these pixels' *8 neighbours* exist in $I_{high}$, keep it as well.
+
+				#### Interest point detection
+
+				To identify features of importance, for some importance. Used in say, place recognition, motion estimation. 
+
+				e.g. image matching between two cameras with offset perspectives. 
+
+				* which requires a **repeatable** (can detect same points independently) 
+				* and **discriminative** (can match up points) detector. Some patches are easier to match, especially ones with a lot of contrast. 
+				* are robust to transformations (like perspective distortion)
+
+				**Corner detection** is useful. A corner is an intersection of 2 or more edges.
+
+				Because a corner only looks like the same corner in one specific image patch, if you move the image patch the intensities change significantly, not true for edges and blank patches.
+
+				<hr>
+
+				The ***Harris corner detection*** uses sum-squared difference of two shifted patches:
+
+				$$SSD(u,v) = \sum_u \sum_v w(x,y) (I(u+x, v+y) - I(u, v))^2 $$ 
+
+				Where $w(x,y)$ is the window function that essentially isolates the image to one "window" or "patch". This can be flat (1 if in, 0 if out) or gaussian.
+
+				We can look at derivative points, and plot them on an $x,y$ axis. We can draw an ellipse around these points to get two radii ("eigenvalues") $\lambda_1, \lambda_2$ 
+
+				* if $\lambda_1 \approx \lambda_2$ and they are both small (points clustered around centre), then likely to be flat. 
+				* if $\lambda_1 \ll \lambda_2$ or vice versa (points spread in line), then edge 
+				* if $\lambda_1 \approx \lambda_2$ and they are both **large**, then likely corner.
+
+				Apply non-maximum suppression again to get corner points.
+
+				* Because it's an ellipse, the eigenvalues stay the same on rotation -- rotation invariant 
+				* (Partially) invariant to intensity, as we use derivatives (sensitive to threshold).
+				* **not** invariant to scale!
+
+				<hr>
+
+				***SIFT*** for scaled invariant feature transform.
+
+				SIFT is a method that is **localised**, **distinctive**, generates a large **quantity** of features, is **efficient**, and **extensible** to different feature types.
+
+				It 
+				1. Finds extrema, peaks in intensity in the *second derivative of scale space* (a set of spaces of images at various scales)
+				2. Sift through to find key points
+				3. Assign evaluation to each point 
+				4. Describe each point using a "SIFT descriptor"
+
+				SIFT finds lots of candidate points, then removes ones via some rule (e.g. too low contrast).
+
+				The lower down in scale space, the more detailed the image is. The higher up, the less. So a SIFT point in a higher level corresponds to a larger area on the main image. We use the "difference of gaussians" to get the second derivative of state space, and pick extrema from that.
+
+				We can get the orientation of each pixel in the area of a key point, and put them into a weighted histogram by their gradient magnitude (and a gaussian falloff), 
+
+				and any peaks above 80% of highest peak are taken as orientations of the key point.
+
+				We can also overlay a 16&times;16 window around a key point, and work out the magnitude weighted gradients of each 4&times;4 block. Put this into an eight bin histogram for every 45&deg; of rotation, and you get a 128-long feature set which can then be used elsewhere.
 			</div>
 		</div>
 
@@ -526,7 +598,7 @@
 			<div class="cbox">
                 <div class="columncontainer ctwo" id="fc2">
                 </div>
-                <script type="text/javascript" src="./js/footerGen.js"></script>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
             </div>
 		</footer>
 
