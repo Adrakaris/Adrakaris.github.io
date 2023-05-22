@@ -56,6 +56,7 @@
 				<li><a href="#vision">Vision</a></li>
 				<li><a href="#stateest">State Estimation</a></li>
 				<li><a href="#gaussian">Linear Gaussian Filters</a></li>
+				<li><a href="#nparam">Non-Parametric Filters</a></li>
 			</ol>
 
 			<h2>Introduction</h2>
@@ -1052,6 +1053,56 @@ This Jacobian is then used rather than the linear $A$ matrix in the kalman algor
 				UKF is also efficient, being only constant time slower than EKF, whilst generally having better results, and much better when the function is very nonlinear.
 				
 				Plus no more jacobians. 
+			</div>
+		</div>
+
+		<div class="colourband" id="nparam">
+			<h2>Non-Parametric (Particle) Filters</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+
+				If our distribution is not gaussian, or if the system is very non-linear, then using linear "parametric" systems generally doesn't work well. 
+
+				Thus we consider "non-parametric" models which aren't as assumption heavy.
+
+				We can approximate a PDF with a set of particles, either:
+				* more particles where PDF is highest, or 
+				* bigger particles where PDF is highest
+
+				<figure>
+					<img src="./assets/particle-density.png" alt="" style="max-width: 640px;">
+					<figcaption>Two types of particle distribution (Claire Rocks)</figcaption>
+				</figure>
+
+				* **Rejection Sampling** is where you generate particles uniformly in a space, and only keep the particles that fall under the curve $f$. 
+				* **Importance sampling** uses a different distribution $\pi$ to generate samples from $f$, and account for differences by using a weight $w = \frac{f(x)}{\pi(x)}$. We can then resample to get the thing more evenly spread. 
+
+				Thus, particle filter:
+1. Sample particles using **proposal distribution** $\pi : x_t^{[j]} \sim \pi(x_t)$
+2. Compute the **importance weights** using the proposal $\pi$ and target $f : w_t^{[j]} = \frac{f(x_t^{[j]})}{\pi(x_t^{[j]})}$
+3. Resample distribution according to new weights.
+
+In terms of localisation, each particle is a **pose hypothesis**: a possibile position the robot is in. 
+
+The proposal distribution is the model of motion: $x_t^{[j]} \sim p(x_t | x_{t-1}, u_t)$.
+
+When we go to transform, we can just push all the particles through and be done with it! Getting a $\ol{bel(x_t)}$ is trivial.
+
+The measurement part is harder. Because we have a measurement, and some particles agree with it better and others much less. 
+
+We can re-weight each of the particles $w_t^{[j]} = \frac{\textrm{target}}{\textrm{proposal}} \propto p(z_t|x_t)$.
+
+Now though, they're not equal again, and so we can resample them equally. Basically, draw from all the available particles (with replacement) with weighted probability. This way, we essentally drop the unlikely samples, and replace them with more likely ones. 
+
+Different resampling styles: 
+* **Stochastic universal sampling.** Sum the weights, and sample a random number between that sum. Depending on what that number is, pick the corresponding particle's position as the new sample. Imagine this as taking a wheel and spinning it many times.
+* **Low-variance sampling.** Take the same wheel, but put $n$ evenly spaced arrows around it, and essentially sample several evenly spaced particles. In case the weights doesnt change, this is a good way of maintaining a similar particle distribution that stochastic sampling doesn't.
+
+The disadvantages of particle sampling is that it's computationally intensive, and there's a chance that your particles will start to disappear ("particle depletion").
+
+But for stuff where gaussian filters are hard, and for lower dimensional spaces, it can be very good.
 			</div>
 		</div>
 
