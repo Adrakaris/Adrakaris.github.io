@@ -55,6 +55,7 @@
 				<li><a href="#sensing">Sensing</a></li>
 				<li><a href="#vision">Vision</a></li>
 				<li><a href="#stateest">State Estimation</a></li>
+				<li><a href="#gaussian">Linear Gaussian Filters</a></li>
 			</ol>
 
 			<h2>Introduction</h2>
@@ -84,9 +85,10 @@
 				\newcommand{\vecu}{\underline}
 				\newcommand{\rm}{\textrm}
 				\newcommand{\bb}{\mathbb}
-				\newcommand{\nm}{\overline}
+				\newcommand{\ol}{\overline}
 				\newcommand{\tl}{\tilde}
 				\newcommand{\t}{^\top}
+				\newcommand{\bs}{\boldsymbol}
 
 			\)
 			</div>
@@ -791,6 +793,159 @@ $$
 Simply iterate the matrix multiplications. 
 
 The normalisation constant is also written as $c^{-1}$.
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="gaussian">Linear Gaussian Filters</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents
+
+				1. [Kalman Filters](#gaus-kalman)
+				2. [Extended Kalman Filters](#gaus-extk)
+				3. [Unscented Kalman Filters](#gaus-NOTSMELLY)
+
+				### Introduction 
+
+				We have a bayes filter, but we have had to make it discrete to work with it.
+
+				"Gaussian filters" is our step in asking "how about we not?". 
+
+			</div>
+
+			<div class="md-conv" id="gaus-kalman">
+				### Kalman Filters 
+
+				> The smelly filter (you'll see why later)
+
+				Kalman filters work of gaussians, that is either $p(x) \sim N(\mu, \sigma^2)$ for the *univariate* case, and $p(\vec{x}) \sim N(\bs{\mu}, \vec{\Sigma})$ in the *multivariate* case.
+
+				Where $\boldsymbol{\mu}$ is the state vector, and $\vec{\Sigma}$ is a covariance matrix.
+				
+				Where the univariate case $p(x) = \frac{1}{\sqrt{2\pi\sigma ^2}} e ^{- \frac{1}{2} \frac{(x-\mu)^2}{\sigma^2}}$, and the multivariate case is a damn sight harder to write. 
+				
+				Importantly 
+				* A gaussian put into a linear function makes another gaussian 
+				
+				$$\left. \begin{matrix}X \sim N(\mu, \sigma^2) \\ Y = aX+b\end{matrix} \right\} \implies Y \sim N(a\mu + b,\; a^2\sigma^2) $$
+				
+				* A gaussian multiplied to another gaussian gets a gaussian 
+				
+				$$ \left. \begin{matrix}X_1 \sim N(\mu_1, \sigma_1^2) \\ X_2 \sim N(\mu_2, \sigma_2^2)\end{matrix} \right\} \implies p(X_1)p(X_2) \sim N \left( \frac{(\sigma_2^2)}{(\sigma_1^2 + \sigma_2^2)}\mu_1 + \frac{\sigma_1^2}{\sigma_1^2+\sigma_2^2}\mu_2,\; \frac{1}{\sigma_1^{-2}+ \sigma_2^{-2}} \right)
+				$$ (I don't think you need to remember this)
+
+				<div class="blue">
+					The **Kalman Filter** uses gaussians and linear distributions to model a state space. 
+				
+					We have a continuous state space (and discrete time), and everything is linear. In addition to bayes assumptions, we assume 
+					* A linear control model $\vec{x}_t = \vec{A}_t\vec{x}_{t-1} + \vec{B}_t\vec{u}_{t} + \epsilon_t$
+					* A linear measurement model $\vec{z}_t = \vec{C}_t \vec{x}_t + \delta_t$
+					* And a gaussian starting state $p(\vec{x}_0) \sim N(\bs{\mu}_0, \bs{\Sigma}_0)$
+					
+					Where 
+					* $\underset{n \times n}{\vec{A}_t}$ (:: matrix) describes the **state transition** from $t-1$ to $t$ **without** any control **or** noise. 
+					* $\underset{n \times l}{\vec{B}_t}$ (:: matrix) describes how the control $\vec{u}_t$ changes the state from $t-1$ to $t$.
+					* $\underset{k \times n}{\vec{C}_t}$ (:: matrix) describes how a state $\vec{x}_t$ maps to an observation $\vec{z}_t$.
+					* $\epsilon_t, \delta_t$ (:: random variables) represent the process and measurement noise respectively, which we assume to be *independent* and *normally distributed*. They have covariance $\vec{R}_t$ and $\vec{Q}_t$ respectively. 
+					
+					
+				</div>
+				
+				Thus we can implement the kalman filter as 
+			</div>
+
+			<div class="codediv"><span class="grey">1.</span>	def KALMAN_FILTER(\(\bs{\mu}_t, \bs{\Sigma}_t, \vec{u}_t, \vec{z}_t\)):
+<span class="grey">prediction:</span>
+<span class="grey">2.</span>      \(\ol{\bs{\mu}_t} = \vec{A}_T \bs{\mu}_{t-1} + \vec{B}_t \vec{u}_t\)
+<span class="grey">3.</span>		\(\ol{\bs{\Sigma}_t} = \vec{A}_t \bs{\Sigma}_{t-1} \vec{A}_t\t + \vec{R}_t\)
+<span class="grey">correction:</span>
+<span class="grey">4.</span>		\( \vec{K}_t = \ol{\bs{\Sigma}_t} \vec{C}_t\t (\vec{C}_t \ol{\bs{\Sigma}_t} \vec{C}_t\t + \vec{Q}_t)^{-1} \)
+<span class="grey">5.</span>		\( \bs{\mu}_t =  \ol{\bs{\mu}_t} + \vec{K}_t (\vec{z}_t - \vec{C}_t \ol{\bs{\mu}_t}) \) 
+<span class="grey">6.</span>		\( \bs{\Sigma}_t = (\vec{I} - \vec{K}_t \vec{C}_t) \ol{\bs{\Sigma}_t} \)
+<span class="grey">return:</span>
+<span class="grey">7.</span>		return \(\bs{\mu}_t, \bs{\Sigma}_t\)			</div>
+
+			<div class="md-conv">
+				Where: 
+				* $\bs{\mu}_t$ is the mean at time $t$, $\bs{\Sigma}_t$ is the matrix of covariances at time $t-1$.
+				* $\vec{u}_t$ is the control action/robot movement, $\vec{z}_t$ is the sensor measurement 
+				* We have a *deterministic* state transition without any error term, using the previous *mean* rather than the actual $\vec{x}_T$. 
+				* $\vec{A}_t$ is the state transition matrix, $\vec{B}_t$ is the control matrix, $\vec{C}_t$ is the measurement matrix.
+				* $\vec{R}_t, \vec{Q}_t$ are gaussian noise
+
+				Where: 
+				* 2, 3 calculate the predicted belief $\ol{bel}(x_t)$ before using any controls $u_t$, and
+				* 2 is the deterministic state transition 
+				* 4 calculates the **kalman gain** 
+				* 5, 6 uses measurements to firm up belief. 
+
+				The **kalman gain** is an intermediate matrix used in the kalman filter. It stands in essentially for a constant that needs to be calculated. 
+
+				Whilst you do not need to actually use the kalman algorithm you do need to know it, know how to construct a state vector, and the linear transition model (2).
+
+				This may involve suvat equations, in which case we can assume $t=1$. 
+			</div>
+
+			<button class="collapsible">Example... </button>
+			<div class="ccontent md-conv">
+				***Example.*** Suppose a robot is moving in a 2D environment with linear dynamics.
+
+				At time $t$ it has location $x_t$ and velocity $\Delta x_t$. The instance acceleration is $a_t$. You are asked to use a kalman filter. 
+				
+				Design a state vector and transition model, such that the linear system is Markovian.
+				
+				Derive the state prediction step of the Kalman filter (derive the predicted belief). Assume the additive process noise is gaussian with covariance $\vec{R}_t$.
+				
+				<hr>
+				
+				The state vector has position and velocity: $\begin{bmatrix} x_t \\ \Delta x_t \end{bmatrix}$. The control vector is $\begin{bmatrix} a_t \end{bmatrix}$.
+				
+				Using suvat, we can determine how each state variable is updated:
+				$$
+				\begin{align*}
+				s &= ut + \frac{1}{2}at^2\\
+				v &= u + at
+				\end{align*}
+				$$
+				Where $s = x_t, v = \Delta x_t$, and we **assume $t=1$** so 
+				$$
+				\begin{align*}
+				x_t &= x_{t-1} + \Delta x_{t-1}  + \frac{1}{2}a\\
+				\Delta x_t &= \Delta x_{t-1} + a 
+				\end{align*}
+				$$
+				Thus we can model the system dynamics in matrix form as 
+				$$
+				\begin{bmatrix} x_t  \\ \Delta x_t \end{bmatrix} = 
+				\begin{bmatrix} 1 & 1 \\ 0 & 1 \end{bmatrix}
+				\begin{bmatrix} x_{t-1} \\ \Delta x_{t-1} \end{bmatrix} +
+				\begin{bmatrix} \frac{1}{2} \\ 1 \end{bmatrix} a_t + \epsilon_t
+				$$
+				Where $\epsilon_t$ is an error, and our two number matrices are $\vec{A}$ and $\vec{B}$ respectively. 
+				
+				Under the linear gaussian assumption, we have $\ol{bel(x_t)} \sim N(\ol{\mu_t}, \ol{\Sigma_t})$ where 
+				$$
+				\ol{bel(x_t)} = \begin{cases} \ol{\mu_t} = A_t\mu_{t-1} + B_t u_t \\
+				\ol{\Sigma_t} = A_t \Sigma_{t-1} A_t\t + R_t \end{cases}
+				$$
+				
+			</div>
+
+			<div class="md-conv">
+				On the upside, kalman filters are very **efficient**
+
+				On the downside, **worlds are rarely if ever linear**.
+			</div>
+
+			<div class="md-conv" id="gaus-extk">
+				### Extended Kalman Filters
+			</div>
+
+			<div class="md-conv" id="gaus-NOTSMELLY">
+				### Unscented Kalman Filters
 			</div>
 		</div>
 
