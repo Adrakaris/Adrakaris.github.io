@@ -168,7 +168,7 @@
 					<p>
 						<b>Probability density (PDF)</b>: probability of observing a value, i.e. \(p(X = x)\)
 
-						\[ p(x|\mu, \sigma^2 ) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp(-\frac{(x-\mu)^2}{\sigma^2}) \]
+						\[ p(x|\mu, \sigma^2 ) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp(-\frac{(x-\mu)^2}{2\sigma^2}) \]
 					</p>
 					<p>
 						<b>Cumulative density (CDF)</b>: probility of observing &leq; the value \(p(X \leq x)\)
@@ -1698,10 +1698,10 @@ for epoch \(t\) from 1 .. \(n\): <span class="grey">[*]</span>
 			</p>
 			<p>
 				Thus given the distance between the two support vectors is \(d\), we know \(\w \cdot \x_i = 1\) is the same as \(\w  \cdot(\x_j + d \fr{\w}{|\w|}) = 1\). Rearranging this we get 
-				\[d |\w| = 2 \iff d = \fr{2}{\w}\]
+				\[d |\w| = 2 \iff d = \fr{2}{|\w|}\]
 			</p>
 			<p>
-				Thus maximise \(d = \fr{2}{\w}\), which is the same as minimising \(\fr{1}{2}|\w|\), or \(\fr{1}{2}|\w|^2\).
+				Thus maximise \(d = \fr{2}{|\w|}\), which is the same as minimising \(\fr{1}{2}|\w|\), or \(\fr{1}{2}|\w|^2\).
 			</p>
 			<div class="side">
 
@@ -1870,6 +1870,22 @@ $$
 				<p>
 					i.e. there's no point to \(\z\), just have a <b>kernel function</b> \(\kappa(\x_i, \x_j) = (\x_i \cdot x_j)^2\) and skip the \(\z\).
 				</p>
+				<div class="md-conv">
+					Alternatively, we can go the full length and have bias, linear, and quadratic terms, instead of just quadratic terms. 
+
+					Note the coefficients are just for convenience.
+
+					\begin{align}
+						\z_i &= [1, \sqrt{2}a, \sqrt{2}b, a^2, \sqrt{2}ab, b^2] \\
+						\z_i &= [1, \sqrt{2}c, \sqrt{2}d, c^2, \sqrt{2}cd, d^2] \\
+					\end{align}
+
+					\begin{align}
+						\z_i \cdot \z_j &= k(\x_i, \x_j) \\
+						&= (1 + \x_i \cdot \x_j)^2 \\
+						&= 1 + 2\x_i\cdot \x_j + (\x_i \cdot \x_j)^2
+					\end{align}
+				</div>
 			</div>
 
 			<p class="blue">
@@ -1882,7 +1898,7 @@ $$
 			<button class="collapsible">Mercer's Theorem... </button>
 			<div class="ccontent">
 				<p>
-					<b><i>Theorem.</i></b> Rather than first mapping from X to Z with a function \(\phi : \X \lra \Z\), we instead compute a <i>modified inner product</i> \(\kappa(\cdot, \cdot)\), which is a function that fits a bunch of formal stuff, but most importantly is <b>symmetric</b>: \(\kappa(a, b) = \kappa(b,a)\)
+					<b><i>Theorem.</i></b> Rather than first mapping from X to Z with a function \(\phi : \X \lra \Z\), we instead compute a <i>modified inner product</i> \(\kappa(a, \b) = \phi(a) \cdot \phi(b)\), which is a function that fits a bunch of formal stuff, but most importantly is <b>symmetric</b>: \(\kappa(a, b) = \kappa(b,a)\)
 				</p>
 			</div>
 
@@ -1978,7 +1994,7 @@ p(D|\vec{w}) = \prod_{i=1}^n p(\vec{x}_i | \vec{w})
 \]
 Then MLE would be
 \[
-\vec{\hat{w}} \in \argmax_\vec{w} (p(D|\vec{w})) \equiv \argmin_\vec{w}(\sum\limits_{i=1}^n \log p(\vec{x_i}|\vec{w}))
+\vec{\hat{w}} \in \argmax_\vec{w} (p(D|\vec{w})) \equiv \argmin_\vec{w}(-\sum\limits_{i=1}^n \log p(\vec{x_i}|\vec{w}))
 \]
 			</p>
 

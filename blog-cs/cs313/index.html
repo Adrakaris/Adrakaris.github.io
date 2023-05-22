@@ -54,6 +54,7 @@
 			<ol>
 				<li><a href="#sensing">Sensing</a></li>
 				<li><a href="#vision">Vision</a></li>
+				<li><a href="#stateest">State Estimation</a></li>
 			</ol>
 
 			<h2>Introduction</h2>
@@ -582,6 +583,11 @@
 				3. Assign evaluation to each point 
 				4. Describe each point using a "SIFT descriptor"
 
+				<figure style="float: right;">
+					<img src="./assets/gaussian.png" alt="" style="max-width: 400px;">
+					<figcaption>SIFT process [(src)](https://link.springer.com/article/10.1007/s11554-018-0781-0)</figcaption>
+				</figure>
+
 				SIFT finds lots of candidate points, then removes ones via some rule (e.g. too low contrast).
 
 				The lower down in scale space, the more detailed the image is. The higher up, the less. So a SIFT point in a higher level corresponds to a larger area on the main image. We use the "difference of gaussians" to get the second derivative of state space, and pick extrema from that.
@@ -591,6 +597,119 @@
 				and any peaks above 80% of highest peak are taken as orientations of the key point.
 
 				We can also overlay a 16&times;16 window around a key point, and work out the magnitude weighted gradients of each 4&times;4 block. Put this into an eight bin histogram for every 45&deg; of rotation, and you get a 128-long feature set which can then be used elsewhere.
+
+				
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="stateest">State Estimation</h2>
+		</div>
+
+		<div class="cbox">
+
+			<div class="md-conv">
+				### Introduction
+
+				There are two fundamental interactions between a robot and its environment: Sensor measurements, and control actions.
+
+				Thus we have 
+				* $z_t$: the measurement data 
+				* $u_t$: the control data, i.e. the actions the robot makes. 
+
+				Robot sensing is imprecise, and so we use probability distributions to model our *beliefs*. 
+
+				Our beliefs are initially "flat": there is a uniform distribution of where we could be in the world.
+
+				When we observe something, we can use our given knowledge of where it is to re-evaluate our belief to have higher certainty around more possible spots. 
+
+				As we repeat this, our probability distribution gets more and more certain around a single spot, hopefully. 
+			</div>
+			
+			<div class="md-conv">
+				### Probability and Simple Estimation
+
+				State estimation is based on probability. You will need to know probability. This page is not going to contain all the probability rules.
+
+				* A probability density function (PDF) $p(X = x)$ is a function that always integrates to 1. Discrete probabilities sum to 1.
+				* The law of total probability states $$P(x) = \sum_{i=1}^k P(x \land y_k) = \sum_{i=1}^k P(x|y_i)P(y_i)$$
+				* Bayes theorem, hopefully I don't need to state it by now? Also, in bayes, $p(y|x)$ is the **likelihood**, $p(x)$ is the **prior**, and $p(y)$ is the **evidence**
+
+			</div>
+
+			<button class="collapsible">Simple example</button>
+			<div class="ccontent md-conv">
+				Given a 4 room maze, with rooms $a$ to $d$. Initially, the robot is equally likely to be in any of the four rooms: $P(X=x) = 0.5 \;\forall x \in \{a,b,c,d\}$.
+
+				The robot has a sensor $z$ that tells what room it's in with 80% accuracy, and has a 20% chance to be off by one every time. So if the robot is in room $a$, the probabilities will be like:
+
+				$$\begin{matrix}a & b & c & d \\0.8 & 0.1 & 0 & 0.1\end{matrix}$$
+
+				Given bayes $p(x|z) = \frac{{p(z|x)p(x)}}{{p(z)}}$ we want to update our **belief of the prior** $p(x)$ using our sensor model.
+
+				e.g try $p(x=a|z=b)$: 
+
+				$$
+				p(x=a|z=b) = \frac{p(z=b|x=a)p(x=a)}{p(z=b)}
+				$$
+
+				We know $p(z=b|x=a) = 0.1$ from the model, $p(x=a)$ from the initial prior belief, and no idea about $p(z=b)$.
+
+				But we can use $p(z) = \sum\limits_{i=1}^n p(z|x_i)p(x_i)$, or we can use a **normalisation constant** $\eta$, which just enforces that the resulting probabilities should sum to 1. Basically, we can just ignore the evidence and normalise.
+
+				Thus, $P(x=a|z=b) = \eta \cdot 0.1 \cdot 0.25 = 0.025 \eta$. $P(x=b|z=b) = \eta\cdot 0.8 \cdot 0.25 = 0.2\eta$, and so on. Thus we get 
+
+				$$
+				\begin{matrix}\textrm{Room} & a & b & c & d \\ P(x) & 0.025\eta & 0.2\eta & 0.025 \eta & 0\end{matrix}
+				$$
+
+				Solving for $\eta$ we get 
+
+				$$
+				\begin{matrix}\textrm{Room} & a & b & c & d \\ P(x) & 0.1 & 0.8 & 0.1 & 0\end{matrix}
+				$$
+
+				And this is our new updated prior. 
+			</div>
+
+			<div class="md-conv">
+				### State Estimation
+
+				State estimation is estimating our **belief** of the current state given past **observations** $z_1..z_t$, and past **controls** $u_1..u_t$.
+
+				$$Bel(x_t) = p(x_t |  u_{1..t}, z_{1..t})$$
+				Reformulating this with bayes we have 
+
+				$$
+				\begin{align*}
+				Bel(x_t) &=  \eta \cdot  p(z_t | x_{1..t-1},u_{1..t}, z_{1..t-1}) \cdot p(x_t | u_{1..t}, z_{1..t-1})
+				\end{align*}
+				$$
+
+				And assuming **sensor independence**: that current results are indpendent from past results, we get 
+				$$
+				\begin{align*}
+				Bel(x_t) &=   \eta \cdot  p(z_t | x_t) \cdot p(x_t | u_{1..t}, z_{1..t-1})\\
+				&= \eta \cdot  p(z_t | x_t) \cdot \int p(x_t | u_{1..t}, z_{1..t-1}, x_{t-1}) \cdot p(x_{t-1}|u_{1..t-1}, z_{1..t-1}) dx_{t-1} \pod{1}\\
+				&= \eta \cdot p(z_t | x_t) \int p(x_t | u_t, x_{t-1}) \cdot Bel(x_{t-1}) dx_{t-1}. \pod{2}
+				\end{align*}
+				$$
+				Where in (1) we use **total probability** to sum over all results, and (2) we use **markov independence**: *the probability of $x_t$ is dependent only on $x_{t-1}$* to simplify down into a recursive formulation. 
+
+				<div class="blue">
+					$$
+					\eta \cdot p(z_t | x_t) \int p(x_t | u_t, x_{t-1}) \cdot Bel(x_{t-1}) dx_{t-1}.
+					$$
+					* Where $\eta$ is the normalisation constant, 
+					* $p(z_t | x_t)$ is the current observation $z_t$ in the current state $x_t$, 
+					* then you integrate over $p(x_t|u_t , x_{t-1})$ which is the probaility of appearing in the current state $x_t$ given action $u_{t-1}$ and previous state $x_{t-1}$,
+					* multiplied by the **prior belief** of the previous state $Bel(x_{t-1})$.
+					* For which we work out the **posterior belief** $Bel(x_t)$.
+				</div>
+
+				Implementing this, we need to specify the movement (state-action) and observation models, based on our own knowledge, and represent the belief somehow.
+
+				The methods for doing this are called **filters**, of which we have several to look at.
 			</div>
 		</div>
 
