@@ -941,11 +941,117 @@ The normalisation constant is also written as $c^{-1}$.
 			</div>
 
 			<div class="md-conv" id="gaus-extk">
-				### Extended Kalman Filters
-			</div>
+				### Extended Kalman Filters 
 
+				Our state update and measurement model are often not linear. We can describe them with non-linear functions $g$ and $h$ s.t.
+
+* The process model becomes $x_t = g(u_t, x_{t-1})$
+* The measurement model becomes $z_t = h(x_t)$  
+
+e.g. A robot on the ground, where the state of the robot is described by $[x_t, y_t, \theta_t]$. The velocity is constant, the motor produces a heading change $\Delta \theta_t$. We'd get 
+
+$$
+g(u_t, x_{t-1}) = \begin{bmatrix} 
+x_{t-1} + d_t \cos(\theta_t) + \sigma_t^x \\ 
+y_{t-1} + d_t \sin(\theta_t) + \sigma_t^y \\ 
+\theta_{t-1} + \Delta \theta_t + \sigma_t^\theta \end{bmatrix}
+$$
+
+Which is non linear.
+
+Slight issue, this utterly collapses if we try to kalman it directly. So what do we do? We **approximate** the non-linear function with a linear one -- specifically a **taylor expansion**.
+
+Generally we use the first order taylor expantion with partial derivative over $x_{t-1}$, so when we have the functions over the means $\mu_{t-1}$,
+
+* Prediction is given $g(u_t, x_{t-1}) \approx g(u_t, \mu_{t-1}) + \frac{\partial g(u_t, \mu_{t-1})}{\partial x_{t-1}}(x_{t-1}-\mu_{t-1})$ $\iff g(u_t, \mu_{t-1}) + G_t(x_{t-1} - \mu_{t-1})$ where we taylor series about $x=\mu_{t-1}$.
+* Correction/measurement is given $h(x_t) \approx h(\ol{\mu_t}) + \frac{\partial h(\ol(\mu_t))}{\partial x_t}(x_t - \ol{\mu_t})$ $\iff h(\ol{\mu_t}) + H_t(x_t-\ol{\mu_t})$ where we taylor series about $x = \ol{\mu}_t$.
+
+We can break $g$ (from the example) into three functions, 
+$$
+g(u_t, x_{t-1}) = \begin{bmatrix} 
+x_{t-1} + d_t \cos(\theta_t) + \sigma_t^x \\ 
+y_{t-1} + d_t \sin(\theta_t) + \sigma_t^y \\ 
+\theta_{t-1} + \Delta \theta_t + \sigma_t^\theta \end{bmatrix}
+= \begin{bmatrix} g_1 \\ g_2 \\ g_3 \end{bmatrix}
+$$
+And find the **Jacobian Matrix**: a matrix of partials for each function/variable pair:
+$$
+G_t = \begin{bmatrix} \frac{\partial g_1}{\partial x} & \frac{\partial g_1}{\partial y} & \frac{\partial g_1}{\partial \theta} \\  \frac{\partial g_2}{\partial x} & \frac{\partial g_2}{\partial y} & \frac{\partial g_2}{\partial \theta} \\ \frac{\partial g_3}{\partial x} & \frac{\partial g_3}{\partial y} & \frac{\partial g_3}{\partial \theta}\end{bmatrix}
+$$
+This Jacobian is then used rather than the linear $A$ matrix in the kalman algorithm:
+			</div>
+			<style>
+				span.red{
+					color: red;
+				}
+			</style>
+			<div class="codediv"><span class="grey">1.</span>	def EXTENDED_KALMAN_FILTER(\(\bs{\mu}_t, \bs{\Sigma}_t, \vec{u}_t, \vec{z}_t\)):
+<span class="grey">prediction:</span>
+<span class="grey">2.</span>      \(\ol{\bs{\mu}_t} = g (\vec{u}_t,\bs{\mu}_{t-1} )\)
+<span class="grey">3.</span>		\(\ol{\bs{\Sigma}_t} = \vec{G}_t \bs{\Sigma}_{t-1} \vec{G}_t\t + \vec{R}_t\)
+<span class="grey">correction:</span>
+<span class="grey">4.</span>		\( \vec{K}_t = \ol{\bs{\Sigma}_t} \vec{H}_t\t (\vec{H}_t \ol{\bs{\Sigma}_t} \vec{H}_t\t + \vec{Q}_t)^{-1} \)
+<span class="grey">5.</span>		\( \bs{\mu}_t =  \ol{\bs{\mu}_t} + \vec{K}_t (\vec{z}_t - h(\ol{\bs{\mu}_t}) )\) 
+<span class="grey">6.</span>		\( \bs{\Sigma}_t = (\vec{I} - \vec{K}_t \vec{H}_t) \ol{\bs{\Sigma}_t} \)
+<span class="grey">return:</span>
+<span class="grey">7.</span>		return \(\bs{\mu}_t, \bs{\Sigma}_t\)			</div>
+			
+			<div class="md-conv">
+				Where 
+				* $\vec{H}_t$ is the jacobian of $h(\ol{\bs{\mu}_t})$ w.r.t $x_t$ 
+				* $\vec{G}_t$ is the same except for $g$.
+				* lines 2 and 7 use the nonlinear functions 
+				* line 3 uses the jacobian of $g$ instead of $\vec{A}$ 
+				* line 4, 6 uses the jacobian of $h$ instead of $\vec{C}$
+
+				<hr>
+
+				EKFs are good in that they're also very efficient and generally work quite well. 
+
+				If the nonlinearities are significant however, the EKF does not perform particularly well. ("propagation of uncertainty")
+
+				Plus the jacobian isn't trivial.
+			</div>
 			<div class="md-conv" id="gaus-NOTSMELLY">
 				### Unscented Kalman Filters
+
+				UKFs use a thing called *unscented transform*. They propagate only certain points ("sigma points") of a distribution through a nonlinear function, and makes a gaussian based on the *weighted* sigma points.
+
+				In general, the unscented transform goes:
+				* Compute set of sigma points 
+				* Each has a weight 
+				* Transform each through function 
+				* Compute gaussian. 
+				
+				This way it uses more points than EKF, which only uses one (the mean).
+				
+				Our sigma points <span class="grey">(*which are represented by $\chi$ because OF COURSE THEY ARE WHY WOULD ANYTHING ELSE MAKE SENSE*)</span> are calculated as follows:
+
+				* The mean $\mu= \chi^0$ is our first "sigma" point.
+
+				* Choose \(2n\) "sigma" points for $n$ dimensions, two per dimension, where 
+
+					* $\chi^i = \mu + (\sqrt{(n + \lambda) \Sigma})_i$ for $i = 1..n$. 
+					* $\chi^j = \mu - (\sqrt{(n+\lambda)\Sigma})_j$ for $j = n+1..2n$
+				* So dimension 1 choses the 1st and $n+1$st $\chi$ points. 
+				* Where ${\lambda} = {\alpha}^2(n+k)-n$ where ${\alpha, k}$ are scaling factors that determine the spread of the $\chi$ points from the mean.
+				
+				Each sigma point has two weights, a mean-weight $w_m$ and a covariance-weight $w_c$. 
+				* for $\chi^0$ they are calculated $w_m^0 = \lambda/(n+\lambda)$ and $w_c^0 = \frac{\lambda}{n+\lambda}+ (1 - \alpha^2 + \beta)$.
+					* Where $\lambda$ is the same scaling parameter, and $\beta$ "encodes prior knoweldge of $x$" and is 2 for a gaussian usually.
+				* Then for each $\chi^i$ not the mean the weights $w_m^i = w_c^i = \frac{\lambda}{2(n+\lambda)}$.
+				
+				Once we pass the $\chi^i$ through the nonlinear function, we get transformed points $\psi^i$, from which we can get the new gaussian as follows:
+				$$
+				\begin{matrix}\mu' = \sum\limits_{i=0}^{2n}w_m^i\psi^i && 
+				\Sigma' = \sum\limits_{i=0}^{2n} w_c^i (\psi^i - \mu')(\psi^i - \mu')\t\end{matrix}
+				$$
+				
+				<hr>
+				
+				UKF is also efficient, being only constant time slower than EKF, whilst generally having better results, and much better when the function is very nonlinear.
+				
+				Plus no more jacobians. 
 			</div>
 		</div>
 
