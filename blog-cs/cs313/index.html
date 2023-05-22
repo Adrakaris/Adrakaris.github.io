@@ -86,6 +86,7 @@
 				\newcommand{\bb}{\mathbb}
 				\newcommand{\nm}{\overline}
 				\newcommand{\tl}{\tilde}
+				\newcommand{\t}{^\top}
 
 			\)
 			</div>
@@ -609,6 +610,15 @@
 		<div class="cbox">
 
 			<div class="md-conv">
+				### Contents
+
+				1. [Introduction](#sta-int)
+				2. [Probability and Simple Estimation](#sta-prob)
+				3. [State Estimation](#sta-est)
+				4. [Discrete Filter](#sta-dis)
+			</div>
+
+			<div class="md-conv" id="sta-int">
 				### Introduction
 
 				There are two fundamental interactions between a robot and its environment: Sensor measurements, and control actions.
@@ -626,7 +636,7 @@
 				As we repeat this, our probability distribution gets more and more certain around a single spot, hopefully. 
 			</div>
 			
-			<div class="md-conv">
+			<div class="md-conv" id="sta-prob">
 				### Probability and Simple Estimation
 
 				State estimation is based on probability. You will need to know probability. This page is not going to contain all the probability rules.
@@ -672,7 +682,7 @@
 				And this is our new updated prior. 
 			</div>
 
-			<div class="md-conv">
+			<div class="md-conv" id="sta-est">
 				### State Estimation
 
 				State estimation is estimating our **belief** of the current state given past **observations** $z_1..z_t$, and past **controls** $u_1..u_t$.
@@ -710,6 +720,77 @@
 				Implementing this, we need to specify the movement (state-action) and observation models, based on our own knowledge, and represent the belief somehow.
 
 				The methods for doing this are called **filters**, of which we have several to look at.
+			</div>
+
+			<div class="md-conv" id="sta-dis">
+				### Discrete Filter 
+
+				The equation we highlighted is called the **recursive bayes filter**.
+
+It can be broken down into two stes 
+
+1. **Prediction** of state based on action: $\overline{Bel}(x_t) = \int p(x_t | u_t, x_{t-1} ) Bel(x_{t-1})$
+2. **Measurement** to correct prediction: $Bel(x_t) = \eta \, p(z_t|x_t) \,\overline{Bel}(x_t)$
+
+We need to specify our **motion model** $p(x_t|u_t, x_{t-1})$ and our **observation model** $p(z_t|x_t)$.
+
+The integral also needs to be made discrete. If we have a continuous space, then often a histogram-based approximation method to "collapse" it down to discrete space. 
+
+Then, $\int$ becomes $\sum\limits$, and $\sum\limits$ becomes a matrix multiplication, and we add a normalisation step for the resulting state vector.
+			</div>
+
+			<button class="collapsible">Toy example... </button>
+			<div class="ccontent md-conv">
+				***Example.*** Suppose a robot is in two rooms, either blue $b$ or orange $o$. 
+
+Assume the robot follows a static transition model, where it has a 0.7 chance to stay in the same room, and a 0.3 chance to move. We can represent this in a transition table / matrix $\vec{T}$: 
+
+$$
+\begin{array}{c|cc}
+  \textrm{move} & b & o \\ \hline 
+ b & 0.7 & 0.3 \\
+ o & 0.3 & 0.7
+\end{array} \;= \begin{bmatrix} 0.7 & 0.3 \\ 0.3 & 0.7 \end{bmatrix} = \vec{T}
+$$
+
+Where each value represents the probability of transitioning from the state on the row to the state on the column. So the top right 0.3 is the probability of going from $b$ to $o$, or $p(o|b)$.
+
+You'll need to know how to construct this matrix.
+
+Assume the robot can sense the room colour with some certainty. 
+* if it is in blue, it has a 0.9 chance to sense blue 
+* if it is in orange, it has a 0.8 chance to sense orange 
+
+$$
+\begin{array}{c|cc}
+  \textrm{sense} & b & o \\ \hline 
+ b & 0.9 & 0.1 \\
+ o & 0.2 & 0.8
+\end{array} \;=
+ \begin{bmatrix} 0.9 & 0.1  \\ 0.2 & 0.8 \end{bmatrix} = \vec{B}
+$$
+
+Where $\vec{B}$ is our observation model matrix.
+
+We initialise our state to a beginning assumption $$\vec{f}_{0} = \begin{bmatrix} 0.5 \\ 0.5 \end{bmatrix}$$
+
+Suppose that we have the observations `blue, blue, orange, blue, blue`. We can create a list of observation matrices $\vec{O}_t$, which is a **diagonal** matrix that for an observation $\diamond$ gives the probabilities of observing $\diamond$ in each state, so 
+$$
+\begin{matrix}
+\vec{O}_{z_t=\diamond} = \begin{bmatrix} p(z=\diamond|b) & 0 \\ 0 & p(z=\diamond|o) \end{bmatrix}
+&
+\vec{O}_{z_t=b} = \begin{bmatrix} 0.9 & 0 \\ 0 & 0.2 \end{bmatrix} &
+\vec{O}_{z_t=o} = \begin{bmatrix} 0.1 & 0  \\ 0 & 0.8 \end{bmatrix}
+\end{matrix}
+$$
+
+Then the recursive bayes filter $\eta \cdot p(z_t | x_t) \int p(x_t | u_t, x_{t-1}) \cdot Bel(x_{t-1}) dx_{t-1}$ is defined as
+$$
+\vec{f}_t = \eta\;\vec{O}_t\;\vec{T}\t\vec{f}_{t-1}
+$$
+Simply iterate the matrix multiplications. 
+
+The normalisation constant is also written as $c^{-1}$.
 			</div>
 		</div>
 
