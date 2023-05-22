@@ -57,6 +57,7 @@
 				<li><a href="#stateest">State Estimation</a></li>
 				<li><a href="#gaussian">Linear Gaussian Filters</a></li>
 				<li><a href="#nparam">Non-Parametric Filters</a></li>
+				<li><a href="#mapping">Mapping</a></li>
 			</ol>
 
 			<h2>Introduction</h2>
@@ -1106,6 +1107,95 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 			</div>
 		</div>
 
+		<div class="colourband">
+			<h2 id="mapping">Mapping</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents 
+
+				1. [Maps](#map-intro)
+				2. [Probabilistic Occupancy Grid](#map-pog)
+				3. [Place Recognition](#map-pr)
+			</div>
+
+			<div class="md-conv" id="map-intro">
+				### Maps  
+
+				To localise ourselves in an environment, we need a map; a model of where we are. 
+
+				So that we can avoid obstacles and find routes.
+
+				The **mapping problem** (given a sensor, what does the environment look like?) is one of the most fundamental problems in robotics.
+
+				Some types of maps:
+
+				***Feature based metric maps.*** which represent the scene as a set of sparse "landmarks", which are identifying features such as edges and corners. At least, we assume so.
+				
+				***Dense Metric Maps.*** which try to provide a high resolution model. They are better for obstacle avoidance, or visualisation and rendering. But very intense computationally. 
+				
+				***Topological Maps.*** ignores metric information, and only uses place recognition to build a graph of nodes, and so all you have is a graph with nodes of places, and edges denoting reachability of those places. 
+				
+				***Topological Metric Maps.*** are topological maps far away (in general has no physcial geometric infomation), but locally enforce physical metrics (euclidean constraints). Flexible and locally consistent. 
+				
+				
+			</div>
+
+			<div class="md-conv" id="map-pog">
+				### Probabilistic Occupancy Grid 
+				
+				Assuming we know a robot pose, the problem is to work out which parts of the space are free, and which are obstacles. 
+				
+				We can split the map into grids, and for each cell store the probability that that cell is occupied. 
+				* Denote the probability of occupation as $p(O_i)$ for cell $i$. 
+				* Denote the probability of emptiness as $p(E_i) : p(E_i) = 1-p(O_i)$.
+				* Initialise $p(O_i) = 0.5$ for all cells $i$.
+				
+				Suppose we have a sensor measurement of $d$ distance. 
+				* Cells distance $d$ away are likely to be occupied, whilst those closer are likely to be free 
+				* The sensor has a cone, which spreads out. So we can only affect cells in the cone. 
+				* We can use bayes to $p(O_i|Z) = \frac{p(Z|O_i)p(O_i)}{p(Z)}$.
+				* To not calculate $p(Z)$ we can calculate $p(E_i|Z) = \frac{p(Z|E_i)p(E_i)}{p(Z)}$ and normalise using the two values. 
+				
+				Rather than using straight probability, we can also use "log odds representation":
+				* $\frac{p(O_i|Z)}{p(E_i|Z)} = \frac{p(Z|O_i)}{p(Z|E_i)} \times \frac{p(O_i)}{p(E_i)}$.
+				* Odds notation is where $o(A) = \frac{p(A)}{p(\lnot A)}$.
+				* Thus the odds of occupancy $o(O_i|Z) = \frac{p(Z|O_i)}{p(Z|E_i)} \times o(O_i)$ and $\ln o(O_i|Z) = \ln \frac{p(Z|O_i)}{p(Z|E_i)} + \ln o(O_i)$. This allows us to update additively.
+				* If we let $U$ be the update term, for cells closer than $d$, if $\frac{p(Z|O_i)}{p(Z|E_i)} \lt 1$ then we set $U$ negative to decrease the estimate for occupation. Otherwise set $U$ positive to increase estimate of occupation.
+				
+				We assume that cells are **independent** from each other. 
+				
+				Over time and motion, measurements **converge** towards black and white (1 and 0).
+				
+				Large occupancy maps are very memory intensive though, and have some uncertainty due to robot pose uncertainty.
+				
+				
+			</div>
+
+			<div class="md-conv" id="map-pr">
+				### Place Recognition
+				
+				Recognising a location that we have already learned.
+				
+				Using our sensors and a model to find our position in a known space, that we initially do not know. 
+				
+				e.g. we have a front facing sonar camera, and know the borders of a room. All we can do is move and look around. 
+				
+				We can initialise a bunch of particles, and as we make measurements, we can delete the ones inconsistent with our measurement.
+				
+				With more information, such as heading information, we can make this narrowing down more effective. 
+				
+				Alternativey, if we have a 360 degree sonar but no heading information, we can put all the distances into a histogram, and use this histogram to model our heading. 
+				
+				All of this is an example of **signature matching**, where we try to match our observation against known situations. Matching can be done with a correlation measure, like sum squared differences.
+				
+				With a histogram, we can shift the histogram to match the same position in different headings. However, it may be computationally expensive to match every rotation, and so a way around that is to use a "histogram of occurences" (histogram over distances rather than angle), which is rotation invariant.
+			</div>
+		</div>
+
+
+
 		<footer>
 			<div class="cbox">
                 <div class="columncontainer ctwo" id="fc2">
@@ -1115,6 +1205,9 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 		</footer>
 
 	</div>
+
+
+
 
 	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
 	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
