@@ -58,6 +58,7 @@
 				<li><a href="#gaussian">Linear Gaussian Filters</a></li>
 				<li><a href="#nparam">Non-Parametric Filters</a></li>
 				<li><a href="#mapping">Mapping</a></li>
+				<li><a href="#planning">Planning</a></li>
 			</ol>
 
 			<h2>Introduction</h2>
@@ -1293,7 +1294,109 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 			</div>
 		</div>
 
+		<div class="colourband">
+			<h2 id="planning">Planning</h2>
+		</div>
 
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents  
+
+				1. [Motion Planning](#plan-motion)
+			</div>
+
+			<div class="md-conv" id="plan-motion">
+				### Motion Planning
+				<figure style="float:right">
+					<img src="./assets/motion-controller.png" alt="" style="max-width: 400px;" >
+					<figcaption>Motion controller diagram (Claire Rocks)</figcaption>
+				</figure>
+
+				***The Problem.*** Starting from an initial pose, find a valid path to the goal pose, whilst avoiding any obstacles. Ideally, this should be a minimum cost path.
+				
+				
+				
+				We need to position the robot accordingly, and worry about its geometry. It's easier to work with a point, so we first convert our world space (workspace) to **configuration space**.
+				
+				**Configuration space** is the space for all legal configurations -- i.e. we take all the obstacles, and expand them by the radius of the robot. Then, we can treat the robot as a single point. 
+				
+				This is the **C-space transformation**. 
+				
+				With a circular robot, this expansion is easy, but for non-circular robots we have to account for rotational differences, thus we can make the C space 3D with the third dimension being $\theta$.
+				
+				Then C space has $C_{free}$ for free space and $CO$ for obstacles.
+				
+				Path planning in C space is generally easier. But we still need to make it discrete to plan. There are two general approaches: 
+				* *Combinatorial:* captures connectivity of C in graph form
+				* *Sampling:* uses collison detection to incrementally probe for free space
+				
+				<figure>
+					<img src="./assets/c-space-repr.png" alt="" style="max-width: 640px;">
+					<figcaption>C-space representation (Claire Rocks)</figcaption>
+				</figure>
+				
+				***Roadmap.*** Network of curves in $C_{free}$ that connect initial and goal configs. 
+				
+				Satisfies:
+				* Accessibility: for any configuration (position) in $C_{free}$ there is always a path to the network 
+				* Connectivity: if there is a free path between two configurations, then there is a free path in the network 
+				
+				Constructible in various methods, such as visibility graphs or voronoi diagrams. 
+				
+				***Visibility Graph.*** An undirected graph, where the nodes are $q_i$ the start, $q_g$ the target, and each corner node of each obstacle $CO$.
+				
+				Two nodes are connected together if the line connecting them is an edge of $CO$, or the line lies completely in $C_{free}$. 
+				
+				<figure>
+					<img src="./assets/visibility-graph.png" alt="" style="max-width: 480px;">
+					<figcaption>Visibility Graph (Claire Rocks)</figcaption>
+				</figure>
+				
+				<figure style="float: right;">
+					<img src="./assets/supportingseparating.png" alt="" style="max-width: 280px;">
+					<figcaption>Supporting and separating lines (Claire Rocks)</figcaption>
+				</figure>
+
+				We can make this diagram better by using supporting and separating lines to get a reduced visibility graph. Supporting lines put two obstacles on the same side, whilst separating lines put them on opposite sides. We remove the lines that would intersect an obstacle. 
+				
+				
+				
+				A visibility graph is **complete**, it is **optimal** (but only in distance travelled, because the path may be too close to obstacles), and has $O(n^2\log n)$ time complexity over nodes. 
+				
+				***Voronoi Diagram.*** Tries to find the paths furthest away from the lines. 
+				
+				<figure>
+					<img src="./assets/voronoi.png" alt="" style="max-width: 540px;">
+					<figcaption>Voronoi diagram (Claire Rocks)</figcaption>
+				</figure>
+				
+				Voronoi is also **complete**, **optimal** (in maintaining largest distance away from obstacles), and has $O(e\log e)$ time complexity over edges. 
+				
+				***Exact cell decomposition.*** break Cspace down into discrete and non overlapping cells. Look at connectivity between said cells. 
+				
+				<figure>
+					<img src="./assets/exact-cell-decom.png" alt="" style="max-width: 480px;">
+					<figcaption>Exact cell decomposition (Claire Rocks)</figcaption>
+				</figure>
+				
+				This is **complete**, but **not optimal**, but has a lower time complexity of $O(n \log n)$ over nodes of $CO$.
+				
+				***Approximate cell decomposition.*** Decompose C-space into a grid of predefined size and shape, and identify 
+				* Free cells (entirely within $C_{free}$)
+				* Occupied cells (entirely within $CO$)
+				* Mixed cells partially in both. 
+				Connectivity is built upon free and mixed cells. 
+				
+				If mixed cells are large, then we may not well find a free path from $q_i$ to $q_g$. We can use **adaptive decomposition** which splits mixed cells into smaller cells, and resamples them. 
+				
+				<figure>
+					<img src="./assets/approx-cell-decomp.png" alt="" style="max-width: 480px;">
+					<figcaption>Approximate cell decomposition (Claire Rocks)</figcaption>
+				</figure>
+				
+				It is **not complete** (see the left), optimal depending on cost of cells, and very easy to compute, but depends on the dimensions $d$ of C-space, $O(n^d)$.
+			</div>
+		</div>
 
 		<footer>
 			<div class="cbox">
