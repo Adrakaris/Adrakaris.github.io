@@ -91,6 +91,8 @@
 				\newcommand{\tl}{\tilde}
 				\newcommand{\t}{^\top}
 				\newcommand{\bs}{\boldsymbol}
+				\newcommand{\x}{\vec{x}}
+				\newcommand{\y}{\vec{y}}
 
 			\)
 			</div>
@@ -1118,6 +1120,7 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 				1. [Maps](#map-intro)
 				2. [Probabilistic Occupancy Grid](#map-pog)
 				3. [Place Recognition](#map-pr)
+				4. [SLAM](#map-slam)
 			</div>
 
 			<div class="md-conv" id="map-intro">
@@ -1186,11 +1189,107 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 				
 				With more information, such as heading information, we can make this narrowing down more effective. 
 				
-				Alternativey, if we have a 360 degree sonar but no heading information, we can put all the distances into a histogram, and use this histogram to model our heading. 
+				Alternatively, if we have a 360 degree sonar but no heading information, we can put all the distances into a histogram, and use this histogram to model our heading. 
 				
 				All of this is an example of **signature matching**, where we try to match our observation against known situations. Matching can be done with a correlation measure, like sum squared differences.
 				
-				With a histogram, we can shift the histogram to match the same position in different headings. However, it may be computationally expensive to match every rotation, and so a way around that is to use a "histogram of occurences" (histogram over distances rather than angle), which is rotation invariant.
+				With a histogram, we can shift the histogram to match the same position in different headings. However, it may be computationally expensive to match every rotation, and so a way around that is to use a "histogram of occurrences" (histogram over distances rather than angle), which is rotation invariant.
+
+				#### Visual Place Recognition
+
+				As visual cameras become more popular, we want to recognise places/recover positions using images. 
+				
+				Traditional methods use
+				* sparse visual features, 
+				* decomposing images into a visual "bag of words" i.e. a bag of image clippings extracted using SIFT, etc. 
+				* Words represent sets of similar future points, and a place is characterised by a histogram of its words.
+				* And then we use probabilistic inference, that is, for each location construct a model on what words are likely to appear there.
+				
+				Newer methods naturally 
+				* throw out everything we already had. 
+				* CNNs! 
+				
+				
+			</div>
+
+			<div class="md-conv" id="map-slam">
+				### SLAM (Simultaneous Location and Mapping)
+				
+				***The problem.*** A robot has to move through an unknown, but static space, simultaneously working out its surroundings and its positition. Hence, SLAM.
+				
+				SLAM is needed when
+				* the robot needs to be fully autonomous
+				* little is known in advance about the environment
+				* difficult to use infrastructure such as GPS or beacons
+				* location is important. 
+				
+				In SLAM:
+				* Map is built incrementally
+				* Robot is localised according to the incremental map.
+				* Always keep in mind *loop closures* -- link up paths via loop closures.
+				
+				<figure>
+					<img src="./assets/slam-loop-closure.png" alt="" style="max-width: 500px;">
+					<figcaption>Loop closure (Claire Rocks)</figcaption>
+				</figure>
+				
+				In a SLAM system, the sensors feed in to the front end, where we do 
+				* feature extraction, and data assocation (inc. short term feature tracking, and long term memory for loop closure)
+				This feeds into the backend, where we estimate our map using MAP (Maximum A-Posteriori $\argmax p(Z|X)p(X)$, see CS342), and there is a feedback cycle which reinforces the features. 
+				
+				SLAM requires distinct landmarks to work effectively and allow reliable matching. 
+				
+				We must assume the world is **static.**
+				
+				<hr>
+				
+				<figure>
+					<div style="display: flex; flex-wrap: wrap;">
+						<img src="./assets/slam-1.png" alt="" style="max-width: 380px;">
+						<img src="./assets/slam-2.png" alt="" style="max-width:380px">
+						<img src="./assets/slam-3.png" alt="" style="max-width: 380px;">
+						<img src="./assets/slam-4.png" alt="" style="max-width: 380px;">
+						<img src="./assets/slam-5.png" alt="" style="max-width: 380px;">
+						<img src="./assets/slam-6.png" alt="" style="max-width: 380px;">
+					</div>
+					
+
+					<figcaption style="display: block; text-align: center;">Steps of SLAM</figcaption>
+				</figure>
+				
+				<hr>
+				
+				The joint uncertainty with pose and map locations can be represented by a joint gaussian distribution, and so we can use EKF to update it. 
+				
+				We can have vectors in vectors, representing using a state vector $\hat{\x}$ and a covariance matrix $\bs{\Sigma}$:
+				
+				$$
+				\begin{align*}
+				\hat{\x} &= \begin{bmatrix} \hat{\x}_R\\
+				\hat{\y}_1\\
+				\hat{\y}_2\\
+				\vdots \end{bmatrix} & \bs{\Sigma} &= \begin{bmatrix} \Sigma_{\x\x} & \Sigma_{\x\y_1} & \Sigma_{\x\y_2} &\cdots\\
+				\Sigma_{\y_1\x} & \Sigma_{\y_1\y_1} & \Sigma_{\y_1\y_2}  & \cdots \\
+				\Sigma_{\y_2\x} & \Sigma_{\y_2\y_1} & \Sigma_{\y_2\y_2} & \cdots\\
+				\vdots & \vdots & \vdots & \ddots\end{bmatrix}
+				\end{align*}
+				$$
+				
+				e.g. using a monocular camera:
+				* Frontend: same features detected in multiple images associated with same 3D world points 
+				* Backend: estimates pose and location of 3D points that best explains observed features (minimising geometric error)
+				
+				So far, what we have been describing is called **Metric SLAM**. It is somewhat limited, as the probabilistic filters are difficult to scale to high dimensions, and growth in uncertainty from the origin of the map makes estimates inaccurate. 
+				
+				With high uncertainty, matching features gets hard. 
+				
+				#### Topological SLAM
+				
+				Rather than doing a full metric/geometric SLAM system, we can use a database of local places, and connect them together graph wise to get a hybrid system. 
+				
+				Edges can then have other motion information, and graphs can be optimised upon loop closure. 
+				
+				Modern systems use the hybrid topological-metric SLAM approach for place recognition.
 			</div>
 		</div>
 
