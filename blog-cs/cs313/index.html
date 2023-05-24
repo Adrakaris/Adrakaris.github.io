@@ -1303,6 +1303,9 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 				### Contents  
 
 				1. [Motion Planning](#plan-motion)
+				2. [Sampling](#pla-samp)
+				3. [Potential Field](#pla-potfield)
+				4. [Searching](#pla-search)
 			</div>
 
 			<div class="md-conv" id="plan-motion">
@@ -1395,6 +1398,110 @@ But for stuff where gaussian filters are hard, and for lower dimensional spaces,
 				</figure>
 				
 				It is **not complete** (see the left), optimal depending on cost of cells, and very easy to compute, but depends on the dimensions $d$ of C-space, $O(n^d)$.
+			</div>
+
+			<div class="md-conv" id="pla-samp">
+				### Sampling 
+
+				Sampling approaches only find a subset of the full space, not having complete coverage. 
+				
+				It can deal with arbitrary elements and shapes, and the two main methods are probabilistic roadmap and single query planner.
+				
+				***Probabilistic Roadmap.*** Construct a map probabilistically. 
+				* Learning: randomly sample a $q_{rand}$ within a distance $\delta$ away. If $q_{rand} \in CO$, then discard it, else if $q_{rand} \in C_{free}$, then connect it to the nearest existing node. This makes a roadmap $R$.
+				* Querying: Try find a path connecting $q_i$ to $q_g$ in $R$, by connecting both start and goal into $R$, and then finding a valid path between them. 
+				
+				It is not complete realistically, where we cannot have infinite samples. And it is not optimal. It has a complexity of $O(n^d)$ for $n$ nodes in the roadmap, and $d$ dimensions of C space. 
+				
+				***Single query planners.*** Only focuses on a single query rather than generating a full solution of the space. 
+				* only a subset of C space is represented, and we use a tree structure to "connect random biased samples" to the existing tree. 
+				* This is done using a technique called "Rapidly-exploring Random Trees (RRT)".
+				* RRT: sample a random configuration $q_{rand}$, and if it is free propose a new point $q_{new}$ in a straight line from the nearest existing node to $q_{rand}$, of a length $\delta$. If $q_{new}$ and its connection is valid, keep it and continue expanding. 
+				
+				It is not complete, rather we want minimal exploration. It is not optimal, and has same computational complexity as the roadmaps, though typically $n$ is smaller. 
+			</div>
+
+			<div class="md-conv" id="plan-potfield">
+				### Potential Field 
+
+				Previous methods were all **global** -- they tried to find connectivity offline (beforehand). 
+				
+				Potential field are **local**, and can be done online. 
+				
+				The robot is treated as a point on c-space, and is attracted towards a goal and repulsed from obstacles.
+				
+				Think of C-space now as a sloped terrain, with the bottom where the goal is, and the robot wants to roll down towards that goal. Obstacles are thus like mountains on this terrain that cannot be rolled up.
+				
+				<figure>
+					<img src="./assets/attractive-repulsive.png" alt="" style="max-width: 640px;">
+				</figure>
+				
+				This terrain is the **potential field** $U(q)$. In it, we have two potential functions:
+				* The attractive potential towards the goal $U_{att}(q)$, 
+				* And the repulsive potential away from obstacles $U_{rep}(q)$.
+				* Thus $U(q) = U_{att}(q) + U_{rep}(q)$.
+				
+				The attractive potential can be defined as 
+				$$
+				\begin{align*}
+				U_{att}(q) &= k_a \cdot d^2(q, q_g)& d(q,q_g) &=  \lVert q-q_g \rVert_2
+				\end{align*}
+				$$
+				For a **gravity** constant $k_a \gt 0$, where $q$ is the robot position and $q_g$ is the goal.
+				
+				The repulsive potential depends on the obstacle, and is like a hill around it. The total $U_{rep}$ is the **sum** of all individual obstacle repulsive fields:
+				$$
+				U_{rep,i}(q) = \begin{cases}
+				k_b \cdot \left(\frac{1}{d_i\left(q\right)} - \frac{1}{d_{o,i}}\right)^2 & d_i(q) \leq d_{0,i} \\
+				0 & d_i(q) \gt d_{0,i}
+				\end{cases}
+				$$
+				Where $d_i(q)$ is the distance from the robot and obstacle $i$. Where $d_{0,i}$ is the distance of the repulsive field of the obstacle / its perimeter. Where $k_b$ is the **gain coefficient** of repulsion.
+				
+				Now what can we do with it? Why yes effectively we're doing *gradient descent!~*
+				
+				The "force" of the field is the direction we should move in, and the force $F(q)$ is just 
+				$$
+				F(q) = -\nabla U(q).
+				$$
+				And we can use this to control the robot. 
+				
+				Just like gradient descent we have local minimums and saddle points where $F(q) = 0$, which are problematic. What we can do then is have techniques to get out of local minimums, or simply just design to not have them.
+				
+				It is not complete, not optimal, but very cheap computationally, as analysis is local. 
+			</div>
+
+			<div class="md-conv" id="plan-search">
+				### Searching 
+
+				Once we actually have a plan, a map, a space where we know we can move, then we can get on to searching. 
+				
+				Searching comes in various ways, like Uninformed, informed, or local searches. 
+				
+				***Uninformed Search.*** If we don't know where to goal is, then we have to do a blind search. 
+				
+				Some blind search methods are DFS, BFS, and uniform cost search. The last one in particular, is where every edge has a cost, and we greedily expand the node with the smallest accumulated cost -- fully this is just **Dijkstra's algorithm**.
+				
+				Usually it's done on grids. 
+				
+				These algorithms' performance depends often on the shape of the obstacles, e.g. concave winding obstacles often take longer distance to get around. 
+				
+				***Informed Search.*** When we know where the goal is. Thus we have our cost $c(n)$ and a heuristic estimate $h(n)$ (AI flashbacks).
+				
+				Greedy best-first search has a cost function $f(n) = h(n)$ -- that is, it ignores the accumulated cost. 
+				
+				A* algorithm combines both and has $f(n) = c(n) = h(n)$, and thus is better. 
+				
+				Both have a time complexity of $O(n+e)$ for $n$ nodes and $e$ edges.
+				
+				In searching, we typically assume that the robot knows where it is, and the map is correct, and the correct commands are executed. 
+				
+				These are all problematic:
+				* The robot is usually off by a little bit.
+				* The shortest path often goes close to obstacles (so we may want to expand obstacles to give more buffer)
+				* The grid should be aligned to the space. Otherwise it's like building buildings at a weird slant in Minecraft; its doable but not as good. 
+				
+				***Local search.*** is used when we care only about getting to the goal and not what route we took to get there. This is often used alongside potential field and is effectively a gradient descent.
 			</div>
 		</div>
 
