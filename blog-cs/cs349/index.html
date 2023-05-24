@@ -81,6 +81,7 @@
 				2. [Evaluation](#lc-eval)
 				3. [Normal Forms](#lc-nf)
 				4. [More LC Representations](#lc-more)
+				5. [Church Encodings](#lc-church)
 			</div>
 
 			<div class="md-conv" id="lc-intro">
@@ -225,14 +226,18 @@
 				
 				Recall the definition of terms $M \lra x \;|\; (\lambda x \cdot M) \;|\; (M\;M)$
 				
-				* **Normal form** is defined as $M \lra x \gang \lambda x \cdot M \gang M_1 \; M_2 \cdots M_n$.
-				* **HNF** is defined as $$M \lra x \gang \lambda x \cdot  M \gang x\;m_1\;m_2\cdots m_n$$$ for any term $m_i$, which doesn't have to be NF.
+				* **Normal form** is defined as $$M \lra x \gang \lambda x \cdot M \gang M_1 \; M_2 \cdots M_n$$.
+				* **HNF** is defined as $$M \lra x \gang \lambda x \cdot  M \gang x\;m_1\;m_2\cdots m_n$$ for any term $m_i$, which doesn't have to be NF.
 				* **WNF** is defined as $$M \lra x \gang \lambda x \cdot m \gang x \; M_1 \; M_2 \cdots M_n$$ for any term $m$, and (weak) **normal form** terms $M_i$.
 				* **Weak head normal form** (WHNF) is a combination of WNF and HNF, and is the most relaxed. It is defined as $$M \lra x \gang \lambda x \cdot m \gang x \; m_1 \; m_2 \cdots m_n$$ for any term $m, m_i$. i.e. as long as the top level has no redexes, we're good.
 				
-				> Try: what normal forms are $a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
-				> 
-				> Try: what normal forms are $\lambda a \cdot a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
+				<p class="side">
+					Try: what normal forms are $a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
+				</p>
+				<p class="side">
+					Try: what normal forms are $\lambda a \cdot a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
+				</p>
+			
 			</div>
 
 			<div class="md-conv" id="lc-more">
