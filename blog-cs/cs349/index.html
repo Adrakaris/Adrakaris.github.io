@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS349</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS349</h1>
+					<p class="subheading">Princples of Programming Languages</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents </h1>
+			</div>
+		</header>
+
+
+		<div class="cbox">
+			<div class="md-conv">
+				&nbsp;
+				1. [Lambda Calculus](#lcalc)
+				\( 
+					\renewcommand{\vec}{\mathbf}
+					\renewcommand{\epsilon}{\varepsilon}
+					\DeclareMathOperator*{\argmax}{argmax}
+					\DeclareMathOperator*{\argmin}{argmin}
+					\def\lra{{\longrightarrow}}
+					\def\lla{{\longleftarrow}}
+					\newcommand{\fr}{\frac}
+					\newcommand{\vecu}{\underline}
+					\newcommand{\rm}{\textrm}
+					\newcommand{\bb}{\mathbb}
+					\newcommand{\ol}{\overline}
+					\newcommand{\tl}{\tilde}
+					\newcommand{\t}{^\top}
+					\newcommand{\bs}{\boldsymbol}
+					\newcommand{\gang}{\;|\;}
+				\)
+			</div>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="lcalc">Lambda Calculus</h2>
+		</div>
+
+		<div class="cbox">	
+			<div class="md-conv">
+				### Contents 
+
+				1. [Introduction](#lc-intro)
+				2. [Evaluation](#lc-eval)
+				3. [Normal Forms](#lc-nf)
+			</div>
+
+			<div class="md-conv" id="lc-intro">
+				### Introduction
+
+				Lambda calculus (LC) is a formal, mathematical way to represent programming languages. It can be thought of as a purely functional "language", which consist of 
+				
+				<div class="blue">
+					* **Variables** $x$, which are denoted by single lower case letters;
+					* **Terms** $M \lra x | (\lambda x \cdot M) | (M\;M)$, in which 
+					* $\lambda x \cdot M$ is **abstraction** (and can be thought of as a function)
+					* $M \; M$ is **application** (and can be thought of as applying functions)
+				</div>
+				
+				
+				In LC, 
+				* Application associates **left**: $a\;b\;a = ((a \; b) \; a)$
+				* Abstraction associates **right**: $\lambda x \; y \cdot M = (\lambda x \cdot (\lambda y \cdot M))$. (Multiple abstraction can be collapsed)
+				* Application **binds stronger** than abstraction: $\lambda a \cdot a \; b \; a = (\lambda a \cdot ((a \; b) \; a))$
+				* Brackets are not included if not necessary. 
+				* There *is no empty word*. 
+				
+				An abstraction (lambda) **binds** the variable that comes after it. All non-bound variables are **free**. In 
+				$$\lambda a \cdot a \; b \; a$$
+				$a$ is a bound variable, $b$ is a free variable, and $a \; b \; a$ is the **scope** of variable $a$.
+				
+				We can define properties about LC using structural induction (which looks like recursion). For example, let us define the set $FV(X)$ over a term $X$, of the free variables in that term. This can be defined as 
+				$$
+				\begin{align*}
+				FV(x) &= \{x\} & \pod{x \in \textrm{Variables}}\\
+				FV(M_1\;M_2) &= FV(M_1) \cup FV(M_2) & \pod{M_1, M_2 \in \textrm{Terms}}\\
+				FV(\lambda x \cdot M) &= FV(M) \setminus \{x\} & \pod{M \in \rm{Terms}}
+				\end{align*}
+				$$
+			</div>
+
+			<div class="md-conv" id="lc-eval">
+				### Evaluation 
+
+				<div class="blue">
+
+					Define **substitution** of a free variable $x$ by some term $N$, within another term $M$ as $[N/x]M$. 
+
+				</div>
+				
+				
+				You can read $[N/x]$ as "N replaces x".
+				
+				Some examples are given: 
+				
+				$$
+				\begin{align*}
+					[(\lambda x \cdot y) / a] (\lambda m \cdot a\;m) &\implies  (\lambda m \cdot ((\lambda x \cdot y) \; m)). \\
+				[b / a] (\lambda x \cdot x \; y) &\implies  (\lambda x \cdot x \; y).\\
+				[(\lambda x \cdot m) / a] (\lambda m \cdot a \; m) &\implies (\lambda m \cdot (\lambda x \cdot m) \; m) \pod{*}\\
+				&\equiv (\lambda m_1 \cdot (\lambda x \cdot m) \; m_1).
+				\end{align*}
+				$$
+
+				($*$) Note that we can substitute variables with the same label in, thus creating ambiguous labelling. This can and should be relabelled. 
+				
+				Formally, the rules for substitute are given 
+				* $[N / x] x = N$
+				* $[N / x] (M_1 \; M_2) = ([N / x] M_1 \; [N / x] M_2)$
+				* $[N / x] (\lambda x \cdot M) = \lambda x \cdot M$ (bound variables **cannot** be substituted)
+				* $[N / x] (\lambda y \cdot M) = \lambda y \cdot ([N / x]M)$ if $x \neq y$ and $y \not \in FV(N)$
+				
+				Substitution is a purely syntactic operation and should be thought of as such. 
+				
+				Substitution also has **capture avoidance** -- prevent accidental binding of free variables (hint: rename), and **freshness** -- if a variable is not free in $N$ it cannot be reused. 
+				
+				<div class="blue">
+
+					Define **$\alpha$-equivalence** as the principle that variable *name* doesn't matter, only the **order** and **binding status**.
+				</div>
+				
+				Thus we can rename variables. 
+
+				<div class="blue">
+
+					Define a **contraction**, also called a **$\beta$-reduction** as the following operation:
+					$$
+					(\lambda x \cdot M)\; N \underset{\beta \textrm{-red}}{\lra} [N / x]M
+					$$
+					The whole left hand side is called the **$\beta$-redex**.
+
+				</div>
+				
+				
+				
+				You can think of this like a function $\lambda x \cdot M$ being passed in $N$ as its parameter $x$, so replace all instances of bound variable $x$ with $N$ in the function body.
+				
+				* A reduction series is thus a series of contractions 
+				* And a **normal form** is when all beta-redexes have been resolved. 
+				* An **evaluation** $A \implies B$ or $A \lra^* B$ is a **full reduction** of $A$ to the corresponding **normal form** $B$.
+				* A **divergence** is when a formula cannot reach normal form.
+
+				<div class="blue">
+
+					Define eta **$\eta$-reduction** as the following simplification:
+					$$
+					\lambda x \cdot M \; x \underset{\eta}{\lra} M
+					$$
+				</div>
+
+				This can be thought of as unwrapping a redundant function call. 
+				
+				<hr>
+
+				For multiple redexes, we have multiple reduction orders. In some cases, some reduction orders converge whilst others do not. In other cases, some reduction orders are quicker than others. 
+
+				> Try $(\lambda a \; b \cdot b) ((\lambda x \cdot x\;x) (\lambda x \cdot x\; x)) (\lambda x \cdot x)$ yourself. 
+				
+				Assuming that $M \underset{\beta}{\lra} M'$ and $N \underset{\beta}{\lra} N'$ our three orders are 
+				* $(\lambda x \cdot M) N \lra (\lambda x \cdot M) N'$ : **eager evaluation** (reduce argument)
+				* $(\lambda x \cdot M) N \lra [N/x]M$ : **lazy evaluation** (reduce function)
+				* $(\lambda x \cdot M) N \lra (\lambda x \cdot M') N$ : **optimising evaluation** (reduce function body)
+				
+				For multiple candidate redexes, we can also reduce them based on their **physical** order. 
+				* **Normal order** is reducing from the left 
+				* **Applicative order** is reducing from the right 
+				
+				Normal will *always* converge if possible, whereas applicative may not.
+				
+				> Try $(\lambda x \cdot (\lambda y \cdot (\lambda z \cdot (x \; z) (y \; z))))(\lambda u \cdot u)(\lambda v \cdot v)$ with both orders. 
+			</div>
+
+			<div class="md-conv" id="lc-nf">
+				### Normal Forms 
+
+				A normal form (NF) is an expression with **no redexes**. 
+				
+				...or at least, one may naively think, because it's not so simple. 
+				
+				Take $a ((\lambda b \cdot b\;b) (\lambda c \cdot c\;c))$. This has a redex, so it's not normal form, right? Said the average eager evaluation fan. The lazy evaluation enjoyer *would* say this is normal form.
+				
+				Thus we make **head normal form** HNF -- where the head (the first term) is normal form and we don't care about arguments. 
+				
+				Take $\lambda a \cdot a ((\lambda b \cdot b) \; a)$. This is not in normal form, but the function body wouldn't be optimised in lazy execution. However this is also not HNF, as the head term is reducible. 
+				
+				Thus we make **weak normal form** WNF -- where function bodies are ignored. 
+				
+				Recall the definition of terms $M \lra x \;|\; (\lambda x \cdot M) \;|\; (M\;M)$
+				
+				* **Normal form** is defined as $M \lra x \gang \lambda x \cdot M \gang M_1 \; M_2 \cdots M_n$.
+				* **HNF** is defined as $$M \lra x \gang \lambda x \cdot  M \gang x\;m_1\;m_2\cdots m_n$$$ for any term $m_i$, which doesn't have to be NF.
+				* **WNF** is defined as $$M \lra x \gang \lambda x \cdot m \gang x \; M_1 \; M_2 \cdots M_n$$ for any term $m$, and (weak) **normal form** terms $M_i$.
+				* **Weak head normal form** (WHNF) is a combination of WNF and HNF, and is the most relaxed. It is defined as $$M \lra x \gang \lambda x \cdot m \gang x \; m_1 \; m_2 \cdots m_n$$ for any term $m, m_i$. i.e. as long as the top level has no redexes, we're good.
+				
+				> Try: what normal forms are $a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
+				> 
+				> Try: what normal forms are $\lambda a \cdot a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
+			</div>
+		</div>
+		
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+	<script type="text/javascript" src="../../js/markdown.js"></script>
+</body>
+</html>

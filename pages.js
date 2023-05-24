@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2023,05,24)),
+        "link": "blog-cs/cs349",
+        "title": "Notes on CS349",
+        "desc": "Notes on CS349: Principles of Programming Languages</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2023,05,01)),
         "link": "blog-cs/cs352",
         "title": "Notes on CS352",
