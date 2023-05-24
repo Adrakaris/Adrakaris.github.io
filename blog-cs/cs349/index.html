@@ -80,6 +80,7 @@
 				1. [Introduction](#lc-intro)
 				2. [Evaluation](#lc-eval)
 				3. [Normal Forms](#lc-nf)
+				4. [More LC Representations](#lc-more)
 			</div>
 
 			<div class="md-conv" id="lc-intro">
@@ -232,6 +233,111 @@
 				> Try: what normal forms are $a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
 				> 
 				> Try: what normal forms are $\lambda a \cdot a \; ((\lambda b \cdot b\; b)(\lambda c \cdot c \; c))$ in?
+			</div>
+
+			<div class="md-conv" id="lc-more">
+				### More Representations of LC 
+
+				Note: none of these are extensions, as in they don't add anything new to the LC that we know. However, with the LC we have we can actually do rather a lot...
+				
+				#### De Bruijn Representation 
+				
+				Variables can replace other variables through $\alpha$-equivalence conversion. We need this to avoid name collisions. Rather than using variable names, we can use place values instead of variable names. 
+				
+				Take $\lambda x \cdot x (\lambda y \cdot x \; y \; x \; (\lambda z \cdot y \; z \; x)) \; x$. We can label which occurrence binds to which abstraction:
+				
+				<figure>
+					<img src="./assets/debruijn.png" alt="" style="max-width: 280px;">
+					<figcaption>(Sara Kalvala)</figcaption>
+				</figure>
+				
+				Rather than writing variable names, we just write how many levels up does the variable bind to. Thus this becomes 
+				$$
+				\lambda\; 1 \;(\lambda \; 2 \; 1 \; 2 (\lambda \; 2 \; 1 \; 3)) \; 1
+				$$
+				So 1 means binding to the immediate lambda, 2 means one layer up, etc, etc. The lambdas are actually redundant too; we can just use brackets:
+				$$
+				(1\; (2\;1\;2\;(2\;1\;3))\;1)
+				$$
+				This is **de Bruijn's representation**.
+				
+				This has the *minor* problem that using round brackets conflicts with using round brackets to specify order, in the case of $\lambda x\; y \cdot x \; (y \; x)$, this decomposes to $\lambda x \cdot \lambda y \cdot x \; (y\; x) =  (1 ( 2 \; (1 \; 2)))$... except it doesn't because the start of a bracket implies a lambda. 
+				
+				So we have to mix brackets; $[1\; [2\; (1\; 2)]]$ which is fine since it's just notation, but switching notation can get confusing. 
+				
+				We also have the second *minor* problem of free variables -- just use an arbitrary string for them (i.e. keep the letters). 
+				
+				However, free variables are generally **unhelpful** and **bad** and need to be sent off to be **disciplined** and so we avoid having them if we can. 
+				
+				#### Combinatory Logic 
+				
+				Certain functions have rather interesting properties. These are the **combinators**, and each is given a letter. 
+				
+				As far as I remember you don't need to remember the equations but you do need to know what they do.
+				
+				$$
+				\begin{align*}
+				I &= \lambda x \cdot x & S &=  \lambda x \cdot \lambda y \cdot \lambda z \cdot x\; z\;(y\;z) \\
+				K &= \lambda x \cdot \lambda y \cdot x & B &= \lambda x \cdot \lambda y \cdot \lambda x \cdot x\;(y\;z)\\
+				Y &= \lambda f \cdot (\lambda x \cdot f\;(x\;x))(\lambda x \cdot f\;(x\;x)) & T &= \lambda x \cdot \lambda y \cdot y \; x
+				\end{align*}
+				$$
+				
+				Note there are no free variables. $I$ is generally called "identity", $K$ is generally called "constant", $T$ is generally called "transpose", and $Y$ is the $Y$ combinator, because it's special. (this comes up really far on) 
+				
+				It is provable that any combinator can be made using $S$ and $K$. 
+				$$
+				\begin{align*}
+				I &= SKK\\
+				B &= S(KS)K\\
+				T &= B(SI)K
+				\end{align*}
+				$$
+				($Y$ is complicated but possible.)
+				
+				
+			</div>
+
+			<div class="md-conv" id="lc-church">
+				### Church Encodings 
+				
+				An "extension" (but not really) of lambda calculus, by strategically making functions we can get some... interesting things. Developed by someone surnamed Church.
+				
+				Take:
+				$$
+				\begin{align*}
+				T &= \lambda x\; y \cdot x\\
+				F &= \lambda x \; y \cdot y\\
+				IF &= \lambda p \; x \; y \cdot p \; x \; y
+				\end{align*}
+				$$
+				Note how $IF\; T \; a \; b \implies a$, whereas $IF \; F \; a \; b \implies b$. Suspiciously... boolean, no?
+				
+				Take:
+				$$
+				\begin{align*}
+				A &= \lambda p\; q \cdot p \; q \; p\\
+				O &= \lambda p \; q \cdot p \; p \; q\\
+				N &= \lambda p \; a \; b \cdot p \; b \; a
+				\end{align*}
+				$$
+				Note how $N \; T \implies F$, and $A \; T \; x \implies x$. Make the derivations yourself :). 
+				
+				$T, F, IF, A, O, N$ are encodings found by Church for booleans and boolean operations. 
+				
+				Now take:
+				$$
+				\begin{align*}
+				Add &= \lambda i \; j \; f \; x \cdot (i\; f) \;(j\;f\;x)\\
+				0 &= \lambda f \; x \cdot x\\
+				1 &= \lambda f \; x \cdot f \; x
+				\end{align*}
+				$$
+				These are Church encodings for numbers. We can try $Add \; 0 \; 1 \implies 1$. We can also add ones to get $ 2 = \lambda f \; x \cdot f \; f \; x$. In fact, this is a consistent pattern. 
+				
+				Note how $0 \equiv F$, zero is false, but $1 \not \equiv T$, and is not true. We could easily get confused where we are, and so we may want to introduce...
+				
+				Types.
 			</div>
 		</div>
 		
