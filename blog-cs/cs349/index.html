@@ -49,6 +49,7 @@
 				&nbsp;
 				1. [Lambda Calculus](#lcalc)
 				2. [Simply Typed Lambda Calculus](#stlc)
+				3. [PCF Model Language](#pcf)
 				\( 
 					\renewcommand{\vec}{\mathbf}
 					\renewcommand{\epsilon}{\varepsilon}
@@ -494,7 +495,290 @@
 				
 				With proof trees we can do type analysis (**static semantics**) as well as evaluation (**dynamic semantics**).
 				
-				We can also have evaluation judgements, $C \types M \implies v$ where $C$ would be our variable scope environment, and $\implies$ is the full reduction series. 
+				We can also have evaluation judgements, $E \types M \implies v$ where $E$ would be our variable scope environment, and $\implies$ is the full reduction series.
+				
+				Note that the syntax for all of these changes around a bit since there is no one standard.
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="pcf">PCF Model Language</h2>
+			<p class="subheading">"Programmable computable functions"</p>
+		</div>
+
+		<div class="cbox">
+			\(
+\DeclareMathOperator*{\num}{num}
+\DeclareMathOperator*{\bool}{bool}
+\DeclareMathOperator*{\true}{true}	
+\DeclareMathOperator*{\false}{false}	
+\DeclareMathOperator*{\succ}{succ}	
+\DeclareMathOperator*{\pred}{pred}	
+\DeclareMathOperator*{\zeroq}{zero?}	
+\DeclareMathOperator*{\if}{if}	
+\DeclareMathOperator*{\then}{then}	
+\DeclareMathOperator*{\else}{else}	
+\DeclareMathOperator*{\fst}{fst}
+\DeclareMathOperator*{\snd}{snd}
+\DeclareMathOperator*{\let}{let}
+\DeclareMathOperator*{\inn}{in}
+\DeclareMathOperator*{\and}{and}
+\DeclareMathOperator*{\rec}{rec}
+			\)
+
+			<div class="md-conv">
+				### Contents 
+
+				1. [PCF](#pcf-intro)
+				2. [PCF Recursion](#pcf-rec)
+				3. [Structural Operational Semantics](#pcf-sos)
+			</div>
+
+			<div class="md-conv" id="pcf-intro">
+				### PCF
+
+				PCF incorporates church encodings.
+				
+				<div class="blue">
+
+					The **PCF Model Language** is defined as having:
+				
+					Types:
+					$$
+					t := \num \gang \bool \gang t \ra t
+					$$
+					Expressions:
+					$$
+					\begin{align*}
+					M :&= \true \gang \false \gang 0 \gang 1 \gang 2 \gang \cdots \\
+					&\gang \succ(M) \gang \pred(M) \gang \zeroq(M) \gang M+M \gang M\times M\\
+					&\gang \if M \then M \else M\\
+					&\gang x \gang \lambda x:t \cdot M \gang M \; M
+					\end{align*}
+					$$
+					Where 
+					* numbers are in set/type $\num$ (often shortened to $n$ in writing in reality), and booleans are in set/type $\bool$ (often shorteend to $b$)
+					* $\succ(M): \num\ra\num$ increments, and $\pred(M):\num \ra \num$ decrements. 
+					* $\zeroq(M): \num \ra \bool$ is a zero check. 
+					
+					We can extend expressions with **pairs**:
+					$$
+					\begin{align*}
+					t :&= \cdots \gang t * t\\
+					M :&= \cdots \gang \langle M,M\rangle \gang \fst(M) \gang \snd(M)
+					\end{align*}
+					$$
+					* e.g. $\langle 3, \true \rangle : \num * \bool$
+					
+					We can extend expressions with **let-declarations**:
+					$$
+					\begin{align*}
+					M :&= \cdots \gang \let d \inn M\\
+					d :&= (x = M) \gang d \and d
+					\end{align*}
+					$$
+					Where
+					* we have a new *declaration* syntax system.
+					* e.g. $\let x = 3 \in x + 2$
+				</div>
+				
+				For an if statement $\if M_1 \then M_2 \else M_3$ we can evaluate it (dynamic judgment) as follows:
+				$$
+				\frac{
+					\begin{matrix}E \types M_1 \implies \true && E \types M_2 \implies v\end{matrix}
+				}{
+				E \types \if M_1 \then M_2 \else M_3 \implies v
+				}
+				$$
+				The static type judgment goes:
+				$$
+				\frac{
+					\begin{matrix}
+					T \types M_1 \type bool &&
+					T \types M_2 \type t &&
+					T \types M_3 \type t
+					\end{matrix}
+				}{
+				T \types \if M_1 \then M_2 \else M_3 \type t
+				}
+				$$
+				
+				For a zero check $\zeroq(M)$, to judge it dynamically we need to use a **meta-predicate**, as we need extra conditions to be met for the true case:
+				$$
+				\begin{array}{cc}
+				\dfrac{ E \types M \implies o
+				}{ E \types \zeroq(M) \implies \true
+				} &
+				v \neq 0\dfrac{E \types M \implies v
+				}{E \types \zeroq(M) \implies \false
+				}
+				\end{array}
+				$$
+				The typing otoh is straight forward. 
+				
+				Declarations are trickier, and to do them properly we'd have to cheat somewhat, by resolving to a **new environment** rather than a value or a type. 
+				$$
+				\dfrac{E \types M \implies v}
+				{E \types (x=M) \implies E;(x,v)}
+				$$
+				i.e. for a declaration $(x=M)$ we append the assigned value of $x$ into the environment. Thus the let statement goes 
+				$$
+				\dfrac{
+				\begin{matrix}
+				E \types d \implies E'
+				&&
+				E;E' \types M \implies v
+				\end{matrix}
+				}{
+				E \types \let d \inn M \implies v
+				}
+				$$
+				
+				The static judgements go 
+				$$
+				\dfrac{T \types M \type t
+				}{T \types (x=M) \type T;x:t
+				}
+				$$
+				$$
+				\dfrac{
+				\begin{matrix}T \types d \type T' && T' \types M \type t\end{matrix}
+				}{
+				T;T' \types \let d \inn M \type t}
+				$$
+				
+				Constants have judgement $T \vdash c : t$ (given $c \in t$)
+				
+				Variables have judgement $T \vdash x : t$ (given $x:t \in T$)
+				
+				Pairs have judgement 
+				$$
+				\dfrac{
+					\begin{matrix}
+					T \types e_1 \type t_1 && T \types e_2 \type T_2
+					\end{matrix}
+				}{T \types \langle e_1, e_2 \rangle \type t_1 * t_2}
+				$$
+				
+				Conditionals have judgement 
+				$$
+				\dfrac{
+				\begin{matrix}
+				T \types b \type \bool && T \types e_1 \type t && T \types e_2 \type t
+				\end{matrix}
+				}{T \types \if b \then e_1 \else e_2 \type t}
+				$$
+				
+				Functions have judgement 
+				$$
+				\dfrac{
+				T, x:t_1 \types e \type t_2
+				}{
+				T \types \lambda x:t_1 \cdot e\type t_1 \ra t_2} 
+				$$
+				
+				***Subject reduction.*** If $E \vdash e \implies v$ ($e$ evals to $v$ in the env) and $E \in T$ (the env has types) and $T \vdash e : t$ (e is type t), then $v \in t$ ($v$ is of type $t$)
+				
+				Similarly if $E \vdash d \implies E'$ and $E \in T$ and $T \vdash d : T'$. then $E' \in T'$.
+			</div>
+
+			<div class="md-conv" id="pcf-rec">
+				### Recursion
+
+				***Recursion.*** For an example of recursion, read this sentence again.
+
+				Take a factorial function: 
+				* `fac 0 = 1`
+				* `fac n = n * fac (n-1)`
+				
+				In PCF, we may be temped to write 
+				$$
+				\begin{align*}
+				f = \lambda n:\num \cdot \if \zeroq (n) \then \succ (n) \else n \times f(\pred(n))
+				\end{align*}
+				$$
+				But $f$ is technically a free variable and thus it's not so trivial in regular PCF. 
+				
+				We can bind $f$: $\lambda f \cdot  \lambda n:\num \cdot \if \zeroq (n) \then \succ (n) \else n \times f(\pred(n))$, but finding the $f$ to pass in is difficult.
+				
+				This is where the **Y-combinator** comes in. It's defined above, but we can redefine it as 
+				$$
+				Y = ZZ : Z = \lambda x\; z \cdot x \; (z\; z\; x)
+				$$
+				We can do $Y (\lambda f \cdot \cdots)$ to "layer" our recursion. 
+				
+				Thus we write the whole thing using a mu $\mu f$:
+				$$
+				\mu (f:\num\ra\num) \cdot  \lambda (n:\num) \cdot \if \zeroq(n) \then \succ(n) \else n \times f(\pred(n))
+				$$
+				
+				Define the "**recursive wrapper function**" as $\mu f:t \cdot M$, with the reduction 
+				$$
+				\mu f:t \cdot M \lra [\mu f:t \cdot M / f] M
+				$$
+				
+				The evaluation step is 
+				$$
+				\frac{
+				\types [\mu f:t \cdot M / f] M \implies v}{
+				\types \mu f:t \cdot M \implies v}
+				$$
+				
+				Recursion can make infinite type trees, which break our eager-evaluation typing system.
+				
+				We can define some syntactic sugar for defining things:
+				* Functions $f(x,y) = \cdots$
+				* Recursions $\let \rec f(\cdots) = \cdots$
+				* And declarations $\let x=M;; \cdots$
+				This syntax comes from ocaml.
+			</div>
+
+			<div class="md-conv" id="pcf-sos">
+				### Structural Operational Semantics
+
+				**Natural semantics** describe reductions to normal form.
+
+				**Structural semantics** describes a **single reduction step** - a small step. "Small step semantics".
+				
+				Here we're constructing proof trees for a single step. 
+				
+				We do this because the double arrow natural semantics don't specify execution order, whilst single arrow small steps do.
+				
+				Small steps have some **axiom**s/fundamental rules:
+				$$
+				\begin{align*}
+				n_0 + n_1 &\lra n &\iff n=n_0+n_1\\
+				n_0=n_1 & \lra \true &\iff n_0=n_1\\
+				n_0=n_1 &\lra \false &\iff n+0 \neq n_1\\
+				\if \true \then e_0 \else e_1 &\lra e_0\\
+				\if \false \then e_0 \else e_1 & \lra e_1\\
+				(\lambda x:t \cdot  e_0)\; e_1 &\lra [e_1/x]e_0\\
+				\mu x:t \cdot e &\lra [\mu x:t \cdot e / x]e &\pod{\textrm{Single recursion}}
+				\end{align*}
+				$$
+				
+				And we have inductive cases that need to be propagated, such as if:
+				$$
+				\frac{
+				e \lra e'
+				}{
+				\if e \then e_0 \else e_1 \lra \if e' \then e_0 \else e_1
+				}
+				$$
+				
+				We also say operations resolve left hand first:
+				$$
+				\begin{matrix}
+				\dfrac{e \lra e'}{e+e_0 \lra e'+e_0} && \dfrac{e \lra e'}{n + e \lra n+e'} \\ 
+				\dfrac{e \lra e'}{e = e_0 \lra e' = e_0} && \dfrac{e \lra e'}{n = e \lra n = e'}
+				\end{matrix}
+				$$
+				And application is done lazily (**call-by-name PCF**)
+				$$
+				\frac{e \lra e'}{e\; e_0 \lra e' \; e_0}
+				$$
+				
+				We can also do call by value instead. 
 			</div>
 		</div>
 

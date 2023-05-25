@@ -20,7 +20,7 @@ var pages = [
         "date": new Date(Date.UTC(2023,05,24)),
         "link": "blog-cs/cs349",
         "title": "Notes on CS349",
-        "desc": "Notes on CS349: Principles of Programming Languages</p>",
+        "desc": "Notes on CS349: Principles of Programming Languages</p><p>It may take a while to construct itself there's a lot of md and maths</p>",
         "picture": "",
         "tags": ["cs"]
     },
