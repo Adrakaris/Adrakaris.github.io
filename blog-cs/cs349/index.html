@@ -48,13 +48,16 @@
 			<div class="md-conv">
 				&nbsp;
 				1. [Lambda Calculus](#lcalc)
+				2. [Simply Typed Lambda Calculus](#stlc)
 				\( 
 					\renewcommand{\vec}{\mathbf}
 					\renewcommand{\epsilon}{\varepsilon}
 					\DeclareMathOperator*{\argmax}{argmax}
 					\DeclareMathOperator*{\argmin}{argmin}
 					\def\lra{{\longrightarrow}}
+					\def\ra{{\rightarrow}}
 					\def\lla{{\longleftarrow}}
+					\def\la{{\leftarrow}}
 					\newcommand{\fr}{\frac}
 					\newcommand{\vecu}{\underline}
 					\newcommand{\rm}{\textrm}
@@ -64,6 +67,8 @@
 					\newcommand{\t}{^\top}
 					\newcommand{\bs}{\boldsymbol}
 					\newcommand{\gang}{\;|\;}
+					\newcommand{\types}{\;\;\vdash\;}
+					\newcommand{\type}{\;:\;}
 				\)
 			</div>
 		</div>
@@ -345,7 +350,153 @@
 				Types.
 			</div>
 		</div>
+
+		<div class="colourband">
+			<h2 id="stlc">Simply Typed Lambda Calculus</h2>
+			<p class="subheading">STLC</p>
+		</div>
 		
+		<div class="cbox">
+			<div class="md-conv">
+
+				<div class="blue">
+
+					Define a **type environment** as a set $T = x_1:t_1 \cdots x_n:t_n$ (the curly brackets are implied), where $x_i$ is a variable and $t_i$ is its type.
+				</div>
+				 
+				<div class="blue">
+
+					Define a **typing judgment** as a triple of a type environment $T$, a term $M$, and a resulting type $t$, denoted as:
+					$$
+					T \vdash M : t
+					$$
+	
+				</div>
+
+				<div class="blue">
+
+					Define a **typing derivation** as a tree where nodes are labelled by typing judgments. This is generally done as a form of natural deduction proof tree. 
+				</div>
+				
+				<div class="blue">
+
+					**Simply Typed Lambda Calculus (STLC)** is a language built on LC that has 
+				* Variables $x \in \textrm{Variables}$
+				* Terms $M := x \gang \lambda x : t \cdot M \gang M \; M$, where $x : t$ means parameter $x$ has type $t$
+				* Types $t := o \gang t \ra t$, where $o$ is a generic "object" type, and $\ra$ denotes function types (recall haskell). 
+				</div>
+				
+				
+				
+				An example typing judgment would thus be 
+				$$
+				x:o, f:o\ra o\ra o \types (f \; x)\; x \type o
+				$$
+				
+				Now we will be looking at typing rules, to infer the type of a term. 
+				
+				For a variable $x$ we cannot say much about its type. Thus our typing rule is given 
+				$$
+				\frac{}{
+				T,x:t \types x \type t
+				}
+				$$
+				The **identity** rule.
+				
+				For a lambda, the typing rule is given 
+				$$
+				\frac{
+				x:t,T  \types M \type t_1
+				}{
+				T \types \lambda x:t \cdot M \type t \ra t_1
+				}
+				$$
+				The **abstraction** rule. I.e. $x$ is bound to $t$ and so would appear as type $t$ in $M$.
+				
+				For application, the typing rule is given 
+				$$
+				\frac{
+				\begin{matrix}T \types M_1 \type t_2 \ra t & & T \types M_2 \type t_2\end{matrix}
+				}{
+				T \types M_1 \; M_2 \type t
+				}
+				$$
+				The **application** rule. $M_1$ must be a function for the application to make sense. 
+				
+				To construct a type proof/inference tree, we start at the bottom with the statement we want to prove, and build upwards, creating branches as we go. 
+				
+				We first decompose, without writing in the type environments or the typing, and then fill those in top to bottom afterwards. 
+				
+				<p class="side">
+					
+				</p>
+				<div class="side">
+
+					***Example:.*** prove $x:o, f:o\ra o\ra o \types (f \; x)\; x \type o$.
+
+					***Answer.*** The typing tree is built from the bottom up, and goes as follows:
+				
+				$$
+				\frac{
+				\begin{matrix}
+				\dfrac{\begin{matrix}
+				\dfrac{}{x:o,f:o\ra o\ra o \types f \type o \ra o \ra o}
+				&&
+				\dfrac{}{x:o,f:o\ra o\ra o \types x \type o}
+				\end{matrix}
+				}{x:o,f:o\ra o\ra o \types f \; x : o \ra o 
+				}
+				&& 
+				\dfrac{}{x:o,f:o\ra o\ra o \types x \type o}
+				\end{matrix}
+				}{
+				x:o, f:o\ra o\ra o \types (f \; x)\; x \type o
+				}
+				$$
+				
+				This is ... not pleasant to type up.
+
+				If it expands over the page I'm not going to fix it.
+				</div>
+			</div>
+
+			<div class="side md-conv">
+				***Example.*** find the types of $\lambda (f:o\ra o) \cdot \lambda (y:o) \cdot f \; y$ and $\lambda (f:o ) \cdot \lambda y:o \cdot f \; y$.
+
+				***Answer.*** We start by inspection. By inspection, the first one looks alright, and the second one is clearly a type error.
+				
+				The proof tree for the first one is as follows. Note that for the type environment in the proof tree, if we are not given it it is usually safe to leave it blank if there are no relevant type bindings. 
+				
+				$$
+				\frac{
+					\dfrac{
+						\dfrac{
+							\begin{matrix}
+							\dfrac{}{f:o\ra o, y:o \types f \type o \ra o} 
+							&&
+							\dfrac{}{f:o \ra o, y:o \types y \type o}
+							\end{matrix}
+						}{
+						f:o \ra o, y:o \types f \; y \type o
+						}
+					}{
+					f:o \ra o \types \lambda y:o \cdot f \; y \type o \ra o
+					}
+				}{
+				\types \lambda (f:o\ra o) \cdot \lambda (y:o) \cdot f \; y \type (o \ra o) \ra (o \ra o)
+				}
+				$$
+				
+				It is also handy perhaps to use multiple colours.
+			</div>
+
+			<div class="md-conv">
+				
+				With proof trees we can do type analysis (**static semantics**) as well as evaluation (**dynamic semantics**).
+				
+				We can also have evaluation judgements, $C \types M \implies v$ where $C$ would be our variable scope environment, and $\implies$ is the full reduction series. 
+			</div>
+		</div>
 
 		<footer>
 			<div class="cbox">
