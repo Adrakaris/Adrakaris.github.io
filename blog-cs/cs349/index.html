@@ -50,6 +50,7 @@
 				1. [Lambda Calculus](#lcalc)
 				2. [Simply Typed Lambda Calculus](#stlc)
 				3. [PCF Model Language](#pcf)
+				4. [MiniML](#miniml)
 				\( 
 					\renewcommand{\vec}{\mathbf}
 					\renewcommand{\epsilon}{\varepsilon}
@@ -64,7 +65,6 @@
 					\newcommand{\rm}{\textrm}
 					\newcommand{\bb}{\mathbb}
 					\newcommand{\ol}{\overline}
-					\newcommand{\tl}{\tilde}
 					\newcommand{\t}{^\top}
 					\newcommand{\bs}{\boldsymbol}
 					\newcommand{\gang}{\;|\;}
@@ -226,7 +226,7 @@
 				
 				Thus we make **head normal form** HNF -- where the head (the first term) is normal form and we don't care about arguments. 
 				
-				Take $\lambda a \cdot a ((\lambda b \cdot b) \; a)$. This is not in normal form, but the function body wouldn't be optimised in lazy execution. However this is also not HNF, as the head term is reducible. 
+				Take $\lambda a \cdot (\lambda b \cdot b) \; a$. This is not in normal form, but the function body wouldn't be optimised in lazy execution. However this is also not HNF, as the head term is reducible. 
 				
 				Thus we make **weak normal form** WNF -- where function bodies are ignored. 
 				
@@ -512,6 +512,7 @@
 \DeclareMathOperator*{\bool}{bool}
 \DeclareMathOperator*{\true}{true}	
 \DeclareMathOperator*{\false}{false}	
+\let\inst\succ
 \DeclareMathOperator*{\succ}{succ}	
 \DeclareMathOperator*{\pred}{pred}	
 \DeclareMathOperator*{\zeroq}{zero?}	
@@ -779,6 +780,405 @@
 				$$
 				
 				We can also do call by value instead. 
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="miniml">MiniML</h2>
+
+			
+		</div>
+
+		<div class="cbox">
+
+			<div class="md-conv">
+				### Contents 
+
+				1. [MiniML](#miniml-intro)
+				1. [Lists and Type Quantification](#miniml-lists)
+				1. [Hindley Damas Milner Type Inference](#miniml-hdma)
+				1. [Cardelli Type Judgement](#cardelli)
+			</div>
+			<div class="md-conv" id="miniml-intro">
+				### MiniML
+
+				Whilst PCF has explicit types, some people may prefer implict types and type inference.
+				
+				This is exactly what MiniML does.
+				
+				It lets us perform type-level operations in our proof trees and thus do type inference. We have the following type operations (for which we take out the middle because it's not important, apparently):
+				$$
+				\begin{matrix}
+				\dfrac{}{T, :t \types \type t}id && 
+				\dfrac{\begin{matrix}T \types \type t_1 & T \types \type t_2\end{matrix}}{T \types \type t_1 * t_2}pair  \\ 
+				\dfrac{T, :t_1 \types \type t_2}{T \types \type t_1 \ra t_2}abs &&
+				\dfrac{T \types \type t_1 * t_2}{T \types \type t_1}pair^{-1}  \\ 
+				\dfrac{\begin{matrix}T\types\type t_1 \ra t_2 & T \types\type t_1\end{matrix}}{T \types \type t_2}appl &&
+				\dfrac{T \type\types t_1 * t_2}{T \type\types t_2}pair^{-1}
+				\end{matrix}
+				$$
+				Type annotations can behave like propositional logic statements, or vice-versa.
+				
+				For example if we take the fact that $(A \land B) \implies C \equiv A \implies (B \implies C)$, then we can say $f\;\langle x, y\rangle \equiv (f \; x) \; y$. I.e. **currying functions**.
+				
+				**MiniML** is a language that has type polymorphism, type inference and type checking. It makes use of **type variables** for unknown types. 
+				
+				It has the following expression $e$ syntax:
+				$$
+				\DeclareMathOperator*{\fn}{fn}
+				\begin{align*}
+				e :&= c_\bool \gang c_\num \gang \langle e_1, e_2\rangle \gang \fst e \gang \snd e \\
+				&\gang e_1\; e_2 \gang \fn x \cdot e \gang \let d \inn e \gang \if e \then e_0 \else e_1
+				\end{align*}
+				$$
+				We use $\fn$ rather than $\lambda$ to denote that it's implicitly typed. $c_\bool$ and $c_\num$ are boolean and numeric constants. 
+				
+				It has the following type syntax:
+				$$
+				t := \num \gang \bool \gang t_1*t_2\gang t_1 \ra t_2 \gang \alpha, \beta, \gamma, \cdots
+				$$
+				Note that tau $\tau$ may be used for type, but since `\tau` is a whole three letters more, I'll mostly be using $t$. $\alpha, \beta, \gamma$ are **type variables**. 
+				
+				We can find the types of some terms by just inspection. 
+				
+				E.g. $\fn f \cdot \fn x \cdot f\;(f\;x)$. 
+				
+				We can see that this depends on the type of $x$, so give it a type variable $x:\alpha$. $f$ must be an $\alpha \ra \alpha$ for $f\; x$ to work, and which also makes $f\;(f\;x)$ work. Thus the expression should be typed $(\alpha \ra \alpha) \ra \alpha \ra \alpha$.
+				
+				E.g. $\fn x \cdot \fn y \cdot \fn z \cdot \if (\fst x = \fst y) \then ((\snd x) + z) \else ((\snd y) + z)$.
+				
+				We know $x, y$ must be pairs with the first type matching: $x:\alpha*?,\; y:\alpha*?$. We know due to the $+$ that $z$ and the second elements of $x, y$ must be numbers. Thus $x, y : \alpha * \num, z : \num$. Thus the whole function should be typed $(\alpha * \num) \ra (\alpha * \num) \ra \num \ra \num$.
+				
+				We can also systematically find types of things, by 
+				1. Building an inference tree 
+				2. Putting in temporary type variables 
+				3. Make type inference equations with those variables and resolve down.
+				
+				The abstraction rule is
+				$$
+				\frac{T;x:t_2 \types e \type t_3}{T \types \fn x \cdot e \type t_1} \implies t_1 \sim t_2 \ra t_3
+				$$
+				The application rule is 
+				$$
+				\frac{\begin{matrix}T \types e_1 \type t_2 && T \types e_2 \type e_3\end{matrix}}{T \types e_1 \; e_2 \type t_1}\implies t_2 \sim t_3 \ra t_1
+				$$
+
+				<hr>
+				
+				***Example.*** Type $\types \fn f \cdot \fn x \cdot f\;(f\;x)$.
+				
+				***Answer.*** The tree is constructed 
+				$$
+				\frac{
+					\dfrac{
+						\dfrac{
+							\begin{matrix}
+							\dfrac{}{T \types f \type t_4}(4) &&
+							\dfrac{
+								\begin{matrix}
+								\dfrac{}{T \types f \type t_6}(6) && \dfrac{}{T \types x \type t_7} (7)
+								\end{matrix}
+							}{
+							T \types f \; x \type t_5
+							}(5)
+							\end{matrix}
+						}{
+						T = f:\tau_1, x:\tau_2 \types f\;(f\;x) \type t_3
+						}(3)
+					}{
+					f:\tau_1 \types \fn x \cdot f \; (f \; x) \type t_2
+					}(2)
+				}{
+				\types \fn f \cdot \fn x \cdot f\;(f\;x) \type t_1
+				}(1)
+				$$
+				
+				The constraints are thus 
+				$$
+				\begin{matrix}
+				\tau_1 \sim t_4 \pod{4} & t_6 \sim t_7 \ra t_5 \pod{5} \\ 
+				\tau_1 \sim t_6 \pod{6} & t_4 \sim t_5 \ra t_3 \pod{3}\\
+				\tau_2 \sim t_7 \pod{7} & t_2 \sim \tau_2 \ra t_3 \pod{2} \\ 
+				& t_1 \sim \tau_1 \ra t_2 \pod{1}
+				\end{matrix}
+				$$
+				And our goal is to find $t_1$.
+				$$
+				\implies 
+				\begin{matrix}
+				\tau_1 \sim \tau_2 \ra t_5 \\ \tau_1 \sim t_5 \ra t_3 \\ t_2 \sim \tau_2 \ra t_3 \\ t_1 \sim \tau_1 \ra t_2
+				\end{matrix}
+				\implies \tau_2 \sim t_5 \land t_5 \sim t_3 \implies \tau_1 \sim \tau_2 \ra \tau_2
+				$$
+				$$
+				\implies 
+				\begin{matrix}
+				\tau_1 \sim \tau_2 \ra \tau_2 \\ \tau_1 \sim \tau_2 \ra \tau_2 \\ t_2 \sim \tau_2 \ra \tau_2 \\ t_1 \sim \tau_1 \ra t_2
+				\end{matrix} \implies t_1 \sim \tau_1 \ra (\tau_2 \ra \tau_2) \implies t_1 \sim (\tau_2 \ra \tau_2) \ra (\tau_2 \ra \tau_2)
+				$$
+				Thus $t_1 \sim (\tau_2 \ra \tau_2) \ra \tau_2 \ra \tau_2$ via currying.
+				
+
+				<hr>
+			</div>
+
+			<div class="md-conv" id="miniml-lists">
+				#### Lists and Type Quantification 
+
+				Since we have polymorphism, maybe we want to store lists. 
+				
+				Lists in functional languages tend to be linked lists because it's easiest to write them recursively. We modify MiniML to include 
+				
+				$$
+				\DeclareMathOperator*{\nil}{nil}
+				\DeclareMathOperator*{\hd}{hd}
+				\DeclareMathOperator*{\tl}{tl}
+				\DeclareMathOperator*{\len}{len}
+				\DeclareMathOperator*{\null}{null}
+				\DeclareMathOperator*{\nth}{nth}
+				\DeclareMathOperator*{\list}{list}
+				\begin{align*}
+				e :&= \cdots \gang \nil \gang e_1::e_2 \gang \hd e \gang \tl e \gang \len e \gang \null e \gang \nth e\\
+				t :&= \cdots \gang t \list
+				\end{align*}
+				$$
+				
+				Where $\nil$ is the empty list `[]`, $::$ is the "cons" operator, which links the previous element to the list, hd is head (first elem), tl is tail (everything else), len is length, null is an is-empty check, and nth is index. 
+				
+				An example of a list is $a :: b::c::d::\nil$. We can also write this with syntax sugar as $[a,b,c,d]$.
+
+				Lists are homogeneously typed.
+
+				* Numbers: $ 3::4::5::6:: \nil \type \num \list$
+				* Pairs: $\langle 3,\true\rangle :: \langle4,\false\rangle :: \nil \type (\num \ast \bool) \list$.
+				
+				Now we get to the difficult thing of typing $\nil$. It isn't any one type, because it appears at the end of all lists, so we may have to include ... *universal type quantification?*
+				$$
+				\begin{align*}
+				\nil &\type \forall \alpha \cdot \alpha \list,\\
+				(::) &\type \forall \alpha \cdot \alpha * \alpha \list \ra \alpha \list.
+				\end{align*}
+				$$
+				This is different from before in that beforehand we had some slightly vague generic type thing with type variables. Now, we're explicitly using quantification representation.
+
+				
+				\begin{align}
+				\hd &\type \forall \alpha \cdot \alpha \list \ra \alpha\\
+				\tl &\type \forall \alpha \cdot \alpha\list \ra \alpha \list \\
+				\len &\type \forall \alpha \cdot \alpha\list \ra \num \\
+				\null &\type \forall \alpha \cdot \alpha\list \ra \bool \\
+				\nth &\type \forall \alpha \cdot \alpha \list \ra \alpha
+				\end{align}
+				
+				
+				We can do something similar with pairs 
+				$$
+				\begin{align*}
+				\fst &\type \forall \alpha \beta \cdot \alpha * \beta \ra \alpha \\
+				\snd &\type \forall \alpha \beta \cdot \alpha * \beta \ra \beta \\
+				\langle\;,\;\rangle &\type \forall \alpha \beta \cdot \alpha \ra \beta \ra \alpha * \beta 
+				\end{align*}
+				$$
+				
+				Quantified types must be **instantiated explicitly**. We denote "is instantiated to" using the symbol $\inst$.
+				
+				For example, $\forall \alpha \cdot \alpha \ra \alpha \inst \num \ra \num$.
+				
+				Formally, a quantified type expression $\sigma \inst \tau$ an explicit type expression. But only if 
+				* $\sigma$ is of the form $\forall t \cdot \sigma'$.
+				* And $\tau$ is of the form $[t_x / t]\sigma$ where $t_x$ is the explicit type we instantiate to.
+				
+				We can now construct our proof trees using these. 
+
+				<hr>
+				
+				***Example.*** Type $\fn l_1 \cdot \fn l_2 \cdot (\hd l_1 + 2) :: (\tl l_2)$.
+				
+				***Answer.*** Yes, this tree is very wide. 
+				
+				$$
+				\dfrac{
+					\dfrac{
+					\begin{matrix}
+					\dfrac{}{T,(::):\forall \alpha \cdot \alpha * \alpha \list \ra \alpha \list \types (::) \type t_5}
+					&&
+					\dfrac{
+						\begin{matrix}
+						\dfrac{}{T \types (+) \type \num\ra\num\ra\num} &&
+						\dfrac{\begin{matrix}
+						\dfrac{}
+						{T, \hd:\forall \alpha \cdot \alpha\list \ra \alpha \types \hd \type t_{10}} &&
+						\dfrac{}{T \types l_1 \type t_9}
+						\end{matrix}}
+						{T \types \hd l_1 : t_8} &&
+						\dfrac{}{T \types 2 \type \num}
+						\end{matrix}
+					}{T \types \hd l_1 + 2 \type t_3}
+					&&
+					\dfrac{
+						\begin{matrix}
+						\dfrac{}{T, \forall \alpha \cdot \alpha\list \ra \alpha\list \types \tl \type t_6}
+						&&
+						\dfrac{}{T \types l_2 \type t_7}
+						\end{matrix}
+					}{T \types \tl l_2 \type t_4}
+					\end{matrix}
+					}{
+					T = l_1:s_1,l_2:s_2 \types (\hd l_1 + 2) :: (\tl l_2) \type t_1
+					} appl
+				}{
+				\types \fn l_1 \cdot \fn l_2 \cdot (\hd l_1 + 2) ::(\tl l_2) \types t_0
+				}abs \times 2
+				$$
+				
+				Thus (let $n$ stand for $\num$)
+				$$
+				\begin{align*}
+				t_0 &\sim s_1 \ra s_2 \ra t_1 \pod{1}\\
+				t_5 &\sim t_3 \ra t_4 \ra t_1 \pod{2} & t_5 &\inst \forall \alpha\cdot \alpha * \alpha\list \ra \alpha\list \pod{3}\\
+				t_6 &\sim t_7 \ra t_4 \pod{4} & t_6 &\inst \forall \alpha \cdot \alpha\list \ra \alpha\list \pod{5}\\
+				t_7 &\sim s_2 \pod{6}\\
+				n\ra n\ra n&\sim t_8 \ra n \ra t_3 \pod{7}\\
+				t_9 &\sim s_1 \pod{8}\\
+				t_{10} &\sim t_9 \ra t_8 \pod{9} & t_{10} &\inst \forall \alpha \cdot \alpha\list \ra \alpha \pod{10}
+				\end{align*}
+				$$
+				Start collapsing. 
+				
+				You should get something like $\type \num\list \ra \num\list \ra \num\list$.
+				
+				No I'm not writing the working. This has got to be some of the worst latex that I've had to write.
+				
+				<hr>
+				
+			</div>
+
+			<div class="md-conv" id="miniml-hdma">
+				#### Hindley Damas Milner Type Inference
+
+				A **Type Scheme** is an expression with quantifiers. Free type variables are unbound, and quantification binds those variables. This process is called **closing**. 
+				
+				For a type expr with free vars $\sigma$, denote closing as $CL_T(\sigma) = \forall \alpha_1 \cdots \alpha_n \cdot \sigma$, for free variables $\alpha_1 \cdots \alpha_n$ in the expression that do not occur in $T$.
+				
+				The closure of a type environment is the closure of all assignments. 
+				
+				This allows us to type more difficult things like $\let f = \fn x \cdot x \in \langle f \true, f \nil\rangle$. We can declare and close in our let rule. 
+				
+				$$
+				\dfrac{
+				\begin{matrix}
+				\dfrac{}{T \types \fn x \cdot x \type \alpha\ra \alpha} &&
+				\dfrac{
+				 \begin{matrix}
+				 T,f:\forall \alpha \cdot \alpha \ra \alpha \types f \true \type \bool&&  T,f:\forall \alpha \cdot \alpha \ra \alpha \types f \nil \type \nil
+				 \end{matrix}
+				}{
+				T,f:\forall \alpha \cdot \alpha \ra \alpha \types \langle f \true , f \nil \rangle \type \bool * \nil
+				}
+				\end{matrix}
+				}{
+				T \types \let f = \fn x \cdot x \in \langle f \true , f \nil \rangle \type \bool * \nil
+				}
+				$$
+				
+				Confused at this point? Don't worry, I am too.
+				
+				An algorithm for type inference.. The approach goes: 
+				
+				1. Build a tree of the term 
+				2. To each occurence of a constant, set an arbitrary instance of its universally quantified type 
+				3. Build a set of constants based on typing rules 
+				4. Solve equations by replacing variables to **unify** types. 
+				
+				Unification is like 
+				</div>
+
+			<div>
+				<p>
+					\[ \begin{array}{c|ccccc:c}
+				& \num & \bool & t_1 * t_2 & t_1 \list & t_1\ra t_2 & \alpha \\\hline
+				\num & \checkmark & \times & \times & \times & \times & (\num) \la \alpha \\
+				\bool & \times & \checkmark & \times & \times & \times & (\bool) \la \alpha \\ 
+				t_3 *t_4 & \times & \times & \begin{matrix}t_3\sim t_1 \\ t_4\sim t_2\end{matrix} & \times & \times & ((t_3)*(t_4)) \la \alpha \\
+				t_2 \list & \times & \times & \times & t_1\sim t_2 &\times & ((t_2) \list) \la \alpha \\
+				t_3 \ra t_4 & \times & \times & \times & \times & \begin{matrix}t_3\sim t_1 \\ t_4\sim t_2\end{matrix} & ((t_3) \ra (t_4))\la \alpha \\ \hdashline
+				\beta & \textrm{same} & \textrm{system} & \textrm{as the} & \alpha & \textrm{column}
+				\end{array} \]
+				</p>
+			</div>
+				
+				
+			<div class="md-conv">
+				For the type variables $\alpha, \beta$, what the thing denotes is take alpha and put it into the set/bag of all elements of that type. i.e. $(\num) \la\alpha$ means put alpha into the set of number types. 
+				
+				We need to also check that the type variables do not exist already. Otherwise it's a bad unification, such as trying to do $\lambda x \cdot x\;x$. If this happens we stop with a type error. 
+				
+				As any closed MiniML statement gives a type that is a propositional tautology.
+				
+				
+			</div>
+
+			<div class="md-conv" id="cardelli">
+				### Cardelli Type Judgement 
+				
+				Luca Cardelli provides some more notation (yay...) for defining whether or not a statement, or a type environment is well-formed. 
+				
+				* $\Gamma \types M \type A$ reads "M has type A in type environment $\Gamma$".
+				* $\Gamma \types A$ reads "A is a well formed type expression [in $\Gamma$]"
+				* $\Gamma \types \diamond$ reads "The environment $\Gamma$ is well-formed"
+				* $\varnothing \types \diamond$ reads "The empty environment is well formed", and is a fundamental rule. 
+				
+				So what we have to do now is to prove that the type system is well formed as well as type our statement. Are you screaming yet? (:
+				
+				For PCF, we can have the following well-formed type rules 
+				$$
+				\frac{}{\varnothing \types \diamond} \pod{\textrm{Empty environment}}
+				$$
+				$$
+				\frac{
+				\begin{matrix}\Gamma \types A && x \not\in \rm{domain}(\Gamma)\end{matrix}
+				}{
+				\Gamma, x:A \types \diamond 
+				} \pod{\textrm{A new variable }x \textrm{ is well typed}}
+				$$
+				$$
+				\frac{
+				\begin{matrix}\Gamma \types \diamond && K \in \textrm{Basic types}\end{matrix}
+				}{
+				\Gamma \types K
+				} \pod{\textrm{Type Constants}}
+				$$
+				$$
+				\frac{
+				\begin{matrix}\Gamma \types A && \Gamma \types B\end{matrix}
+				}{
+				\Gamma \types A \ra B
+				} \pod{\textrm{arrow type }\ra}
+				$$
+				$$
+				\frac{
+				\Gamma,x:A \types \diamond
+				}{
+				\Gamma, x:A \types x:A
+				} \pod{\textrm{Identity typing}}
+				$$
+				$$
+				\frac{\Gamma,x:A \types M \type B}{\Gamma \types \lambda x:A \cdot M \type A \ra B} \pod{\textrm{Function typing}}
+				$$
+				$$
+				\frac{
+				\begin{matrix}\Gamma \types M \type A \ra B  && \Gamma \types N \type A \end{matrix}
+				}{
+				\Gamma \types M \; N \type B
+				} \pod{\textrm{Apply typing}}
+				$$
+				The PCF type system is also called $F_1$, by the way. Why? We shall never know.
+				
+				Whilst this add precision this also adds a lot of pedantry, like 
+				$$
+				\frac{\Gamma \types \diamond}{\Gamma \types 0 \type \num}
+				$$
+				Well thanks for telling me zero is a number, I would've never known. But unfortunately we need this to do our next thing... $F_2$?
 			</div>
 		</div>
 
