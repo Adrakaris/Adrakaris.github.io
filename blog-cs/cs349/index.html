@@ -51,6 +51,7 @@
 				2. [Simply Typed Lambda Calculus](#stlc)
 				3. [PCF Model Language](#pcf)
 				4. [MiniML](#miniml)
+				5. [Polymorphic Lambda Calculus](#plc)
 				\( 
 					\renewcommand{\vec}{\mathbf}
 					\renewcommand{\epsilon}{\varepsilon}
@@ -821,23 +822,27 @@
 				
 				For example if we take the fact that $(A \land B) \implies C \equiv A \implies (B \implies C)$, then we can say $f\;\langle x, y\rangle \equiv (f \; x) \; y$. I.e. **currying functions**.
 				
-				**MiniML** is a language that has type polymorphism, type inference and type checking. It makes use of **type variables** for unknown types. 
+				<div class="blue">
+
+					**MiniML** is a language that has type polymorphism, type inference and type checking. It makes use of **type variables** for unknown types. 
 				
-				It has the following expression $e$ syntax:
-				$$
-				\DeclareMathOperator*{\fn}{fn}
-				\begin{align*}
-				e :&= c_\bool \gang c_\num \gang \langle e_1, e_2\rangle \gang \fst e \gang \snd e \\
-				&\gang e_1\; e_2 \gang \fn x \cdot e \gang \let d \inn e \gang \if e \then e_0 \else e_1
-				\end{align*}
-				$$
-				We use $\fn$ rather than $\lambda$ to denote that it's implicitly typed. $c_\bool$ and $c_\num$ are boolean and numeric constants. 
+					It has the following expression $e$ syntax:
+					$$
+					\DeclareMathOperator*{\fn}{fn}
+					\begin{align*}
+					e :&= c_\bool \gang c_\num \gang \langle e_1, e_2\rangle \gang \fst e \gang \snd e \\
+					&\gang e_1\; e_2 \gang \fn x \cdot e \gang \let d \inn e \gang \if e \then e_0 \else e_1
+					\end{align*}
+					$$
+					We use $\fn$ rather than $\lambda$ to denote that it's implicitly typed. $c_\bool$ and $c_\num$ are boolean and numeric constants. 
+					
+					It has the following type syntax:
+					$$
+					t := \num \gang \bool \gang t_1*t_2\gang t_1 \ra t_2 \gang \alpha, \beta, \gamma, \cdots
+					$$
+					Note that tau $\tau$ may be used for type, but since `\tau` is a whole three letters more, I'll mostly be using $t$. $\alpha, \beta, \gamma$ are **type variables**. 
+				</div>
 				
-				It has the following type syntax:
-				$$
-				t := \num \gang \bool \gang t_1*t_2\gang t_1 \ra t_2 \gang \alpha, \beta, \gamma, \cdots
-				$$
-				Note that tau $\tau$ may be used for type, but since `\tau` is a whole three letters more, I'll mostly be using $t$. $\alpha, \beta, \gamma$ are **type variables**. 
 				
 				We can find the types of some terms by just inspection. 
 				
@@ -847,7 +852,7 @@
 				
 				E.g. $\fn x \cdot \fn y \cdot \fn z \cdot \if (\fst x = \fst y) \then ((\snd x) + z) \else ((\snd y) + z)$.
 				
-				We know $x, y$ must be pairs with the first type matching: $x:\alpha*?,\; y:\alpha*?$. We know due to the $+$ that $z$ and the second elements of $x, y$ must be numbers. Thus $x, y : \alpha * \num, z : \num$. Thus the whole function should be typed $(\alpha * \num) \ra (\alpha * \num) \ra \num \ra \num$.
+				We know $x, y$ must be pairs with the first type matching: $x:\alpha * ?,\; y:\alpha * ?$. We know due to the $+$ that $z$ and the second elements of $x, y$ must be numbers. Thus $x, y : \alpha * \num, z : \num$. Thus the whole function should be typed $(\alpha * \num) \ra (\alpha * \num) \ra \num \ra \num$.
 				
 				We can also systematically find types of things, by 
 				1. Building an inference tree 
@@ -927,23 +932,28 @@
 
 				Since we have polymorphism, maybe we want to store lists. 
 				
-				Lists in functional languages tend to be linked lists because it's easiest to write them recursively. We modify MiniML to include 
+				<div class="blue">
+
+					Lists in functional languages tend to be linked lists because it's easiest to write them recursively. We modify MiniML to include 
 				
-				$$
-				\DeclareMathOperator*{\nil}{nil}
-				\DeclareMathOperator*{\hd}{hd}
-				\DeclareMathOperator*{\tl}{tl}
-				\DeclareMathOperator*{\len}{len}
-				\DeclareMathOperator*{\null}{null}
-				\DeclareMathOperator*{\nth}{nth}
-				\DeclareMathOperator*{\list}{list}
-				\begin{align*}
-				e :&= \cdots \gang \nil \gang e_1::e_2 \gang \hd e \gang \tl e \gang \len e \gang \null e \gang \nth e\\
-				t :&= \cdots \gang t \list
-				\end{align*}
-				$$
+					$$
+					\DeclareMathOperator*{\nil}{nil}
+					\DeclareMathOperator*{\hd}{hd}
+					\DeclareMathOperator*{\tl}{tl}
+					\DeclareMathOperator*{\len}{len}
+					\DeclareMathOperator*{\null}{null}
+					\DeclareMathOperator*{\nth}{nth}
+					\DeclareMathOperator*{\list}{list}
+					\begin{align*}
+					e :&= \cdots \gang \nil \gang e_1::e_2 \gang \hd e \gang \tl e \gang \len e \gang \null e \gang \nth e\\
+					t :&= \cdots \gang t \list
+					\end{align*}
+					$$
+					
+					Where $\nil$ is the empty list `[]`, $::$ is the "cons" operator, which links the previous element to the list, hd is head (first elem), tl is tail (everything else), len is length, null is an is-empty check, and nth is index. 
+				</div>
+
 				
-				Where $\nil$ is the empty list `[]`, $::$ is the "cons" operator, which links the previous element to the list, hd is head (first elem), tl is tail (everything else), len is length, null is an is-empty check, and nth is index. 
 				
 				An example of a list is $a :: b::c::d::\nil$. We can also write this with syntax sugar as $[a,b,c,d]$.
 
@@ -1179,6 +1189,228 @@
 				\frac{\Gamma \types \diamond}{\Gamma \types 0 \type \num}
 				$$
 				Well thanks for telling me zero is a number, I would've never known. But unfortunately we need this to do our next thing... $F_2$?
+			</div>
+		</div>
+
+		<div class="colourband">
+			<h2 id="plc">Polymorphic Lambda Calculus</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents 
+
+				1. [PLC](#plc-intro)
+				1. [Records and Subtypes](#records)
+			</div>
+
+			<div class="md-conv" id="plc-intro">
+				### PLC 
+
+				Let's move back to PCF, with its explicit typing, but now we add in quantification.
+
+				In MiniML, quantifiers **cannot** appear in terms, and can only exist in type propositions. In PLC, we have term-based quantified type hinting.
+				
+				Introduce 
+				$$
+				e := \cdots \gang \Lambda V \cdot e \gang e[t]
+				$$
+				Where $V$ is a type variable, and big lambda $\Lambda$ is used for universal quantification. The $e[t]$ syntax instantiates a function to a type, like using **generics**. 
+				
+				Introduce 
+				$$
+				t := \num \gang \bool \gang t_1 \ra t_2 \gang \cdots \gang \forall V \cdot t
+				$$
+				**Note** that $\num$ is often rendered $\textrm{int}$ but that would clash with another MathJax command and so I'll use $\num$ which is already working perfectly fine. 
+				
+				We have some more proof rules 
+				$$
+				\begin{matrix}
+				\textrm{Over terms} && \textrm{Over types} \\\\
+				\dfrac{\Gamma,x:t \types e \type t_2}{\Gamma \types \lambda x:t_1\cdot e \type t_1 \ra t_2} && \dfrac{\Gamma, V \types e \type t}{\Gamma \types \Lambda V \cdot e \type \forall V \cdot t} \\\\ 
+				\dfrac{
+				\begin{matrix}\Gamma \types e_1 \type t_1\ra t_2 && \Gamma \types e_2 \type t_1\end{matrix}
+				}{
+				\Gamma \types e_1 \; e_2 \type t_2
+				} &&
+				\dfrac{
+				\Gamma \types e \type \forall V \cdot t_2
+				}{\Gamma \types e[t_1] \type t_2[t_1/V]}
+				\end{matrix}
+				$$
+				
+				PLC makes type checking an undecidable problem. But they're still useful; 
+				
+				Previously in church encodings we found out that 0 equaled false. We separated them out into $\num, \bool$ sets, but this relatively is a bit of a hack. 
+				
+				With PLC, we can write type expressions for all of the types:
+				$$
+				\begin{align*}
+				\bool &= \forall \alpha \cdot \alpha \ra \alpha \ra \alpha & \num &= \forall \alpha \cdot (\alpha \ra \alpha) \ra (\alpha\ra \alpha)\\\\
+				\false &= \Lambda \alpha \cdot \lambda(x:\alpha, y:\alpha)\cdot y & 0 &= \Lambda \alpha \cdot \lambda (f:\alpha\ra\alpha, x:a) \cdot x\\
+				\true &= \Lambda \alpha \cdot \lambda(x:\alpha, y : \alpha) \cdot x & 1 &= \Lambda \alpha \cdot \lambda (f:\alpha\ra \alpha, x:\alpha) \cdot f \; x
+				\end{align*}
+				$$
+				
+				This is called **System F**.
+				
+				<hr>
+				
+				***Example.*** Prove that $\true$ is type $\bool$
+				
+				***Answer.***
+				$$
+				\dfrac{
+					\dfrac{
+						\alpha, x:\alpha, y:\alpha \types x \type \alpha
+					}{
+					\alpha \types \lambda x:\alpha \cdot \lambda y \cdot \alpha \cdot x \type \alpha \ra \alpha \ra \alpha
+					}
+				}{
+				\types \Lambda \alpha \cdot \lambda x:\alpha \cdot \lambda y:\alpha \cdot x \type \forall \alpha \cdot \alpha \ra \alpha \ra \alpha
+				}
+				$$
+				
+				<hr>
+				
+				When using PLC, we *must* instantiate the type every single time we use it. For example, take the IF function: 
+				$$
+				IF = \Lambda t \cdot \lambda b:\bool \cdot \lambda x_1:t \cdot \lambda x_2 : t \cdot b[t] \; x_1 \; x_2
+				$$
+				Because $b$ is a boolean of type $\forall \alpha \cdot \alpha \ra \alpha \ra \alpha$, we must instantiate this using the type $t$ to be able to use it with $x$s of type $t$. 
+				
+				This can make some... rather clunky writings. Take $\fn l_1 \cdot \fn l_2 \cdot (\hd l_1 + 2) :: (\tl l_2)$ from before. In PLC, this would become 
+				$$
+				\lambda(l_1:\num\list)\cdot \lambda(l_2 :\num\list) \cdot (\hd[\num]\; l_1 + 2 ) ::_{[\num]} (\tl[\num] l_2)
+				$$
+				Yes, you even have to instantiate the cons. 
+			</div>
+
+			<div class="md-conv" id="records">
+				### Records and Subtypes
+
+				We have lists, but we want something more flexible -- the **record structure**.
+				
+				A record is made of key/value pairs, like a dictionary, a struct, a table (lua), etc. And records are very, very powerful. 
+				
+				Define **Record** notation and types as:
+				$$
+				\begin{align*}
+				e :&= \cdots \gang \{l_1 =e_1, \cdots ,l_n=e_n\} \gang e@l\\
+				t :&= \cdots \gang \{l_1:T_1, \cdots, l_n:T_n\}
+				\end{align*}
+				$$
+				Where $e@l$ means retrieve the value at key $l$ of record $e$. This is called **projection**.
+				
+				Note how records are not homogenous, every entry has its own type. 
+				
+				An example: $a = \{\textrm{one} = 4, \textrm{two} = \false\}$. We can get 4 by doing $a@\textrm{one}$.
+				
+				The record typing rule is as follows:
+				$$
+				\dfrac{
+				\Gamma \types e_i \type t_i \textrm{ for each }i
+				}{
+				\Gamma \types \{l_1 = e_1, \cdots, l_n=e_n\} \type \{l_1:t_1 \cdots l_n :t_n\} 
+				}
+				$$
+				The projection typing rule is:
+				$$
+				\dfrac{
+				\Gamma \types e \type \{l_1:t_1 \cdots l_n:t_n\}
+				}{
+				\Gamma \types e@l_i \type t_i
+				}
+				$$
+				
+				We run into some problems with some typing things with records. e.g. take $f = \lambda x \cdot x@\textrm{one}$. We want to know the type of $f$ and $x$. 
+				
+				* Naturally, $x$ is any record with a field named "one".
+				* Thus $f$ should take a record with a field "one" of any type... $\Lambda t \cdot \{\textrm{one} : t\} \ra t$ ... right?
+				
+				Well what if we pass in $\{\textrm{one}: 13, \textrm{two}: \true\}$? This would not be allowed under $f$'s type, but ostensibly should be. 
+				
+				Thus, we introduce **subtyping**. 
+				
+				Denote **subtyping** as $S \lt: T$, read "$S$ is a subtype of $T$", if $S$ can be passed in anywhere where type $T$ is required. 
+				
+				For example, $\{\textrm{one}:\num, \textrm{two}:\bool\} \lt: \{\textrm{one}:\num\}$.
+				
+				Given subtyping we introduce the **subsumption rule**:
+				$$
+				\newcommand{\subtype}{\;\lt:\;}
+				\dfrac{
+				\begin{matrix}\Gamma \types e \type S && \Gamma \types S \subtype T\end{matrix}
+				}{
+				\Gamma \types e \type T
+				}
+				$$
+				We can now introduce the **sub-record rule**:
+				$$
+				\dfrac{
+				\begin{matrix}
+				\{l_1:T_1 \cdots l_n:T_n\} \subseteq \{k_1:S_1 \cdots k_m:S_m\} && k_i = l_j \implies S_i \subtype T_j
+				\end{matrix}
+				}{
+				\Gamma \types \{k_1:S_1 \cdots k_m:S_m\} \subtype \{l_1:T_1 \cdots l_n:T_n\}
+				}
+				$$
+				And introduce the **sub-function rule**:
+				$$
+				\dfrac{
+				\begin{matrix}\Gamma \types T_1 \subtype S_1 && \Gamma \types S_2 \subtype T_2\end{matrix}
+				}{
+				\Gamma \types S_1 \ra S_2 \subtype T_1 \ra T_2
+				}
+				$$
+				
+				**Every type is a subtype of itself**, so perhaps we could be doing... $\leq:$? But no. Let's not change notation as we've done that enough already. 
+				
+				Subsumption rule however can lead to infinite loops and non-deterministic proof trees, as:
+				$$
+				\frac{
+					\dfrac{
+						\begin{matrix}\dfrac{\vdots}{\Gamma,x:s \types e \type t }
+						&& \dfrac{}{t \subtype t'} \end{matrix}
+					}{
+					\Gamma, x:s \types e \type t'
+					}
+				}{
+				\Gamma \types \lambda x:s \cdot e \type s \ra t'
+				}
+				$$
+				Note how we can loop the left a forever. 
+				
+				So rather than this we should integrate subsumption into other rules. 
+				
+				Replacing **application**:
+				$$
+				\dfrac{
+				\begin{matrix}
+				\Gamma \types e_1 \type t_1\ra t_2 && \Gamma \types e_2 \type u && \Gamma \types u \subtype t_1
+				\end{matrix}
+				}{
+				\Gamma \types e_1\;e_2 \type t_2
+				}
+				$$
+				
+				Replacing **abstraction**:
+				$$
+				\frac{
+				\begin{matrix}\Gamma \types t_1 \subtype s_1 && \Gamma \types s_2 \subtype t_2\end{matrix}
+				}{
+				\Gamma \types s_1 \ra s_2 \subtype t_1 \ra t_2
+				}
+				$$
+				Note which way round the types are. Input is subtype, but output is supertype. Input can be more specific, and output can be less specific. 
+				
+				**Covariance** is when a subtype returns nothing that the supertype would not reutrn,
+				
+				**Contravariance** is when a subtype must accept all arguments accepted by a supertype. 
+				
+				The **Liskov Substitution Principle** is that if $S \lt: T$, then any program that takes $T$ can be replaced with $S$ without changing the program. I.e. a child class can be used anywhere that can be used in the parent class.
+				
+				And this whole subtyping rigamarole leads us to...
 			</div>
 		</div>
 
