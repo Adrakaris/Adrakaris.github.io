@@ -52,6 +52,8 @@
 				3. [PCF Model Language](#pcf)
 				4. [MiniML](#miniml)
 				5. [Polymorphic Lambda Calculus](#plc)
+				6. [Simple Language with Subtypes](#sls)
+
 				\( 
 					\renewcommand{\vec}{\mathbf}
 					\renewcommand{\epsilon}{\varepsilon}
@@ -72,6 +74,7 @@
 					\newcommand{\types}{\;\;\vdash\;}
 					\newcommand{\type}{\;:\;}
 				\)
+				Just a warm reminder that the further down we get the less sense everything makes :)
 			</div>
 		</div>
 
@@ -1045,12 +1048,12 @@
 				$$
 				\begin{align*}
 				t_0 &\sim s_1 \ra s_2 \ra t_1 \pod{1}\\
-				t_5 &\sim t_3 \ra t_4 \ra t_1 \pod{2} & t_5 &\inst \forall \alpha\cdot \alpha * \alpha\list \ra \alpha\list \pod{3}\\
-				t_6 &\sim t_7 \ra t_4 \pod{4} & t_6 &\inst \forall \alpha \cdot \alpha\list \ra \alpha\list \pod{5}\\
+				t_5 &\sim t_3 \ra t_4 \ra t_1 \pod{2} & t_5 &\sim \forall \alpha\cdot \alpha * \alpha\list \ra \alpha\list \pod{3}\\
+				t_6 &\sim t_7 \ra t_4 \pod{4} & t_6 &\sim \forall \alpha \cdot \alpha\list \ra \alpha\list \pod{5}\\
 				t_7 &\sim s_2 \pod{6}\\
 				n\ra n\ra n&\sim t_8 \ra n \ra t_3 \pod{7}\\
 				t_9 &\sim s_1 \pod{8}\\
-				t_{10} &\sim t_9 \ra t_8 \pod{9} & t_{10} &\inst \forall \alpha \cdot \alpha\list \ra \alpha \pod{10}
+				t_{10} &\sim t_9 \ra t_8 \pod{9} & t_{10} &\sim \forall \alpha \cdot \alpha\list \ra \alpha \pod{10}
 				\end{align*}
 				$$
 				Start collapsing. 
@@ -1413,6 +1416,284 @@
 				And this whole subtyping rigamarole leads us to...
 			</div>
 		</div>
+
+		<div class="colourband">
+			<h2 id="sls">Simple Language with Subtypes</h2>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents 
+
+				1. [SLS](#sls-1)
+				2. [Existential Quantification](#sls-2)
+				3. [Abstract Data Types](#sls-3)
+				4. [Further Type Construction](#sls-4)
+			</div>
+
+			<div class="md-conv" id="sls-1">
+				### SLS 
+
+				We now have simple functions, polymorphic functions, polymorphic functions with subtyping, and combinations of all of them. We can unify them into one notation under the **"Simple" Language with Subtypes**:
+
+				$$
+				\DeclareMathOperator*{\Top}{Top}
+				f = \Lambda (a \lt: \Top) \cdot \Lambda (b \lt: \{\textrm{one}:a\}) \cdot \lambda x:b \cdot x@\textrm{one}
+				$$
+				We introduce a type $\Top$ that is the superest of supertypes -- anything subtypes top. The type of $f$ is thus 
+				$$
+				f \type \forall a \lt: \Top \cdot \forall b \lt: \{\textrm{one}: \num\}
+				$$
+
+				Now we can 
+				$$
+				f[\num][\{\textrm{one}:\num, \textrm{two}:\bool\}] \; \{\textrm{one} = 2, \textrm{two} = \true\}
+				$$
+
+				Remember how we mentioned that PCF was system $F_1$? This is $F_2$. 
+
+				$F_2$ has types 
+				$$
+				s, t := X \gang \Top \gang s \ra t \gang \forall X \lt: s \cdot t
+				$$
+				Type variables, top, functions, foralls. 
+
+				Its basic terms now go
+				$$
+				M, N := x, \gang \lambda x:t \cdot M \gang M \; N \gang \Lambda s \lt: t \cdot M \gang M[t]
+				$$
+				Typed abstraction, application, type abstraction, and type instantiation.
+
+				We now have expressions of the form type -> type, type -> term, term -> term... and we start to get the "lambda cube" (search it up yourself).
+			</div>
+
+			<div class="md-conv" id="sls-2">
+				### Existential <strike>Crisis</strike> Quantification 
+
+				We have $\forall$, why not also have $\exists$? Well of course we can! 
+				
+				It gets... even more difficult though. 
+				
+				A trivial type is $T \types x \type \exists a \cdot a$. This really says that $x$ can be any type. 
+				
+				We could say $\dfrac{\types 3 \type \num}{\types 3 \type \exists a \cdot a}$, thus $a \sim \num$. 
+				
+				We could say $\types \langle [4,9,5], \len \rangle \type \exists a \cdot a$, thus we could say $a \sim (\num\list) \ast (\num\list \ra \num)$.
+				
+				We could be more specific and say $\types \langle 3, \succ \rangle \type \exists a \cdot a \ast (a \ra a)$. Thus $a \sim \num$. We could be even more specific and say $\types \langle 3, \succ \rangle \type \exists a \cdot a \ast (a \ra \num)$.
+				
+				But $\langle [4,9,5], \len\rangle \type \exists a \cdot a \ast (a \ra \num)$ as well, so these two both have the same existential quantification!? 
+				
+				Yes, because **existential quantification hides types**, rather it shows the **relationship** between types, abstractly. 
+				
+				They almost act as function interfaces. Thus we have 
+				* Content: $\langle 3, \succ \rangle$
+				* Interface: $a \ast (a \ra \num)$
+				* Representation: $a \sim \num$.
+			</div>
+
+			<div class="md-conv" id="sls-3">
+				### Abstract Data Types 
+
+				Let's focus on making a stack data type. 
+				
+				We need to specify an interface, hide information, typecheck the declaration with full information, and typecheck invocations with partial infomation.
+				
+				To help this we include the following declaration syntax:
+				$$
+				\DeclareMathOperator*{\pack}{pack} 
+				\DeclareMathOperator*{\with}{with} 
+				\DeclareMathOperator*{\new}{new} 
+				d := \cdots \gang p = \pack[\tau=t_1 \inn t_2] \with M \gang x, \tau = \new p
+				$$
+				Where the first expression is a declaration, and the second expression is an instantiation. 
+				
+				For example: 
+				* $\let p = \pack[a=\num \inn a \ast (a \ra \num)]\with \; \langle3, \succ\rangle ;$
+				* $\let x, t = \new p;$
+				* $(\snd x) \; (\fst x);$
+				
+				Note in line 2 we create simultaneously a new variable and a type variable. 
+				
+				Now we can create a stack: <span class="grey">I am crying formatting this</span>
+				
+			</div>
+
+			<div class="codediv">\( \let \textrm{ StackL } = \)
+	\( \Lambda \textrm{ item } \cdot \pack [X = \textrm{ item } \list \inn \{ \)
+		\( \textrm{new} : X, \)
+		\( \textrm{push} : \textrm{item} \ra X \ra X \),
+		\( \textrm{pop} : X \ra X \),
+		\( \textrm{top} : X \ra \textrm{item} \)
+	\( \}] \with \{ \) 
+		\( \textrm{new} = [] \),
+		\( \textrm{push} = \lambda (i:\textrm{item}) \cdot \lambda (j:\textrm{item}\list) \cdot i :: j \),
+		\( \textrm{pop} = \lambda(i : \textrm{item} \list) \cdot \tl i \)
+		\( \textrm{top} = \lambda (i : \textrm{item} \list) \cdot \hd i \)
+	\( \}; \)
+\( \let p, S = \new \textrm{StackL}[\num] \)
+\( p @ \textrm{top} \; (p@\textrm{push} \; 3 \; p@\textrm{new}) \)			</div>
+
+			<div class="md-conv">
+				The type of $p$ is thus $\types \{\new : S , \textrm{push} : \num \ra S \ra S, \textrm{pop} : S \ra S , \textrm{top} : S \ra \textrm{item}\}$. Note that $p@\textrm{new}$ is not the special keyword $\new$, but rather just a method.  
+				
+				Where $S$ is the packed type variable that we declare with $p$. 
+				
+				Note that once we declare a type variable, it cannot be reused. So we can't push a variable using $p@\textrm{push}$ into another stack $q$, since the type variable of $p$ would not be that of $q$.
+				
+				The typing rules for $\pack, \new$ are given:
+				$$
+				\pack \frac{
+				\Gamma \types M \type [t_1 / \tau] t_2
+				}{
+				\Gamma \types p = \pack [\tau = t_1 \inn t_2] \with M  \type \Gamma, p:\exists \tau \cdot t_2
+				}
+				$$
+				$$
+				\new \frac{
+				\Gamma \types p \type \exists t_1 \cdot \tau 
+				}{
+				\Gamma \types x_1,t2 = \new p \type \Gamma, [t_2 / t_1] \tau, t_2
+				}
+				$$
+				
+				In this stack, the $X$ type is **hidden**. Thus we can't really do much with types of this hidden type. 
+				
+				To address this we can selectively leak an interface. 
+
+				#### Bounded Existential Quantification (or Subtypes, bascially)
+
+				Suppose we want to create a point structure with $x, y$ fields. In the declaration we can selectively "leak" an interface: 
+				$$
+				\pack [pt \lt: \{x:\num, y:\num\} = \{\cdots\}] \inn \{\cdots\};
+				$$
+				Now we can change the pack typing rule to 
+				$$
+				\frac{
+				\begin{matrix}\Gamma \types C \lt: A && \Gamma \types [C / X] M \type [C / X ] B\end{matrix}
+				}{
+				\Gamma \types \pack [X \lt: A = C \inn B] \with M \type \Gamma, p:\exists X\lt:A \cdot B
+				}
+				$$
+				We can thus define a point, which we can think of like an entity in the game, that is either alive (red) or dead (grey), this way:
+			</div>
+
+			<div class="codediv">\( \let \textrm{points} = \pack [ \)
+	\( pt \lt: \{x:\num, y:\num\} = \{x:\num, y:\num, rgb:\num\} \inn\; \{ \)
+		\( init : n \ra n \ra pt, \)
+		\( kill : pt \ra pt \)
+	\( \} \)
+\( ]\; \with \; \{ \)
+	\( init = \lambda a:\num \cdot \lambda b:\num \cdot \{x=a, y=b, rgb=\textrm{Red}\}, \)
+	\( kill = \lambda p : pt \cdot \{x=p@x, y=p@y, rgb=\textrm{Grey}\} \)
+\( \}; \)</div>
+				
+			<div class="md-conv">
+				For this new bounded existential quantification we have the following rules: 
+				$$
+				\frac{
+				\Gamma \types M \type \exists X \lt: A \cdot B
+				}{
+				\Gamma \types x,T = \new M \type \Gamma, x:[T / X]B, T \lt: A
+				}
+				$$
+				$$
+				\frac{
+				\begin{matrix}\Gamma\types A \subtype A' && \Gamma, X\lt:A \types B \subtype B'\end{matrix}
+				}{
+				\Gamma \types (\exists X\lt:A \cdot B) \subtype (\exists X \lt: A' \cdot B')
+				}
+				$$
+				
+				We also have the rules for well formed types 
+				$$
+				\frac{
+				\Gamma, X\lt: A \types B
+				}{
+				\Gamma \types \exists X \lt:A \cdot B
+				}
+				$$
+				And well-formed scope rules 
+				$$
+				\begin{matrix}
+				\dfrac{\Gamma, t\lt:\alpha \types \beta}{\Gamma \types \forall t \lt: \alpha \cdot \beta}
+				&&
+				\dfrac{\Gamma, t\lt:\alpha \types \beta}{\Gamma \types \exists t \lt: \alpha \cdot \beta} \\ \\
+				\dfrac{\Gamma, t \lt: \alpha \types \diamond}{\Gamma, t \lt: \alpha \types t \lt: \alpha} &&
+				\dfrac{\begin{matrix}\Gamma \types \alpha && t \not\in \textrm{dom}(\Gamma)\end{matrix}}{\Gamma, t \lt: \alpha \types \diamond}
+				\end{matrix}
+				$$
+				
+			</div>
+
+			<div class="md-conv" id="sls-4">
+				### Further Type Construction 
+
+				We now have expressions for logical and (through pair) and logical imply (through arrow), as well as universal and existential quantification. 
+				
+				Now we introduce the most fundamental **unit type**: 
+				$$
+				\DeclareMathOperator*{\unit}{unit}
+				\frac{\Gamma \types \diamond}{\Gamma \types () \type \unit}
+				$$
+				There is only one value with this type, the brackets. 
+				
+				We introduce **union types**: i.e. multiple types being stored under one variable. An example of this is given (ocaml):	
+			</div>
+			<div class="codediv">type num = Fl of float | In of int ;;
+[Fl 0.2 ; In 3] ;; <span class="grey">: num list</span> </div>
+
+			<div class="md-conv">
+				There are no type errors, because each type of the union type must be preceded by its keyword. 
+				
+				This is now our logical or. 
+				
+				We can add this to our language using the $+$ type operator, with the following syntax:
+				
+				$$
+				\DeclareMathOperator*{\of}{of}
+				\frac{
+				\Gamma \types x : t_n
+				}{
+				\Gamma \types l_n \; x \type (\cdots + l_n \of t_n + \cdots)
+				}
+				$$
+				
+				So given $e : \textrm{float}$ we can say $Fl \;e \type (Fl \of \textrm{float}, In \of \textrm{int})$.
+				
+				We can now **pattern match** over types, though we must account for all cases (ocaml):
+			</div>
+			<div class="codediv">let addone x = match x with Fl x -> x + 1.0 |
+							In x -> x + 1</div>
+
+			<div class="md-conv">
+				
+				We can now do **recursive types**, which is useful for recursive data structures like binary trees:
+				
+				type $\alpha$ bintree = Leaf of $\alpha$ 
+					| Btree of ($\alpha$ bintree * $\alpha$ bintree) ;;
+				
+				We must then figure out how to type this ... why not reuse the $\mu$ operator?
+				$$
+				BTree_A = \mu X \cdot (A + (X \ast X))
+				$$
+				We can label the various union types:
+				$$
+				BTree_A = \mu X \cdot (\textrm{inr}:A + \textrm{inl}:(X \ast X))
+				$$
+				
+				We can also redefine list this way 
+				$$
+				List_A = \mu X \cdot (\unit ,(A * X))
+				$$
+				But this makes terms more complicated. 
+				
+				Now we're getting crazy.
+				
+				But we can get crazier with *gasp* imperative languages...
+			</div>
+		</div>
+
 
 		<footer>
 			<div class="cbox">
