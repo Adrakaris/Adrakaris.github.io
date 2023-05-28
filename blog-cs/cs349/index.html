@@ -53,6 +53,7 @@
 				4. [MiniML](#miniml)
 				5. [Polymorphic Lambda Calculus](#plc)
 				6. [Simple Language with Subtypes](#sls)
+				7. [Imperative Programming](#imp)
 
 				\( 
 					\renewcommand{\vec}{\mathbf}
@@ -73,6 +74,7 @@
 					\newcommand{\gang}{\;|\;}
 					\newcommand{\types}{\;\;\vdash\;}
 					\newcommand{\type}{\;:\;}
+					\newcommand{\cal}{\mathcal}
 				\)
 				Just a warm reminder that the further down we get the less sense everything makes :)
 			</div>
@@ -1694,6 +1696,300 @@
 			</div>
 		</div>
 
+
+		<div class="colourband">
+			<h2 id="imp">Imperative Programming</h2>
+			<p class="subtitle">A Language Called IMP</p>
+		</div>
+
+		<div class="cbox">
+			<div class="md-conv">
+				### Contents 
+
+				1. [IMP](#imp-1)
+				2. [BLOCK](#block)
+				3. [PROC](#proc)
+
+				$
+				\newcommand{\A}{\cal{A}}
+				\newcommand{\B}{\cal{B}}
+				\newcommand{\N}{\cal{N}}
+				\newcommand{\C}{\cal{C}}
+				\DeclareMathOperator*{\true}{true}
+				\DeclareMathOperator*{\false}{false}
+				\DeclareMathOperator*{\skip}{skip}
+				\DeclareMathOperator*{\if}{if}
+				\DeclareMathOperator*{\then}{then}
+				\DeclareMathOperator*{\else}{else}
+				\DeclareMathOperator*{\while}{while}
+				\DeclareMathOperator*{\do}{do}
+				\DeclareMathOperator*{\AND}{AND}
+				$
+			</div>
+
+			<div class="md-conv" id="imp-1">
+				
+				### IMP
+				
+				Bear with me here, believe it or not it's going to get even worse. 
+				
+				Imperative programming, which has mutable *shudder* variables. We will introduce a language called IMP. 
+				
+				An example of IMP is: `y := 1; while ~(x = 1) do (y := y * x; x := x - 1)`
+				
+				<div class="blue">
+
+					**IMP** has the following operations:
+				
+					* Arithmetic operations: $a := n \gang v \gang a_1 + a_2 \gang a_1 - a_2 \gang a_1 * a_2$.
+					* Boolean operations: $b := \true \gang \false \gang a_1 = a_2 \gang a_1 \leq a_2 \gang \sim b \gang b_1 \land b_2$ (or can be done with and and de-morgans). 
+					* Commands: $c := \skip \gang v := a \gang c_1 ; c_2 \gang \if b \then c_1 \else c_2 \gang \while b \do c$
+				</div>
+				
+				
+				PCF has judgements and declarations. For IMP we have a **store**, which maps variables to values, which are going to be integer values.
+				$$
+				s = [a \mapsto 3, b \mapsto 2]
+				$$
+				IMP is treated like a series of strings, and we kinda functionally parse our way through. The following operations are **bindings** or **parsings** (I made up that word)
+				
+				I.e. whilst on the surface we use imperative language, behind the scenes we are secretly just using lambda functions and shunting a store data structure all across the place.
+				
+				***Arithmetic.*** $\cal{A}[v] = \lambda s \cdot s[v]$. 
+				
+				A takes a variable string and a store, and retrieves the integer value in the store mapped from that variable. Over operations, arithmetic will recursively parse all variables and calculate them into values:
+				$$
+				\cal{A}[a_1 + a_2]\; s = \cal{A}[a_1]\; s + \cal{A}[a_2] \; s
+				$$
+				Note that + inside the brackets is a *string*, whilst the + outside of the brackets is mathematical add. Yes, this notation is about as readable as Haskell type-kinding, but oh well. 
+				
+				***Numeric.*** $\cal{N}[n] = n$. 
+				
+				N takes a string literal number, and parses its corresponding number. This is similar to A in that e.g. $\cal{N}[67] \equiv \cal{A}[67]\;s  \equiv 67$. The difference is N does not take a store, as literal numbers do not need a store, whilst A requires a store to retrieve variable values. 
+				
+				***Boolean.*** $\cal{B}[b] \in \{\top, \bot\}$ 
+				
+				B takes a string literal boolean $\true, \false$, and a store, and parses its corresponding truth value $\top, \bot$. So
+				* $\cal{B}[\true] = \lambda s \cdot \top$ and $\cal{B}[\false] = \lambda s \cdot \bot$
+				* $\cal{B}[a_1 = a_2] = \lambda s \cdot \if \A[a_1] \; s = \A[a_2] \; s \then \top \else \bot$
+				* $\B[b_1 \land b_2] = \lambda s \cdot \B[b_1] \; s \AND \B[b_2]$. **Note:** The notation used by Sara is "&&" for the and operation (not the string) but since that does not play as nice with $\LaTeX$ I will use capitalised **AND**. 
+				
+				***Command.*** $\C[c]$.
+				
+				C takes a string literal command, and a store, and parses command operations based on what it gets:
+				* $\C[\skip] = \lambda s \cdot s$ (no operation)
+				* $\C[v:=a] = \lambda s \cdot s[v \mapsto \A[a]\;s]$ (variable assignment)
+				* $\C[c_1; c_2] = \lambda s \cdot \C[c_2] \; (\C[c_1] \; s)$ (sequencing)
+				* $C[\while b \do c] = \lambda s \cdot \C[\if b \then \C[\while b \do c]\; s]\; s$. (while loops -- this is recursion which can get... strange).
+				
+				A, N, B, C convert IMP to **natural semantics**.
+				
+				<hr>
+				
+				We can also do **operational semantics**, using **configurations**.
+				
+				***Configuration.*** A configuration is a pair of command and store: $\langle c, s \rangle \implies \cdots$.
+				
+				E.g. 
+				$$
+				\begin{align*}
+				\langle v:=a, s\rangle &\implies s[v \mapsto \A[a]\; s]\\
+				\langle \skip, s\rangle &\implies s\\
+				\langle c_1; c_2, s\rangle &\implies \cdots
+				\end{align*}
+				$$
+				Where if we have sequencing, we can use our natural deduction style:
+				$$
+				\frac{
+				\begin{matrix}\langle c_1, s\rangle \implies s'  && \langle c_2, s'\rangle \implies s''\end{matrix}
+				}{
+				\langle c_1; c_2, s\rangle  \implies s''
+				}
+				$$
+				$$
+				\frac{
+				\begin{matrix}\B[b] \; s  = \top && \langle c_1, s \rangle \implies s'\end{matrix}
+				}{
+				\langle \if b \then c_1 \else c_2, s\rangle \implies s'
+				}
+				$$
+				And so on and so forth.
+				
+				***Example.*** Verify the program `y := 1; while ~(x=1) do (y := y * x; x := x - 1)` in the store $s_0 = [x \mapsto 2]$
+				
+				***Answer.*** Proof trees! Wide.
+				$$
+				\frac{
+					\begin{matrix}
+					\dfrac{}{\langle y:=1, [x \mapsto 2]\rangle \implies [x \mapsto 2, y \mapsto 1] = s_1} & 
+					\dfrac{
+						\begin{matrix}
+						\dfrac{}{\langle \B[\lnot (x=1)], s_1 \rangle \implies \bot} & 
+						\dfrac{
+						\vdots
+						}{
+						\langle y := y * x; x := x - 1, s_1\rangle \implies [x \mapsto 1, y \mapsto 2] = s_2 
+						}
+						&
+						\dfrac{\vdots}{\while \sim(x=1) \do (c_1, c_2), s_2\rangle \implies s_2} 
+						\end{matrix}
+					}{
+					\langle \while \sim(x=1) \do (c_1, c_2), s_1\rangle
+					\implies s_2
+					}
+					\end{matrix}
+				}{
+				\langle y:=1; \while \sim(x=1) \do (c_1, c_2), [x \mapsto 2]\rangle \implies s_2 = [y \mapsto 2, x \mapsto 1]
+				}
+				$$
+				You get the idea. 
+				
+				<hr>
+				
+				We can also do **small step semantics**, proving one specific reduction 
+				
+				$$
+				\frac{
+				\langle c_1, s\rangle \lra s'
+				}{
+				\langle c_1;c_2 , s \rangle \lra \langle c_2, s \rangle 
+				}
+				$$
+				$$
+				\frac{
+				\langle c_1, s \rangle \lra \langle c_1', s' \rangle 
+				}{
+				\langle c_1; c_2 , s \rangle \lra \langle c_1' ; c_2 , s'\rangle 
+				}
+				$$
+				Which is when $c_1$ can be broken down -- i.e. it consists of multiple single commands. 
+				
+				$$
+				\langle \while b \do c, s\rangle \lra \langle \if b \then (c; \while b \do c) \else \skip, s \rangle
+				$$
+				
+				In imperative languages, because we have *shudder* side effects, we may actually get into a stuck state, in which $\implies$ is difficult to get but $\lra$ is still perfectly fine (until the stuck).
+			</div>
+
+			<div class="md-conv" id="block">
+				### BLOCK 
+
+				**BLOCK** is an extension to IMP that introduces **variable scope**. An example is given below:
+			</div>
+
+			<div class="codediv">begin 
+	var x := 0; var y := 1;
+	begin 
+		var x := 2; y := x + 1
+	end;
+	x := y + x
+end;</div>
+
+			<div class="md-conv">
+				We extend the command syntax to include a block declaration:
+				
+				$$
+				\DeclareMathOperator*{\scope}{begin}
+				\DeclareMathOperator*{\close}{end}
+				\DeclareMathOperator*{\var}{var}
+				\newcommand{\DV}{\cal{DV}}
+				\newcommand{\dimplies}{\underset{D}{\implies}}
+				\begin{align*}
+					c & := \cdots \gang \scope d_v \; c \close \\
+					d_v & := \var v := a; d_v \gang \epsilon
+				\end{align*}
+				$$
+
+				And we have the following declaration rules of $\dimplies$, which is resolution of a declaration.
+				\[
+				\frac{
+					\langle d_v, s[v \mapsto \A[a]\; s] \rangle \dimplies s'
+				}{
+				\langle \var v := a ; d_v , s \rangle \dimplies s'
+				}
+				\]
+				Which is a new binding -- we update it as such in the store and repeat for all declarations.
+				\[
+				\frac{}{\langle \epsilon, s \rangle \dimplies s}
+				\]
+				Which is the base case of emptiness.
+				\[
+				\frac{
+					\begin{matrix}
+						\langle d_v, s \rangle \dimplies s' && \langle c, s' \rangle \implies s''
+					\end{matrix}
+				}{
+				\langle \scope d_v \; c \close, s \rangle \implies s''[\DV (d_v) \mapsto s]
+				}
+				\]
+				* Top left: we evaluate the declaration to get all variable bindings in scope. 
+				* Top right: we evaluate the commands under the scope made 
+				* Bottom: Reassign any variables from the outer scope that were changed in the inner scope. $\DV$ 
+
+				***Example.*** Let's take the code mentioned before and track the stores
+			</div>
+
+			<div class="codediv">				   			<span class="grey">\(s_0 = []\)</span>
+begin var x := 0;  			<span class="grey">\(s_1 = [x \mapsto 0]\)</span>
+	  var y := 1;  			<span class="grey">\(s_2 = [x \mapsto 0, y \mapsto 1]\)</span>
+	  begin var x := 2; 	<span class="grey">\(s_3 = [x \mapsto 2, y \mapsto 1]\)</span>
+			y := x + 1  	<span class="grey">\(s_4 = [x \mapsto 2, y \mapsto 3]\)</span>
+	  end;					<span class="grey">\(s_5 = [x \mapsto 0, y \mapsto 3]\) (return to outer x)</span>
+	  x := y + x 			<span class="grey">\(s_6 = [x \mapsto 3, y \mapsto 3]\)</span>
+end;			</div>
+
+			<div class="md-conv">
+
+				<hr>
+
+				It can be somewhat difficult to keep track of things when name collisions are a thing, such as the rescoping of `x`. 
+
+				So we introduce **environments**, and now variables are **pointers to environments**. This way we get around the name collision. 
+
+				* Now **Environments** map **variables -> locations** 
+				* **Stores** map **locations -> values**.
+
+				So now we can modify things, like A to become 
+				$$
+				\A[v] = \lambda E_v \cdot \lambda s \cdot s \; (E_v \; v)
+				$$
+				Variable -> env -> location -> store -> value.
+
+				Now we can use environments in our proofs $E_v \types \langle c, s \rangle \implies s'$.
+
+				We now modify the `begin end` rule to 
+				\[
+				\frac{
+					\begin{matrix}
+						\langle d_v,E_v, s \rangle \dimplies E'_v, s' && E_v \types \langle c, s' \rangle \implies s''
+					\end{matrix}
+				}{
+				E_v \types \langle \scope d_v \; c \close, s \rangle \implies s''[\DV (d_v) \mapsto s]
+				}
+				\]
+				The declaration now takes an environment. 
+
+				A single variable declaration looks like 
+				\[
+				\langle \var x := a, E_v, s \rangle \dimplies E_v[x \mapsto l], s[l \mapsto \A[a] \; E_v \; s]
+				\]
+
+				Thus a list of declarations looks like 
+				\[
+				\frac{
+					\langle d_v,E_v, s \rangle \dimplies E'_v, s'
+				}{
+					\langle \var x := a; d_v, E_v, s \rangle \dimplies E'_v[x \mapsto l], s'[l \mapsto \A[a] \; E_v \; s]
+				}
+				\]
+			</div>
+
+			<div class="md-conv" id="proc">
+				### PROC
+
+				I'll get onto this later... famous last words.
+			</div>
+		</div>
 
 		<footer>
 			<div class="cbox">
