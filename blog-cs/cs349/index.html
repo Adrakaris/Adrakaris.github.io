@@ -1709,6 +1709,7 @@
 				1. [IMP](#imp-1)
 				2. [BLOCK](#block)
 				3. [PROC](#proc)
+				4. [Types](#proc-types)
 
 				$
 				\newcommand{\A}{\cal{A}}
@@ -1987,7 +1988,241 @@ end;			</div>
 			<div class="md-conv" id="proc">
 				### PROC
 
-				I'll get onto this later... famous last words.
+				With block scoping, we can begin to make **procedures**. At the same time we can break both your and my minds even more (:
+
+				Define new procedure syntax as 
+				$$
+				\DeclareMathOperator*{\call}{call}
+				\DeclareMathOperator*{\proc}{proc}
+				\DeclareMathOperator*{\is}{is}
+				\newcommand{\hra}{\hookrightarrow}
+				\begin{align*}
+				c:&= \cdots \gang \scope d_v \; d_p \; c \close \gang \call p\\
+				d_v :&= \var v:=a; d_v \gang \epsilon \\
+				d_p :&= \proc p \is c; d_p \gang \epsilon 
+				\end{align*}
+				$$
+				Where now we have block variable declarations $d_v$ and procedure declarations $d_p$.
+				
+				The simplest procedure is just a command. An example is follows:
+			</div>
+			<div class="codediv">begin var x := 0;
+	  var y := 1;
+	  proc p is x := x * 2;
+	  proc q is call p;
+	  begin var x := 5;
+			proc p is x := x + 1;
+			call q;
+			y := x
+	  end;
+end;</div>
+			<div class="md-conv">
+				This is a PROC program. It is also a bad proc program because it's really ambiguous. 
+				
+				Note how we have two separate definition of `p` in the inner scope and in the outer scope. And then we have a `q` in the outer scope which is defined as `call p`. But, which `p` does it go to? The inner scope `p` or the outer scope `p`? (`AUDIENCE: (screams)`)
+				
+				There are several sematic approaches to fix this:
+				* Have dynamic variable and procedure scope 
+				* Dynamic variable scope and static procedure scope 
+				* or Static variable and procedure scope. 
+				
+				In the first one, procedures are stored in an environment $E_p$:
+				$$
+				E_p : n \mapsto c \pod{1}
+				$$Name of procedure $n$ maps to command $c$. But we need to store the procedure environment when that procedure was created, as it may call other procedures, so 
+				$$
+				E_p : n \mapsto (c \times E_p) \pod{2}
+				$$
+				But we also need to store the variable environment for when that procedure was created, so 
+				$$
+				E_p : n \mapsto (c \times E_p \times E_v) \pod{3}
+				$$
+				
+				So we can have the declaration rule for (3) as:
+				$$
+				\frac{
+				\begin{matrix}
+				\langle \proc p \is c,\; E_p,\; E_v\rangle \dimplies E_p[p \mapsto \{C, E_p, E_v\}] = E'_p && \langle d_p, E'_p \rangle \dimplies s' \end{matrix}
+				}{
+				\langle \proc p \is c; d_p,\; E_p,\; E_v,\; s \rangle \dimplies s'
+				}
+				$$
+				
+				The rule for call for **dynamic scope** is 
+				$$
+				\newcommand{\frak}{\mathfrak}
+				\dfrac{
+				E_p \types \langle c, s\rangle \implies s'
+				}{
+				E_p \types \langle \call p, s\rangle \implies s'
+				}  \pod{\textrm{where }E_p(p) = c}
+				$$
+				
+				The rule for begin is 
+				$$
+				\frac{
+				\begin{matrix}
+				\langle d_v, s \rangle \dimplies s' &&
+				\frak{U}(d_p, E_p) \types \langle c, s' \rangle \implies s''
+				\end{matrix}
+				}{
+				E_p \types \langle \scope d_v \; d_p \; c \close, \;s \rangle \lra s''[DV(d_v) \mapsto s]
+				}
+				$$
+				Where 
+				* Fraktur $\frak{U}$ is a function called **update** which adds $d_p$s to $E_p$ defined as 
+				$$
+				\begin{align*}
+					\frak{U}(\proc p \is c; d_p,\;E_p) &= \frak{U} (d_p, \;E_p[p \mapsto c])\\
+				\frak{U}(\epsilon, E_p) &= E_p
+				\end{align*}
+				$$
+				* This is a recursive update function for **dynamic scope** that registers all functions in the scope 
+				* For exiting a block we use a **single step** single arrow 
+				* $DV(\cdot)$ is declared variables, and the whole process is restoring variables. 
+				
+				Then for static scoping update must also store environment:
+				$$
+				\begin{align*}
+					\frak{U}(\proc p \is c; d_p,\;E_p) &= \frak{U} (d_p, \;E_p[p \mapsto \{c, E_p\}])\\
+				\frak{U}(\epsilon, E_p) &= E_p
+				\end{align*}
+				$$
+				And our call must be modified to 
+				$$
+				\newcommand{\frak}{\mathfrak}
+				\dfrac{
+				E_p[p \mapsto \{c, E_p'\}] \types \langle c, s\rangle \implies s'
+				}{
+				E_p \types \langle \call p, s\rangle \implies s'
+				}  \pod{\textrm{where }E_p(p) = \{c, E_p'\}}
+				$$
+				Where 
+				* $E_p[p \mapsto \{c, E_p'\}]$ is to deal with recursive environments
+				* and our condition on call now includes scope. 
+				
+				For **static procedure and variable scope** we also add $E_v$ to the procedure environment mapping. 
+				
+				Our declaration syntax then becomes 
+				$$
+				\frac{
+				\begin{matrix}\langle d_v, E_v, s \rangle \dimplies E_v', s' &&
+				E_v', E_p', \types \langle c, s' \rangle \implies s''\end{matrix}
+				}{
+				E_v, E_p \types \langle \scope d_v\; d_p\; c \close , s\rangle \implies s''
+				} \pod{\textrm{where }E_p' = \frak{U}(d_p, E_v', E_p)}
+				$$
+				Call becomes 
+				$$
+				\newcommand{\frak}{\mathfrak}
+				\dfrac{
+				E_v',E_p'[p \mapsto \{c, E_v', E_p'\}] \types \langle c, s\rangle \implies s'
+				}{
+				E_v, E_p \types \langle \call p, s\rangle \implies s'
+				}  \pod{\textrm{where }E_p(p) = \{c, E_v', E_p'\}}
+				$$
+				
+				Since we have to write $E \types c \implies$ to describe what a command does, often in other notations this is abbreviated to $[c]$ or the same thing except with blackboard bold square brackets.
+
+				#### Parametric Procedures 
+
+				The thing that stands out on the page the most here is "頭痛" which means "headache", so you have been warned.
+				
+				Procedures with parameters, basically. 
+				$$
+				d_p := \proc p(v) \is c
+				$$
+				
+				The syntax rules also depend on whether we 
+				* **call by value**: $c := \cdots \gang \call p(a)$ where $a$ is resolvable via $\cal{A}$.
+				* **call by reference**: $c:= \cdots \gang \call p(v)$ where $v$ is a variable. 
+				
+				Call by value syntax goes 
+				$$
+				\frac{
+				E_p', E_v'[v \mapsto l] \types \langle c, s[l \mapsto \cal{A}[a]\; E_v\; s] \rangle \implies s'
+				}{
+				E_v, E_p \types \langle \call p(a), s\rangle \implies s'
+				} \textrm{ where } E_p(p) = (c, v, E_p', E_v') \textrm{ and a new } l
+				$$
+				Where 
+				* $E_v'[v \mapsto l]$ is then discarded but the $s[l \mapsto \cal{A}[a]\; E_v\; s]$ is not deleted, as we can just rely on a garbage collector to get rid of it
+				
+				Call by reference syntax goes 
+				$$
+				\frac{
+				E_p', E_v'[v \mapsto E_v(w)] \types \langle c,s \rangle \implies s'
+				}{
+				E_p, E_v \types \langle \call p(w), s \rangle \implies s
+				} \textrm{ where } E_p(p) = (c, v, E_p', E_v')
+				$$
+				Where 
+				* $E_v'[v \mapsto E_v(w)]$ links $v$ inside the procedure to the variable $w$ that is passed in 
+				* $p(v)$ is the formal parameter in definition, $p(w)$ is the passed in param.
+				
+				Of course many languages have both call by value and by reference... or technically have both due to the use of pointers. 
+				
+				
+				
+				
+			</div>
+
+			<div class="md-conv" id="proc-types">
+				### Types 
+				
+				For imperative languages, we start to run into pointers. So we need to increase our typing repertoire.
+				
+				Let the generic **command** type be $\cal{C}$. 
+				
+				The types of **variables** uses the **ref** constructor:
+				$$
+				\DeclareMathOperator{\ref}{ref}
+				\DeclareMathOperator{\Ref}{Ref}
+				\DeclareMathOperator{\deref}{deref}
+				\frac{
+				\Gamma \types M \type A
+				}{
+				\Gamma \types \ref M \type \Ref A
+				}
+				$$
+				$$
+				\frac{
+				\Gamma \types M \type \Ref A
+				}{
+				\Gamma \types \deref M \type A
+				}
+				$$
+				Ref is like `&var : int*` and deref is like `*var : int`.
+				
+				Thus 
+				$$
+				\frac{
+				\begin{matrix}
+				\Gamma \types \ref v \type \Ref A && \Gamma \types N \type A
+				\end{matrix}
+				}{
+				\Gamma \types v := N \type \cal{C}
+				}
+				$$
+				
+				We can also consider explicitly typed variables 
+				$$
+				\frac{
+				\Gamma\types E \type A
+				}{
+				\Gamma \types \var I:A =E \type \{(I:\Ref A)\}
+				}
+				$$
+				Where $I$ is the variable identifier and $A$ is the type: $\var x:\textrm{int} = 3$.
+				
+				Procedures can be assigned the type $\DeclareMathOperator*{\Proc}{Proc}\Proc$. 
+				$$
+				\frac{
+				\Gamma \types c \type \cal{C}
+				}{
+				\Gamma \types \proc p= c \type \{(p:\Proc)\}
+				}
+				$$
 			</div>
 		</div>
 
