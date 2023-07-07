@@ -697,12 +697,20 @@ table {
     margin-right: auto;
 }
 
-
-
 table, th, td {
     border-collapse: collapse;
     border-top: 1px solid var(--pink);
     border-bottom: 1px solid var(--pink);
+}
+
+table.gb, table.gb th, table.gb td {
+    border-top: 1px solid var(--green);
+    border-bottom: 1px solid var(--green);
+}
+
+table.gr, table.gr th, table.gr td {
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
 }
 
 th, td {

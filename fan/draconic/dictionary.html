@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Draconic Dictionary</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIconGreen.png">
+	<script type="text/javascript" src="./dictionaryindex.js" defer></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<!-- GREEN -->
+		<header class="green">
+			<div class="parallax smallfan" >
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 10fr; grid-column-gap: 10px; padding: 5px;">
+					<div class="column">
+						<a href="../../fan/" class="nav">Home</a>
+					</div>
+					<div class="column">
+						<a href="../../fan/blog-fan.html" class="nav">Blog</a>
+					</div>
+					<div class="column">
+					</div>
+				</div>
+				<div class="cbox overlay"> 		
+					<h1>Draconic</h1>
+				</div>
+			</div>
+		</header>
+
+		<header class="green">
+			<div class="cbox">
+				<h1>Dictionary</h1>
+			</div>
+		</header>
+
+		<div class="cbox">
+			<p></p>
+
+			<div class="buttonwrapper green">
+				<a href="./">Back</a>
+			</div>
+			<p></p>
+			
+			<div class="md-conv">
+				Round brackets indicate definitions for ancient draconic only.
+
+				Square brackets give contextualisations to one or more of the definitions.
+
+				Words separated by spaces in the query do not need to be consecutive in the dictionary.
+			</div>
+		</div>
+
+		
+		<div class="colourband green">
+			<h2>Dictionary</h2>
+			<input id="se" class="search" type="text" placeholder="Search...">
+            <button id="sb" type="submit" class="search" style="background-color: var(--green);">Go</button>
+		</div>
+		
+		<div class="cbox w">
+			<table id="dictionary" class="gr" style="width: 100%;">
+
+			</table>
+		</div>
+
+		<footer class="green">
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<!-- <script type="text/javascript" src="../../js/collapsible.js"></script>  This stays at the end -->
+	<!-- <script type="text/javascript" src="../../js/prism.js"></script> -->
+	<script type="text/javascript" src="../../js/markdown.js"></script>
+</body>
+</html>
