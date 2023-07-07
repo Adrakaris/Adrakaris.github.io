@@ -78,17 +78,21 @@ function resetTable(table) {
 
 function refilterTable(table, dictArray, keyword) {
     keyword = keyword.trim();
-    console.log("keyworld " + keyword);
-    if (keyword === "") return dictArray;
-    let keywords = keyword.split(" ")
+    console.log("keyword " + keyword);
+    let newArray;
+    if (keyword !== "") {
+        let keywords = keyword.split(" ")
 
-    let title = dictArray.slice(0,1);
-    let result = dictArray.slice(1).filter(row => {
-        // console.log(row);
-        return keywords.every(kw => row.some(e => e.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().includes(kw)));
-    });
-    console.log(result);
-    let newArray = title.concat(result);
+        let title = dictArray.slice(0,1);
+        let result = dictArray.slice(1).filter(row => {
+            // console.log(row);
+            return keywords.every(kw => row.some(e => e.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase().includes(kw)));
+        });
+        newArray = title.concat(result);
+    } else {
+        newArray = dictArray;
+    }
+    
     resetTable(table);
     fillTable(table, newArray);
 }
@@ -96,10 +100,9 @@ function refilterTable(table, dictArray, keyword) {
 
 function main(req) {
     var table = document.getElementById("dictionary");
-    var dictArray;
 
-    dictArray = sortDictionary(req.responseText);
-    fillTable(table, dictArray);
+    const DICTIONARY = sortDictionary(req.responseText);
+    fillTable(table, DICTIONARY);
 
     // ================================================================
     // SEARCH FUNCTIONALITY
@@ -110,7 +113,7 @@ function main(req) {
     iButton.addEventListener("click", function() {
         // do the search logic
         // console.log(`click, ${document.querySelector("#se").value}`)
-        refilterTable(table, dictArray, iText.value.toLowerCase());
+        refilterTable(table, DICTIONARY, iText.value.toLowerCase());
     });
     
     iText.addEventListener("keyup", function(event) {
