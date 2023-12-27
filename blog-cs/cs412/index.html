@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS412</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+	<div class="hidden">
+		<header>
+			<div class="parallax parsmaller">
+				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 8fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+					<div class="column tinycolumn">
+						<a href="../../" class="nav">Home</a>
+					</div>
+					<div class="column tinycolumn">
+						<a href="../../blog.html" class="nav">Blog</a>
+					</div>
+					<div class="column tinycolumn">
+						
+						<a href="../../about.html" class="nav">About</a>
+					</div>
+					<div></div>
+					<div class="column">
+						<button class="nav dark-light">Dark Mode</button>
+					</div>
+				</div>
+				<div class="cbox"> 		
+					<h1>CS412</h1>
+					<p class="subheading">Formal Systems</p>
+				</div>
+			</div>
+		</header>
+
+		<header>
+			<div class="cbox">
+				<h1>Contents</h1>
+			</div>
+		</header>
+
+		<style>
+			r-r {
+				float: right;
+			}
+		</style>
+
+
+		<div class="cbox">
+			<div class="blue md-conv" style="text-align: center;">
+				**IMPORTANT NOTES**
+
+				This is not an exhaustive list of B syntax. This also does not explain Atelier B's syntax quirks in any thorough manner.
+
+				[Atelier] B mandates that no identifiers be one letter long, i.e. you can't have $x$, $y$, etc. and it has to be $xx$, $yy$, etc. But this is stupid in display maths and generally affects readability -- actually name your variables. Thus, for single letter variables:
+				
+				**Variables may not have double letters.**
+
+				Fill them in yourself in your head, or use actual variable names in code.
+			</div>
+
+			<div class="md-conv">
+				### Contents
+
+				1. [Référence du système B](#reference)
+			</div>
+		</div>
+
+		
+		<div class="colourband">
+			<h2 id="reference">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Animated-Flag-First-French-Republic.gif" alt="" style="display: inline; max-height: 1em;"> 
+				Référence du système B
+				<img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Animated-Flag-First-French-Republic.gif" alt="" style="display: inline; max-height: 1em;"> 
+			</h2>
+		</div>
+		
+		<div class="cbox">
+			<div class="md-conv">
+				## Contents 
+
+				1. [Layout](#ref-layout)
+				2. [Structures](#ref-structures)
+				3. [Notation](#ref-notation)
+			</div>
+
+			<div class="md-conv" id="ref-layout">
+				### Layout 
+
+				The general layout of B:
+			</div>
+			<div class="codediv">
+MACHINE
+	MachineName(params)  <span class="grey">// machine name and params </span>
+
+CONSTRAINTS
+	params : NAT  <span class="grey">//constraints of parameters</span>
+
+SETS
+	ONES; TWOS;  <span class="grey">// deferred sets </span>
+	RESP = {yes, no}  <span class="grey">// enumerated sets</span>
+
+CONSTANTS
+	const  <span class="grey">// declar names</span>
+
+PROPERTIES
+	const : NAT1  <span class="grey">// define properties about sets and constants </span>
+
+VARIABLES
+	vara, varb  <span class="grey">// declare names</span>
+
+INVARIANT  <span class="grey">// states constants about the machine that must always be true</span>
+		   <span class="grey">// includes types (what variable element of which)</span>
+	vara : NAT1 & varb : NAT &
+	P & Q
+
+INITIALISATION  <span class="grey">// gives initial values to variables (must obey invariant)</span>
+	vara := 1 || varb := 0
+
+OPERATIONS <span class="grey">// defines the machine operations (the important bit)</span>
+
+	addOne = PRE <span class="grey">// preconditions</span>
+		varb < MAXINT
+	THEN
+		varb := varb + 1
+	END;
+
+	out <-- read = out := varb  <span class="grey">// note this one-liner without </span>
+								<span class="grey">preconditions doesn't need an END</span>
+END</div>
+
+			<hr>
+
+			<div class="md-conv" id="ref-structures">
+				## Structures
+
+				Important structures to know. 
+				\(
+					\newcommand{\b}{\textbf}	
+					\newcommand{\B}{\textbf}	
+					\newcommand{\bb}{\mathbb}	
+					\newcommand{\N}{\mathbb{N}}	
+					\newcommand{\No}{\mathbb{N}_1}	
+					\DeclareMathOperator*{\card}{card}
+					\DeclareMathOperator*{\dom}{dom}
+					\DeclareMathOperator*{\ran}{ran}
+					\DeclareMathOperator*{\pow}{\mathbb{P}}
+					\DeclareMathOperator*{\llra}{\longleftrightarrow}
+					\DeclareMathOperator*{\skip}{skip}
+					\DeclareMathOperator*{\seq}{seq}
+					\DeclareMathOperator*{\seqo}{seq_1}
+					\DeclareMathOperator*{\iseq}{iseq}
+					\DeclareMathOperator*{\perm}{perm}
+					\DeclareMathOperator*{\size}{size}
+					\DeclareMathOperator*{\rev}{rev}
+					\DeclareMathOperator*{\first}{first}
+					\DeclareMathOperator*{\last}{last}
+					\DeclareMathOperator*{\tail}{tail}
+					\DeclareMathOperator*{\front}{front}
+					\newcommand{\lessplus}{&lt;\kern-6pt +\;}
+					\newcommand{\pfunc}{\kern3pt +\kern-12pt \longrightarrow}
+					\newcommand{\pinj}{\kern3pt +\kern-12pt \rightarrowtail}
+					\newcommand{\inj}{\rightarrowtail}
+					\newcommand{\surj}{\twoheadrightarrow}
+					\newcommand{\bij}{\kern3pt \rightarrowtail\kern-8pt \twoheadrightarrow}
+				\)
+
+				\(
+					\DeclareMathOperator*{\bmachine}{\b{MACHINE}}
+					\DeclareMathOperator*{\bconstraints}{\b{CONSTRAINTS}}
+					\DeclareMathOperator*{\bbegin}{\b{BEGIN}}
+					\DeclareMathOperator*{\bend}{\b{END}}
+					\DeclareMathOperator*{\bpre}{\b{PRE}}
+					\DeclareMathOperator*{\bif}{\b{IF}}
+					\DeclareMathOperator*{\bcase}{\b{CASE}}
+					\DeclareMathOperator*{\bany}{\b{ANY}}
+					\DeclareMathOperator*{\blet}{\b{LET}}
+					\DeclareMathOperator*{\bchoice}{\b{CHOICE}}
+					\DeclareMathOperator*{\bselect}{\b{SELECT}}
+					\DeclareMathOperator*{\bthen}{\b{THEN}}
+					\DeclareMathOperator*{\belse}{\b{ELSE}}
+					\DeclareMathOperator*{\beither}{\b{EITHER}}
+					\DeclareMathOperator*{\bwhere}{\b{WHERE}}
+					\DeclareMathOperator*{\bwhen}{\b{WHEN}}
+					\DeclareMathOperator*{\bor}{\b{OR}}
+					\DeclareMathOperator*{\bof}{\b{OF}}
+					\DeclareMathOperator*{\bbe}{\b{BE}}
+					\DeclareMathOperator*{\bin}{\b{IN}}
+				\)
+
+				***Preconditons.*** Usually around most operations with parameters. Parameters passed must match preconditions, else behaviour is undefined (this is useful when we deabstract everything). Written as
+
+				$$\bpre P \bthen B \bend$$ 
+
+				Where $P$ is the predicate condition and $B$ is the operation.
+
+				Operations are stateless and instantaneous (no doing one thing after another).
+
+				***Conditionals.*** If statements.
+
+				$$\bif E \bthen S \b{ ELSE } T \bend$$ 
+
+				The else block is optional.
+
+				***Conditionals.*** Switch cases. 
+
+				\begin{align}
+					\bcase E \bof \;&\beither e_1 \bthen T_1 \\ 
+					&\bor e_2 \bthen T_2 \\ 
+					&\bor \dots \\
+					&\b{ELSE } V \\
+					&\bend
+				\end{align}
+
+				Often seen over finite sets. Works as you'd expect a switch statement to work.
+
+				***Block.*** A begin-end block. Used only for increasing readability.
+
+				$$ \bbegin S \bend $$
+
+				***Machine parameters.*** Values which can be passed in when a machine is instantiated. Write next to the machine in *brackets* like how you'd write a function signature.
+
+				$$ \bmachine Store(ITEM, capacity) $$
+
+				*Upper-case* parameters are treated as deferred sets, whilst *lower-case* parameters are treated as constants. Constants must have their type specified in the $\bconstraints$ clause, whilst sets can be left as-is.
+
+				$$\bconstraints capacity \in \No \land capacity \leq 4096$$
+
+				One should ensure that the constraints can actually be met.
+
+				***Let.*** Allows a variable to stand in place of a value in a block statement.
+
+				$$\blet x \bbe x = E \bin S \bend$$ 
+
+				This is the deterministic version of the $\bany$ structure that is below.
+
+
+				#### Nondeterministic structures
+
+				***Any.***  Allows an arbitrary choice of variable value in a statement.
+
+				$$ \bany x \bwhere Q \bthen T \bend $$ 
+
+				For example: $\bany n \bwhere n \in \No \bthen total := total \times n \bend$. This can be done over multiple variables:
+
+				\begin{align}
+					&\bany dx, dy \bwhere dx \in \No \land dy \in \No \land dy \gt dx \\
+					&\bthen x := x + dx || y := y + dy \\ 
+					&\bend
+				\end{align}
+
+				***Choice.*** Choose any one of multiple outcomes to execute.
+
+				$$ \bchoice S \bor T \bor \dots \bor U \bend $$
+
+				This can be used to describe *allowable outcomes*. Each branch in a choice statement can also be non-deterministic, thus you can nest $\bany$s in $\bchoice$s.
+
+				***Select.*** The non-deterministic version of the switch statement. The conditions in a select can overlap, leading to multiple possible outputs.
+
+				\begin{align}
+					&\bselect Q_1 \bthen T_1 \\
+					&\bwhen Q_2 \bthen T_2 \\ 
+					&\cdots \\
+					&\bwhen Q_n \bthen T_n \\
+					&\belse V \bend 
+				\end{align}
+
+				Where the $Q$s are predicates, the $T$s are statements, and the else clause is optional.
+				
+			</div>
+
+			<hr>
+
+			<div class="md-conv" id="ref-notation">
+				## Notation 
+
+				Display maths notation and code notation are both shown. If one is missing that means I forgot and cannot yet be bothered to look it up. 
+
+				Some B notation is difficult to display in mathjax -- I will be using the closest possible variants.
+
+				My code font also has ligatures, bear that in mind.
+
+				#### General B notation:
+
+				* assignment: $x := y$ <r-r>`x := y`</r-r>
+				* parallel operation: $x := y || y := z$ -- does NOT assign z to x since it is done in parallel. <r-r>`x := y || y := z`</r-r>
+				* parallel assign: $x, y := y, z$ <r-r>`x,y := y,z`</r-r>
+				* no operation: $\skip$ <r-r>`skip`</r-r>
+				* operation return: $o \longleftarrow operation = \cdots$ <r-r>`oo &lt;-- operation = ...`</r-r>
+
+				#### Set Notation
+
+				* empty set: $\{\}$  <r-r>`{}`</r-r>
+				* member: $e \in S$  <r-r>`e : S`</r-r>
+				* not member: $e \not\in S$  <r-r>`e /: S`</r-r>
+				* subset: $S \subseteq T$ ; <r-r>`S &lt;: T`</r-r>
+				* union: $S \cup T$ <r-r>`S \/ T`</r-r>
+				* intersection: $S \cap T$ <r-r>`S /\ T`</r-r>
+				* subtraction: $S - T$ <r-r>`S - T`</r-r>
+				* big union: $\bigcup S$
+				* big intersect: $\bigcap S$
+				* powerset: $\pow S$ <r-r>`POW(S)`</r-r>
+				* cartesian product: $S \times T$ <r-r>`S * T`</r-r> 
+				* cardinality (size): $\card(s)$ <r-r>`card(S)`</r-r>
+				* naturals with 0: $\N$ <r-r>`NAT`</r-r>
+				* naturals without 0: $\No$ <r-r>`NAT1`</r-r>
+				* set comprehension: $\{ x | x \in T \land P\}$ <r-r>`{x|x : T & P}`</r-r>
+				* range between $m$ and $n$ inclusive: $m..n$ <r-r>`m..n`</r-r>
+
+				#### Logic Notation 
+
+				* and, or, not: $\land, \lor, \lnot$ <r-r>`&`,  `or`,  `not`</r-r>
+				* implies, equivalence: $\implies, \iff$ <r-r>`=>`, `&lt;=>`</r-r>
+				* universal (forall): $\forall x \cdot x \in T \implies P$ <r-r>`!(x).(x : T => P)`</r-r>
+				* existential (there exists): $\exists x \cdot x \in T \land P$ <r-r>`#(x).(x : T & P)`</r-r>
+
+				Remember to pay attention to which variables are *bound* in first order logic.
+
+				#### Arithmetic Notation 
+
+				* equals, less than, greater than: <r-r>`=`, `&lt;`, `&gt;`</r-r>
+				* less than equals, greater than equals: <r-r>`&lt;=`, `>=`</r-r>
+				* not equals: $\neq$ <r-r>`/=`</r-r>
+				* add, subtract, multiply, divide: <r-r>`+`, `-`, `*`, `/`</r-r>
+				* summation: $\sum x \cdot (x \in T | f(x))$ where $f(x)$ is the expression to sum. <r-r>`SIGMA (x) . (x:T | f(x))`</r-r>
+
+				#### Relation Notation
+				
+				Relations between two sets describes mappings of elements from one set to another. Note that a relation $X \llra Y$ can be described as a set of pairs $(x,y) : x \in X \land y \in Y$.
+
+				* set (type) of all relations between X and Y: $X \llra Y$ <r-r>`X &lt;-&gt; Y`</r-r>
+				* element $x$ maps to $y$: $x \mapsto y$ <r-r>`x |-&gt; y`</r-r>
+				* domain of relation: $\dom(R)$ <r-r>`dom(R)`</r-r>
+				* range of relation: $\ran(R)$ <r-r>`ran(R)`</r-r>
+				* domain restriction: $U \triangleleft R$, all mappings $x \mapsto y$ in R where $x \in U$. <r-r>`U &lt;| R`</r-r>
+				* domain subtraction: $U \blacktriangleleft R$, all mappings $x \mapsto y$ in R where $x \not\in U$. <r-r>`U &lt;|| R`</r-r>
+				* range restriction: $R \triangleright U$, all $x \mapsto y$ in R where $y \in U$. <r-r>`R |> U`</r-r>
+				* range subtraction: $R \blacktriangleright U$, all $x \mapsto y$ \in R where $y \not\in U$. <r-r>`R ||> U`</r-r>
+				* relational image: $R[U]$, all $y$ where $x \mapsto y \in R$ and $x \in U$. <r-r>`R[U]`</r-r>
+				* relational inverse: $R^{-1}$, the set $\{y \mapsto x | x \mapsto y \in R\}$. <r-r>`R'`</r-r>
+				* relation composition: $R;S$, given $R \in X \llra Y \land S \in Y \llra Z$, produces the relation $R;S \in X \llra Z$ where $x\mapsto z \in (R;S) \implies x \mapsto y \in R \land y \mapsto z \in S$. <r-r>`R ; S`</r-r>
+				* identity relation: $id(S)$, the relation of every element in S to itself.
+				* repeated composition: $R^n$ relation R composed to itself $n$ times.
+				* relation overriding: $R \lessplus S$, where R and S relate the same sets, substitutes all mappings $x \mapsto y \in R$ for corresponding $x \mapsto y' \in S$, if $x$ is present in both domains. <r-r>`R &lt;+ S`</r-r>
+
+
+				For the four triangle operations, pay special care as to what order it's in.
+
+				#### Function Notation
+
+				Functions are just relations where each input maps to only one output, that is for $f \in S \llra T$ to be a function, $x \mapsto y \in f \implies \forall y' \cdot (y' \in S \land y' \neq y \implies x \mapsto y' \not\in f)$.
+
+				The following are the notations for different types of functions -- they should be read as "the set of all X"
+
+				* partial functions: $S \pfunc T$, which maps some elems of S to some elems of T. <r-r>`S +-&gt; T`</r-r>
+				* total functions: $S \longrightarrow T$, which maps *all* elems of S to some elems of T. <r-r>`S --&gt; T`</r-r>
+				* partial injections: $S \pinj T$, partial functions which are injective (one-to-one) <r-r>`S >+> T`</r-r>
+				* total injections: $S \inj T$, injective total functions. <r-r>`S >-> T`</r-r>
+				* surjective functions: $S \surj T$, where all range elements are mapped "onto". <r-r>`S --&gt;> T`</r-r>
+				* bijective functions: $S \bij T$ which are both injective and surjective. <r-r>`S >->> T`</r-r>
+				* get function value: $f(x)$, which gets what $x$ maps to. <r-r>`f(x)`</r-r>
+				* replace function value: $f(x) := y'$ replaces $x \mapsto y$ with $x \mapsto y'$. <r-r>`f(x) := yy`</r-r>
+				* lambda function notation: $\lambda x \cdot (x \in S | f(x))$ where $f(x)$ is an expression over $x$. <r-r>`%x.(x : S | f(x))` </r-r>
+
+				For replacement of multiple mappings, i.e. relation overriding with more than one element, we must use the $\lessplus$ syntax.
+
+				**Arrays** are nothing but functions from a numerical range $1..n \longrightarrow S$ to some set of elements.
+
+
+				#### Sequence Notation 
+
+				Sequences, or lists, are written as functions $1..n \longrightarrow T$, relating a (1-)index to an element. They are syntax-sugared into conventional list format.
+
+				* empty sequence: $[]$ <r-r>`[]`</r-r>
+				* sequence of elements: $[e_1, \dots, e_n]$ <r-r>`[e1, ..., en]`</r-r>
+				* set of finite sequences: $\seq(S)$ <r-r>`seq(S)`</r-r>
+				* set of finite non-empty sequences: $\seqo(S)$ <r-r>`seq1(S)`</r-r>
+				* set of injective sequences (no repeats): $\iseq(S)$ <r-r>`iseq(S)`</r-r>
+				* set of permutations of the set: $\perm(S)$ <r-r>`perm(S)`</r-r>
+				* list concatenation: $s_1 \smallfrown s_2$ <r-r>`s1 ^ s2`</r-r>
+				* prepend element $e$: $e \rightarrow s$ <r-r>`e -> s`</r-r>
+				* append element $e$: $s \leftarrow e$ <r-r>`s &lt;- e`</r-r>
+				* length: $\size(s)$ <r-r>`size(s)`</r-r>
+				* reverse: $\rev(s)$ <r-r>`rev(s)`</r-r>
+				* take first $n$ elems: $s \uparrow n$ <r-r>`s /|\ n`</r-r>
+				* drop the first $n$ elems: $s \downarrow n$ <r-r>`s \|/ n`</r-r>
+				* get the first element of non-empty sequence: $\first(s)$ <r-r>`first(s)`</r-r>
+				* get last element: $\last(s)$ <r-r>`last(s)`</r-r>
+				* get all but the first element: $\tail(s)$ <r-r>`tail(s)`</r-r>
+				* get all but the last element: $\front(s)$ <r-r>`front(s)`</r-r>
+
+				#### Nondeterminism
+
+				* assign any element from set: $x :\in S$ <r-r>`x :: S`</r-r>
+
+			</div>
+		</div>
+
+
+
+		<footer>
+			<div class="cbox">
+                <div class="columncontainer ctwo" id="fc2">
+                </div>
+                <script type="text/javascript" src="../../js/footerGen.js"></script>
+            </div>
+		</footer>
+
+	</div>
+
+	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script type="text/javascript" src="../../js/prism.js"></script>
+	<script type="text/javascript" src="../../js/markdown.js"></script>
+</body>
+</html>

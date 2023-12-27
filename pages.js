@@ -17,7 +17,15 @@
 
 var pages = [
     {
-        "date": new Date(Date.UTC(2023,05,24)),
+        "date": new Date(Date.UTC(2023,11,12)),
+        "link": "blog-cs/cs412",
+        "title": "Notes on CS412 and le Système B",
+        "desc": "Notes on CS412: Formal languages, including a personal reference of B</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
+        "date": new Date(Date.UTC(2023,5,24)),
         "link": "blog-cs/cs349",
         "title": "Notes on CS349",
         "desc": "Notes on CS349: Principles of Programming Languages</p><p>It may take a while to construct itself there's a lot of md and maths</p>",
@@ -25,7 +33,7 @@ var pages = [
         "tags": ["cs"]
     },
     {
-        "date": new Date(Date.UTC(2023,05,01)),
+        "date": new Date(Date.UTC(2023,5,1)),
         "link": "blog-cs/cs352",
         "title": "Notes on CS352",
         "desc": "Notes on CS352: Project Management</p>",
@@ -33,7 +41,7 @@ var pages = [
         "tags": ["cs"]
     },
     {
-        "date": new Date(Date.UTC(2023,04,24)),
+        "date": new Date(Date.UTC(2023,4,24)),
         "link": "blog-cs/cs331",
         "title": "Notes on CS331",
         "desc": "Notes on CS331: Neural</p>",
@@ -41,7 +49,7 @@ var pages = [
         "tags": ["cs"]
     },
     {
-        "date": new Date(Date.UTC(2023, 01, 25)),
+        "date": new Date(Date.UTC(2023, 1, 25)),
         "link": "blog-cs/cs313",
         "title": "Notes on CS313",
         "desc": "Notes on CS313: Robotics</p>",
@@ -57,7 +65,7 @@ var pages = [
         "tags": ["cs"]
     },
     {
-        "date": new Date(Date.UTC(2022,05,05)),
+        "date": new Date(Date.UTC(2022,5,5)),
         "link": "blog-cs/cs261/",
         "title": "Notes on CS261",
         "desc": "Notes on CS261: Software Eng (wah)</p>",
@@ -65,7 +73,7 @@ var pages = [
         "tags": ["cs"]
     },
     {
-        "date": new Date(Date.UTC(2022,05,02)),
+        "date": new Date(Date.UTC(2022,5,2)),
         "link": "blog-cs/cs259/",
         "title": "Notes on CS259",
         "desc": "Notes on CS259: Formal Languages</p>",
@@ -73,7 +81,7 @@ var pages = [
         "tags": ["cs"]
     },
     {
-        "date": new Date(Date.UTC(2022,02,07)),
+        "date": new Date(Date.UTC(2022,2,7)),
         "link": "blog-cs/cs262/",
         "title": "Notes on CS262",
         "desc": "Notes on CS262: Logic and Verification. For a quick cheat sheet for the class test, click <a href='blog-cs/cs262/cheat.html'>here</a>.</p>",
