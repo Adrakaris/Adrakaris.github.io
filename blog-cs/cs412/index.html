@@ -67,6 +67,7 @@
 				### Contents
 
 				1. [Référence du système B](#reference)
+				2. [Verification](#proof)
 			</div>
 		</div>
 
@@ -161,6 +162,10 @@ END</div>
 					\DeclareMathOperator*{\last}{last}
 					\DeclareMathOperator*{\tail}{tail}
 					\DeclareMathOperator*{\front}{front}
+					\DeclareMathOperator*{\struct}{struct}
+					\DeclareMathOperator*{\rec}{rec}
+					\DeclareMathOperator*{\true}{true}
+					\DeclareMathOperator*{\false}{false}
 					\newcommand{\lessplus}{&lt;\kern-6pt +\;}
 					\newcommand{\pfunc}{\kern3pt +\kern-12pt \longrightarrow}
 					\newcommand{\pinj}{\kern3pt +\kern-12pt \rightarrowtail}
@@ -172,6 +177,8 @@ END</div>
 				\(
 					\DeclareMathOperator*{\bmachine}{\b{MACHINE}}
 					\DeclareMathOperator*{\bconstraints}{\b{CONSTRAINTS}}
+					\DeclareMathOperator*{\binitialisation}{\b{INITIALISATION}}
+					\DeclareMathOperator*{\binvariant}{\b{INVARIANT}}
 					\DeclareMathOperator*{\bbegin}{\b{BEGIN}}
 					\DeclareMathOperator*{\bend}{\b{END}}
 					\DeclareMathOperator*{\bpre}{\b{PRE}}
@@ -294,7 +301,7 @@ END</div>
 
 				#### Set Notation
 
-				* empty set: $\{\}$  <r-r>`{}`</r-r>
+				* empty set: $\{\}$ or $\varnothing$  <r-r>`{}`</r-r>
 				* member: $e \in S$  <r-r>`e : S`</r-r>
 				* not member: $e \not\in S$  <r-r>`e /: S`</r-r>
 				* subset: $S \subseteq T$ ; <r-r>`S &lt;: T`</r-r>
@@ -397,10 +404,234 @@ END</div>
 
 				* assign any element from set: $x :\in S$ <r-r>`x :: S`</r-r>
 
+				#### Record Types 
+
+				Records store named fields. The type of a record structure is written as 
+				$$ person \in \struct(p\_name \in NAME, p\_age \in \No) $$
+
+				And an initialisation can go as
+				$$ person := \rec(p\_name : Bob, p\_age : 21) $$
+
+				Retrieval: $person'p\_name$
+
 			</div>
 		</div>
 
+		<div class="colourband">
+			<h2 id="proof">Verification</h2>
+		</div>
 
+		<div class="cbox">
+			<div class="md-conv">
+				## Introduction
+
+				Verification is an essential part of formal systems -- ensuring that the code we write is correct and mathematically sound. This is how we eventually generate safe systems.
+
+				During verification *bound variables* in first order logic must be dealt with very carefully, for example in
+				$$ x+y \gt 10 \land \forall x \cdot (x \in X \implies P(x)) $$ 
+				the first $x$ is not bound, but in the second expression $x$ is a *different* bound variable. In 
+				$$ \forall x \cdot (x \in X \implies P(x)) \land \forall x \cdot (x \in X \implies Q(X)) $$ 
+				the two $x$ variable are bound to different scopes and are *unrelated*. Especially, avoid cases such as 
+				$$ \forall x \cdot (x \in \N \implies \exists x \cdot (x \in \N \land x > x)) $$ 
+				... just don't do the last one. Rename your variables properly.
+
+				**Substitution** is the process of replacing an *unbound* variable in an expression with another expression, it is denoted (original)[var/new]:
+
+				$$ (x + y \gt 10)[3 / x] == 3 + y \gt 10 $$
+
+				Read this $[3/x]$ as "three replaces x".
+
+				### Contents
+ 
+				1. [The Weakest Precondition](#v-wp)
+				2. [Machine Consistency](#v-consistent)
+
+				<hr>
+
+			</div>
+
+			<div class="md-conv" id="v-wp">
+				## The Weakest Precondition
+
+				The *weakest precondition* of a statement is essentially the least restricted state space for which an operation produces a desired output -- the postcondition.
+				$
+				\newcommand{\lh}{\;\{}
+				\newcommand{\rh}{\}\;}
+				$
+
+				Just like in CS261 we can denote a precondition-operation-postcondition triple in *hoare triples*, that is for program $Q$ with precondition $P$ and postcondition $R$, write 
+				$$ \lh P \rh Q \lh R \rh $$
+
+				We are interested in the *weakest precondition* $P$, given a $Q, R$. This is written (perhaps confusingly) as
+				$$ [Q]R $$
+
+				#### Laws of Logic
+
+				The following hold for complex postconditions:
+
+				* $[S] (P \land Q) \iff [S]P \land [S]Q$ ;
+				* $[S]P \lor [S]Q \implies [S] (P \lor Q) $ but not the other way round;
+				* If $P \implies Q$ then $[S]P \implies [S]Q$. 
+				* $[S]\true$ is trivially true for any S which terminates.
+
+				#### Derivation Rules
+
+				***Assignment Rule***. The weakest precondition for an assignment is 
+				$$ [x := E]R == R[E/x] $$
+				Replace all occurrences of $x$ in $R$ with $E$.
+
+				***Multiple Assignment Rule***. The WP for multi-assignment is
+				$$ [x_1..x_n := E_1 .. E_n]R == R[E_1..E_n / x_1 .. x_n] $$ 
+
+				***Skip Rule***. over a skip operation:
+				$$ [skip]R == R $$
+
+				***Block Rule***. over a begin-end block:
+				$$ [\bbegin P \bend] R == [P]R$$ 
+
+				***Conditional Rule***. Over an if statement:
+				$$[\bif G \bthen P_1 \belse P_2 \bend] R$$ 
+
+				\begin{align}
+					&== (G \implies [P_1]R) \land (\lnot G \implies [P_2]R) \\ 
+					&== (G \land [P_1]R) \lor (\lnot G \land [P_2]R)
+				\end{align}
+
+				Also 
+				$$[\bif G \bthen P_1 \bend] R == (G \land [P_1]R) \lor (\lnot G \land R)$$ 
+
+				***Conditional Rule (II)***. Over a case statement:
+				$$[\bcase v \bof \beither v_1 \bthen p_1 \bor v_2 \bthen p_2 \cdots \belse p \bend] R $$
+
+				$$ == (v=v_1 \land [p_1]R) \lor (v=v_2 \land [p_2]R) \lor \cdots \lor (v \neq v_{1..n} \land p[R]) $$ 
+
+				***Precondition.*** 
+
+				$$ [ \bpre C \bthen P \bend ] R == C \land [ P ] R $$ 
+
+				***One-point rule.*** If we have one of the following forms:
+				$$
+				\begin{matrix}
+					\forall x \cdot (x = v \implies P) \\ 
+					\exists x \cdot (x = v \implies P) 
+				\end{matrix}
+				$$
+				Always replace by $P[v/x]$.
+
+				***Nondeterministic assignment.*** 
+				$$ [x :\in E] R == \forall s \cdot (s \in E \implies R[s/x]) $$
+				
+				***Any block.*** 
+				$$ 
+					[\bany x \bwhere Q \bthen P \bend] R \\
+				$$
+				$$ == \forall x \cdot (x \in E \implies [P]R ) $$
+
+				***Choice block.*** 
+				$$ [\bchoice P_1 \bor \dots \bor P_n \bend ] R$$ 
+				$$ == [P_1]R \land \cdots \land [P_n]R $$
+
+				***Select block.***
+				$$ [\bselect c_1 \bthen p_1 \bwhen c_2 \bthen p_2 \dots \belse p \bend] R $$ 
+				$$ == (c_1 \implies [p_1]R) \land (c_2 \implies [p_2]R) \land \cdots \land p[R] $$ 
+			</div>
+
+			<div class="md-conv" id="v-consistent">
+				## Machine Consistency
+
+				How do we make sure a machine is consistent? We need to check for several things, including 
+				
+				* that the invariant is maintained.
+				* that the invariant is given by the initialisation.
+
+				<div class="blue">
+					***Initialisation consistency.***
+					$$ \lh \true \rh \binitialisation \lh I \rh $$
+					where $I$ is the invariant.
+				</div>
+			</div>
+			<button class="collapsible">Example.</button>
+			<div class="ccontent md-conv">
+				Given 
+				\begin{align}
+					\binvariant\; &inside \subseteq PID \land \\
+					& maxin \in \No \land \\
+					&\card(inside) \leq maxin
+				\end{align}
+				$$ \binitialisation\; inside := \{\} || maxin := 500 $$
+
+				We can solve this as
+
+				\begin{align}
+					[\binitialisation] \binvariant &== [inside := \{\} || maxin := 500] \left(\begin{matrix}
+					inside \subseteq PID \land \\
+					maxin \in \No \land \\
+					\card(inside) \leq maxin
+					\end{matrix}\right) \\ 
+					&== \varnothing \subseteq PID \land 500 \in \No \land 0 \leq 500 \\ 
+					&== \true 
+				\end{align}
+
+			</div>
+
+			<div class="md-conv">
+				Operations come next, and we can assume invariants are true. 
+
+				<div class="blue">
+					***Operation consistency.*** 
+					\[I \land \bpre \implies [S] I \] $$
+					Where $S$ is the operation body.
+				</div>
+			</div>
+
+			<button class="collapsible">Example.</button>
+			<div class="ccontent md-conv">
+				Given the above an operation
+				\begin{align}
+					enter(p) &= \bpre p \in PID \land p \not\in inside \land \card(inside) \lt maxin \\
+					&= \bthen inside := inside \cup \{p\} \\ 
+					&\bend 
+				\end{align}
+
+				We get 
+				$$
+				\begin{matrix}
+					inside \subseteq PID \land maxin \in \No \land \card(inside) \leq maxin \land \\
+					p \in PID \land p \not\in inside \land \card(inside) \lt maxin \\ 
+					\implies \\ 
+					[inside := inside \cup \{p\}] \left(\begin{matrix}
+					inside \subseteq PID \land maxin \in \No \land\\
+					 \card(inside) \leq maxin 
+					\end{matrix}\right)
+				\end{matrix}
+				$$
+				The latter resolves to
+				$$ == inside \cup \{p\} \subseteq PID \land maxin \in \No \land \card(inside \cup \{p\}) \leq maxin$$ 
+
+				Overall this resolves to $\true$ given our precondition and invariant.
+			</div>
+
+			<div class="md-conv">
+				***Assertions.*** An assertion is a fact we can make about the program that is always true -- i.e. it is an invariant. 
+
+				**However**, if we prove that this assertion follows from the invariant: $I \implies A$, then we do not need to include this assertion in any precondition.
+
+				That is, for properties $P$, constants $C$, invariant $I$, and assertions $J_1 .. J_n$, for every $J_i$:
+				$$ P \land C \land I \land J_{1..i-1} \implies J_i $$
+
+				You can also use properties and constants in operation proof: $P \land C \land I \land \bpre \implies [S]I$
+
+				<div class="side">
+					**Some notes:** AB does not detect if your constraints are *satisfiable*, just that they're true.
+
+					The natural numbers is a finite set from $0 .. 2^{32}-1$, and so often if AB fails to prove something it's because you've not checked that your input is less than `MAXINT`.
+
+					Don't ask me how the prover works. <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Animated-Flag-First-French-Republic.gif" alt="" style="display: inline; max-height: 1em;"> 
+				</div>
+			</div>
+		</div>
+
+		
 
 		<footer>
 			<div class="cbox">
