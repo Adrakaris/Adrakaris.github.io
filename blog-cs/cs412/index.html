@@ -181,7 +181,6 @@ END</div>
 					\DeclareMathOperator*{\bmachine}{\b{MACHINE}}
 					\DeclareMathOperator*{\brefinement}{\b{REFINEMENT}}
 					\DeclareMathOperator*{\bimplementation}{\b{IMPLEMENTATION}}
-					\DeclareMathOperator*{\bimplements}{\b{IMPLEMENTS}}
 					\DeclareMathOperator*{\bimports}{\b{IMPORTS}}
 					\DeclareMathOperator*{\brefines}{\b{REFINES}}
 					\DeclareMathOperator*{\bincludes}{\b{INCLUDES}}
@@ -1127,7 +1126,7 @@ OPERATIONS
 
 				\begin{align}
 					\bimplementation\;& Membership_i \\
-					\bimplements\;& Membership \\ 
+					\brefines\;& Membership \\ 
 					\bvalues\;& MID = 0..500; reserved = 0
 				\end{align}
 
@@ -1158,7 +1157,7 @@ END</div>
 				This can implement to 
 
 				<div class="codediv">IMPLEMENTATION Carpark_i 
-IMPLEMENTS CarPark 
+REFINES CarPark 
 VALUES cap = 500
 CONCRETE_VARIABLES inuse 
 INITIALISATION inuse := 0
@@ -1196,7 +1195,7 @@ END</div>
 				It can implement to 
 
 				<div class="codediv">IMPLEMENTATION		Smallform_i
-IMPLEMENTS 			Smallform 
+REFINES 			Smallform 
 VALUES 				cmax = 30; CLASS = 0..29
 CONCRETE_VARIABLES 	rarr
 INVARIANT 			rarr : 0..29 --&gt; RESP &
@@ -1257,7 +1256,7 @@ END</div>
 			</div>
 
 			<div class="codediv md-conv">IMPLEMENTATION 	TotCarpark_i 
-IMPLEMENTS 		TotCarpark
+REFINES 		TotCarpark
 IMPORTS		 	Carpark 
 SEES 			RESP
 OPERATIONS
@@ -1297,7 +1296,7 @@ OPERATIONS
 
 				\begin{align}
 					\bimplementation \;& Top\_i \\
-					\bimplements \;& Top \\ 
+					\brefines \;& Top \\ 
 					\bimports \;& \r{BASIC_IO} \\
 					\boperations \; & main = \r{STRING_WRITE}(\r{"Hello world! \\n"})
 				\end{align}
