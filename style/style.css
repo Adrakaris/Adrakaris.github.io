@@ -653,6 +653,9 @@ code {
 
 blockquote {
     font-style: italic;
+    border-left: 2px solid var(--pink);
+    padding-left: 40px;
+    margin-left: 0px;
 }
 
 /* #endregion */
@@ -774,6 +777,25 @@ ol.side, ul.side {
 .draconic, h1.draconic, p.draconic, div.draconic, div.draconic > p, e-drac {
     font-family: Rekharhakr, sans-serif;
     font-style: normal;
+}
+
+b-blue {
+    display: block;
+    border-width: thin;
+    border-style: solid;
+    border-color: var(--blue);
+    border-spacing: 10px 10px;
+    /*padding: 10px;*/
+    padding-left: 10px;
+    margin-left: -10px;
+}
+
+b-side {
+    display: block;
+    border-left: 1px solid var(--pink);
+    border-spacing: 10px 0px;
+    padding-left: 10px;
+    margin-left: -10px;
 }
 
 /* #endregion */

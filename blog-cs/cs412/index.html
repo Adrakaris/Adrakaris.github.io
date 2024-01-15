@@ -1286,9 +1286,9 @@ Take the `Carpark` machine from example 1. Perhaps we want to implement error ha
 	\bsees\\;& RESP  \\\\
 	\bsets\\;& ERR = \{ok, noroom, empty\} \\\\
 	\boperations\\; 
-	& e, o \longleftarrow tot\_spaceq = \bbegin e :\in ERR || o :\in RESP \bend; \\\\
-	& e \longleftarrow tot\_enter = \bbegin e :\in ERR \bend; \\\\
-	& e \longleftarrow tot\_leave = \bbegin e :\in ERR \bend
+	& e, o \longleftarrow tot\\_spaceq = \bbegin e :\in ERR || o :\in RESP \bend; \\\\
+	& e \longleftarrow tot\\_enter = \bbegin e :\in ERR \bend; \\\\
+	& e \longleftarrow tot\\_leave = \bbegin e :\in ERR \bend
 \end{align}
 
 Note this TotCarpark's operations are fully abstract, all they say is that those variables must be assigned from those sets -- this gives us total freedom to control how to do the assignment. We also pull response into its own machine.
@@ -1362,11 +1362,11 @@ Where `arr_vrb` is the variable in `BASIC_ARRAY_VAR` that stores the array.
 
 Importing multiple copies of a machine is as simple as prepending an identifier onto them, so 
 $$ \bimports s1.\r{LSET}(35, CLASS), s2.\r{LSET}(40, \N) $$ 
-will import two sets, and expose their two variables as $s1.set\_vrb$ and $s2.set\_vrb$, with their operations accordingly.
+will import two sets, and expose their two variables as $s1.set\\_vrb$ and $s2.set\\_vrb$, with their operations accordingly.
 
 The proofs of these machines can be assumed to have been done beforehand.
 
-* `L_PFNC(p1, p2, p3)` is a partial function. It represents a partial function $0..p_3 \pfunc p_1..p_2$ over integers only. Its linking variable is `pfnc_vrb` and is used like $pfnc\_vrb = marr \pod{marr \in CLASS \pfunc MARK}$
+* `L_PFNC(p1, p2, p3)` is a partial function. It represents a partial function $0..p_3 \pfunc p_1..p_2$ over integers only. Its linking variable is `pfnc_vrb` and is used like $pfnc\\_vrb = marr \pod{marr \in CLASS \pfunc MARK}$
 
 And much, much more.
 

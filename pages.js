@@ -17,6 +17,14 @@
 
 var pages = [
     {
+        "date": new Date(Date.UTC(2024,1,15)),
+        "link": "blog-cs/cs419",
+        "title": "Notes on Cs419 ",
+        "desc": "Quantum Computing; Enjoy the Mathjax</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new Date(Date.UTC(2023,11,12)),
         "link": "blog-cs/cs412",
         "title": "Notes on CS412 and le Système B",

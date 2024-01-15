@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Scaffold</title>
+	<title>CS419</title>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
 	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
@@ -38,31 +38,96 @@
 				</div>
 			</div>
 			<div class="cbox"> 		
-				<h1>Title</h1>
+				<h1>CS419</h1>
+				<p class="subheading">Quantum Computing</p>
 			</div>
 		</div>
 	</header>
 
 <header>
 	<div class="cbox">
-		<h1>Heading</h1>
+		<h1>Introduction</h1>
 	</div>
 </header>
 
-<div class="buttonwrapper beside" >
-	<a href="./index-zh.html">简体中文</a>
-</div>
-<!-- REMEMBER TO DO! -->
 
 <div class="cbox">
 
+<div class="md-conv">
+
+For this module, I am trying to write notes along with the lectures. Thus content headings may be a little late coming.
+
+Lots of this is just linear algebra with funny notation.
+
+Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to work)
+\\(
+	\newcommand{\k}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\b}[1]{\left\langle #1 \right\rvert}
+	\newcommand{\ip}[2]{\left\langle #1 \vert #2 \right\rangle}
+	\newcommand{\bb}{\mathbb}
+\\)
+
 </div>
 
-<!--
-<div class="colourband">
-	<h2>Heading 2</h2>
 </div>
-	-->
+
+
+<div class="colourband">
+	<h2>Quantum Computing Fundamentals</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv" id="fund-dirac">
+### Fundamentals and Dirac Notation 
+
+Let $V$ be a finite dimensional vector space, where the vector coefficients are **complex**.
+
+
+<b-blue>
+
+***Def.*** We write a vector in $V$ as $\k{v} \in V$. This is called a **ket** vector and is a *column* vector.
+
+</b-blue>
+
+
+Generally we work in 2D vector spaces: $V_2$, with some chosen ortho-normal basis $\\{\k{0}, \k{1}\\}$
+
+***Example.*** Some vector $\k{v}$ can be written as a decomposition of bases:
+$$ \k{v} = a \k{0} + b \k{1} = \begin{bmatrix}
+	a \\\\ b
+\end{bmatrix} \pod{a, b \in \bb{C}} $$ 
+
+***Def.*** The **conjugate transpose** of vector $\k{v}$ is $\k{v}^\dagger$, and is made by transposing the vector and replacing its coefficients with their complex conjugates. This is a **bra** vector and is a row vector, and we reverse the direction of the brackets.
+
+\begin{align}
+	\b{v} = \k{v}^\dagger &= a^* \b{0} + b^* \b{1} \\\\
+	&= \begin{bmatrix}
+		a^*  & b^*
+	\end{bmatrix}
+\end{align}
+
+Let vector $\k{w} = c\k{0} + d \k{1}$.
+
+The **inner product** of $\k{v}$ and $\k{w}$ is written 
+$$ \ip{v}{w} = \k{v}^\dagger \k{w} = \begin{bmatrix}
+	a^* & b^*
+\end{bmatrix} \begin{bmatrix}
+	c \\\\ d
+\end{bmatrix}
+$$
+
+We can say that 
+- $\ip{0}{1} = 0$ since the bases are ortho-normal,
+- $\ip{i}{j} = \delta_{ij}$ for some $\k{i}, \k{j}$
+
+
+> This is Dirac's "bra-ket" notation, which is just "bracket" without the c.
+
+***Def.*** 
+
+</div>
+</div>
+	
 
 	<footer>
 		<div class="cbox">
