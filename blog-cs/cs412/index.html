@@ -7,7 +7,13 @@
 	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
 	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
 	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
-	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+	<script async type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script defer type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script defer type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
+	<script defer type="text/javascript" src="../../js/prism.js"></script>
 </head>
 <body>
 
@@ -51,26 +57,26 @@
 
 
 		<div class="cbox">
-			<div class="blue md-conv" style="text-align: center;">
-				**IMPORTANT NOTES**
+<div class="blue md-conv" style="text-align: center;">
+**IMPORTANT NOTES**
 
-				This is not an exhaustive list of B syntax. This also does not explain Atelier B's syntax quirks in any thorough manner.
+This is not an exhaustive list of B syntax. This also does not explain Atelier B's syntax quirks in any thorough manner.
 
-				[Atelier] B mandates that no identifiers be one letter long, i.e. you can't have $x$, $y$, etc. and it has to be $xx$, $yy$, etc. But this is stupid in display maths and generally affects readability -- actually name your variables. Thus, for single letter variables:
-				
-				**Variables may not have double letters.**
+[Atelier] B mandates that no identifiers be one letter long, i.e. you can't have $x$, $y$, etc. and it has to be $xx$, $yy$, etc. But this is stupid in display maths and generally affects readability -- actually name your variables. Thus, for single letter variables:
 
-				Fill them in yourself in your head, or use actual variable names in code.
-			</div>
+**Variables may not have double letters.**
 
-			<div class="md-conv">
-				### Contents
+Fill them in yourself in your head, or use actual variable names in code.
+</div>
 
-				1. [Référence du système B](#reference)
-				2. [Verification](#proof)
-				3. [Machine Structuring](#structure)
-				4. [Refinement](#refinement)
-			</div>
+<div class="md-conv">
+### Contents
+
+1. [Référence du système B](#reference)
+2. [Verification](#proof)
+3. [Machine Structuring](#structure)
+4. [Refinement](#refinement)
+</div>
 		</div>
 
 		
@@ -84,597 +90,611 @@
 		
 		<div class="cbox">
 			<div class="md-conv">
-				## Contents 
+## Contents 
 
-				1. [Layout](#ref-layout)
-				2. [Structures](#ref-structures)
-				3. [Notation](#ref-notation)
+1. [Layout](#ref-layout)
+2. [Structures](#ref-structures)
+3. [Notation](#ref-notation)
 			</div>
 
 			<div class="md-conv" id="ref-layout">
-				### Layout 
+### Layout 
 
-				The general layout of B:
-			</div>
-			<div class="codediv">
+The general layout of B:
+
+### Layout 
+
+The general layout of B:
+
+```haskell
 MACHINE
-	MachineName(params)  <span class="grey">// machine name and params </span>
+	MachineName(params)  // machine name and params 
 
 CONSTRAINTS
-	params : NAT  <span class="grey">//constraints of parameters</span>
+	params : NAT  //constraints of parameters
 
 SETS
-	ONES; TWOS;  <span class="grey">// deferred sets </span>
-	RESP = {yes, no}  <span class="grey">// enumerated sets</span>
+	ONES; TWOS;  // deferred sets 
+	RESP = {yes, no}  // enumerated sets
 
 CONSTANTS
-	const  <span class="grey">// declar names</span>
+	const  // declar names
 
 PROPERTIES
-	const : NAT1  <span class="grey">// define properties about sets and constants </span>
+	const : NAT1  // define properties about sets and constants 
 
 VARIABLES
-	vara, varb  <span class="grey">// declare names</span>
+	vara, varb  // declare names
 
-INVARIANT  <span class="grey">// states constants about the machine that must always be true</span>
-		   <span class="grey">// includes types (what variable element of which)</span>
+INVARIANT  // states constants about the machine that must always be true
+			// includes types (what variable element of which)
 	vara : NAT1 & varb : NAT &
 	P & Q
 
-INITIALISATION  <span class="grey">// gives initial values to variables (must obey invariant)</span>
+INITIALISATION  // gives initial values to variables (must obey invariant)
 	vara := 1 || varb := 0
 
-OPERATIONS <span class="grey">// defines the machine operations (the important bit)</span>
+OPERATIONS // defines the machine operations (the important bit)
 
-	addOne = PRE <span class="grey">// preconditions</span>
-		varb < MAXINT
+	addOne = PRE // preconditions
+		varb &lt; MAXINT
 	THEN
 		varb := varb + 1
 	END;
 
-	out <-- read = out := varb  <span class="grey">// note this one-liner without </span>
-								<span class="grey">preconditions doesn't need an END</span>
-END</div>
-
-			<hr>
-
-			<div class="md-conv" id="ref-structures">
-				## Structures
-
-				Important structures to know. 
-				\(
-					\newcommand{\b}{\textbf}	
-					\newcommand{\B}{\textbf}	
-					\newcommand{\r}{\textrm}	
-					\newcommand{\bb}{\mathbb}	
-					\newcommand{\N}{\mathbb{N}}	
-					\newcommand{\No}{\mathbb{N}_1}	
-					\DeclareMathOperator*{\card}{card}
-					\DeclareMathOperator*{\dom}{dom}
-					\DeclareMathOperator*{\ran}{ran}
-					\DeclareMathOperator*{\pow}{\mathbb{P}}
-					\DeclareMathOperator*{\llra}{\longleftrightarrow}
-					\DeclareMathOperator*{\skip}{skip}
-					\DeclareMathOperator*{\seq}{seq}
-					\DeclareMathOperator*{\seqo}{seq_1}
-					\DeclareMathOperator*{\iseq}{iseq}
-					\DeclareMathOperator*{\perm}{perm}
-					\DeclareMathOperator*{\size}{size}
-					\DeclareMathOperator*{\rev}{rev}
-					\DeclareMathOperator*{\first}{first}
-					\DeclareMathOperator*{\last}{last}
-					\DeclareMathOperator*{\tail}{tail}
-					\DeclareMathOperator*{\front}{front}
-					\DeclareMathOperator*{\struct}{struct}
-					\DeclareMathOperator*{\rec}{rec}
-					\DeclareMathOperator*{\true}{true}
-					\DeclareMathOperator*{\false}{false}
-					\newcommand{\lessplus}{&lt;\kern-6pt +\;}
-					\newcommand{\pfunc}{\kern3pt +\kern-12pt \longrightarrow}
-					\newcommand{\pinj}{\kern3pt +\kern-12pt \rightarrowtail}
-					\newcommand{\inj}{\rightarrowtail}
-					\newcommand{\surj}{\twoheadrightarrow}
-					\newcommand{\bij}{\kern3pt \rightarrowtail\kern-8pt \twoheadrightarrow}
-				\)
-
-				\(
-					\DeclareMathOperator*{\bmachine}{\b{MACHINE}}
-					\DeclareMathOperator*{\brefinement}{\b{REFINEMENT}}
-					\DeclareMathOperator*{\bimplementation}{\b{IMPLEMENTATION}}
-					\DeclareMathOperator*{\bimports}{\b{IMPORTS}}
-					\DeclareMathOperator*{\brefines}{\b{REFINES}}
-					\DeclareMathOperator*{\bincludes}{\b{INCLUDES}}
-					\DeclareMathOperator*{\bsees}{\b{SEES}}
-					\DeclareMathOperator*{\buses}{\b{USES}}
-					\DeclareMathOperator*{\bpromotes}{\b{PROMOTES}}
-					\DeclareMathOperator*{\bconstraints}{\b{CONSTRAINTS}}
-					\DeclareMathOperator*{\bsets}{\b{SETS}}
-					\DeclareMathOperator*{\bconstants}{\b{CONSTANTS}}
-					\DeclareMathOperator*{\bproperties}{\b{PROPERTIES}}
-					\DeclareMathOperator*{\bvariables}{\b{VARIABLES}}
-					\DeclareMathOperator*{\bvalues}{\b{VALUES}}
-					\DeclareMathOperator*{\bvariant}{\b{VARIANT}}
-					\DeclareMathOperator*{\binvariant}{\b{INVARIANT}}
-					\DeclareMathOperator*{\binitialisation}{\b{INITIALISATION}}
-					\DeclareMathOperator*{\boperations}{\b{OPERATIONS}}
-					\DeclareMathOperator*{\bbegin}{\b{BEGIN}}
-					\DeclareMathOperator*{\bend}{\b{END}}
-					\DeclareMathOperator*{\bpre}{\b{PRE}}
-					\DeclareMathOperator*{\bif}{\b{IF}}
-					\DeclareMathOperator*{\bcase}{\b{CASE}}
-					\DeclareMathOperator*{\bany}{\b{ANY}}
-					\DeclareMathOperator*{\blet}{\b{LET}}
-					\DeclareMathOperator*{\bchoice}{\b{CHOICE}}
-					\DeclareMathOperator*{\bselect}{\b{SELECT}}
-					\DeclareMathOperator*{\bthen}{\b{THEN}}
-					\DeclareMathOperator*{\belse}{\b{ELSE}}
-					\DeclareMathOperator*{\beither}{\b{EITHER}}
-					\DeclareMathOperator*{\bwhere}{\b{WHERE}}
-					\DeclareMathOperator*{\bwhen}{\b{WHEN}}
-					\DeclareMathOperator*{\bwhile}{\b{WHILE}}
-					\DeclareMathOperator*{\bor}{\b{OR}}
-					\DeclareMathOperator*{\bof}{\b{OF}}
-					\DeclareMathOperator*{\bbe}{\b{BE}}
-					\DeclareMathOperator*{\bin}{\b{IN}}
-					\DeclareMathOperator*{\bdo}{\b{DO}}
-					\DeclareMathOperator*{\bvar}{\b{VAR}}
-				\)
-
-				***Preconditons.*** Usually around most operations with parameters. Parameters passed must match preconditions, else behaviour is undefined (this is useful when we deabstract everything). Written as
-
-				$$\bpre P \bthen B \bend$$ 
+	out &lt;-- read = out := varb  // note this one-liner without 
+								preconditions doesn't need an END
+END
+```
+</div>
+
+<hr>
+
+<div class="md-conv" id="ref-structures">
+## Structures
+
+Important structures to know. 
+\\(
+	\newcommand{\b}{\textbf}	
+	\newcommand{\B}{\textbf}	
+	\newcommand{\r}{\textrm}	
+	\newcommand{\bb}{\mathbb}	
+	\newcommand{\N}{\mathbb{N}}	
+	\newcommand{\No}{\mathbb{N}_1}	
+	\DeclareMathOperator*{\card}{card}
+	\DeclareMathOperator*{\dom}{dom}
+	\DeclareMathOperator*{\ran}{ran}
+	\DeclareMathOperator*{\pow}{\mathbb{P}}
+	\DeclareMathOperator*{\llra}{\longleftrightarrow}
+	\DeclareMathOperator*{\skip}{skip}
+	\DeclareMathOperator*{\seq}{seq}
+	\DeclareMathOperator*{\seqo}{seq_1}
+	\DeclareMathOperator*{\iseq}{iseq}
+	\DeclareMathOperator*{\perm}{perm}
+	\DeclareMathOperator*{\size}{size}
+	\DeclareMathOperator*{\rev}{rev}
+	\DeclareMathOperator*{\first}{first}
+	\DeclareMathOperator*{\last}{last}
+	\DeclareMathOperator*{\tail}{tail}
+	\DeclareMathOperator*{\front}{front}
+	\DeclareMathOperator*{\struct}{struct}
+	\DeclareMathOperator*{\rec}{rec}
+	\DeclareMathOperator*{\true}{true}
+	\DeclareMathOperator*{\false}{false}
+	\newcommand{\lessplus}{&lt;\kern-6pt +\;}
+	\newcommand{\pfunc}{\kern3pt +\kern-12pt \longrightarrow}
+	\newcommand{\pinj}{\kern3pt +\kern-12pt \rightarrowtail}
+	\newcommand{\inj}{\rightarrowtail}
+	\newcommand{\surj}{\twoheadrightarrow}
+	\newcommand{\bij}{\kern3pt \rightarrowtail\kern-8pt \twoheadrightarrow}
+\\)
+
+\\(
+	\DeclareMathOperator*{\bmachine}{\b{MACHINE}}
+	\DeclareMathOperator*{\brefinement}{\b{REFINEMENT}}
+	\DeclareMathOperator*{\bimplementation}{\b{IMPLEMENTATION}}
+	\DeclareMathOperator*{\bimports}{\b{IMPORTS}}
+	\DeclareMathOperator*{\brefines}{\b{REFINES}}
+	\DeclareMathOperator*{\bincludes}{\b{INCLUDES}}
+	\DeclareMathOperator*{\bsees}{\b{SEES}}
+	\DeclareMathOperator*{\buses}{\b{USES}}
+	\DeclareMathOperator*{\bpromotes}{\b{PROMOTES}}
+	\DeclareMathOperator*{\bconstraints}{\b{CONSTRAINTS}}
+	\DeclareMathOperator*{\bsets}{\b{SETS}}
+	\DeclareMathOperator*{\bconstants}{\b{CONSTANTS}}
+	\DeclareMathOperator*{\bproperties}{\b{PROPERTIES}}
+	\DeclareMathOperator*{\bvariables}{\b{VARIABLES}}
+	\DeclareMathOperator*{\bvalues}{\b{VALUES}}
+	\DeclareMathOperator*{\bvariant}{\b{VARIANT}}
+	\DeclareMathOperator*{\binvariant}{\b{INVARIANT}}
+	\DeclareMathOperator*{\binitialisation}{\b{INITIALISATION}}
+	\DeclareMathOperator*{\boperations}{\b{OPERATIONS}}
+	\DeclareMathOperator*{\bbegin}{\b{BEGIN}}
+	\DeclareMathOperator*{\bend}{\b{END}}
+	\DeclareMathOperator*{\bpre}{\b{PRE}}
+	\DeclareMathOperator*{\bif}{\b{IF}}
+	\DeclareMathOperator*{\bcase}{\b{CASE}}
+	\DeclareMathOperator*{\bany}{\b{ANY}}
+	\DeclareMathOperator*{\blet}{\b{LET}}
+	\DeclareMathOperator*{\bchoice}{\b{CHOICE}}
+	\DeclareMathOperator*{\bselect}{\b{SELECT}}
+	\DeclareMathOperator*{\bthen}{\b{THEN}}
+	\DeclareMathOperator*{\belse}{\b{ELSE}}
+	\DeclareMathOperator*{\beither}{\b{EITHER}}
+	\DeclareMathOperator*{\bwhere}{\b{WHERE}}
+	\DeclareMathOperator*{\bwhen}{\b{WHEN}}
+	\DeclareMathOperator*{\bwhile}{\b{WHILE}}
+	\DeclareMathOperator*{\bor}{\b{OR}}
+	\DeclareMathOperator*{\bof}{\b{OF}}
+	\DeclareMathOperator*{\bbe}{\b{BE}}
+	\DeclareMathOperator*{\bin}{\b{IN}}
+	\DeclareMathOperator*{\bdo}{\b{DO}}
+	\DeclareMathOperator*{\bvar}{\b{VAR}}
+\\)
+
+***Preconditons.*** Usually around most operations with parameters. Parameters passed must match preconditions, else behaviour is undefined (this is useful when we deabstract everything). Written as
 
-				Where $P$ is the predicate condition and $B$ is the operation.
+$$\bpre P \bthen B \bend$$ 
 
-				Operations are stateless and instantaneous (no doing one thing after another).
+Where $P$ is the predicate condition and $B$ is the operation.
 
-				***Conditionals.*** If statements.
+Operations are stateless and instantaneous (no doing one thing after another).
 
-				$$\bif E \bthen S \b{ ELSE } T \bend$$ 
+***Conditionals.*** If statements.
 
-				The else block is optional.
+$$\bif E \bthen S \b{ ELSE } T \bend$$ 
 
-				***Conditionals.*** Switch cases. 
+The else block is optional.
 
-				\begin{align}
-					\bcase E \bof \;&\beither e_1 \bthen T_1 \\ 
-					&\bor e_2 \bthen T_2 \\ 
-					&\bor \dots \\
-					&\b{ELSE } V \\
-					&\bend
-				\end{align}
+***Conditionals.*** Switch cases. 
 
-				Often seen over finite sets. Works as you'd expect a switch statement to work.
+\begin{align}
+	\bcase E \bof \;&\beither e_1 \bthen T_1 \\\\
+	&\bor e_2 \bthen T_2 \\\\
+	&\bor \dots \\\\
+	&\b{ELSE } V \\\\
+	&\bend
+\end{align}
 
-				***Block.*** A begin-end block. Used only for increasing readability.
+Often seen over finite sets. Works as you'd expect a switch statement to work.
 
-				$$ \bbegin S \bend $$
+***Block.*** A begin-end block. Used only for increasing readability.
 
-				***Machine parameters.*** Values which can be passed in when a machine is instantiated. Write next to the machine in *brackets* like how you'd write a function signature.
+$$ \bbegin S \bend $$
 
-				$$ \bmachine Store(ITEM, capacity) $$
+***Machine parameters.*** Values which can be passed in when a machine is instantiated. Write next to the machine in *brackets* like how you'd write a function signature.
 
-				*Upper-case* parameters are treated as deferred sets, whilst *lower-case* parameters are treated as constants. Constants must have their type specified in the $\bconstraints$ clause, whilst sets can be left as-is.
+$$ \bmachine Store(ITEM, capacity) $$
 
-				$$\bconstraints capacity \in \No \land capacity \leq 4096$$
+*Upper-case* parameters are treated as deferred sets, whilst *lower-case* parameters are treated as constants. Constants must have their type specified in the $\bconstraints$ clause, whilst sets can be left as-is.
 
-				One should ensure that the constraints can actually be met.
+$$\bconstraints capacity \in \No \land capacity \leq 4096$$
 
-				***Let.*** Allows a variable to stand in place of a value in a block statement.
+One should ensure that the constraints can actually be met.
 
-				$$\blet x \bbe x = E \bin S \bend$$ 
+***Let.*** Allows a variable to stand in place of a value in a block statement.
 
-				This is the deterministic version of the $\bany$ structure that is below.
+$$\blet x \bbe x = E \bin S \bend$$ 
 
+This is the deterministic version of the $\bany$ structure that is below.
 
-				#### Nondeterministic structures
 
-				***Any.***  Allows an arbitrary choice of variable value in a statement.
+#### Nondeterministic structures
 
-				$$ \bany x \bwhere Q \bthen T \bend $$ 
+***Any.***  Allows an arbitrary choice of variable value in a statement.
 
-				For example: $\bany n \bwhere n \in \No \bthen total := total \times n \bend$. This can be done over multiple variables:
+$$ \bany x \bwhere Q \bthen T \bend $$ 
 
-				\begin{align}
-					&\bany dx, dy \bwhere dx \in \No \land dy \in \No \land dy \gt dx \\
-					&\bthen x := x + dx || y := y + dy \\ 
-					&\bend
-				\end{align}
+For example: $\bany n \bwhere n \in \No \bthen total := total \times n \bend$. This can be done over multiple variables:
 
-				***Choice.*** Choose any one of multiple outcomes to execute.
+\begin{align}
+	&\bany dx, dy \bwhere dx \in \No \land dy \in \No \land dy \gt dx \\\\
+	&\bthen x := x + dx || y := y + dy \\\\
+	&\bend
+\end{align}
 
-				$$ \bchoice S \bor T \bor \dots \bor U \bend $$
+***Choice.*** Choose any one of multiple outcomes to execute.
 
-				This can be used to describe *allowable outcomes*. Each branch in a choice statement can also be non-deterministic, thus you can nest $\bany$s in $\bchoice$s.
+$$ \bchoice S \bor T \bor \dots \bor U \bend $$
 
-				***Select.*** The non-deterministic version of the switch statement. The conditions in a select can overlap, leading to multiple possible outputs.
+This can be used to describe *allowable outcomes*. Each branch in a choice statement can also be non-deterministic, thus you can nest $\bany$s in $\bchoice$s.
 
-				\begin{align}
-					&\bselect Q_1 \bthen T_1 \\
-					&\bwhen Q_2 \bthen T_2 \\ 
-					&\cdots \\
-					&\bwhen Q_n \bthen T_n \\
-					&\belse V \bend 
-				\end{align}
+***Select.*** The non-deterministic version of the switch statement. The conditions in a select can overlap, leading to multiple possible outputs.
 
-				Where the $Q$s are predicates, the $T$s are statements, and the else clause is optional.
+\begin{align}
+	&\bselect Q_1 \bthen T_1 \\\\
+	&\bwhen Q_2 \bthen T_2 \\\\
+	&\cdots \\\\
+	&\bwhen Q_n \bthen T_n \\\\
+	&\belse V \bend 
+\end{align}
 
-				#### Refinement Structures
+Where the $Q$s are predicates, the $T$s are statements, and the else clause is optional.
 
-				***Local variables.*** Introducing local variables to be used in a block.
+#### Refinement Structures
 
-				$$ \bvar v \bin S \bend $$
+***Local variables.*** Introducing local variables to be used in a block.
 
-				An example of this is a swap operation:
+$$ \bvar v \bin S \bend $$
 
-				$$ swap(x,y) = \bvar t \bin t := x; x := y; y := t \bend $$
+An example of this is a swap operation:
 
-				***Loops.*** For more information see [Refinement>Loops](#r-4).
+$$ swap(x,y) = \bvar t \bin t := x; x := y; y := t \bend $$
 
-				$$ \bwhile C \bdo L \binvariant LI \bvariant LV \bend $$
+***Loops.*** For more information see [Refinement>Loops](#r-4).
 
-				Where $C$ is the condition, $L$ is the actual loop operation, $LI$ is the loop invariant, $LV$ is the loop variant that strictly decreases.
+$$ \bwhile C \bdo L \binvariant LI \bvariant LV \bend $$
 
-				
-			</div>
+Where $C$ is the condition, $L$ is the actual loop operation, $LI$ is the loop invariant, $LV$ is the loop variant that strictly decreases.
 
-			<hr>
 
-			<div class="md-conv" id="ref-notation">
-				## Notation 
+</div>
 
-				Display maths notation and code notation are both shown. If one is missing that means I forgot and cannot yet be bothered to look it up. 
+<hr>
 
-				Some B notation is difficult to display in mathjax -- I will be using the closest possible variants.
+<div class="md-conv" id="ref-notation">
+## Notation 
 
-				My code font also has ligatures, bear that in mind.
+Display maths notation and code notation are both shown. If one is missing that means I forgot and cannot yet be bothered to look it up. 
 
-				#### General B notation:
+Some B notation is difficult to display in mathjax -- I will be using the closest possible variants.
 
-				* assignment: $x := y$ <r-r>`x := y`</r-r>
-				* parallel operation: $x := y || y := z$ -- does NOT assign z to x since it is done in parallel. <r-r>`x := y || y := z`</r-r>
-				* parallel assign: $x, y := y, z$ <r-r>`x,y := y,z`</r-r>
-				* no operation: $\skip$ <r-r>`skip`</r-r>
-				* operation return: $o \longleftarrow operation = \cdots$ <r-r>`oo &lt;-- operation = ...`</r-r>
+My code font also has ligatures, bear that in mind.
 
-				#### Set Notation
+#### General B notation:
 
-				* empty set: $\{\}$ or $\varnothing$  <r-r>`{}`</r-r>
-				* member: $e \in S$  <r-r>`e : S`</r-r>
-				* not member: $e \not\in S$  <r-r>`e /: S`</r-r>
-				* subset: $S \subseteq T$ ; <r-r>`S &lt;: T`</r-r>
-				* union: $S \cup T$ <r-r>`S \/ T`</r-r>
-				* intersection: $S \cap T$ <r-r>`S /\ T`</r-r>
-				* subtraction: $S - T$ <r-r>`S - T`</r-r>
-				* big union: $\bigcup S$
-				* big intersect: $\bigcap S$
-				* powerset: $\pow S$ <r-r>`POW(S)`</r-r>
-				* cartesian product: $S \times T$ <r-r>`S * T`</r-r> 
-				* cardinality (size): $\card(s)$ <r-r>`card(S)`</r-r>
-				* naturals with 0: $\N$ <r-r>`NAT`</r-r>
-				* naturals without 0: $\No$ <r-r>`NAT1`</r-r>
-				* set comprehension: $\{ x | x \in T \land P\}$ <r-r>`{x|x : T & P}`</r-r>
-				* range between $m$ and $n$ inclusive: $m..n$ <r-r>`m..n`</r-r>
+* assignment: $x := y$ <r-r>`x := y`</r-r>
+* parallel operation: $x := y || y := z$ -- does NOT assign z to x since it is done in parallel. <r-r>`x := y || y := z`</r-r>
+* parallel assign: $x, y := y, z$ <r-r>`x,y := y,z`</r-r>
+* no operation: $\skip$ <r-r>`skip`</r-r>
+* operation return: $o \longleftarrow operation = \cdots$ <r-r>`oo &lt;-- operation = ...`</r-r>
 
-				#### Logic Notation 
+#### Set Notation
 
-				* and, or, not: $\land, \lor, \lnot$ <r-r>`&`,  `or`,  `not`</r-r>
-				* implies, equivalence: $\implies, \iff$ <r-r>`=>`, `&lt;=>`</r-r>
-				* universal (forall): $\forall x \cdot x \in T \implies P$ <r-r>`!(x).(x : T => P)`</r-r>
-				* existential (there exists): $\exists x \cdot x \in T \land P$ <r-r>`#(x).(x : T & P)`</r-r>
+* empty set: $\{\}$ or $\varnothing$  <r-r>`{}`</r-r>
+* member: $e \in S$  <r-r>`e : S`</r-r>
+* not member: $e \not\in S$  <r-r>`e /: S`</r-r>
+* subset: $S \subseteq T$ ; <r-r>`S &lt;: T`</r-r>
+* union: $S \cup T$ <r-r>`S \/ T`</r-r>
+* intersection: $S \cap T$ <r-r>`S /\ T`</r-r>
+* subtraction: $S - T$ <r-r>`S - T`</r-r>
+* big union: $\bigcup S$
+* big intersect: $\bigcap S$
+* powerset: $\pow S$ <r-r>`POW(S)`</r-r>
+* cartesian product: $S \times T$ <r-r>`S * T`</r-r> 
+* cardinality (size): $\card(s)$ <r-r>`card(S)`</r-r>
+* naturals with 0: $\N$ <r-r>`NAT`</r-r>
+* naturals without 0: $\No$ <r-r>`NAT1`</r-r>
+* set comprehension: $\{ x | x \in T \land P\}$ <r-r>`{x|x : T & P}`</r-r>
+* range between $m$ and $n$ inclusive: $m..n$ <r-r>`m..n`</r-r>
 
-				Remember to pay attention to which variables are *bound* in first order logic.
+#### Logic Notation 
 
-				#### Arithmetic Notation 
+* and, or, not: $\land, \lor, \lnot$ <r-r>`&`,  `or`,  `not`</r-r>
+* implies, equivalence: $\implies, \iff$ <r-r>`=>`, `&lt;=>`</r-r>
+* universal (forall): $\forall x \cdot x \in T \implies P$ <r-r>`!(x).(x : T => P)`</r-r>
+* existential (there exists): $\exists x \cdot x \in T \land P$ <r-r>`#(x).(x : T & P)`</r-r>
 
-				* equals, less than, greater than: <r-r>`=`, `&lt;`, `&gt;`</r-r>
-				* less than equals, greater than equals: <r-r>`&lt;=`, `>=`</r-r>
-				* not equals: $\neq$ <r-r>`/=`</r-r>
-				* add, subtract, multiply, divide: <r-r>`+`, `-`, `*`, `/`</r-r>
-				* summation: $\sum x \cdot (x \in T | f(x))$ where $f(x)$ is the expression to sum. <r-r>`SIGMA (x) . (x:T | f(x))`</r-r>
+Remember to pay attention to which variables are *bound* in first order logic.
 
-				#### Relation Notation
-				
-				Relations between two sets describes mappings of elements from one set to another. Note that a relation $X \llra Y$ can be described as a set of pairs $(x,y) : x \in X \land y \in Y$.
+#### Arithmetic Notation 
 
-				* set (type) of all relations between X and Y: $X \llra Y$ <r-r>`X &lt;-&gt; Y`</r-r>
-				* element $x$ maps to $y$: $x \mapsto y$ <r-r>`x |-&gt; y`</r-r>
-				* domain of relation: $\dom(R)$ <r-r>`dom(R)`</r-r>
-				* range of relation: $\ran(R)$ <r-r>`ran(R)`</r-r>
-				* domain restriction: $U \triangleleft R$, all mappings $x \mapsto y$ in R where $x \in U$. <r-r>`U &lt;&lt;| R`</r-r>
-				* domain subtraction: $U \blacktriangleleft R$, all mappings $x \mapsto y$ in R where $x \not\in U$. <r-r>`U &lt;&lt;| R`</r-r>
-				* range restriction: $R \triangleright U$, all $x \mapsto y$ in R where $y \in U$. <r-r>`R |> U`</r-r>
-				* range subtraction: $R \blacktriangleright U$, all $x \mapsto y$ \in R where $y \not\in U$. <r-r>`R |>> U`</r-r>
-				* relational image: $R[U]$, all $y$ where $x \mapsto y \in R$ and $x \in U$. <r-r>`R[U]`</r-r>
-				* relational inverse: $R^{-1}$, the set $\{y \mapsto x | x \mapsto y \in R\}$. <r-r>`R'`</r-r>
-				* relation composition: $R;S$, given $R \in X \llra Y \land S \in Y \llra Z$, produces the relation $R;S \in X \llra Z$ where $x\mapsto z \in (R;S) \implies x \mapsto y \in R \land y \mapsto z \in S$. <r-r>`R ; S`</r-r>
-				* identity relation: $id(S)$, the relation of every element in S to itself.
-				* repeated composition: $R^n$ relation R composed to itself $n$ times.
-				* relation overriding: $R \lessplus S$, where R and S relate the same sets, substitutes all mappings $x \mapsto y \in R$ for corresponding $x \mapsto y' \in S$, if $x$ is present in both domains. <r-r>`R &lt;+ S`</r-r>
+* equals, less than, greater than: <r-r>`=`, `&lt;`, `&gt;`</r-r>
+* less than equals, greater than equals: <r-r>`&lt;=`, `>=`</r-r>
+* not equals: $\neq$ <r-r>`/=`</r-r>
+* add, subtract, multiply, divide: <r-r>`+`, `-`, `*`, `/`</r-r>
+* summation: $\sum x \cdot (x \in T | f(x))$ where $f(x)$ is the expression to sum. <r-r>`SIGMA (x) . (x:T | f(x))`</r-r>
 
+#### Relation Notation
 
-				For the four triangle operations, pay special care as to what order it's in.
+Relations between two sets describes mappings of elements from one set to another. Note that a relation $X \llra Y$ can be described as a set of pairs $(x,y) : x \in X \land y \in Y$.
 
-				#### Function Notation
+* set (type) of all relations between X and Y: $X \llra Y$ <r-r>`X &lt;-&gt; Y`</r-r>
+* element $x$ maps to $y$: $x \mapsto y$ <r-r>`x |-&gt; y`</r-r>
+* domain of relation: $\dom(R)$ <r-r>`dom(R)`</r-r>
+* range of relation: $\ran(R)$ <r-r>`ran(R)`</r-r>
+* domain restriction: $U \triangleleft R$, all mappings $x \mapsto y$ in R where $x \in U$. <r-r>`U &lt;&lt;| R`</r-r>
+* domain subtraction: $U \blacktriangleleft R$, all mappings $x \mapsto y$ in R where $x \not\in U$. <r-r>`U &lt;&lt;| R`</r-r>
+* range restriction: $R \triangleright U$, all $x \mapsto y$ in R where $y \in U$. <r-r>`R |> U`</r-r>
+* range subtraction: $R \blacktriangleright U$, all $x \mapsto y$ \in R where $y \not\in U$. <r-r>`R |>> U`</r-r>
+* relational image: $R[U]$, all $y$ where $x \mapsto y \in R$ and $x \in U$. <r-r>`R[U]`</r-r>
+* relational inverse: $R^{-1}$, the set $\{y \mapsto x | x \mapsto y \in R\}$. <r-r>`R'`</r-r>
+* relation composition: $R;S$, given $R \in X \llra Y \land S \in Y \llra Z$, produces the relation $R;S \in X \llra Z$ where $x\mapsto z \in (R;S) \implies x \mapsto y \in R \land y \mapsto z \in S$. <r-r>`R ; S`</r-r>
+* identity relation: $id(S)$, the relation of every element in S to itself.
+* repeated composition: $R^n$ relation R composed to itself $n$ times.
+* relation overriding: $R \lessplus S$, where R and S relate the same sets, substitutes all mappings $x \mapsto y \in R$ for corresponding $x \mapsto y' \in S$, if $x$ is present in both domains. <r-r>`R &lt;+ S`</r-r>
 
-				Functions are just relations where each input maps to only one output, that is for $f \in S \llra T$ to be a function, $x \mapsto y \in f \implies \forall y' \cdot (y' \in S \land y' \neq y \implies x \mapsto y' \not\in f)$.
 
-				The following are the notations for different types of functions -- they should be read as "the set of all X"
+For the four triangle operations, pay special care as to what order it's in.
 
-				* partial functions: $S \pfunc T$, which maps some elems of S to some elems of T. <r-r>`S +-&gt; T`</r-r>
-				* total functions: $S \longrightarrow T$, which maps *all* elems of S to some elems of T. <r-r>`S --&gt; T`</r-r>
-				* partial injections: $S \pinj T$, partial functions which are injective (one-to-one) <r-r>`S >+> T`</r-r>
-				* total injections: $S \inj T$, injective total functions. <r-r>`S >-> T`</r-r>
-				* surjective functions: $S \surj T$, where all range elements are mapped "onto". <r-r>`S --&gt;> T`</r-r>
-				* bijective functions: $S \bij T$ which are both injective and surjective. <r-r>`S >->> T`</r-r>
-				* get function value: $f(x)$, which gets what $x$ maps to. <r-r>`f(x)`</r-r>
-				* replace function value: $f(x) := y'$ replaces $x \mapsto y$ with $x \mapsto y'$. <r-r>`f(x) := yy`</r-r>
-				* lambda function notation: $\lambda x \cdot (x \in S | f(x))$ where $f(x)$ is an expression over $x$. <r-r>`%x.(x : S | f(x))` </r-r>
+#### Function Notation
 
-				For replacement of multiple mappings, i.e. relation overriding with more than one element, we must use the $\lessplus$ syntax.
+Functions are just relations where each input maps to only one output, that is for $f \in S \llra T$ to be a function, $x \mapsto y \in f \implies \forall y' \cdot (y' \in S \land y' \neq y \implies x \mapsto y' \not\in f)$.
 
-				**Arrays** are nothing but functions from a numerical range $1..n \longrightarrow S$ to some set of elements.
+The following are the notations for different types of functions -- they should be read as "the set of all X"
 
+* partial functions: $S \pfunc T$, which maps some elems of S to some elems of T. <r-r>`S +-&gt; T`</r-r>
+* total functions: $S \longrightarrow T$, which maps *all* elems of S to some elems of T. <r-r>`S --&gt; T`</r-r>
+* partial injections: $S \pinj T$, partial functions which are injective (one-to-one) <r-r>`S >+> T`</r-r>
+* total injections: $S \inj T$, injective total functions. <r-r>`S >-> T`</r-r>
+* surjective functions: $S \surj T$, where all range elements are mapped "onto". <r-r>`S --&gt;> T`</r-r>
+* bijective functions: $S \bij T$ which are both injective and surjective. <r-r>`S >->> T`</r-r>
+* get function value: $f(x)$, which gets what $x$ maps to. <r-r>`f(x)`</r-r>
+* replace function value: $f(x) := y'$ replaces $x \mapsto y$ with $x \mapsto y'$. <r-r>`f(x) := yy`</r-r>
+* lambda function notation: $\lambda x \cdot (x \in S | f(x))$ where $f(x)$ is an expression over $x$. <r-r>`%x.(x : S | f(x))` </r-r>
 
-				#### Sequence Notation 
+For replacement of multiple mappings, i.e. relation overriding with more than one element, we must use the $\lessplus$ syntax.
 
-				Sequences, or lists, are written as functions $1..n \longrightarrow T$, relating a (1-)index to an element. They are syntax-sugared into conventional list format.
+**Arrays** are nothing but functions from a numerical range $1..n \longrightarrow S$ to some set of elements.
 
-				* empty sequence: $[]$ <r-r>`[]`</r-r>
-				* sequence of elements: $[e_1, \dots, e_n]$ <r-r>`[e1, ..., en]`</r-r>
-				* set of finite sequences: $\seq(S)$ <r-r>`seq(S)`</r-r>
-				* set of finite non-empty sequences: $\seqo(S)$ <r-r>`seq1(S)`</r-r>
-				* set of injective sequences (no repeats): $\iseq(S)$ <r-r>`iseq(S)`</r-r>
-				* set of permutations of the set: $\perm(S)$ <r-r>`perm(S)`</r-r>
-				* list concatenation: $s_1 \smallfrown s_2$ <r-r>`s1 ^ s2`</r-r>
-				* prepend element $e$: $e \rightarrow s$ <r-r>`e -> s`</r-r>
-				* append element $e$: $s \leftarrow e$ <r-r>`s &lt;- e`</r-r>
-				* length: $\size(s)$ <r-r>`size(s)`</r-r>
-				* reverse: $\rev(s)$ <r-r>`rev(s)`</r-r>
-				* take first $n$ elems: $s \uparrow n$ <r-r>`s /|\ n`</r-r>
-				* drop the first $n$ elems: $s \downarrow n$ <r-r>`s \|/ n`</r-r>
-				* get the first element of non-empty sequence: $\first(s)$ <r-r>`first(s)`</r-r>
-				* get last element: $\last(s)$ <r-r>`last(s)`</r-r>
-				* get all but the first element: $\tail(s)$ <r-r>`tail(s)`</r-r>
-				* get all but the last element: $\front(s)$ <r-r>`front(s)`</r-r>
 
-				#### Nondeterminism
+#### Sequence Notation 
 
-				* assign any element from set: $x :\in S$ <r-r>`x :: S`</r-r>
+Sequences, or lists, are written as functions $1..n \longrightarrow T$, relating a (1-)index to an element. They are syntax-sugared into conventional list format.
 
-				#### Record Types 
+* empty sequence: $[]$ <r-r>`[]`</r-r>
+* sequence of elements: $[e_1, \dots, e_n]$ <r-r>`[e1, ..., en]`</r-r>
+* set of finite sequences: $\seq(S)$ <r-r>`seq(S)`</r-r>
+* set of finite non-empty sequences: $\seqo(S)$ <r-r>`seq1(S)`</r-r>
+* set of injective sequences (no repeats): $\iseq(S)$ <r-r>`iseq(S)`</r-r>
+* set of permutations of the set: $\perm(S)$ <r-r>`perm(S)`</r-r>
+* list concatenation: $s_1 \smallfrown s_2$ <r-r>`s1 ^ s2`</r-r>
+* prepend element $e$: $e \rightarrow s$ <r-r>`e -> s`</r-r>
+* append element $e$: $s \leftarrow e$ <r-r>`s &lt;- e`</r-r>
+* length: $\size(s)$ <r-r>`size(s)`</r-r>
+* reverse: $\rev(s)$ <r-r>`rev(s)`</r-r>
+* take first $n$ elems: $s \uparrow n$ <r-r>`s /|\ n`</r-r>
+* drop the first $n$ elems: $s \downarrow n$ <r-r>`s \|/ n`</r-r>
+* get the first element of non-empty sequence: $\first(s)$ <r-r>`first(s)`</r-r>
+* get last element: $\last(s)$ <r-r>`last(s)`</r-r>
+* get all but the first element: $\tail(s)$ <r-r>`tail(s)`</r-r>
+* get all but the last element: $\front(s)$ <r-r>`front(s)`</r-r>
 
-				Records store named fields. The type of a record structure is written as 
-				$$ person \in \struct(p\_name \in NAME, p\_age \in \No) $$
+#### Nondeterminism
 
-				And an initialisation can go as
-				$$ person := \rec(p\_name : Bob, p\_age : 21) $$
+* assign any element from set: $x :\in S$ <r-r>`x :: S`</r-r>
 
-				Retrieval: $person'p\_name$
+#### Record Types 
 
-			</div>
-		</div>
+Records store named fields. The type of a record structure is written as 
+$$ person \in \struct(p\\_name \in NAME, p\\_age \in \No) $$
 
-		<div class="colourband">
-			<h2 id="proof">Verification</h2>
-		</div>
+And an initialisation can go as
+$$ person := \rec(p\\_name : Bob, p\\_age : 21) $$
 
-		<div class="cbox">
-			<div class="md-conv">
-				## Introduction
+Retrieval: $person'p\\_name$
 
-				Verification is an essential part of formal systems -- ensuring that the code we write is correct and mathematically sound. This is how we eventually generate safe systems.
+</div>
+</div>
 
-				During verification *bound variables* in first order logic must be dealt with very carefully, for example in
-				$$ x+y \gt 10 \land \forall x \cdot (x \in X \implies P(x)) $$ 
-				the first $x$ is not bound, but in the second expression $x$ is a *different* bound variable. In 
-				$$ \forall x \cdot (x \in X \implies P(x)) \land \forall x \cdot (x \in X \implies Q(X)) $$ 
-				the two $x$ variable are bound to different scopes and are *unrelated*. Especially, avoid cases such as 
-				$$ \forall x \cdot (x \in \N \implies \exists x \cdot (x \in \N \land x > x)) $$ 
-				... just don't do the last one. Rename your variables properly.
+<div class="colourband">
+<h2 id="proof">Verification</h2>
+</div>
 
-				**Substitution** is the process of replacing an *unbound* variable in an expression with another expression, it is denoted (original)[var/new]:
+<div class="cbox">
+<div class="md-conv">
+## Introduction
 
-				$$ (x + y \gt 10)[3 / x] == 3 + y \gt 10 $$
+Verification is an essential part of formal systems -- ensuring that the code we write is correct and mathematically sound. This is how we eventually generate safe systems.
 
-				Read this $[3/x]$ as "three replaces x".
+During verification *bound variables* in first order logic must be dealt with very carefully, for example in
+$$ x+y \gt 10 \land \forall x \cdot (x \in X \implies P(x)) $$ 
+the first $x$ is not bound, but in the second expression $x$ is a *different* bound variable. In 
+$$ \forall x \cdot (x \in X \implies P(x)) \land \forall x \cdot (x \in X \implies Q(X)) $$ 
+the two $x$ variable are bound to different scopes and are *unrelated*. Especially, avoid cases such as 
+$$ \forall x \cdot (x \in \N \implies \exists x \cdot (x \in \N \land x > x)) $$ 
+... just don't do the last one. Rename your variables properly.
 
-				### Contents
- 
-				1. [The Weakest Precondition](#v-wp)
-				2. [Machine Consistency](#v-consistent)
+**Substitution** is the process of replacing an *unbound* variable in an expression with another expression, it is denoted (original)[var/new]:
 
-				<hr>
+$$ (x + y \gt 10)[3 / x] == 3 + y \gt 10 $$
 
-			</div>
+Read this $[3/x]$ as "three replaces x".
 
-			<div class="md-conv" id="v-wp">
-				## The Weakest Precondition
+### Contents
 
-				The *weakest precondition* of a statement is essentially the least restricted state space for which an operation produces a desired output -- the postcondition.
-				$
-				\newcommand{\lh}{\;\{}
-				\newcommand{\rh}{\}\;}
-				$
+1. [The Weakest Precondition](#v-wp)
+2. [Machine Consistency](#v-consistent)
 
-				Just like in CS261 we can denote a precondition-operation-postcondition triple in *hoare triples*, that is for program $Q$ with precondition $P$ and postcondition $R$, write 
-				$$ \lh P \rh Q \lh R \rh $$
+<hr>
 
-				We are interested in the *weakest precondition* $P$, given a $Q, R$. This is written (perhaps confusingly) as
-				$$ [Q]R $$
+</div>
 
-				#### Laws of Logic
+<div class="md-conv" id="v-wp">
+## The Weakest Precondition
 
-				The following hold for complex postconditions:
+The *weakest precondition* of a statement is essentially the least restricted state space for which an operation produces a desired output -- the postcondition.
+$
+\newcommand{\lh}{\\;\\{}
+\newcommand{\rh}{\\}\\;}
+$
 
-				* $[S] (P \land Q) \iff [S]P \land [S]Q$ ;
-				* $[S]P \lor [S]Q \implies [S] (P \lor Q) $ but not the other way round;
-				* If $P \implies Q$ then $[S]P \implies [S]Q$. 
-				* $[S]\true$ is trivially true for any S which terminates.
+Just like in CS261 we can denote a precondition-operation-postcondition triple in *hoare triples*, that is for program $Q$ with precondition $P$ and postcondition $R$, write 
+$$ \lh P \rh Q \lh R \rh $$
 
-				#### Derivation Rules
+We are interested in the *weakest precondition* $P$, given a $Q, R$. This is written (perhaps confusingly) as
+$$ [Q]R $$
 
-				***Assignment Rule***. The weakest precondition for an assignment is 
-				$$ [x := E]R == R[E/x] $$
-				Replace all occurrences of $x$ in $R$ with $E$.
+#### Laws of Logic
 
-				***Multiple Assignment Rule***. The WP for multi-assignment is
-				$$ [x_1..x_n := E_1 .. E_n]R == R[E_1..E_n / x_1 .. x_n] $$ 
+The following hold for complex postconditions:
 
-				***Skip Rule***. over a skip operation:
-				$$ [skip]R == R $$
+* $[S] (P \land Q) \iff [S]P \land [S]Q$ ;
+* $[S]P \lor [S]Q \implies [S] (P \lor Q) $ but not the other way round;
+* If $P \implies Q$ then $[S]P \implies [S]Q$. 
+* $[S]\true$ is trivially true for any S which terminates.
 
-				***Block Rule***. over a begin-end block:
-				$$ [\bbegin P \bend] R == [P]R$$ 
+#### Derivation Rules
 
-				***Conditional Rule***. Over an if statement:
-				$$[\bif G \bthen P_1 \belse P_2 \bend] R$$ 
+***Assignment Rule***. The weakest precondition for an assignment is 
+$$ [x := E]R == R[E/x] $$
+Replace all occurrences of $x$ in $R$ with $E$.
 
-				\begin{align}
-					&== (G \implies [P_1]R) \land (\lnot G \implies [P_2]R) \\ 
-					&== (G \land [P_1]R) \lor (\lnot G \land [P_2]R)
-				\end{align}
+***Multiple Assignment Rule***. The WP for multi-assignment is
+$$ [x_1..x_n := E_1 .. E_n]R == R[E_1..E_n / x_1 .. x_n] $$ 
 
-				Also 
-				$$[\bif G \bthen P_1 \bend] R == (G \land [P_1]R) \lor (\lnot G \land R)$$ 
+***Skip Rule***. over a skip operation:
+$$ [skip]R == R $$
 
-				***Conditional Rule (II)***. Over a case statement:
-				$$[\bcase v \bof \beither v_1 \bthen p_1 \bor v_2 \bthen p_2 \cdots \belse p \bend] R $$
+***Block Rule***. over a begin-end block:
+$$ [\bbegin P \bend] R == [P]R$$ 
 
-				$$ == (v=v_1 \land [p_1]R) \lor (v=v_2 \land [p_2]R) \lor \cdots \lor (v \neq v_{1..n} \land p[R]) $$ 
+***Conditional Rule***. Over an if statement:
+$$[\bif G \bthen P_1 \belse P_2 \bend] R$$ 
 
-				***Precondition.*** 
+\begin{align}
+&== (G \implies [P_1]R) \land (\lnot G \implies [P_2]R) \\\\
+&== (G \land [P_1]R) \lor (\lnot G \land [P_2]R)
+\end{align}
 
-				$$ [ \bpre C \bthen P \bend ] R == C \land [ P ] R $$ 
+Also 
+$$[\bif G \bthen P_1 \bend] R == (G \land [P_1]R) \lor (\lnot G \land R)$$ 
 
-				***One-point rule.*** If we have one of the following forms:
-				$$
-				\begin{matrix}
-					\forall x \cdot (x = v \implies P) \\ 
-					\exists x \cdot (x = v \implies P) 
-				\end{matrix}
-				$$
-				Always replace by $P[v/x]$.
+***Conditional Rule (II)***. Over a case statement:
+$$[\bcase v \bof \beither v_1 \bthen p_1 \bor v_2 \bthen p_2 \cdots \belse p \bend] R $$
 
-				***Nondeterministic assignment.*** 
-				$$ [x :\in E] R == \forall s \cdot (s \in E \implies R[s/x]) $$
-				
-				***Any block.*** 
-				$$ 
-					[\bany x \bwhere Q \bthen P \bend] R \\
-				$$
-				$$ == \forall x \cdot (x \in E \implies [P]R ) $$
+$$ == (v=v_1 \land [p_1]R) \lor (v=v_2 \land [p_2]R) \lor \cdots \lor (v \neq v_{1..n} \land p[R]) $$ 
 
-				***Choice block.*** 
-				$$ [\bchoice P_1 \bor \dots \bor P_n \bend ] R$$ 
-				$$ == [P_1]R \land \cdots \land [P_n]R $$
+***Precondition.*** 
 
-				***Select block.***
-				$$ [\bselect c_1 \bthen p_1 \bwhen c_2 \bthen p_2 \dots \belse p \bend] R $$ 
-				$$ == (c_1 \implies [p_1]R) \land (c_2 \implies [p_2]R) \land \cdots \land p[R] $$ 
+$$ [ \bpre C \bthen P \bend ] R == C \land [ P ] R $$ 
 
-				***Sequencing.*** Used in refinement.
-				$$ [S; T]R == [S] ([T]R) $$ 
-				Note that I will usually omit the brackets and just define the application order as right-applicative.
+***One-point rule.*** If we have one of the following forms:
+$$
+\begin{matrix}
+\forall x \cdot (x = v \implies P) \\\\
+\exists x \cdot (x = v \implies P) 
+\end{matrix}
+$$
+Always replace by $P[v/x]$.
 
-				***Local variables.*** Used in refinement.
-				$$ [\bvar v \bin S \bend] R == \forall v \cdot [S]R $$
-			</div>
+***Nondeterministic assignment.*** 
+$$ [x :\in E] R == \forall s \cdot (s \in E \implies R[s/x]) $$
 
-			<div class="md-conv" id="v-consistent">
-				## Machine Consistency
+***Any block.*** 
+$$ 
+[\bany x \bwhere Q \bthen P \bend] R 
+$$
+$$ == \forall x \cdot (x \in E \implies [P]R ) $$
 
-				How do we make sure a machine is consistent? We need to check for several things, including 
-				
-				* that the invariant is maintained.
-				* that the invariant is given by the initialisation.
+***Choice block.*** 
+$$ [\bchoice P_1 \bor \dots \bor P_n \bend ] R$$ 
+$$ == [P_1]R \land \cdots \land [P_n]R $$
 
-				<div class="blue">
-					***Initialisation consistency.***
-					$$ \lh \true \rh \binitialisation \lh I \rh $$
-					where $I$ is the invariant.
-				</div>
-			</div>
-			<button class="collapsible">Example.</button>
-			<div class="ccontent md-conv">
-				Given 
-				\begin{align}
-					\binvariant\; &inside \subseteq PID \land \\
-					& maxin \in \No \land \\
-					&\card(inside) \leq maxin
-				\end{align}
-				$$ \binitialisation\; inside := \{\} || maxin := 500 $$
+***Select block.***
+$$ [\bselect c_1 \bthen p_1 \bwhen c_2 \bthen p_2 \dots \belse p \bend] R $$ 
+$$ == (c_1 \implies [p_1]R) \land (c_2 \implies [p_2]R) \land \cdots \land p[R] $$ 
 
-				We can solve this as
+***Sequencing.*** Used in refinement.
+$$ [S; T]R == [S] ([T]R) $$ 
+Note that I will usually omit the brackets and just define the application order as right-applicative.
 
-				\begin{align}
-					[\binitialisation] \binvariant &== [inside := \{\} || maxin := 500] \left(\begin{matrix}
-					inside \subseteq PID \land \\
-					maxin \in \No \land \\
-					\card(inside) \leq maxin
-					\end{matrix}\right) \\ 
-					&== \varnothing \subseteq PID \land 500 \in \No \land 0 \leq 500 \\ 
-					&== \true 
-				\end{align}
+***Local variables.*** Used in refinement.
+$$ [\bvar v \bin S \bend] R == \forall v \cdot [S]R $$
+</div>
 
-			</div>
+<div class="md-conv" id="v-consistent">
+## Machine Consistency
 
-			<div class="md-conv">
-				Operations come next, and we can assume invariants are true. 
+How do we make sure a machine is consistent? We need to check for several things, including 
 
-				<div class="blue">
-					***Operation consistency.*** 
-					\[I \land \bpre \implies [S] I \] $$
-					Where $S$ is the operation body.
-				</div>
-			</div>
+* that the invariant is maintained.
+* that the invariant is given by the initialisation.
 
-			<button class="collapsible">Example.</button>
-			<div class="ccontent md-conv">
-				Given the above an operation
-				\begin{align}
-					enter(p) &= \bpre p \in PID \land p \not\in inside \land \card(inside) \lt maxin \\
-					&= \bthen inside := inside \cup \{p\} \\ 
-					&\bend 
-				\end{align}
+<div class="blue">
 
-				We get 
-				$$
-				\begin{matrix}
-					inside \subseteq PID \land maxin \in \No \land \card(inside) \leq maxin \land \\
-					p \in PID \land p \not\in inside \land \card(inside) \lt maxin \\ 
-					\implies \\ 
-					[inside := inside \cup \{p\}] \left(\begin{matrix}
-					inside \subseteq PID \land maxin \in \No \land\\
-					 \card(inside) \leq maxin 
-					\end{matrix}\right)
-				\end{matrix}
-				$$
-				The latter resolves to
-				$$ == inside \cup \{p\} \subseteq PID \land maxin \in \No \land \card(inside \cup \{p\}) \leq maxin$$ 
+***Initialisation consistency.***
 
-				Overall this resolves to $\true$ given our precondition and invariant.
-			</div>
+$$ \lh \true \rh \binitialisation \lh I \rh $$
 
-			<div class="md-conv">
-				***Assertions.*** An assertion is a fact we can make about the program that is always true -- i.e. it is an invariant. 
+where $I$ is the invariant.
+</div>
 
-				**However**, if we prove that this assertion follows from the invariant: $I \implies A$, then we do not need to include this assertion in any precondition.
+</div>
 
-				That is, for properties $P$, constants $C$, invariant $I$, and assertions $J_1 .. J_n$, for every $J_i$:
-				$$ P \land C \land I \land J_{1..i-1} \implies J_i $$
+<button class="collapsible">Example.</button>
+<div class="ccontent md-conv">
+Given 
+\begin{align}
+\binvariant\\; &inside \subseteq PID \land \\\\
+& maxin \in \No \land \\\\
+&\card(inside) \leq maxin
+\end{align}
+$$ \binitialisation\; inside := \{\} || maxin := 500 $$
 
-				You can also use properties and constants in operation proof: $P \land C \land I \land \bpre \implies [S]I$
+We can solve this as
 
-				<div class="side">
-					**Some notes:** AB does not detect if your constraints are *satisfiable*, just that they're true.
+\begin{align}
+[\binitialisation] \binvariant &== [inside := \\{\\} || maxin := 500] \left(\begin{matrix}
+inside \subseteq PID \land \\\\
+maxin \in \No \land \\\\
+\card(inside) \leq maxin
+\end{matrix}\right) \\\\
+&== \varnothing \subseteq PID \land 500 \in \No \land 0 \leq 500 \\\\ 
+&== \true 
+\end{align}
 
-					The natural numbers is a finite set from $0 .. 2^{32}-1$, and so often if AB fails to prove something it's because you've not checked that your input is less than `MAXINT`.
+</div>
 
-					Don't ask me how the prover works. <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Animated-Flag-First-French-Republic.gif" alt="" style="display: inline; max-height: 1em;"> 
-				</div>
-			</div>
-		</div>
+<div class="md-conv">
+Operations come next, and we can assume invariants are true. 
+
+<div class="blue">
+
+***Operation consistency.*** 
+$$ I \land \bpre \implies [S] I $$
+Where $S$ is the operation body.
+
+</div>
+</div>
+
+<button class="collapsible">Example.</button>
+<div class="ccontent md-conv">
+Given the above an operation
+\begin{align}
+enter(p) &= \bpre p \in PID \land p \not\in inside \land \card(inside) \lt maxin \\\\
+&= \bthen inside := inside \cup \\{p\\} \\\\ 
+&\bend 
+\end{align}
+
+We get 
+$$
+\begin{matrix}
+inside \subseteq PID \land maxin \in \No \land \card(inside) \leq maxin \land \\\\
+p \in PID \land p \not\in inside \land \card(inside) \lt maxin \\\\ 
+\implies \\ 
+[inside := inside \cup \\{p\\}] \left(\begin{matrix}
+inside \subseteq PID \land maxin \in \No \land\\\\
+	\card(inside) \leq maxin 
+\end{matrix}\right)
+\end{matrix}
+$$
+The latter resolves to
+$$ == inside \cup \\{p\\} \subseteq PID \land maxin \in \No \land \card(inside \cup \\{p\\}) \leq maxin$$ 
+
+Overall this resolves to $\true$ given our precondition and invariant.
+</div>
+
+<div class="md-conv">
+***Assertions.*** An assertion is a fact we can make about the program that is always true -- i.e. it is an invariant. 
+
+**However**, if we prove that this assertion follows from the invariant: $I \implies A$, then we do not need to include this assertion in any precondition.
+
+That is, for properties $P$, constants $C$, invariant $I$, and assertions $J_1 .. J_n$, for every $J_i$:
+$$ P \land C \land I \land J_{1..i-1} \implies J_i $$
+
+You can also use properties and constants in operation proof: $P \land C \land I \land \bpre \implies [S]I$
+
+<div class="side">
+
+**Some notes:** AB does not detect if your constraints are *satisfiable*, just that they're true.
+
+The natural numbers is a finite set from $0 .. 2^{32}-1$, and so often if AB fails to prove something it's because you've not checked that your input is less than `MAXINT`.
+
+Don't ask me how the prover works. <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Animated-Flag-First-French-Republic.gif" alt="" style="display: inline; max-height: 1em;"> 
+</div>
+</div>
+</div>
 
 		<div class="colourband">
 			<h2 id="structure">Machine Structuring</h2>
@@ -682,168 +702,169 @@ END</div>
 
 		<div class="cbox">
 
-			<div class="md-conv">
-				### Introduction
+<div class="md-conv">
+### Introduction
 
-				In large specifications modularity in design is essential -- B provides different machine structuring mechanisms that we can use, in order of permissiveness:
+In large specifications modularity in design is essential -- B provides different machine structuring mechanisms that we can use, in order of permissiveness:
 
-				1. [$M_2$ SEES $M_1$](#s-sees)
-				1. [$M_2$ USES $M_1$](#s-uses)
-				1. [$M_2$ INCLUDES $M_1$](#s-includes)
+1. [$M_2$ SEES $M_1$](#s-sees)
+1. [$M_2$ USES $M_1$](#s-uses)
+1. [$M_2$ INCLUDES $M_1$](#s-includes)
 
-				Then:
+Then:
 
-				1. [Proof obligations](#s-proof)
-			</div>
+1. [Proof obligations](#s-proof)
+</div>
 
-			<div class="md-conv" id="s-sees">
-				#### Sees
+<div class="md-conv" id="s-sees">
+#### Sees
 
-				The least permissive instruction. 
+The least permissive instruction. 
 
-				$M_2 \bsees M_1$ grants M2 **read-only** access to M1, which means:
-				* M2 can refer to sets and constants in M1,
-				* M2 can query its variable values directly,
-				* M2 can use **only** operations from M1 that do not change state, and only query.
-				* M2 **cannot** use any of M1's variables in its own invariant -- otherwise this would allow M2's invariant to be broken out of M2's control.
+$M_2 \bsees M_1$ grants M2 **read-only** access to M1, which means:
+* M2 can refer to sets and constants in M1,
+* M2 can query its variable values directly,
+* M2 can use **only** operations from M1 that do not change state, and only query.
+* M2 **cannot** use any of M1's variables in its own invariant -- otherwise this would allow M2's invariant to be broken out of M2's control.
 
-				M2 cannot control M1's parameters, nor see any other machines that also see M1.
+M2 cannot control M1's parameters, nor see any other machines that also see M1.
 
-				A machine can be seen by many other machines. 
+A machine can be seen by many other machines. 
 
-				This is denoted by a SEES clause under the MACHINE header:
+This is denoted by a SEES clause under the MACHINE header:
 
-				\begin{align}
-					\bmachine\;& ClearanceDB \\ 
-					\bsees\;&  Classification, Person
-				\end{align}
+\begin{align}
+	\bmachine\\;& ClearanceDB \\\\ 
+	\bsees\\;&  Classification, Person
+\end{align}
 
-				Seeing is useful for sharing definitions and deferred sets, so that all machines can use the same data types. 
+Seeing is useful for sharing definitions and deferred sets, so that all machines can use the same data types. 
 
-				\begin{align}
-					\bmachine\; & Colours \\ 
-					\bsets \;& COLOURS = \{red, amber, green\} \\ 
-					\bend \;
-				\end{align}
-
-
-			</div>
-
-			<div class="md-conv" id="s-includes">
-				#### Includes 
-
-				The most permissive instruction. 
-
-				$M_2 \bincludes M_1$ grants M2 **full and total control** over M1 -- M1 is effectively put into M2's specification.
-
-				M2 can see all variables and use all operations, though it can *only* update M1's state through it's operations.
-
-				All variables of M1 are useable in M2's invariant.
-
-				The initialisation of M1 is done *before* the initialisation of M2. This is the only bit of sequential processing at the abstract level.
-
-				A machine can only be included by **one** other machine. We can similarly write:
-
-				\begin{align}
-					\bmachine\;& TrafficSystem \\ 
-					\bsees\;&  TrainGate, CarGate
-				\end{align}
-
-				The operations of M1 **cannot** be called externally from M2, we have to either define a different wrapper operation with a **different name**, or we use the $\bpromotes op_1, op_2$ clause.
-
-				This is because in reality the specification is treated as "flat" and not hierarchical. Thus we always need to be careful that the overall specification does make sense.
-
-				Visibility is **not** transitive, so if M3 sees M2 and M2 sees M1, M3 cannot see M1. In nested includes, this means that M3 can only manipulate M2.
-			</div>
-
-			<div class="md-conv" id="s-uses">
-				#### Uses 
-
-				Uses is the clause that one has to be most careful about, because it's the only one that can feasibly break an invariant through side effects (via another machine).
-
-				$M_2 \buses M_1$ is like $M_2 \bsees M_1$ in that M2 has read-only access to M1's variables.
-
-				However M2 **can** use M1's variables in its own invariant, but 
-				* this makes claims about variables that M2 has no control over
-				* which cannot guarantee the invariant always holds
-				* thus proof conditions for USES is always deferred to a later stage (refinement) where it is factored out.
-			</div>
-
-			<div class="md-conv" id="s-proof">
-				### Proof Obligations
-
-				For $M_2 \subset M_1$, the general idea is to 
-				* verify that $M_1$ is consistent 
-				* use the constraints, properties, etc. from $M_1$ in the conditions of $M_2$.
-
-				For INCLUDES, we need to also demonstrate that the instantiation of M1 in M2 satisfies M1, that is
-				$$ C_1 [values / p_1] $$ 
-				Where $C_1$ are the constraints of machine 1, $p_1$ are the parameters, and $values$ are the actual passed values. 
-
-				The initialisation is the only place where we have to use *sequencing* before concrete refinement. It is
-				$$ C_1 \land C_2 \land B_1 \land B_2 \implies [T_1 ; T_2] I_2 $$ 
-				Where $C_\cdot$ are the constraints, $B_\cdot$ are the properties, $T_\cdot$ are the initialisations, and $I_2$ is the invariant of machine 2. 
-
-				Since we prove M1 first, and also can only manipulate it through its own operations (thus maintaining its invariant), we do not need to consider $I_1$ at all.
+\begin{align}
+	\bmachine\\; & Colours \\\\ 
+	\bsets \\;& COLOURS = \{red, amber, green\} \\\\ 
+	\bend \\;
+\end{align}
 
 
-			</div>
-		</div>
+</div>
+
+<div class="md-conv" id="s-includes">
+#### Includes 
+
+The most permissive instruction. 
+
+$M_2 \bincludes M_1$ grants M2 **full and total control** over M1 -- M1 is effectively put into M2's specification.
+
+M2 can see all variables and use all operations, though it can *only* update M1's state through it's operations.
+
+All variables of M1 are useable in M2's invariant.
+
+The initialisation of M1 is done *before* the initialisation of M2. This is the only bit of sequential processing at the abstract level.
+
+A machine can only be included by **one** other machine. We can similarly write:
+
+\begin{align}
+	\bmachine\\;& TrafficSystem \\\\ 
+	\bsees\\;&  TrainGate, CarGate
+\end{align}
+
+The operations of M1 **cannot** be called externally from M2, we have to either define a different wrapper operation with a **different name**, or we use the $\bpromotes op_1, op_2$ clause.
+
+This is because in reality the specification is treated as "flat" and not hierarchical. Thus we always need to be careful that the overall specification does make sense.
+
+Visibility is **not** transitive, so if M3 sees M2 and M2 sees M1, M3 cannot see M1. In nested includes, this means that M3 can only manipulate M2.
+</div>
+
+<div class="md-conv" id="s-uses">
+#### Uses 
+
+Uses is the clause that one has to be most careful about, because it's the only one that can feasibly break an invariant through side effects (via another machine).
+
+$M_2 \buses M_1$ is like $M_2 \bsees M_1$ in that M2 has read-only access to M1's variables.
+
+However M2 **can** use M1's variables in its own invariant, but 
+* this makes claims about variables that M2 has no control over
+* which cannot guarantee the invariant always holds
+* thus proof conditions for USES is always deferred to a later stage (refinement) where it is factored out.
+</div>
+
+<div class="md-conv" id="s-proof">
+### Proof Obligations
+
+For $M_2 \subset M_1$, the general idea is to 
+* verify that $M_1$ is consistent 
+* use the constraints, properties, etc. from $M_1$ in the conditions of $M_2$.
+
+For INCLUDES, we need to also demonstrate that the instantiation of M1 in M2 satisfies M1, that is
+$$ C_1 [values / p_1] $$ 
+Where $C_1$ are the constraints of machine 1, $p_1$ are the parameters, and $values$ are the actual passed values. 
+
+The initialisation is the only place where we have to use *sequencing* before concrete refinement. It is
+$$ C_1 \land C_2 \land B_1 \land B_2 \implies [T_1 ; T_2] I_2 $$ 
+Where $C_\cdot$ are the constraints, $B_\cdot$ are the properties, $T_\cdot$ are the initialisations, and $I_2$ is the invariant of machine 2. 
+
+Since we prove M1 first, and also can only manipulate it through its own operations (thus maintaining its invariant), we do not need to consider $I_1$ at all.
+
+
+</div>
+</div>
 
 		<div class="colourband">
 			<h2 id="refinement">Refinement</h2>
 		</div>
 
-		<div class="cbox">
-			<div class="md-conv">
-				## Contents 
+<div class="cbox">
+<div class="md-conv">
+## Contents 
 
-				1. [Introduction](#r-1)
-				2. [Basic Refinement](#r-2)
-				3. [Proof Obligations](#r-3)
-				4. [Loops](#r-4)
-				5. [Implementations](#r-5)
-				
-			</div>
+1. [Introduction](#r-1)
+2. [Basic Refinement](#r-2)
+3. [Proof Obligations](#r-3)
+4. [Loops](#r-4)
+5. [Implementations](#r-5)
 
-			<div class="md-conv" id="r-1">
-				## Introduction 
+</div>
 
-				So far we have been writing specifications -- *interfaces* for code, but we need to turn these abstract specifications into something concrete that can be implemented, or generated.
+<div class="md-conv" id="r-1">
+## Introduction 
 
-				Refinement is the process of moving from abstract mathematical concepts to concrete machines, which are written using a restricted set of the B language. In refinements, you are permitted **sequencing** and **loops**.
+So far we have been writing specifications -- *interfaces* for code, but we need to turn these abstract specifications into something concrete that can be implemented, or generated.
 
-				This can be done stepwise too, to slowly move forwards to the concrete machine. 
+Refinement is the process of moving from abstract mathematical concepts to concrete machines, which are written using a restricted set of the B language. In refinements, you are permitted **sequencing** and **loops**.
 
-				Refinement machines are denoted using the $\brefinement$ keyword, and what they refine is written under $\brefines$
+This can be done stepwise too, to slowly move forwards to the concrete machine. 
 
-				The final stage is an $\bimplementation$ machine.
+Refinement machines are denoted using the $\brefinement$ keyword, and what they refine is written under $\brefines$
 
-				There are two types of refinement:
+The final stage is an $\bimplementation$ machine.
 
-				***Data refinement.*** replaces abstract data structures with concrete ones.
+There are two types of refinement:
 
-				e.g. replacing set addition $s := s \cup \{i\}$ with array append $idx := idx + 1; arr(idx) := i$
+***Data refinement.*** replaces abstract data structures with concrete ones.
 
-				* refinements must be *at least as available* as the abstract operation -- must not restrict more than the precondition.
-				* the interface must be the same -- same inputs, outputs.
+e.g. replacing set addition $s := s \cup \{i\}$ with array append $idx := idx + 1; arr(idx) := i$
 
-				The most crucial part of data refinement is the **linking invariant**, a statement in the invariant which describes the relationship of the concrete data structure to the abstract one. 
+* refinements must be *at least as available* as the abstract operation -- must not restrict more than the precondition.
+* the interface must be the same -- same inputs, outputs.
 
-				e.g. $s = arr[1..pos]$
+The most crucial part of data refinement is the **linking invariant**, a statement in the invariant which describes the relationship of the concrete data structure to the abstract one. 
+
+e.g. $s = arr[1..pos]$
 
 
-				***Operation refinement.*** replaces an abstract operation with concrete ones. This could be something like replacing an $:\in$ with a defined assignment, or rewriting a summation as a loop.
+***Operation refinement.*** replaces an abstract operation with concrete ones. This could be something like replacing an $:\in$ with a defined assignment, or rewriting a summation as a loop.
 
-				Whatever you do though, you cannot introduce *more* non-determinism, though you can move it around.
-			</div>
+Whatever you do though, you cannot introduce *more* non-determinism, though you can move it around.
+</div>
 
 			<div class="md-conv" id="r-2">
-				## Basic Refinement
+## Basic Refinement
 
-				Take the following machine:
-				
-				<div class="codediv">MACHINE 		Forms 
+Take the following machine:
+
+```haskell
+MACHINE 		Forms 
 SETS 			CLASS; RESP = {yes, no}
 CONSTANTS 		cmax 
 PROPERTIES 		cmax : NAT1 & card(CLASS) &lt;= cmax
@@ -858,15 +879,17 @@ OPERATIONS
 	o &lt;-- query(c) = 
 		PRE c : CLASS 
 		THEN IF c : returns THEN o := yes ELSE o := no END
-		END</div>
+		END
+```
 
-				This details a class and records who has returned their homework.
+This details a class and records who has returned their homework.
 
-				To refine this we can define what the deferred CLASS set really is, as well as replace the returns set with an array that mapped members of the class to `yes` or `no` depending on whether that student has returned or not.
+To refine this we can define what the deferred CLASS set really is, as well as replace the returns set with an array that mapped members of the class to `yes` or `no` depending on whether that student has returned or not.
 
-				We also don't need to re-write anything which is predefined.
+We also don't need to re-write anything which is predefined.
 
-				<div class="codediv">REFINEMENT  Forms_r 
+```haskell
+REFINEMENT  Forms_r 
 REFINES 	Forms 
 VARIABLES 	retarr
 INVARIANT 	retarr : CLASS  --&gt; RESP & 
@@ -875,24 +898,24 @@ INITIALISATION
 	retarr := CLASS  * {no}
 OPERATIONS 
 	ret_form(c) = retarr(c) := yes;
-	o &lt;-- query(c) = o := retarr(c)</div>
+	o &lt;-- query(c) = o := retarr(c)
+```
 
-				Note that the preconditions don't need to be rewritten again. The old invariant is also included implicitly.
+Note that the preconditions don't need to be rewritten again. The old invariant is also included implicitly.
 
-				So in general:
-				* Structuring must repeat (must write USES, SEES, etc)
-				* Operation interfaces must match 1:1 -- though the internals can change.
+So in general:
+* Structuring must repeat (must write USES, SEES, etc)
+* Operation interfaces must match 1:1 -- though the internals can change.
 
-				> A refinement need only maintain enough information to perform its operations in accordance with its specification.
+> A refinement need only maintain enough information to perform its operations in accordance with its specification.
 
-				**USES is forbidden** in refinements.
+**USES is forbidden** in refinements.
 
-				<hr>
 
-				Take another machine and refinement:				
-			</div>
+Take another machine and refinement:	
 
-			<div class="codediv">MACHINE 		EntrySys 
+```haskell 
+MACHINE 		EntrySys 
 SETS 			PID 
 CONSTANTS 		maxin 
 PROPERTIES 		maxin : NAT1
@@ -915,13 +938,13 @@ OPERATIONS
 	p &lt;-- arbitrary_eject = 
 		ANY a WHERE a : inside THEN 
 			inside := inside - {a} || p := a 
-		END </div>
+		END 
+```
 
-			<div class="md-conv">
-				We can refine this to:
-			</div>
+We can refine this to:
 
-			<div class="codediv">REFINEMENT 		EntrySys_r 
+```haskell
+REFINEMENT 		EntrySys_r 
 REFINES 		EntrySys 
 PROPERTIES 		maxin = 500
 VARIABLES 		ilist 
@@ -939,207 +962,213 @@ OPERATIONS
 	
 	p &lt;-- arbitrary_eject = 
 		p := ilist(1);
-		ilist := tail(ilist)</div>
+		ilist := tail(ilist)
+```
 
-			<div class="md-conv">
-				The linking invariant can be quite complex.
+The linking invariant can be quite complex.
 
-				Whilst data refinement is usually the go-to, a refinement doesn't need to change the data structures at all. 
+Whilst data refinement is usually the go-to, a refinement doesn't need to change the data structures at all. 
 			</div>
 
-			<div class="md-conv" id="r-3">
-				## Proof Obligations
 
-				Informally, any refinement which
-				* matches the input/output interface of the machine 
-				* matches the effective behaviour of the machine
-				* has an appropriate linking invariant
-				* has an appropriate initialisation and logically valid operations 
-				can be a valid refinement. 
+<div class="md-conv" id="r-3">
+## Proof Obligations
 
-				More formally, two properties need to be true: **applicability** and **correctness**. To define these we can consider our machines (abstract as $M$ and concrete as $R$) as *functions*.
+Informally, any refinement which
+* matches the input/output interface of the machine 
+* matches the effective behaviour of the machine
+* has an appropriate linking invariant
+* has an appropriate initialisation and logically valid operations 
+can be a valid refinement. 
 
-				**Applicability** states that each value mapped by the abstract machine, must be mapped by the concrete machine. "Everything it does we do"; $\dom(M) \subseteq \dom(R)$
+More formally, two properties need to be true: **applicability** and **correctness**. To define these we can consider our machines (abstract as $M$ and concrete as $R$) as *functions*.
 
-				**Correctness** states that each value mapped by the concrete machine, must agree with the abstract definitions. "Everything it says to do we do"; $\dom(M) \vartriangleright R \subseteq M$
+**Applicability** states that each value mapped by the abstract machine, must be mapped by the concrete machine. "Everything it does we do"; $\dom(M) \subseteq \dom(R)$
 
-				To define the following proof obligations, note this fact:
+**Correctness** states that each value mapped by the concrete machine, must agree with the abstract definitions. "Everything it says to do we do"; $\dom(M) \vartriangleright R \subseteq M$
 
-				* $[prog]P$ denotes states from which prog **must** establish P.
-				* $\lnot [prog] \lnot P$ denotes states from which prog **can** establish P.
+To define the following proof obligations, note this fact:
 
-				The latter is gotten using de morgan's law. Whilst the former's precondition will be states $\land$ed together, the latter will have states $\lor$ed together. 
-			</div>
+* $[prog]P$ denotes states from which prog **must** establish P.
+* $\lnot [prog] \lnot P$ denotes states from which prog **can** establish P.
 
-			<div class="blue md-conv">
-				***Initialisation Condition.***
+The latter is gotten using de morgan's law. Whilst the former's precondition will be states $\land$ed together, the latter will have states $\lor$ed together. 
+</div>
 
-				For the abstract machine with initialisation $T$, properties $B$, constants $C$,
+<div class="blue md-conv">
+***Initialisation Condition.***
 
-				For the concrete machine with initialisation $T_1$, properties $B_1$, linking invariant $J$:
+For the abstract machine with initialisation $T$, properties $B$, constants $C$,
 
-				$$ C \land B \land B_1 \implies [T_1] \lnot [T] \lnot J $$
-			</div>
+For the concrete machine with initialisation $T_1$, properties $B_1$, linking invariant $J$:
 
-			<p></p>
+$$ C \land B \land B_1 \implies [T_1] \lnot [T] \lnot J $$
+</div>
 
-			<div class="blue md-conv">
-				***Operation Condition.***
+<p></p>
 
-				Let the abstract operation be $S$, the concrete be $S_1$, and $J$ as the linking invariant.
+<div class="blue md-conv">
+	***Operation Condition.***
 
-				Then let $I$ be the abstract invariant, $P$ be the preconditions, we get
+	Let the abstract operation be $S$, the concrete be $S_1$, and $J$ as the linking invariant.
 
-				$$ I \land J \land P \implies [S_1] \lnot [S] \lnot J $$
-			</div>
+	Then let $I$ be the abstract invariant, $P$ be the preconditions, we get
 
-			<p></p>
+	$$ I \land J \land P \implies [S_1] \lnot [S] \lnot J $$
+</div>
 
-			<div class="blue md-conv">
-				***Outputs and Preconditions.***
+<p></p>
 
-				Outputs are not part of the state, but they are part of the interface. To ensure the output is what we expect ensures *correctness*. 
+<div class="blue md-conv">
+***Outputs and Preconditions.***
 
-				Say the abstract machine has output $o$ but the concrete has output $o'$ (rename them even though they are the same), we get for our modified operation condition:
+Outputs are not part of the state, but they are part of the interface. To ensure the output is what we expect ensures *correctness*. 
 
-				$$ I \land J \land P \implies [S_1[o'/o]]\lnot[S]\lnot[J \land o' = o] $$ 
+Say the abstract machine has output $o$ but the concrete has output $o'$ (rename them even though they are the same), we get for our modified operation condition:
 
-				Preconditions must not be strengthened, ensuring that the concrete must accept anything the abstract would (or more). If the concrete operation has a precondition $P_1$, we must ensure:
+$$ I \land J \land P \implies [S_1[o'/o]]\lnot[S]\lnot[J \land o' = o] $$ 
 
-				$$ I \land J \land P \implies P_1 $$
-			</div>
+Preconditions must not be strengthened, ensuring that the concrete must accept anything the abstract would (or more). If the concrete operation has a precondition $P_1$, we must ensure:
 
-			<div class="md-conv" id="r-4">
-				## Loops
+$$ I \land J \land P \implies P_1 $$
+</div>
 
-				B gives you while loops of the form $\bwhile C \bdo L \bend$.
+<p></p>
 
-				Whilst it would be nice to write just that, the weakest precondition for loops would be awful, since we'd then need to do recursive unravelling which may never end. 
+<div class="md-conv" id="r-4">
+## Loops
 
-				Thus we need to define extra information to allow us to verify the two properties of a loop:
-				* **correctness**, that when execution ends it has the right postcondition.
-				* **termination**, that the loop does actually end.
+B gives you while loops of the form $\bwhile C \bdo L \bend$.
 
-				For termination, we must identify the **loop variant** -- 
-				* a property of the loop that is **strictly decreasing**, 
-				* and provides an upper **bound** on the number of remaining executions. (Doesn't need to count exactly.)
+Whilst it would be nice to write just that, the weakest precondition for loops would be awful, since we'd then need to do recursive unravelling which may never end. 
 
-				For correctness, we must identify the **loop invariant** (pain), --
-				* a relationship which doesn't change during execution,
-				* which describes how the loop works,
-				* such as by demonstrating the process the loop has completed,
-				* that is chosen carefully enough to make the postcondition true.
+Thus we need to define extra information to allow us to verify the two properties of a loop:
+* **correctness**, that when execution ends it has the right postcondition.
+* **termination**, that the loop does actually end.
 
-				Take the loop 
-				\begin{align}
-					&x := 0; sum := 0; \\
-					& \bwhile x \neq n \\
-					& \bdo x := x + 1 ; sum := sum + arr(x) \\ 
-					& \bend
-				\end{align}
+For termination, we must identify the **loop variant** -- 
+* a property of the loop that is **strictly decreasing**, 
+* and provides an upper **bound** on the number of remaining executions. (Doesn't need to count exactly.)
 
-				We can pick the loop variant $n - x$. 
+For correctness, we must identify the **loop invariant** (pain), --
+* a relationship which doesn't change during execution,
+* which describes how the loop works,
+* such as by demonstrating the process the loop has completed,
+* that is chosen carefully enough to make the postcondition true.
 
-				When the loop ends, the guard ($x \neq n$) becomes false. We need to pick a loop invariant such that it and not the guard imply the postcondition.
+Take the loop 
+\begin{align}
+	&x := 0; sum := 0; \\\\
+	& \bwhile x \neq n \\\\
+	& \bdo x := x + 1 ; sum := sum + arr(x) \\\\ 
+	& \bend
+\end{align}
 
-				We can pick from several loop invariants, like $x \geq 0$ or $y = 3$, but the most helpful one to us right now would be $sum = \sum i \cdot (1 \leq i \land i \leq x | arr(i))$ 
+We can pick the loop variant $n - x$. 
 
-				The negated post condition is just $x = n$, so we may also want to state a bound $0 \leq x \leq n$ in our invariant.
+When the loop ends, the guard ($x \neq n$) becomes false. We need to pick a loop invariant such that it and not the guard imply the postcondition.
 
-				Thus we would finally write:
+We can pick from several loop invariants, like $x \geq 0$ or $y = 3$, but the most helpful one to us right now would be $sum = \sum i \cdot (1 \leq i \land i \leq x | arr(i))$ 
 
-				\begin{align}
-					&x := 0; sum := 0; \\
-					\bwhile\;& x \neq n \\ 
-					\bdo\;& x := x+1 ; sum += sum + arr(x) \\
-					\binvariant\;& sum = \sum i \cdot (1 \leq i \land i \leq x | arr(i)) \land 0 \leq x \leq n \\ 
-					\bvariant\;& x - n \\
-					\bend\;
-				\end{align}
-			</div>
+The negated post condition is just $x = n$, so we may also want to state a bound $0 \leq x \leq n$ in our invariant.
 
-			<div class="blue md-conv">
-				***Loop condition*** For the loop 
-				$$ \bwhile E \bdo S \binvariant I \bvariant v \bend $$ 
+Thus we would finally write:
 
-				We have IF
+\begin{align}
+	&x := 0; sum := 0; \\\\
+	\bwhile\;& x \neq n \\\\ 
+	\bdo\;& x := x+1 ; sum += sum + arr(x) \\\\
+	\binvariant\;& sum = \sum i \cdot (1 \leq i \land i \leq x | arr(i)) \land 0 \leq x \leq n \\\\ 
+	\bvariant\;& x - n \\\\
+	\bend\;
+\end{align}
+</div>
 
-				\begin{align}
-					& \forall vars \cdot (I \land E \implies [S]I) \land \\
-					& \forall vars \cdot (I \land \lnot E \implies R) \land \\
-					& \forall vars \cdot (I \land E \implies v \in \N) \land \\ 
-					& \forall vars \cdot (I \land E \land v = v_0 \implies [S]v < v_0) \\
-					& I 
-				\end{align}
-				THEN
-				$$ [\bwhile E \bdo S \binvariant I \bvariant v \bend] R$$
-				Where each condition in turn:
-				* ensures the invariant is maintained,
-				* ensures that the postcondition is implied from the invariant and the false guard,
-				* ensures that the variant is nonnegative ($\N$)
-				* ensures that the variant is always less than the previous $v_0$ -- strictly decreasing.
-			</div>
+<div class="blue md-conv">
+***Loop condition*** For the loop 
+$$ \bwhile E \bdo S \binvariant I \bvariant v \bend $$ 
 
-			<div class="md-conv" id="r-5">
-				Often it is helpful to use the postcondition to inform you of the invariant.
+We have IF
 
-				## Implementations
+\begin{align}
+	& \forall vars \cdot (I \land E \implies [S]I) \land \\\\
+	& \forall vars \cdot (I \land \lnot E \implies R) \land \\\\
+	& \forall vars \cdot (I \land E \implies v \in \N) \land \\\\
+	& \forall vars \cdot (I \land E \land v = v_0 \implies [S]v < v_0) \\\\
+	& I 
+\end{align}
+THEN
+$$ [\bwhile E \bdo S \binvariant I \bvariant v \bend] R$$
+Where each condition in turn:
+* ensures the invariant is maintained,
+* ensures that the postcondition is implied from the invariant and the false guard,
+* ensures that the variant is nonnegative ($\N$)
+* ensures that the variant is always less than the previous $v_0$ -- strictly decreasing.
+</div>
 
-				The end goal of refinements is an implementation.
+<div class="md-conv" id="r-5">
+Often it is helpful to use the postcondition to inform you of the invariant.
 
-				There are two ways to write the final implementation:
-				* ensure the machine itself is in a fully concrete implementable version of B - $B_0$.
-				* import known library machines to offload some work.
+## Implementations
 
-				#### B0
+The end goal of refinements is an implementation.
 
-				$B_0$ is the **concrete** subset of B and is the code from which a toolkit can do automatic code generation.
+There are two ways to write the final implementation:
+* ensure the machine itself is in a fully concrete implementable version of B - $B_0$.
+* import known library machines to offload some work.
 
-				The actual code generation and structures itself though are toolkit dependent.
+#### B0
 
-				B0 has `CONCRETE_VARIABLES` at the implementation level,
-				The types known are 
-				* $INT \in [MININT, MAXINT]$, 
-				* $BOOL \in \{\true, \false\}$, 
-				* enumerated sets, 
-				* and deferred sets when defined.
+$B_0$ is the **concrete** subset of B and is the code from which a toolkit can do automatic code generation.
 
-				**Arrays** are total functions where the domain is $0..n \pod{n \in \N}$, and the range is concrete.
-				* e.g. $marks \in STUDENT \longrightarrow 0..100$, where STUDENT is also defined $STUDENT = 0..30$.
+The actual code generation and structures itself though are toolkit dependent.
 
-				**Records** are known too, but all types in all fields must be concrete. 
+B0 has `CONCRETE_VARIABLES` at the implementation level,
+The types known are 
+* $INT \in [MININT, MAXINT]$, 
+* $BOOL \in \\{\true, \false\\}$, 
+* enumerated sets, 
+* and deferred sets when defined.
 
-				B0 does **not** have sets, partial functions, relations, and sequences.
+**Arrays** are total functions where the domain is $0..n \pod{n \in \N}$, and the range is concrete.
+* e.g. $marks \in STUDENT \longrightarrow 0..100$, where STUDENT is also defined $STUDENT = 0..30$.
 
-				<hr>
+**Records** are known too, but all types in all fields must be concrete. 
 
-				Given the following machine
+B0 does **not** have sets, partial functions, relations, and sequences.
 
-				\begin{align}
-					\bmachine\;& Membership \\
-					\bsets\;& MID \\
-					\bconstants\;& reserved \\
-					\bproperties\; & card(MID) > 100 \land reserved \in MID
-				\end{align}
+-----
 
-				This can implement to 
+Given the following machine
 
-				\begin{align}
-					\bimplementation\;& Membership_i \\
-					\brefines\;& Membership \\ 
-					\bvalues\;& MID = 0..500; reserved = 0
-				\end{align}
+\begin{align}
+	\bmachine\;& Membership \\\\
+	\bsets\;& MID \\\\
+	\bconstants\;& reserved \\\\
+	\bproperties\; & card(MID) > 100 \land reserved \in MID
+\end{align}
 
-				More examples are given below.
+This can implement to 
 
-				Example 1 shows what happens with variables, the $\bvariables$ clause describes *abstract* variables, any variables to be used again must be redefined again with the correct types in a `CONCRETE_VARIABLES` section.
-			</div>
+\begin{align}
+	\bimplementation\;& Membership_i \\\\
+	\brefines\;& Membership \\\\
+	\bvalues\;& MID = 0..500; reserved = 0
+\end{align}
 
-			<button class="collapsible">Example 1.</button>
-			<div class="ccontent md-conv">
-				***Example.*** Take the machine 
+More examples are given below.
 
-				<div class="codediv">MACHINE 		Carpark
+Example 1 shows what happens with variables, the $\bvariables$ clause describes *abstract* variables, any variables to be used again must be redefined again with the correct types in a `CONCRETE_VARIABLES` section.
+</div>
+
+<p></p>
+
+<button class="collapsible">Example 1.</button>
+<div class="ccontent md-conv">
+***Example.*** Take the machine 
+
+```haskell 
+MACHINE 		Carpark
 SETS 			Resp={yes, no}
 CONSTANTS 		cap 
 PROPERTIES 		cap : NAT1
@@ -1152,11 +1181,14 @@ OPERATIONS
 						END;
 	enter = PRE inuse &lt; cap THEN inuse := inuse + 1 END;
 	leave = PRE inuse &gt; 0 THEN inuse := inuse - 1 END
-END</div>
+END
+```
 
-				This can implement to 
+This can implement to 
 
-				<div class="codediv">IMPLEMENTATION Carpark_i 
+```haskell 
+
+IMPLEMENTATION Carpark_i 
 REFINES CarPark 
 VALUES cap = 500
 CONCRETE_VARIABLES inuse 
@@ -1167,14 +1199,18 @@ OPERATIONS
 						END;
     enter = inuse := inuse + 1;
 	leave = IF inuse > 0 THEN inuse := inuse - 1 END 
-END</div>
-			</div>
+END
+```
+</div>
 
-			<button class="collapsible">Example 2.</button>
-			<div class="ccontent md-conv">
-				***Example.*** Take the following machine 
+<p></p>
 
-				<div class="codediv">MACHINE 		Smallform
+<button class="collapsible">Example 2.</button>
+<div class="ccontent md-conv">
+***Example.*** Take the following machine 
+
+```haskell
+MACHINE 		Smallform
 SETS 			CLASS, RESP = {yes, no}
 CONSTANTS 		cmax 
 PROPERTIES 		cmap : NAT1 & card(CLASS) = cmax 
@@ -1190,11 +1226,13 @@ OPERATIONS
 		PRE c : CLASS 
 		THEN IF c : returns THEN o := yes ELSE o := no END 
 		END 
-END</div>
+END
+```
 
-				It can implement to 
+It can implement to 
 
-				<div class="codediv">IMPLEMENTATION		Smallform_i
+```haskell
+IMPLEMENTATION		Smallform_i
 REFINES 			Smallform 
 VALUES 				cmax = 30; CLASS = 0..29
 CONCRETE_VARIABLES 	rarr
@@ -1204,15 +1242,17 @@ INITIALISATION 		rarr := CLASS * {no}
 OPERATIONS
 	retform(c) = rarr(c) := yes;
 	o &lt;-- formquery(c) = o := rarr(c)
-END</div>
+END
+```
 
-				Of course if we had some seemingly innocent extra operation like 
+Of course if we had some seemingly innocent extra operation like 
 
-				$$ n \longleftarrow howmanyret = n := card(returns) $$
+$$ n \longleftarrow howmanyret = n := card(returns) $$
 
-				B0 can't do $card(rarr \vartriangleright \{yes\})$, and so we need to count it using a loop:
+B0 can't do $card(rarr \vartriangleright \{yes\})$, and so we need to count it using a loop:
 
-				<div class="codediv">	n &lt;-- howmanyret = 
+```haskell 
+	n &lt;-- howmanyret = 
 		VAR i, x, r IN 
 			x := 0; 
 			i := 0;
@@ -1227,35 +1267,36 @@ END</div>
 				30 - i
 			END;
 			n := x
-		END</div>
+		END
+```
 
-				Not the best.
-			</div>
+Not the best.
+</div>
 
-			<div class="md-conv">
+<div class="md-conv">
 
-				$\bpre$ only guarantees that the operation runs fine when the inputs agree, but says nothing if the inputs do not agree. 
+$\bpre$ only guarantees that the operation runs fine when the inputs agree, but says nothing if the inputs do not agree. 
 
-				If we are in a controlled situation where we know the inputs do agree, then ignoring preconditions is OK, but if we are not, then we would need to account for other cases.
+If we are in a controlled situation where we know the inputs do agree, then ignoring preconditions is OK, but if we are not, then we would need to account for other cases.
 
-				Take the `Carpark` machine from example 1. Perhaps we want to implement error handling. We cannot just tack it on because the interface must be remain the same, so we write an **abstract machine wrapper**:
+Take the `Carpark` machine from example 1. Perhaps we want to implement error handling. We cannot just tack it on because the interface must be remain the same, so we write an **abstract machine wrapper**:
 
-				\begin{align}
-					\bmachine\;& TotCarpark \\
-					\bsees\;& RESP  \\
-					\bsets\;& ERR = \{ok, noroom, empty\} \\
-					\boperations\; 
-					& e, o \longleftarrow tot\_spaceq = \bbegin e :\in ERR || o :\in RESP \bend; \\
-					& e \longleftarrow tot\_enter = \bbegin e :\in ERR \bend; \\
-					& e \longleftarrow tot\_leave = \bbegin e :\in ERR \bend
-				\end{align}
+\begin{align}
+	\bmachine\\;& TotCarpark \\\\
+	\bsees\\;& RESP  \\\\
+	\bsets\\;& ERR = \{ok, noroom, empty\} \\\\
+	\boperations\\; 
+	& e, o \longleftarrow tot\_spaceq = \bbegin e :\in ERR || o :\in RESP \bend; \\\\
+	& e \longleftarrow tot\_enter = \bbegin e :\in ERR \bend; \\\\
+	& e \longleftarrow tot\_leave = \bbegin e :\in ERR \bend
+\end{align}
 
-				Note this TotCarpark's operations are fully abstract, all they say is that those variables must be assigned from those sets -- this gives us total freedom to control how to do the assignment. We also pull response into its own machine.
+Note this TotCarpark's operations are fully abstract, all they say is that those variables must be assigned from those sets -- this gives us total freedom to control how to do the assignment. We also pull response into its own machine.
 
-				And now the way we can wrap over Carpark is to make an implementation of TotCarpark, and $\bimports$ Carpark.
-			</div>
+And now the way we can wrap over Carpark is to make an implementation of TotCarpark, and $\bimports$ Carpark.
 
-			<div class="codediv md-conv">IMPLEMENTATION 	TotCarpark_i 
+```haskell 
+IMPLEMENTATION 	TotCarpark_i 
 REFINES 		TotCarpark
 IMPORTS		 	Carpark 
 SEES 			RESP
@@ -1270,66 +1311,67 @@ OPERATIONS
 		IF inuse > 0 
 		THEN BEGIN e := ok; leave END 
 		ELSE e := empty 
-		END</div>
+		END
+```
 
-			<div class="md-conv">
-				**Note** we only ever import an abstract machine, never a refinement or implementation. This is because the machine is the authoratative interface.
+**Note** we only ever import an abstract machine, never a refinement or implementation. This is because the machine is the authoratative interface.
 
-				We can call operations of imported machines -- that's how we will use library machines.
-			</div>
+We can call operations of imported machines -- that's how we will use library machines.
 
-			<div class="md-conv">
-				
-				### Library machines
+</div>
 
-				AB can generate C code -- it can even generate a main function, if given a top level machine. 
+<div class="md-conv">
 
-				The `BASIC_IO` machine is a pre-written library machine that can do basic text input output. Thus, finally, to write a hello world program in B we will need a generic top machine, and its implementation:
+### Library machines
 
-				\begin{align}
-					\bmachine \;& Top \\
-					\boperations \;& main = skip \\
-					\bend
-				\end{align}
+AB can generate C code -- it can even generate a main function, if given a top level machine. 
 
-				And 
+The `BASIC_IO` machine is a pre-written library machine that can do basic text input output. Thus, finally, to write a hello world program in B we will need a generic top machine, and its implementation:
 
-				\begin{align}
-					\bimplementation \;& Top\_i \\
-					\brefines \;& Top \\ 
-					\bimports \;& \r{BASIC_IO} \\
-					\boperations \; & main = \r{STRING_WRITE}(\r{"Hello world! \\n"})
-				\end{align}
+\begin{align}
+	\bmachine \\;& Top \\\\
+	\boperations \\;& main = skip \\\\
+	\bend
+\end{align}
 
-				Tada.
+And 
 
-				In general AB has a variety of library machines which deal with more complex structures, such as sets and sequences. 
+\begin{align}
+	\bimplementation \\;& Top\_i \\\\
+	\brefines \\;& Top \\\\
+	\bimports \\;& \r{BASIC_IO} \\\\
+	\boperations \\\; & main = \r{STRING_WRITE}(\r{"Hello world! \\n"})
+\end{align}
 
-				With each machine, they have their "central" variable that you need to put in your linking invariant, and then it is merely just calling operations. Machine parameters are passed in just like function arguments in conventional programming languages.
+Tada.
 
-				* `BASIC_ARRAY_VAR(index, elem)` is a 1D array machine, with the benefit of using anything as the index, unlike B0's $0..n$ only index.
+In general AB has a variety of library machines which deal with more complex structures, such as sets and sequences. 
 
-				* `BASIC_ARRAY_RGE` is a 2D array machine.
+With each machine, they have their "central" variable that you need to put in your linking invariant, and then it is merely just calling operations. Machine parameters are passed in just like function arguments in conventional programming languages.
 
-				For example an abstract variable $myarray \in 1..3 \longrightarrow \N$ can be implemented by doing the following:
-				$$ \bimports \r{BASIC_ARRAY_VAR}(1..3, \N) $$ 
-				$$ \binvariant arr\_vrb = myarr $$ 
-				Where `arr_vrb` is the variable in `BASIC_ARRAY_VAR` that stores the array.
+* `BASIC_ARRAY_VAR(index, elem)` is a 1D array machine, with the benefit of using anything as the index, unlike B0's $0..n$ only index.
 
-				* `L_SET(maxcard, elemtype)` is a set machine. It stores a set as a **sequence** `set_vrb`, and so the linking invariant should go like $myset = \ran(set\_vrb)$. 
+* `BASIC_ARRAY_RGE` is a 2D array machine.
 
-				Importing multiple copies of a machine is as simple as prepending an identifier onto them, so 
-				$$ \bimports s1.\r{LSET}(35, CLASS), s2.\r{LSET}(40, \N) $$ 
-				will import two sets, and expose their two variables as $s1.set\_vrb$ and $s2.set\_vrb$, with their operations accordingly.
+For example an abstract variable $myarray \in 1..3 \longrightarrow \N$ can be implemented by doing the following:
+$$ \bimports \r{BASIC_ARRAY_VAR}(1..3, \N) $$ 
+$$ \binvariant arr\\_vrb = myarr $$ 
+Where `arr_vrb` is the variable in `BASIC_ARRAY_VAR` that stores the array.
 
-				The proofs of these machines can be assumed to have been done beforehand.
+* `L_SET(maxcard, elemtype)` is a set machine. It stores a set as a **sequence** `set_vrb`, and so the linking invariant should go like $myset = \ran(set\\_vrb)$. 
 
-				* `L_PFNC(p1, p2, p3)` is a partial function. It represents a partial function $0..p_3 \pfunc p_1..p_2$ over integers only. Its linking variable is `pfnc_vrb` and is used like $pfnc\_vrb = marr \pod{marr \in CLASS \pfunc MARK}$
+Importing multiple copies of a machine is as simple as prepending an identifier onto them, so 
+$$ \bimports s1.\r{LSET}(35, CLASS), s2.\r{LSET}(40, \N) $$ 
+will import two sets, and expose their two variables as $s1.set\_vrb$ and $s2.set\_vrb$, with their operations accordingly.
 
-				And much, much more.
+The proofs of these machines can be assumed to have been done beforehand.
 
-				And that is roughly everything.
-			</div>
+* `L_PFNC(p1, p2, p3)` is a partial function. It represents a partial function $0..p_3 \pfunc p_1..p_2$ over integers only. Its linking variable is `pfnc_vrb` and is used like $pfnc\_vrb = marr \pod{marr \in CLASS \pfunc MARK}$
+
+And much, much more.
+
+And that is roughly everything.
+</div>
 		</div>
 
 		<footer>
@@ -1341,10 +1383,5 @@ OPERATIONS
 		</footer>
 
 	</div>
-
-	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
-	<script type="text/javascript" src="../../js/toggle-darklight.js"></script>
-	<script type="text/javascript" src="../../js/prism.js"></script>
-	<script type="text/javascript" src="../../js/markdown.js"></script>
 </body>
 </html>
