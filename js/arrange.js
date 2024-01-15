@@ -139,7 +139,7 @@ function main() {
 	let elems = document.getElementsByClassName("md-conv");
 	Array.from(elems).forEach((elem) => {
 		// elem.innerHTML = MarkdownToHtml.parse(elem.innerHTML);
-		let e = elem.innerHTML.replace(/(\n|^)\&gt;/g, ">")
+		let e = elem.innerHTML.replace(/(\n|^)\&gt;/g, "$1>")
 		console.log(e);
 		elem.innerHTML = marked.parse(e);
 		elem.innerHTML = MarkdownToHtml.parse(elem.innerHTML);

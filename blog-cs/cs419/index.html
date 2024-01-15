@@ -62,9 +62,12 @@ Lots of this is just linear algebra with funny notation.
 Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to work)
 \\(
 	\newcommand{\k}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\e}[1]{\left\lvert #1 \right\rangle}
 	\newcommand{\b}[1]{\left\langle #1 \right\rvert}
 	\newcommand{\ip}[2]{\left\langle #1 \vert #2 \right\rangle}
 	\newcommand{\bb}{\mathbb}
+	\newcommand{\tens}{\otimes}
+	\newcommand{\rm}{\textrm}
 \\)
 
 </div>
@@ -97,6 +100,8 @@ $$ \k{v} = a \k{0} + b \k{1} = \begin{bmatrix}
 	a \\\\ b
 \end{bmatrix} \pod{a, b \in \bb{C}} $$ 
 
+<b-blue>
+
 ***Def.*** The **conjugate transpose** of vector $\k{v}$ is $\k{v}^\dagger$, and is made by transposing the vector and replacing its coefficients with their complex conjugates. This is a **bra** vector and is a row vector, and we reverse the direction of the brackets.
 
 \begin{align}
@@ -106,7 +111,12 @@ $$ \k{v} = a \k{0} + b \k{1} = \begin{bmatrix}
 	\end{bmatrix}
 \end{align}
 
+</b-blue>
+
 Let vector $\k{w} = c\k{0} + d \k{1}$.
+
+<b-blue>
+
 
 The **inner product** of $\k{v}$ and $\k{w}$ is written 
 $$ \ip{v}{w} = \k{v}^\dagger \k{w} = \begin{bmatrix}
@@ -116,6 +126,8 @@ $$ \ip{v}{w} = \k{v}^\dagger \k{w} = \begin{bmatrix}
 \end{bmatrix}
 $$
 
+</b-blue>
+
 We can say that 
 - $\ip{0}{1} = 0$ since the bases are ortho-normal,
 - $\ip{i}{j} = \delta_{ij}$ for some $\k{i}, \k{j}$
@@ -123,7 +135,146 @@ We can say that
 
 > This is Dirac's "bra-ket" notation, which is just "bracket" without the c.
 
-***Def.*** 
+<b-blue>
+
+***Def.*** The **Tensor product** of vectors (in a fixed basis) is defined as follows:
+
+- Let vector spaces $V$ of dimension $m$, with basis $\k{e_1} \dots \k{e_m}$
+- $W$ of dimension $n$ with basis $\k{f_1} \dots \k{f_n}$ 
+
+The **tensor product space** $V \tens W$ has basis
+$$ \\{ \k{e_i} \tens \k{e_j} : i = 1\cdots m , j = 1 \cdots n \\}  $$ 
+
+i.e. there are $m \times n$ bases.
+
+
+A general vector $\k{\xi} \in V \tens W$ is defined 
+$$ \k{\xi} = \sum_{i, j} c_{ij} \k{e_i} \tens \k{e_j} $$ 
+
+For coefficients $c_{ij}$ 
+
+
+Let $\k{\alpha} \in V = \sum_{i=1}^m a_i \k{e_i}$, and $\k{\beta} \in W = \sum_{j=1}^n b_j \k{f_j} $.  Then the **tensor product** of two vectors is defined as:
+
+\begin{align}
+	 \k{\alpha} \tens \k{\beta} &= \sum_{i=1}^m a_i \k{e_i} \tens \sum_{j=1}^n b_j \k{f_j} \\\\
+	 &= \sum_{\forall i, j} a_i b_j \k{e_i} \tens \k{e_j}
+\end{align}
+
+</b-blue>
+
+> Whilst this is a rather... recursive definition, when we reach the fundamental bases (i.e. just have numbers) we can just perform the below operation.
+
+***Example.*** Let:
+
+$$\begin{matrix}
+	\k{a} = \begin{bmatrix}
+		0.1 \\\\ -0.7
+	\end{bmatrix} & \k{b} = \begin{bmatrix}
+		0.3 \\\\ 0.5
+	\end{bmatrix}
+\end{matrix}$$
+
+Then 
+
+$$ 
+\k{a} \tens \k{b} = \begin{bmatrix}
+	0.1 \\\\ -0.7 
+\end{bmatrix} \tens \begin{bmatrix}
+	0.3 \\\\ 0.5
+\end{bmatrix} = \begin{bmatrix}
+	0.1 \times 0.3 \\\\
+	0.1 \times 0.5 \\\\
+	-0.7 \times 0.3 \\\\
+	-0.7 \times 0.5
+\end{bmatrix}
+$$
+
+I.e. everything times everything.
+
+Thus for fundamental bases $V_2 \sim \left\\{ \k{0} = \begin{bmatrix}
+	1\\\\0
+\end{bmatrix}, \k{1} = \begin{bmatrix}
+	0\\\\1
+\end{bmatrix} \right\\}$, we can get 
+
+$$ 
+\k{0} \tens \k{0} = \begin{bmatrix}
+	1\\\\0
+\end{bmatrix} \tens \begin{bmatrix}
+	1\\\\0
+\end{bmatrix} = \begin{bmatrix}
+	1\\\\0\\\\0\\\\0
+\end{bmatrix}
+$$ 
+
+And we can get all our other new bases the same way.
+
+### Product and Entangled States
+
+<b-blue>
+
+***Def.*** Any vector $\k{\xi} \in V \tens W$ of the form $\k{\xi} = \k{a}\_{\in V} \tens \k{b}\_{\in W}$ is called a **product vector**.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+Any vector which is *not* a product vector is an **entangled vector**.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Def.*** The **k-fold tensor product***, denoted $\tens^k V\_2$ or $V^{\tens k}$ is the vector space 
+
+$$ V_2 \tens V_2 \tens \cdots \tens V_2 \pod{k \textrm{ times}}$$
+
+With $2^k$ bases, with each basis being denoted as a k-length bit string. 
+
+Each basis is $\k{i_1} \tens \cdots \tens \k{i_k}$, but because $\tens$ is a bit of a pain it is often written as $\k{i_1}\k{i_2} \cdots \k{i_k}$ or just $\k{i_1i_2 \dots i_k}$.
+
+</b-blue>
+
+***Example.*** Let $\k{v} = 1\k{00} + 1\k{11}$. We claim that this is entangled.
+
+To verify if it is entangled or not, we must demonstrate that it is or is not a product state. I.e. suppose 
+$$ \k{v} = (a\k{0} + b\k{1}) \tens (c\k{0} + d\k{1}) $$ 
+This resolves to 
+$$ ac\k{00} + ad \k{01} + bc \k{10} + bd \k{11} $$ 
+We get that $ac = bd = 0$ and $ad = bc = 1$, which is not possible to solve. Thus $\k{v}$ is entangled.
+
+
+Generally for an arbitrary $\e{v} \in V_2 \tens V_2 = a_{00} \e{00} + a_{01} \e{01} + a_{10} \e{10} + a_{11} \e{11}$, 
+
+$$ \e{v} \rm{ entangled } \iff \det(A) \neq 0 $$ 
+
+Where 
+
+$$ A = \begin{bmatrix}
+	a_{00} & a_{01} \\\\ a_{10} & a_{11}
+\end{bmatrix} $$
+
+But this is *not true* in higher dimensions.
+
+For general dimensions 
+
+$$ \sum_{i=1}^m \sum_{i=1}^n A_{ij} \e{i} \e{j} \rm{ product vector } \iff \rm{ mat } A \rm{ is rank 1} $$
+
+> Rank is a linear algebra term.
+
+----- 
+
+The inner product on general spaces $V \tens W$ is "induced by inner products on V and W applied slotwise". 
+
+This is to say for product states $\e{a_1}\e{b_1}$ and $\e{a_2}\e{b_2}$, the inner product is 
+$$ (\b{b_1}\b{a_1})(\k{a_2}\k{b_2}) \equiv \ip{a_1}{a_2} \ip{b_1}{b_2}.$$
+
+----- 
+
+When vectors come from the same subspaces tensored together, it is important to label which vector belongs to which space.
+
+
 
 </div>
 </div>
