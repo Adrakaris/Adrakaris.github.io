@@ -790,7 +790,7 @@ b-blue {
     margin-left: -10px;
 }
 
-b-side {
+s-side {
     display: block;
     border-left: 1px solid var(--pink);
     border-spacing: 10px 0px;

@@ -140,11 +140,19 @@ function main() {
 	Array.from(elems).forEach((elem) => {
 		// elem.innerHTML = MarkdownToHtml.parse(elem.innerHTML);
 		let e = elem.innerHTML.replace(/(\n|^)\&gt;/g, "$1>")
-		console.log(e);
-		elem.innerHTML = marked.parse(e);
-		elem.innerHTML = MarkdownToHtml.parse(elem.innerHTML);
+		// let e = elem.innerHTML.replace(/\&lt; /g, "< ")
+		e = marked.parse(e);
+		// console.log(e);
+		elem.innerHTML = MarkdownToHtml.parse(e);
 		// elem.innerHTML = elem.textContent;
 	});
+	let code = document.getElementsByTagName("code");
+	Array.from(code).forEach((c) => {
+		// console.log(c);
+		c.textContent = c.textContent.replace(/\&amp;/g, "&");
+		c.textContent = c.textContent.replace(/\&gt;/g, ">");
+		c.textContent = c.textContent.replace(/\&lt;/g, "<");
+	})
 }
 
 
