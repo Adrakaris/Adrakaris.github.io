@@ -19,7 +19,7 @@ var pages = [
     {
         "date": new Date(Date.UTC(2024,1,15)),
         "link": "blog-cs/cs419",
-        "title": "Notes on Cs419 ",
+        "title": "Notes on CS419 ",
         "desc": "量子计算机</p>",
         "picture": "",
         "tags": ["cs"]
@@ -28,7 +28,7 @@ var pages = [
         "date": new Date(Date.UTC(2023,11,12)),
         "link": "blog-cs/cs412",
         "title": "Notes on CS412 and le Système B",
-        "desc": "Notes on CS412: Formal languages, including a personal reference of B</p>",
+        "desc": "正形系统研发及 B 语言</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -36,7 +36,7 @@ var pages = [
         "date": new Date(Date.UTC(2023,5,24)),
         "link": "blog-cs/cs349",
         "title": "Notes on CS349",
-        "desc": "Notes on CS349: Principles of Programming Languages</p>",
+        "desc": "编程语言之原则</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -44,7 +44,7 @@ var pages = [
         "date": new Date(Date.UTC(2023,5,1)),
         "link": "blog-cs/cs352",
         "title": "Notes on CS352",
-        "desc": "Notes on CS352: Project Management</p>",
+        "desc": "项目管理（非 WBS 课程）</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -52,7 +52,7 @@ var pages = [
         "date": new Date(Date.UTC(2023,4,24)),
         "link": "blog-cs/cs331",
         "title": "Notes on CS331",
-        "desc": "Notes on CS331: Neural</p>",
+        "desc": "神经网络</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -60,7 +60,7 @@ var pages = [
         "date": new Date(Date.UTC(2023, 1, 25)),
         "link": "blog-cs/cs313",
         "title": "Notes on CS313",
-        "desc": "Notes on CS313: Robotics</p>",
+        "desc": "机器人</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -68,7 +68,7 @@ var pages = [
         "date": new Date(Date.UTC(2022,11,10)),
         "link": "blog-cs/cs342",
         "title": "Notes on CS342",
-        "desc": "Notes on CS342: Machine Learning. 我觉得这个挺重要的。</p><p>此页很长，加载需要一会。</p>",
+        "desc": "机器学习</p><p>此页很长，加载需要一会。</p>",
         "picture": "",
         "tags": ["cs"]
     },
@@ -136,14 +136,14 @@ var pages = [
         "picture": "",
         "tags": ["misc"]
     },
-    {
-        "date": new Date(Date.UTC(2021, 7, 10)),
-        "link": "blog-cs/minty/index-zh.html",
-        "title": "新的电脑体系",
-        "desc": "最近我刚安装了一个新的SSD，并安装了Linux。这篇文章就是说我为何开始在Linux上编程。</p>",
-        "picture": "",
-        "tags": ["tech"]
-    },
+    // {
+    //     "date": new Date(Date.UTC(2021, 7, 10)),
+    //     "link": "blog-cs/minty/index-zh.html",
+    //     "title": "新的电脑体系",
+    //     "desc": "最近我刚安装了一个新的SSD，并安装了Linux。这篇文章就是说我为何开始在Linux上编程。</p>",
+    //     "picture": "",
+    //     "tags": ["tech"]
+    // },
     {
         "date": new Date(Date.UTC(2021, 5, 29)),
         "link": "blog-cs/cs141/",

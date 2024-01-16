@@ -19,7 +19,7 @@ var pages = [
     {
         "date": new Date(Date.UTC(2024,1,15)),
         "link": "blog-cs/cs419",
-        "title": "Notes on Cs419 ",
+        "title": "Notes on CS419 ",
         "desc": "Quantum Computing; Enjoy the Mathjax</p>",
         "picture": "",
         "tags": ["cs"]
@@ -136,14 +136,14 @@ var pages = [
         "picture": "",
         "tags": ["misc"]
     },
-    {
-        "date": new Date(Date.UTC(2021, 7, 10)),
-        "link": "blog-cs/minty/",
-        "title": "A New PC Setup",
-        "desc": "I've recently installed a new SSD onto my computer and installed a separate Linux system. This is basically a ramble on why I did that and why I moved off Windows for programming.</p>",
-        "picture": "",
-        "tags": ["tech"]
-    },
+    // {
+    //     "date": new Date(Date.UTC(2021, 7, 10)),
+    //     "link": "blog-cs/minty/",
+    //     "title": "A New PC Setup",
+    //     "desc": "I've recently installed a new SSD onto my computer and installed a separate Linux system. This is basically a ramble on why I did that and why I moved off Windows for programming.</p>",
+    //     "picture": "",
+    //     "tags": ["tech"]
+    // },
     {
         "date": new Date(Date.UTC(2021, 5, 29)),
         "link": "blog-cs/cs141/",
