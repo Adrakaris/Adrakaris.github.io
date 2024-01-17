@@ -658,6 +658,10 @@ blockquote {
     margin-left: 0px;
 }
 
+blockquote > * > em {
+    font-style: normal;
+}
+
 /* #endregion */
 
 /* #region figs */

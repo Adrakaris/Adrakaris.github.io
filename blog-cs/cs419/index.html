@@ -617,6 +617,209 @@ Some remarks:
 
 </div>
 
+<div class="md-conv">
+### Basic Unitary Operators for Qubits
+
+#### Single Qubits 
+
+We have unitary operators for single qbits.
+
+***Hadamard Gate.***
+$$ H = \frac{1 }{\sqrt{2} } \begin{bmatrix}
+	1 & 1 \\\\ 1 & -1
+\end{bmatrix} $$ 
+
+This is a gate with the following properties:
+- $HH = I$. 
+- $H \0 = \frac{1 }{\sqrt{2} }(\0 + \1) = \e+$
+- $H \1 = \frac{1 }{\sqrt{2} }(\0 - \1) = \e-$
+
+> This is just a rotation of 45&deg; to the +/- bases.
+
+***Pauli Gates.***
+\begin{matrix}
+	I = \begin{bmatrix}
+		1 & 0 \\\\ 0 & 1
+	\end{bmatrix} &
+	\sigma_x = \begin{bmatrix}
+		0 & 1 \\\\ 1 & 0
+	\end{bmatrix} & 
+	\sigma_y = \begin{bmatrix}
+		0 & -i \\\\ i & 0
+	\end{bmatrix} & 
+	\sigma_z = \begin{bmatrix}
+		1 & 0 \\\\ 0 & -1 
+	\end{bmatrix}
+\end{matrix}
+
+These are all unitary hermitian operators, with the following properties:
+- Multiplicative properties: $\sigma_x^2 + \sigma_y^2 + \sigma_z^2 = I$ 
+	- This also implies the eigenvalues are $\pm 1$.
+- Anti-commute properties: $\sigma_x\sigma_y = -\sigma_y\sigma_x = i\sigma_z$ 
+	- These can be swapped with any combination of $x,y,z$ as long as they are in that order.
+
+Pauli gates also have real versions:
+\begin{matrix}
+	X = \sigma_x & 
+	Y = i\sigma_y = \begin{bmatrix}
+		0 & 1 \\\\ -1 & 0
+	\end{bmatrix} & 
+	Z = \sigma_z
+\end{matrix}
+
+Such that 
+- $X\0 = \1$, and $X\1 = \0$ -- *quantum NOT gate* 
+	- i.e. $X\e k = \e{k \oplus 1} \pod{k=0,1}$ 
+	- X's eigenbases are $\e+, \e-$ 
+- $Z\0 = \0$, and $Z\1 = -\1$
+	- i.e. $Z\e{k} = (-1)^k \e{k}$ 
+	- Z's eigenbases are $\0, \1$
+
+***Phase Gate.*** 
+$$ P(\theta) = \begin{bmatrix}
+	1 & 0 \\\\ 0 & e^{i\theta}	
+\end{bmatrix}$$ 
+
+Where $\theta$ is the angle of rotation. 
+
+#### Double Qubits 
+
+***Controlled X-gate.*** Also called CNOT, CX, controlled-NOT, etc. 
+
+Where 
+$$ CX \e j \e k = \e j \e{j \oplus k} = \e j X^j \e k$$ 
+- That is, if $\e j$ is zero, do not apply the gate, and if $\e j$ is one, then apply $X\e k$. 
+- $CX \0 \e\alpha = \0\e\alpha$ whilst $CX \1 \e\alpha = \1 X\e\alpha$. 
+
+CX operates over two bits, thus the CX matrix is a 4x4 that:
+$$ 
+CX = \left[ \begin{array}{c:c} 
+I & \mathbf{0} \\\\ \hdashline
+\mathbf{0} & X 
+\end{array} \right] = \begin{bmatrix}
+	1&0&0&0\\\\0&1&0&0 \\\\ 0&0&0&1 \\\\ 0&0&1&0
+\end{bmatrix}
+$$
+
+Note that the **order is important** to CX, and so often it is labelled with `12` or `21` with `1` being the control bit, and `2` being the applied bit. So
+- $CX_{12} \0_1 \1_2 = \0_1 \1_2$ 
+- $CX_{21} \0_1 \1_2 = X\0_1 \1_2 = \1_1 \1_2$
+
+***Controlled Z-Gate.*** 
+$$
+CZ_{12} \e j \e k = \e{j} Z^j \e k = (-1)^{jk} \e j \e k
+$$ 
+CZ is **symmetric**: so the order actually doesn't matter, and 
+$$ 
+CZ = \left[ \begin{array}{c:c} 
+I & \mathbf{0} \\\\ \hdashline
+\mathbf{0} & Z 
+\end{array} \right]
+$$
+
+***General Controlled Gate $CU$.*** Has the form 
+$$ 
+CU = \left[ \begin{array}{c:c} 
+I & \mathbf{0} \\\\ \hdashline
+\mathbf{0} & U 
+\end{array} \right]
+$$ 
+
+</div>
+
+
+
+</div>
+
+<div class="colourband">
+	<h2>Quantum Information</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Quantum States as Information Carriers
+
+A qbit is the simplest system that can reliably encode a classical bit.
+
+Information is proportional to the number of distinguishable states of a physical system.
+- Classically, any two different states are distinguishable (trivially)
+- Quantumly, states are **distinguishable** $\iff$ they are **orthogonal**
+	- So if you take $\0$ and $\e+$, and a black box that outputs any one of the two, it is **impossible** to certainly identify which one it is.
+
+Given some quantum information $\e\psi$, we can do 3 basic things:
+
+1. **Ancilla.** Take a fixed known quant-state $\e A$ and adjoin it to our state to get a bigger one: $\e{\tilde{\psi}} = \e\psi \e A$.
+2. **Unitary.** Apply a unitary operator $U$ 
+3. **Measure.** Take a measurement on all or part of $\e\psi$, thus 
+	- Can record result 
+	- And based on outcomes choose further steps 
+	- Output is generally probabilistic. 
+
+And **any combination of the 3**.
+
+
+### The No Cloning Theorem
+
+> Quantum information cannot be copied or cloned.
+
+Copying classical information is trivial. To relate it to operators, we can just use a CNOT operator. 
+
+More generally, any copying process has the form
+- $(b) (0) (M)$ an information register (with $b$), a blank register (with 0), and an internal machine state $M$ which is in the **Ready** state 
+- And goes to $(b) (b) (M_2)$ with the blank register having the copy, and the machine state being $M_b$ post copy (since it can change during copy.)
+
+$$ (b) (0) (M) \lra_{CNOT} (b)(b)(M)$$ 
+
+Quantumly:
+- Given some information $\e\psi_A$,
+- Copying is a *quantum evolution* process of subsystems $A, B, M$. We want 
+$$ \e\psi_A \0_B \e{M\_0}\_M \lra\_? \e\psi\_A \e\psi\_B \e{M\_\psi}_M $$
+- Where B is the blank register space, and M is any extra space needed, which is initially in ready state $M_0$ independent of $\e\psi_A$. 
+
+<b-blue>
+
+***Theorem.*** **No cloning theorem** (Unitary version)
+
+Let $S$ be any known set of quantum states of system $A$, that contains at least one pair $\e\xi, \e\eta : \e\xi \neq \e\eta$ and they are orthogonal. 
+
+Then there exist **no unitary process** that achieves cloning of all states in $S$. 
+
+</b-blue>
+
+Remarks:
+- If $\e\xi = \e\eta$, then there is only one state and it clones fine 
+- If $\e\xi \perp \e\eta$, then they can also clone fine (can rotate to $\0, \1$ and apply CX)
+	- So $CX \e k \0 = \e k \e k : k = 0,1$, 
+	- but $CX(a\0 + b\1)\0 = a\e{00} + \e{11} \neq (a\0 + b\1)(a\0 + b\1)$. 
+- No unitary process means no combination of operations above. 
+
+<s-side>
+
+***Proof.*** Let $\e\xi, \e\eta$ be two different non-orth states. Then we require the cloning process to 
+$$ \e\xi\_A \0_B \e{M\_0}\_M \lra\_U \e\xi_A \e\xi_B \e{M\_\xi}_M $$ 
+$$ \e\eta\_A \0_B \e{M\_0}\_M \lra\_U \e\eta_A \e\eta_B \e{M\_\eta}_M $$ 
+
+***Note.** Unitary processes preserve inner products.*
+
+Therefore
+\begin{align}
+	\ip\xi\eta \ip00 \ip{M_0}{M_0} &= \ip\xi\eta \ip\xi\eta \ip{M_\xi}{M_\eta}\\\\
+	\implies \ip\xi\eta &= \ip\xi\eta \ip\xi\eta \ip{M_\xi}{M_\eta}
+\end{align}
+Since anything inner prod itself = 1 (in normalised vectors).
+
+Since $\e\xi \neq \e\eta$, we know $0 &lt; \ip\xi\eta &lt; 1$, and $0 \leq \ip{M_\xi}{M_\eta} \leq 1$ (we don't really care what the machine state is)
+
+Thus 
+$$ 1 = \ip\xi\eta \ip{M_\xi} {M_\eta}  $$
+Which is a contradiction since neither of the two terms on the right can ever multiply to 1. $\Box$
+
+</s-side>
+
+> However we *can* copy information with a good probability.
+
+</div>
 </div>
 	
 
@@ -626,7 +829,7 @@ Some remarks:
 			</div>
 			<script type="text/javascript" src="../../js/footerGen.js"></script>
 		</div>
-	</footer>
+	</footer>   
 
 </div>
 
