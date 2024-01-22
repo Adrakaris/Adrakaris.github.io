@@ -3,118 +3,106 @@
 <head>
 	<title>The Pantheon of the Gods</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
-	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<link rel="stylesheet" type="text/css" href="../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<!-- <link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all"> -->
 	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
 	<link rel="icon" type="image/png" href="../../style/images/DragonIconGreen.png">
 	<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<!-- <script defer type="text/javascript" src="../../js/collapsible.js"></script>   -->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
 </head>
 <body>
 
-	<div class="hidden">
-		<!-- GREEN -->
-		<header class="green">
-			<div class="parallax homefan" style='--img: url("../fan/assets/gods-full.jpg")'>
-				<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 10fr; grid-column-gap: 10px; padding: 5px;">
-					<div class="column">
-						<a href="../../fan/" class="nav">Home</a>
-					</div>
-					<div class="column">
-						<a href="../../fan/blog-fan.html" class="nav">Blog</a>
-					</div>
-					<div class="column">
-					</div>
+<div class="hidden">
+	<!-- GREEN -->
+	<header class="green">
+		<div class="parallax homefan" style='background-image: url("../assets/gods-full.jpg")'>
+			<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 10fr; grid-column-gap: 10px; padding: 5px;">
+				<div class="column">
+					<a href="../../fan/" class="nav">Home</a>
 				</div>
-				<div class="cbox overlay"> 		
-					<h1>The Celestial Sea</h1>
+				<div class="column">
+					<a href="../../fan/blog-fan.html" class="nav">Blog</a>
+				</div>
+				<div class="column">
 				</div>
 			</div>
-		</header>
-
-		<header class="green">
-			<div class="cbox">
-				<h1>Pantheons of the Gods</h1>
+			<div class="cbox overlay"> 		
+				<h1>The Celestial Sea</h1>
 			</div>
-		</header>
-
+		</div>
+	</header>
+	<header class="green">
 		<div class="cbox">
-			<p>
-				<i>
-					There are those who came before, and there are those who came after. There are those who built the world, those who guard it, those who ascended from it, and those who tried to destroy it. 
-				</i>
-			</p>
-
-			<hr class="green">
-			
-			<div class="leftcol">
-				<div class="fitdiv">
-					<img class="fit" src="../assets/greater-pantheon.png" alt="Greater pantheon" style="--off:20%">
-					
-				</div>
-				<div>
-					<h2>The Greater Pantheon</h2>
-
-					<p><i>
-						The ones who came before
-					</i></p>
-
-					<p>
-						The Old Gods, the ones who came before are the deities who created the Celestial Sea, and the ones who still maintain their light touch through the magic that permeates all. They are the most powerful of them all, and each one occupies a realm to him or herself. They are the ones who are revered before all others.
-					</p>
-					<p>
-						It is from their power that lesser deities form, and it is from their will that common mortals arose. 
-					</p>
-					<p>
-						They rarely, if ever, interact with the mortal worlds, and only in the most subtle of ways, whether by answering a prayer with a cryptic riddle, or subtly altering small events, that would not reveal Heaven's design -- this is the principle of the old gods, and those who disobey must suffer the fury of his peers.
-					</p>
-
-					<div class="buttonwrapper green"><a href="./greaterpantheon.html">The Ones Who Came Before</a></div>
-				</div>
+			<h1>Pantheons of the Gods</h1>
+		</div>
+	</header>
+	<div class="cbox">
+		<p>
+			<i>
+				There are those who came before, and there are those who came after. There are those who built the world, those who guard it, those who ascended from it, and those who tried to destroy it. 
+			</i>
+		</p>
+		<hr class="green">
+		
+		<div class="leftcol">
+			<div class="fitdiv">
+				<img class="fit" src="../assets/greater-pantheon.png" alt="Greater pantheon" style="--off:20%">
+				
 			</div>
-
-			<div class="rightcol">
-				<div>
-					<h2>
-						The Lesser Pantheon
-					</h2>
-					<p>
-						The ones who came after 
-					</p>
-
-					<p>
-						The ones who came after are less powerful, less exhalted, and are usually the followers of a greater deity. That, or they were once part of the Greater Pantheon, but banished by the council. They take a more direct role in shaping the futures of their mortal subjects, and may even walk amongst the plains with them. 
-					</p>
-					<p>
-						Some are born half-mortal, half-god; some received a greater power's grace; and some, via sheer determination and self-cultivation, found the gate to apotheosis and ascended to divinity.
-					</p>
-					<p>
-						They are usually worshipped by smaller followings, or as a messenger or prophet for a greater god. Some even, in rare circumstances, ascend to the position of lesser god through ancient arcane means known only to those who came before.
-					</p>
-
-					<div class="buttonwrapper green"><a href="./lesserpantheon.html">The Ones Who Came After</a></div>
-				</div>
-
-				<div class="fitdiv"><img src="../assets/lesser-pantheon.png" alt="lesser pantheon" style="--off:70%"></div>
+			<div>
+				<h2>The Greater Pantheon</h2>
+				<p><i>
+					The ones who came before
+				</i></p>
+				<p>
+					The Old Gods, the ones who came before are the deities who created the Celestial Sea, and the ones who still maintain their light touch through the magic that permeates all. They are the most powerful of them all, and each one occupies a realm to him or herself. They are the ones who are revered before all others.
+				</p>
+				<p>
+					It is from their power that lesser deities form, and it is from their will that common mortals arose. 
+				</p>
+				<p>
+					They rarely, if ever, interact with the mortal worlds, and only in the most subtle of ways, whether by answering a prayer with a cryptic riddle, or subtly altering small events, that would not reveal Heaven's design -- this is the principle of the old gods, and those who disobey must suffer the fury of his peers.
+				</p>
+				<div class="buttonwrapper green"><a href="./greaterpantheon.html">The Ones Who Came Before</a></div>
 			</div>
 		</div>
-
-		<!---
-		<div class="colourband green">
-			<h2>Heading 2</h2>
+		<div class="rightcol">
+			<div>
+				<h2>
+					The Lesser Pantheon
+				</h2>
+				<p>
+					The ones who came after 
+				</p>
+				<p>
+					The ones who came after are less powerful, less exhalted, and are usually the followers of a greater deity. That, or they were once part of the Greater Pantheon, but banished by the council. They take a more direct role in shaping the futures of their mortal subjects, and may even walk amongst the plains with them. 
+				</p>
+				<p>
+					Some are born half-mortal, half-god; some received a greater power's grace; and some, via sheer determination and self-cultivation, found the gate to apotheosis and ascended to divinity.
+				</p>
+				<p>
+					They are usually worshipped by smaller followings, or as a messenger or prophet for a greater god. Some even, in rare circumstances, ascend to the position of lesser god through ancient arcane means known only to those who came before.
+				</p>
+				<div class="buttonwrapper green"><a href="./lesserpantheon.html">The Ones Who Came After</a></div>
+			</div>
+			<div class="fitdiv"><img src="../assets/lesser-pantheon.png" alt="lesser pantheon" style="--off:70%"></div>
 		</div>
-		--->
-
-		<footer class="green">
-			<div class="cbox">
-                <div class="columncontainer ctwo" id="fc2">
-                </div>
-                <script type="text/javascript" src="../../js/footerGen.js"></script>
-            </div>
-		</footer>
-
 	</div>
+	<!---
+	<div class="colourband green">
+		<h2>Heading 2</h2>
+	</div>
+	--->
+	<footer class="green">
+		<div class="cbox">
+            <div class="columncontainer ctwo" id="fc2">
+            </div>
+            <script type="text/javascript" src="../../js/footerGen.js"></script>
+        </div>
+	</footer>
+</div>
 
-	<script type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
-	<script type="text/javascript" src="../../js/prism.js"></script>
 </body>
 </html>
