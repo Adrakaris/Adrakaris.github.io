@@ -685,11 +685,6 @@ table, th, td {
     border-bottom: 1px solid var(--green);
 }
 
-table.gb, table.gb th, table.gb td {
-    border-top: 1px solid var(--green);
-    border-bottom: 1px solid var(--green);
-}
-
 table.gr, table.gr th, table.gr td {
     border-top: 1px solid lightgray;
     border-bottom: 1px solid lightgray;
