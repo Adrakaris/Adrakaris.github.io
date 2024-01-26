@@ -35,6 +35,14 @@ var fanPages = [
         "tags": ["legends"]
     },
     {
+        "date": new Date(Date.UTC(2020,1,1)),
+        "link": "fan/blog/golden-boat/",
+        "title": "A Golden Boat on the River",
+        "desc": "\"Thasor kinae an thuraf\", a poem about the founding of Rivium and Ricarum, written in the latter age of Dragonkind</p>",
+        "picture": "",
+        "tags": ["legends"]
+    },
+    {
         "date": new Date(Date.UTC(2020, 1, 1)),
         "link": "fan/blog/lianglong/",
         "title": "The Tale of Two Brothers",
