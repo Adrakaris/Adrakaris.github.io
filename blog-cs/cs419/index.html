@@ -69,6 +69,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 2. [Quantum Mechanical Principles](#qmps)
 3. [Quantum Information](#qinfo)
 4. [Quantum Information Transfer](#qit)
+4. [Quantum Cryptography](#qcyp)
 </div>
 
 <div>
@@ -81,6 +82,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 	\newcommand{\rm}{\textrm}
 	\newcommand{\0}{\e{0}}
 	\newcommand{\1}{\e{1}}
+	\newcommand{\t}{^\top}
 	\newcommand{\abs}[1]{\left\lvert #1 \right \rvert}
 	\DeclareMathOperator{\tens}{\otimes}
 	\DeclareMathOperator{\lra}{\longrightarrow}
@@ -861,7 +863,7 @@ $$
 which since $\Pi_1 = I - \Pi_0$ we can write in terms of successful and mistaken inference of alpha-0:
 $$
 \begin{align*}
-P_s &=  \frac{1}{2} + \frac{1}{2}(\ip{\alpha_0}{\Pi_0|\alpha_0} - \ip{\alpha_1}{\Pi_0|\alpha_1})\\
+P_s &=  \frac{1}{2} + \frac{1}{2}(\ip{\alpha_0}{\Pi_0|\alpha_0} - \ip{\alpha_1}{\Pi_0|\alpha_1})\\\\
 &= \frac{1}{2} + \frac{1}{2}\Tr(\Pi_0)(\e{\alpha_0}\b{\alpha_0} - \e{\alpha_1}\b{\alpha_1}) \pod{\dagger}
 \end{align*}
 $$
@@ -879,14 +881,14 @@ The trace of D is zero (the reason is left as an excersise), and so the sum of t
 
 We want to determine delta in terms of the alphas, so we work in subspaces of the two alphas. We need a new basis for each, so 
 - Choose $\e{\alpha_0^\perp}$ to be orthnorm to $\e{\alpha_0}$, so $\e{\alpha_0^\perp}, \e{\alpha_0}$ forms a basis.
-- *Let* $\e{\alpha_0} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}; \e{\alpha_1} = \begin{bmatrix} c_0 \\ c_1 \end{bmatrix} = c_0\e{\alpha_0} + c_1 \e{\alpha_0^\perp}$.
+- *Let* $\e{\alpha_0} = \begin{bmatrix} 1 \\\\ 0 \end{bmatrix}; \e{\alpha_1} = \begin{bmatrix} c_0 \\\\ c_1 \end{bmatrix} = c_0\e{\alpha_0} + c_1 \e{\alpha_0^\perp}$.
 Find the new coefficients by taking inner products of each base with the original vector:
 - $c_0 = \ip{\alpha_0}{\alpha_1}$, $|c_1| = \sin\theta$, and $|\ip{\alpha_0}{\alpha_1}| = \cos \theta$ for the angle between the two vectors (presumably)
 And so 
 $$
-D = \begin{bmatrix} 1 \\ 0 \end{bmatrix}\begin{bmatrix} 1 & 0 \end{bmatrix} -
-\begin{bmatrix} c_0 \\ c_1 \end{bmatrix}\begin{bmatrix} c_0^* & c_1^* \end{bmatrix} = \begin{bmatrix} 
-|c_1|^2 & -c_0c_1^* \\ -c_1c_0^* & -|c_1|^2
+D = \begin{bmatrix} 1 \\\\ 0 \end{bmatrix}\begin{bmatrix} 1 & 0 \end{bmatrix} -
+\begin{bmatrix} c_0 \\\\ c_1 \end{bmatrix}\begin{bmatrix} c_0^* & c_1^* \end{bmatrix} = \begin{bmatrix} 
+|c_1|^2 & -c_0c_1^* \\\\ -c_1c_0^* & -|c_1|^2
  \end{bmatrix}
 $$
 We want the eigenvectors, i.e. to solve the characteristic equation $\det(D = \lambda I) = 0$
@@ -894,7 +896,7 @@ We want the eigenvectors, i.e. to solve the characteristic equation $\det(D = \l
 - Substituting into ($\dagger$)
 $$
 \begin{align*}
-P_s &= \frac{1}{2} + \frac{\delta}{2}\Tr(\Pi_0)(\e p \b p - \e m \b m)\\
+P_s &= \frac{1}{2} + \frac{\delta}{2}\Tr(\Pi_0)(\e p \b p - \e m \b m)\\\\
 &= \frac{1}{2} + \frac{\delta}{2}(\b p \Pi_0 \e p - \b m \Pi_0 \e m)
 \end{align*}
 $$
@@ -938,7 +940,7 @@ Remark: Other disambiguation processes are possible. We could have an **unambigu
 ### No Signalling Principle
 
 ***The standard setup.*** 
-- We have two people, Alice and Bob, who are distantly separated in space. (This is an arbitary distance, and can be quite close or very far)
+- We have two people, Alice and Bob, who are distantly separated in space. <span class="grey">This is an arbitary distance, and can be quite close or very far</span>
 - Each hold a local quantum system A, B respectively.
 - Initially, A, B is in the same (possibly entangled) quantum state. 
 - Each can apply local actions on their own systems.
@@ -1025,7 +1027,332 @@ Remarks:
 <div class="colourband">
 	<h2 id="qit">Quantum Information Transfer</h2>
 </div>
-	
+
+<div class="cbox">
+<div class="md-conv">
+
+### Quantum Dense Coding 
+
+We know that a single qbit can only reliably encode one bit of information. i.e. you can only send one bit per qbit... right?
+
+Well with some quantum f\_ckery we can send more information, if the qbit being sent is already entangled with a qbit at the receiver. This lets us send **2 bits** of information per qibt.
+
+<b-blue>
+
+***Def.*** **Bell states**, or bell basis, is defined by the following: 
+
+\begin{align*}
+\e{\phi^+} &=  \frac{1}{\sqrt{2}}(\e{00} + \e{11})\\\\
+\e{\phi^-} &=  \frac{1}{\sqrt{2}}(\e{00} - \e{11})\\\\
+\e{\psi^+} &= \frac{1}{\sqrt{2}}(\e{01}+\e{10})\\\\
+\e{\psi^-} &= \frac{1}{\sqrt{2}}(\e{01}-\e{10})
+\end{align*}
+
+These states are orthogonal, and the bell basis for 2 qbits are give by these four:
+$$
+\\{ \e{\phi^+}, \e{\phi^-}, \e{\psi^+}, \e{\psi^-} \\}
+$$
+
+</b-blue>
+
+Notably, whereas the 2 qbit computational basis (00 01 10 11) are all product states, these are all **entangled**. Also,
+
+\begin{align}
+\e{\phi^+} &= I \tens I \e{\phi^+} \\\\	
+\e{\phi^-} &= Z \tens I \e{\phi^+} \\\\	
+\e{\psi^+} &= X \tens I \e{\phi^+} \\\\	
+\e{\psi^+} &= Y \tens I \e{\phi^+} \\\\	
+\end{align}
+
+And for any one qbit unitary U:
+
+$$ U \tens I \e{\phi^+} = I \tens U\t \e{\phi^+} $$
+
+We can also make these states by applying operations to the computational basis:
+
+$$
+\0\0 \overset{H \tens I}{\lra} \e+\0 = \frac{1}{\sqrt{2}}(\0 + \1)\0 \overset{CX_{12}}{\lra} \e{\phi^+}
+$$
+
+This works over the other three states and produces the other three bases.
+
+<s-side>
+
+***The quantum dense coding protocol.*** Let Alice and Bob (A and B) be distantly separated in space, and each has one qbit of the entangled $\e{\psi^+}$ state. A wants to send 2 bits of B, so she does:
+
+1. A applies $I,X,Z,Y$ respectively to her (first) qbit, to make the state $\e{\phi^+}, \e{\phi^-}, \e{\psi^+}, \e{\psi^-}$, which encode messages 00, 01, 10, 11.
+2. A sends this qbit to B
+3. B does a **bell measurement** on both qbits together.
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Def.*** A bell measurement is one of four projectors in the bell basis:
+
+\begin{matrix}
+	\Pi_0 = \e{\phi^+}\b{\phi^+} & \Pi_2 = \e{\psi^+}\b{\psi^+}  \\\\
+	\Pi_4 = \e{\phi^-}\b{\phi^-} & \Pi_3 = \e{\psi^-}\b{\psi^-}
+\end{matrix}
+
+</b-blue>
+
+### Quantum Teleportation 
+
+A protocol to send quantum information, in the **LOCC** (local operation and classical communication) paradigm. I.e. A and B can do local quantum operations but can only communicate through classical channels.
+
+Classical channels can mean anything, such as a phone line.
+
+A and B are separated in space, but each have an entangled state $\e{\phi^+}$. 
+
+A has another qbit in some arbitrary state $\e\alpha$, which is possibly unknown, and wants to send this to B without directly sending it over. A cannot identify $\e\alpha$ without destroying it, and the space between A and B is hostile to quantum transfer.
+
+<s-side>
+
+***The protocol.*** A can transfer $\e\alpha$ to B using the entanglement of $\e{\phi^+}$, without anything being passed through space. Let the qbit labels:
+
+- 1: The input qbit $\e\alpha$ (owned by A)
+- 2: The first qbit of entangled $\e{\phi^+}$ (owned by A)
+- 3: The second qbit of entangled $\e{\phi^+}$ (owned by B)
+
+The initial state is $\e\alpha_1 \e{\phi^+}_{23}$, where $\e\alpha = a\0 + b\1$ for some amplitudes. We have that 
+\begin{align}
+\e\alpha \e{\phi^+} &= (a\0 + b\1) \tens \frac{1 }{\sqrt{2} } (\e{00} + \e{11}) \\\\
+&= \frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{001} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \pod{\dagger}
+\end{align}
+
+We perform the following steps.
+
+1. A applies $CX_{12}$ to 1 and 2.
+2. A applies $H$ to 1 
+3. A measures both qbits in computational basis, and obtains one of 00, 01, 10, 11
+
+(Note that this is equivalent to a bell measurement on 12)
+
+</s-side>
+
+We can look at the effects of these steps on $(\dagger)$:
+
+\begin{matrix}
+	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{001} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \\\\
+	\Big\downarrow CX_{12} \\\\
+	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{001} + \frac{b}{\sqrt{2}}\e{110} + \frac{b}{\sqrt{2}}\e{101} \\\\
+	\Big\downarrow H_1 \\\\
+	\frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{00} + \frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{01} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{00} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{11} \\\\
+	= \\\\
+	\frac{1 }{2 } (\e{00}(a\0 + b\1) + \e{01}(a\1 + b\0) + \e{10}(a\0 - b\1) + \e{11}(a\1 - b\0)) \\\\
+	= \\\\
+	\frac{1}{2} (\e{00}I\e\alpha + \e{01}X\e\alpha+ \e{01}Z\e\alpha+ \e{01}Y\e\alpha)
+\end{matrix}
+
+Therefore via the born rule we get 
+
+Outcome | Post measurement state | Probability
+-|-|- 
+00 | $ \e{00}_{12}\e\alpha_3$  | 0.25
+01 | $ \e{01}_{12}X\e\alpha_3$  | 0.25
+10 | $ \e{10}_{12}Z\e\alpha_3$  | 0.25
+11 | $ \e{11}_{12}Y\e\alpha_3$  | 0.25
+
+I.e. for outcome $\e{ij}$ the post measurement state has transformation $X^jZ^i$ applied. 
+
+<s-side>
+
+A then sends the 2 bit outcome to B, so B knows which state alpha is in.
+
+B applies the back-transform $Z^iX^j$ to his 3 state, and the state becomes just $\e\alpha$. 
+
+</s-side>
+
+Teleportation!
+
+***Quantum Circuit diagram.***
+
+Quantum processes like this can be represented as a circuit diagram with time moving along the x axis:
+
+![teleportation circuit diagram](./qcircuit.png)
+
+Double lines represent classical information transfer.
+
+Remarks:
+- After teleportation, A is left, uniformly randomly, with one of the four 2 q-bit states 00, 01, 10, 11. I.e., *no information* is left at A (and consistent with no cloning and no signalling)
+- Before A's measurement, B's qbit is half of the $\e{\psi^+}$ state, and we can show that any complete measurement on that would give a random outcome.
+- After A's measurement, B's qbit is one of the four results all with 0.25 probability. Any complete measurement would thus result in 0 or 1 with prob 1/2.
+- The *physical system* of $\e\alpha$ is not transferred, only the identity/information being reconstructed exactly in a *different* system.
+
+</div>
+</div>	
+
+<div class="colourband">
+	<h2 id="qcyp">Quantum Cryptography</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Background 
+
+Quantum cryptography takes advantage of non-orthogonal states to encode information. The receiver can thus not read message reliably, and furthermore any reading will destroy the message. 
+
+This may be inconvenient for the sender and receiver, but much more for an eavesdropper, Eve (E).
+
+First, we talk about classical systems.
+
+***Secret Sharing*.** The most primitive ciphers are like the caesar cipher. For it to work, the sender and receiver must pre-share an agreed secret, the permutation to un-transform the ciphertext. This is *symmetric* encryption.
+
+The problem with a lot of these systems is that they can be cracked, whether easily (e.g. caesar) or not. Only the **one time pad** is provably secure. Furthermore, a secret key must always be shared, which could be intercepted.
+
+***Public Key Cryptography.*** Using *asymmetric* public private key pairs to encrypt and decrypt data.
+
+There are many different schemes, such as RSA, but they all rely on unproved assumptions about computational hardness (i.e. $P \neq NP$), which could (but probably won't) be disproved, or skirted by using quantum computing f\_ckery.
+
+#### The One-time Pad.
+
+Let the message be a bitstring M of length $n$. 
+
+Encryption/decryption requires A and B to share a private key K, also of length $n$, known **only** to them.
+
+- A encrypts by adding K to M bitwise mod 2 (i.e. XOR). The ciphertext $C = K \oplus M$ 
+- Be decrypts by doing the exact same thing. 
+
+If K is *uniformly random*, then C is also random, and an eavesdropper seeing C would get no useful information. 
+
+However, K must only ever be used **once**, else it could be broken. If we have two $C_1 = M_1 \oplus K$ and $C_2 \oplus K$, then an eavesdropper can do $C_1 \oplus C_2 = M_1 \oplus M_2$ and get information.
+
+Further to this, we have to send the key in the first place.
+
+### Quantum Key Distribution
+
+Methods to send a key in a quantumly secure manner.
+
+Suppose A, B are distantly separated in space, and can communicate quantumly and classically. There is an eavesdropper E who can read and access both these channels.
+
+For quantum transmissions, we have:
+$$
+\begin{matrix}
+	\e{\psi_{00}} = \0 & \e{\psi_{01}} = \e+ \\\\
+	\e{\psi_{10}} = \1 & \e{\psi_{11}} = \e- 
+\end{matrix}
+$$
+Given over two orth-norm basis $B_0 = \0, \1$ the Z eigenbasis, and $B_1 = \e+, \e-$ the X eigenbasis, which are called **mutually unbiased bases**.
+
+Let bit value 0 be encoded in one of $\0, \e+$, and a 1 be encoded in one of $\1, \e-$. This means $\e{\psi_{ij}}$ has a bit value $i$ in basis $B_j$.
+
+***Mutually Unbiased Bases.*** (MUB) A set of MUB on $\bb{C}^d$ is a set of orthnorm bases s.t. any vector of a basis is an **equally weighted superposition** of vectors in any other basis:
+$$
+|\ip{e_i}{f_j}|^2 = \frac{1}{d} \pod{\forall i, j \in \{\e{e_i}, \e{f_j}\}}
+$$ 
+
+I.e. $\0, \1$ are both equal weighted probabilities of the plus-minus basis, and vice versa.
+
+There are a couple things about $N$ the max number of MUBs in dimension $d$:
+- $d=2 \implies N = 3$ being the Z, X, Y eigenbases.
+- For any $d$ that is **prime**, $N = d+1$ 
+- For any $d$ that is **not** prime, we only know a bound for N, that is if $d = p_1^{n_1} p_2^{n_2} .. p_k^{n_k} \pod{p_1 \lt p_2 \lt \cdots \lt p_k}$ breaks down into these prime factors with these powers, $p_1^{n_1} +1 \leq N \leq d_1$.
+
+#### BB84 Protocol
+
+A quantum key distribution QKD protocol.
+
+<s-side>
+
+
+【1】A generates 2 random uniform strings uniformly of length n:
+$$
+\begin{matrix}
+	X = x_1 x_2 .. x_n & Y = y_1 y_2 .. y_n
+\end{matrix}
+$$
+Then prepares n qbit states
+$$ \e{\psi_{x_1y_1}} .. \e{\psi_{x_ny_n}} $$ 
+
+And sends these to B in order. *(Conjugate coding)*
+
+</s-side>
+<p></p>
+<s-side>
+
+【2】When B receives n qbits, they may not be in the states $\e{\psi_{x_iy_i}}$, perhaps due to channel noise, or due to eavesdropping and tampering. 
+
+*Firstly.* Assume transmission is perfect, B receives everything as-is. 
+
+B generates a random uniform string $ Y' = y_1' y_2' .. y_n'$ and measures each qbit $i$ in basis $B_{y'_i}$ to get $X' = x_1'..x_n'$ 
+
+> $Y'$ is B's guess at A's encoding basis Y. 
+
+*Note:* If B is correct $y_i' = y_i \implies x_i' = x_i$. If B is incorrect $y_i' \neq y_i$ then $x_i'$ has **no correlation** to $x_i$.
+
+$y_i' = y_i$ happens with probability 0.5.
+
+</s-side>
+<p></p>
+<s-side>
+
+【3】A and B *publicly reveal* and compare their basis strings Y and Y' (but keep secret Xs).
+
+They both discard all bits $x_i, x_i'$ where the basis bits do not match, leaving shorter strings of *expected* length $\frac n2 : \tilde X , \tilde X'$
+
+Under the assumption of perfect transfer, then these bits provide the desired secret key. 
+
+**However** there is always noise and there may be eavesdropping, and so there are 2 more steps to correct for this.
+
+</s-side>
+<p></p>
+<s-side>
+
+【4】(**Information reconciliation**) A and B want to estimate the bit error rate BER = $\rm{count}(\tilde X' \neq \tilde X)$.
+
+They publicly compare a **subset** of Xs, at pre-agreed random positions. This can be as much as half. Then, all revealed bits are **discarded**.
+
+They assume the remaining bits have the same *proportional error* <span class="grey">but at unknown positions</span>. 
+
+They want to correct these errors without sacrificing too many key bits, and can be done if BER not too large.
+
+</s-side>
+<p></p>
+
+<s-side>
+
+【5】(**Privacy amplification**) are classical methods (not explained) for improving the quality of the key. A and B can do this, also using an estimation of the amount of information E has, via the BER.
+
+</s-side>
+
+There are many possible eavesdropping strategies for E. Such as 
+
+- **Intercept and resend attack** Intercept each qbit separately, measures it in a pre-determined basis, and sends the post measurement state, or try to reconstruct the qbit from her measurement.
+- **General Coherent Attack** With a "large quantum probe" unitarily interact (and entangle with) each passing bit, so E has a set of entangled bits (the "probe") which she could measure to obtain possibly joint info -- can even do this after sending and agreement.
+
+***Intercept and Resend.*** Assume quantum channel has no noise, but E intercepts each qbit and measures it in the **breidbart basis** ($\frac\pi8$ basis):
+
+\begin{align}
+	\e{\alpha_0} &= \cos \frac\pi8 \0 + \sin \frac\pi 8 \1\\\\
+	\e{\alpha_1} &= \cos \frac\pi 8 \0 - \sin \frac\pi 8 \1
+\end{align}
+
+This is a basis angled just between computational and conjugate, at 22.5 degrees offset, which is the best for getting information.
+
+We can work out that in every single case, E's probability of measuring A's bit correctly is 
+$$ \cos^2 \frac\pi 8 = \frac{1 + \frac 1 {\sqrt 2}}{2} \approx 0.85 $$ 
+
+Now the bit error rate, we have to analyse the probability of getting a *wrong* outcome case by case. This is usually done in a probability tree but I don't want to draw it so more $\TeX$:
+
+$$
+\0 \overset{|\ip{\alpha_0}{0}|^2}{\underset{\cos^2}\lra} \e{\alpha_0} \overset{|\ip{\alpha_0}{1}|^2}{\underset{\sin^2}\lra} \1 
+$$
+$$
+\0 \overset{|\ip{\alpha_1}{0}|^2}{\underset{\cos^2}\lra} \e{\alpha_1} \overset{|\ip{\alpha_1}{1}|^2}{\underset{\sin^2}\lra} \1 
+$$
+
+Where the left is what A sends, the middle is what E resends, and the right is what B measures (wrong result only). Calculating this we have 
+$$P(\rm{wrong}) = \cos^2\sin^2 + \sin^2\cos^2 = 2\sin^2\cos^2 = \frac12 (4\cos^2\sin^2) = \frac12 (2\sin\cos)^2$$
+$$= \frac12 \sin^2(\frac\pi4) = \frac14$$
+For the case of a missent $\0$. 
+
+Repeating this for all the other three cases, we get $\frac14$ each time, leading to an average BER of $\frac14$.
+
+</div>
+</div>
+
 
 	<footer>
 		<div class="cbox">
