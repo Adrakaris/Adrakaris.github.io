@@ -17,7 +17,7 @@
 
 var pages = [
     {
-        "date": new Date(Date.UTC()),
+        "date": new Date(Date.UTC(2024,1,31)),
         "link": "blog-cs/cs416",
         "title": "Notes on CS416",
         "desc": "Optimisation Methods</p>",
