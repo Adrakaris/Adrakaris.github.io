@@ -68,8 +68,11 @@ $$
 \newcommand{\p}{\vec{p}} 
 \newcommand{\d}{\vec{d}} 
 \newcommand{\z}{\vec{z}} 
+\newcommand{\w}{\vec{w}} 
 \newcommand{\0}{\vec{0}} 
 \newcommand{\b}{\vec{b}} 
+\newcommand{\dd}{\rm{d}} 
+\newcommand{\lra}{\longrightarrow} 
 \newcommand{\nm}[1]{\left\lVert #1 \right\rVert}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\Tr}{Tr}
@@ -296,6 +299,198 @@ Hence it is a minimum. $\Box$
 > $$ \frac{\partial UV  }{\partial x  } = \frac{\partial U  }{\partial x  }V + U \frac{\partial V  }{\partial x  } $$ 
 > i.e. a useful one to know is that the gradient of $\x\t M \x$ is given as just $2M\x$.
 
+</div>
+
+</div>
+
+<div class="colourband">
+	<h2>Smooth Optimisation</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Gradient and Descent
+
+<b-blue>
+
+***Definition.*** (Partial Derivatives, gradient, smoothness).
+
+Let $f : \R^n \lra \R$, and let $x \in \R^n = (x_1 .. x_n)$
+
+The **partial derivative** $\nabla_{x_i} f(\w) = \frac{\partial f(\w)  }{\partial x_i  }$ 
+- is defined to be a derivative of a function $\phi$, $\phi_i' (w)$, where 
+$$ \phi_i(z) = f(w_1 .. w_{i-1}, z, w_{i+1}.. w_n)$$ 
+- i.e. the partial derivative for an element of a vector, fix all other elements and derive that one only.
+
+The **gradient** $\nabla_\x f(\w)$ (often without the subscript) 
+$$
+\nabla f(\w) = \begin{bmatrix}
+	\nabla_{x_1} f(\w) \\\\ 
+	\vdots \\\\ 
+	\nabla_{x_n} f(\w)
+\end{bmatrix}
+$$
+- So $\nabla f : \R^n \lra \R^n$, if defined for all elements in a domain (**well defined**)
+
+$f$ is **smooth** if its gradient is *continuous* / it is continuously differentiable.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** (First order taylor theorem) **IMPORTANT** 
+
+Let $f: \R^n \lra \R$ be smooth, then we can use first order taylor approximations:
+
+For a small vector distance $\p$:
+
+- The **integral form**:
+$$
+f(\x + \p) = f(\x) + \int_0^1 \nabla f (\x + \gamma \p)\t \p \\;\dd \gamma 
+$$
+- The **mean value form**:
+$$
+f(\x + \p) = f(\x) + \nabla f(\x + \gamma \p)\t\p
+$$
+For some $\gamma \in (0,1)$
+
+</b-blue>
+
+<s-side>
+
+***Corollary.*** (Local linear approximation)
+
+If $f : \R^n \lra \R$ is smooth at $\x$, then for some small $\p$ 
+$$ f(\x + \p) = f(\x) + \nabla f(\x)\t\p + o(\nm{p})$$
+
+Where little $o(\nm p)$ notation means that the "residual" ratio $\frac{ r(\p) }{ \p }$ for some residual function (the "error" I guess) is vanishingly small compared ot the norm of $\p$
+
+</s-side>
+
+</div>
+
+<button class="collapsible">Proof (corrolary)</button>
+<div class="ccontent md-conv">
+
+***Proof.*** 
+
+- By mean value form 
+$$f(\x + \p) = f(\x) + \nabla f(\x + \gamma \p) \t \p$$
+- Adding and subtracting the same thing
+$$= f(\x) + \nabla f (\x)\t \p + (\nabla f(\x + \gamma \p) - \nabla f(\x))\t \p$$ 
+- which is 
+$$ = f(\x) + \nabla f (\x)\t \p + O(\nm{\nabla f(\x + \gamma \p) - \nabla f(\x)} \nm{\p})$$ 
+- And we claim this big-O term is just little-o norm of p, by claiming that 
+$$ \lim_{\nm p \lra 0} O(\cdots) \longrightarrow\longrightarrow 0$$
+As $\nm p \lra 0$, the gradient term tends to $\nabla f(\x)$, and since the gradient is continuous we can do this. Thus the ratio 
+$$
+\frac{ \nm{\nabla f(\x + \gamma \p - \nabla f(\x))} \nm{\p} }{ \nm \p } \lra \nm{\nabla f(\x) - \nabla f(\x)} \lra 0
+$$
+Therefore 
+$$
+f(\x + \p) = f(\x) + \nabla f(\x)\t\p + o(\nm{p}) \Box
+$$
+
+</div>
+
+
+<div class="md-conv">
+<p></p>
+<b-blue>
+
+***Def.*** A vector $\d \in \R^n$ is a **descent direction** if for a function at a point $f(\x)$, 
+$$
+f(\x + t\d) \lt f(\x)
+$$
+For all sufficiently small values of $t$. 
+
+</b-blue>
+<p></p>
+<s-side>
+
+***Fact.*** If $f$ is smooth in a neighbourhood of $\x$ (close to x), then every direction s.t. $\nabla f(\x)\t \d \lt 0$ is a valid descent direction.
+</s-side>
+</div>
+
+<button class="collapsible">Proof (fact)</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Since the gradient is continuous, there is some $t^* \gt 0$ where 
+$$
+\nabla f(\x + t\d) \t \d \lt 0 \pod{\forall t \in [0, t^*]}
+$$
+By the mean value form of taylor theorem, 
+$$
+f(\x + t\d) = f(\x) + t \nabla f (\x + \gamma t \d) \cdot \d
+$$
+Since $\gamma t \lt t$ as gamma is between 0 and 1, $f(\x + t\d) \lt f(\x)$. Thus it is a descent vector. $\Box$
+
+</div>
+
+<div class="md-conv">
+<p></p>
+<s-side>
+
+***Corrolary.*** If $\x^\*$ is a **local minimiser** for a smooth $f$, then 
+$$
+\nabla f(\x^*) = \0
+$$
+
+</s-side>
+
+### Gradient Descent 
+> not to be confused with the previous section "Gradient and Descent"
+
+<s-side>
+
+***Fact.*** (On steepest descent directions for a point where the gradient is nonzero)
+
+Among directions $\d$ with unit length, the one that minimises $\nabla f(\x) \cdot \d$ is 
+$$
+-\frac{ \nabla f(\x)  }{ \nm{\nabla f(\x)} }
+$$
+
+</s-side>
+
+<b-blue>
+	
+***Algorithm.*** Gradient Descent $GD(\alpha_k, T)$:
+1. Pick $\x_0 \in \R^n = \dom(f)$
+2. **for** $k = 0..T-1$ steps:
+	1. choose step size $\alpha_k \gt 0 $
+	2. set $\x\_{k+1} := \x\_k - \alpha\_k \nabla f(\x\_k)$
+3. **return** $\x_T$
+
+</b-blue>
+
+Also written as $GD(\alpha_k)$ and the algorithm runs until convergence.
+
+In terms of the step length, too small and it is too slow, too large and it overshoots. 
+
+<b-blue>
+
+***Def.*** $f$ is **L-Lipschitz continuous** if
+$$
+|f(\x) - f(\y)| \leq L \nm{\x - \y} 
+$$
+For some constant $L$.
+
+***Def.*** $f$ is **L-smooth** if its gradient is L-lipschitz.
+
+</b-blue>
+
+<s-side>
+
+***Lemma.*** (Quadratic UB for L-smooth functions)
+
+If $f$ is L-smooth, then 
+$$
+f(\x + \p) \leq f(\x) + \nabla f(\x)\t\p + \frac{ L }{ 2 } \nm{\p}^2
+$$
+($\nm\p^2 \equiv \p\t\p$)
+
+</s-side>
 </div>
 
 </div>
