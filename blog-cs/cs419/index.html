@@ -75,6 +75,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 4. [Quantum Cryptography](#qcyp)
 4. [Quantum Money](#qm)
 4. [Computation and Complexity Theory](#complexity)
+6. [Quantum Fourier Transforms](#qft)
 </div>
 
 <div>
@@ -87,6 +88,8 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 	\newcommand{\rm}{\textrm}
 	\newcommand{\0}{\e{0}}
 	\newcommand{\1}{\e{1}}
+	\newcommand{\p}{\e{+}}
+	\newcommand{\m}{\e{-}}
 	\newcommand{\t}{^\top}
 	\newcommand{\abs}[1]{\left\lvert #1 \right \rvert}
 	\DeclareMathOperator{\tens}{\otimes}
@@ -94,7 +97,9 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 	\DeclareMathOperator{\lla}{\longleftarrow}
 	\DeclareMathOperator{\span}{span}
 	\DeclareMathOperator{\dim}{dim}
+	\DeclareMathOperator{\poly}{poly}
 	\DeclareMathOperator{\Tr}{Tr}
+	\DeclareMathOperator{\per}{per}
 \)
 </div>
 
@@ -1753,8 +1758,252 @@ Then, note that
 And so now we have the result of $f$ as either a + or - amplitude -- this is phase kickback and is a very important trick.
 
 Now, as a superposition of all $x$s, this becomes 
+$$
+\frac{1}{\sqrt{2}^n} \sum\limits_{\forall x} \e{x} \m \overset{U_f}{\lra} \left(\frac{1}{\sqrt{2^n}}\sum\limits_{\forall x} (-1)^{f(x)} \e{x}\right)\m
+$$
+
+We can now discard the second state, and now have our phase-encoded query:
+$$
+\frac{1}{\sqrt{2^n}}\sum\limits_{\forall x} (-1)^{f(x)} \e{x}
+$$
+
+- If $f$ is constant, then all the signs are the **same**.
+- If $f$ is balanced, **exactly half** the signs will be different.
+
+i.e. $\e{\xi_{f_{const}}} \perp \e{\xi_{f_{balanced}}}$, therefore they are perfectly distinguishable. However, they are not in the basis $\0, \1$, and we only allow measurement in that basis, and so we must convert it back. 
+
+Since we applied H gates to get to this rotated state, we can apply all H gates again to rotate back (H is self inverse):
+$$
+\e{\eta_f} = H \tens \cdots \tens H\e{\xi_f}
+$$
+Unitaries preserve dot product $\implies \e{\eta_{f_{const}}} \perp \e{\eta_{f_{balanced}}}$ still holds. 
+
+- When $f$ is constant, $\e{\eta_f} = \pm \e{0 \cdots 0}$. When measured, this gives 0...0 with **certainty**.
+- When $f$ is balanced $\e{\eta_f} = \sum\limits_{\forall x \in B_n}^{x \neq 0} a_x \e{x}$ for some coefficients $a_x$. When measured, this gives **some** bitstring $B_n$, which will never be 0.
 
 </s-side>
+
+A circuit is shown.
+
+![Circuit diagram](./balanced-constant-circuit.png)
+
+It takes 1 query and $O(n)$ processing.
+
+Some observations:
+- We cannot prove that there is a quantum algorithm that can answer a decision problem for any $f:B_n \lra B_1$ problem using polynomial oracle queries. 
+	- SAT is a problem that cannot be solved. It can be worded as: given a $f: B_n \lra B_1$ with *no* promise, is there an $x : f(x) = 1$?
+	- Rather it is proved that *any* algorithm solving SAT with $p = 1-\varepsilon \pod{\varepsilon > 0}$ probability needs at least $O(\sqrt{2^n})$ queries.
+	- I.e. no promise = bad.
+- If we can tolerate error in the above problem (success rate $p = 1-\varepsilon \pod{\varepsilon \geq 0}$) then we can design a randomised algorithm with a constant $O(\log \frac{1}{\varepsilon})$ queries, which removes the advantage of quantum.
+	- The classical alg is just: (a) choose $k$ values of $x = x_1 .. x_n$ uniformly at random, and execute $f$ on each $x$ ($k$ queries). (b) if any queries are different then balanced, else constant.
+	- If $f$ is constant, the answer is correct with $p=1$, but if balanced, the probability of all zeros or ones is $\frac{2}{2^k}$ and just increase $k$ until this is suitably small.
+
+So this may lead one to claim that quantum algorithms are no more powerful than classical randomised ones (like NFAs being no more powerful than DFAs), but the below shows differently:
+
+<s-side>
+
+***Simon's Problem.***
+
+Given an oracle $f : B_n \lra B_n$    
+And a promise that $f$ is either 
+- one-to-one
+- two-to-one or **periodic**: there is some bitstring $\xi \in B_n : f(x \oplus \xi) = f(x) \pod{\forall x}$.
+
+Determine which one it is.
+
+</s-side>
+
+> This is a follow-on from DJ algorithm, and this builds into prime factoring algorithms.
+
+So far we only look at oracle problems - often though we would like to do standard, more general comptational tasks, that are not in oracle form. However of this type none so far have been found to be better quantumly.
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="qft">Quantum Fourier Transforms</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Periodicity
+
+<b-blue>
+
+***Def.*** A **Quantum Fourier Transform mod N** $QFT_{N}$
+
+Takes an N-dimensional state space basis $\0, \1, \cdots, \e{N} :\in \bb{Z}\_N$, and transforms it by 
+
+$$
+QFT : \e{a} \mapsto \frac{ 1 }{ \sqrt{N}  } \sum\_{b=0}^{N-1} e^{\frac{ 2 \pi i a b  }{ N  }} \e{b}
+$$
+
+Can be written in the matrix form where each index element $[\cdot]\_{ab}$ is 
+$$
+[QFT]\_{ab} = \frac{ 1 }{ \sqrt{N}  } \omega ^{ab} \pod{\omega = e^{\frac{ 2\pi i  }{ N  }}}
+$$
+
+Then the matrix $\sqrt{N} QFT$ is 
+
+- Symmetrical
+- Has 1s in its first row and column 
+- Each row and column is a **geometric sequence** $1, r, r^2, \dots$ where $r = \omega^k$ for the $k$th row/column.
+- Is **unitary** <span class="grey">Proof is left as an exercise to the reader</span>
+
+</b-blue>
+
+Note that $QFT_2$ happens to literally just be the hadamar gate. 
+
+*However* over higher dimensions $QFT_N$ is not just composed hadamars, the latter is often called a *boolean transformation*. 
+
+***Periodicity Problem.***
+
+Carrying on from Simon's problem, 
+
+<s-side>
+
+
+INPUT: $f : \bb{Z}_N \lra \bb{Z}_M$ as an oracle    
+PROMISE: $f$ is periodic
+- $f(x + r \mod N) = f(x)$ for the smallest some $r$, the **period** in $f$. 
+- Note that $r$ divides N $\therefore N = Ar$ for some integer A the number of periods.   
+PROMISE 2: $f$ is one-to-one within each period
+
+PROBLEM: Find $r$ with any constant probability $1 - \varepsilon$. 
+
+</s-side>
+
+***Fact.*** Classically, $O(\sqrt N)$ queries are necessary and sufficient. 
+
+However quantumly, only $O(\log \log N)$ queries and $O(\poly(\log N))$ total processing time is required.
+
+We can also reduce the problem of finding a factor of an integer to this periodicity problem. 
+
+<s-side>
+
+***Quantum Algorithm for Periodicity Determination.***
+
+We have a quantum oracle for $f: \bb Z_N \lra \bb Z_M$. Therefore 
+$$
+U_f \e{x} \e{y} = \e x \e{y + f(x) \mod M}
+$$
+
+【1】Generate superpositions by some method, e.g. $QFT_N \e{\mathbf{0}}$
+$$
+\frac{1}{\sqrt{N}} \sum\limits_{x=0}^{N-1} \e{x}
+$$
+
+【2】We use one query to get 
+$$
+\e{f} := \frac{1}{\sqrt{N}}\sum\limits_{\forall x} \e{x}\e{f(x)}
+$$
+Since $N = Ar$, 
+
+【3】Measure the second register in the $\0, \1, \cdots, \e{N-1}$ basis. We see some value $y = f(x_0)$ with $x_0$ being the smallest value such that $f(x_0) = y$.
+
+So there are one such $x_0$ in each period, and in total 
+$$
+x_0, x_0 + r, x_0 + 2r, \cdots, x_0 + (A-1)r
+$$
+After measurement, first register collapses to
+$$
+\e\per := \frac{1}{\sqrt{A}}\sum\limits_{j=0}^{A-1} \e{x_0 + jr}
+$$
+
+</s-side>
+
+> *Note.* that $x_0$ is uniformly random from $0..r-1$. All function values occur equally often.
+> 
+> If we measure $\e\per$, we will get a random $j : x_0 + jr$.
+> - Therefore we get a random $x_0$ from a random period $j$.
+> - And a uniformly random $x$, which is not helpful.
+> 
+> **But** if we apply QFT first:
+
+<s-side>
+
+
+【4】We get 
+$$
+\begin{align*}
+QFT \e{\per} &= \frac{1}{\sqrt{N}} \frac{1}{\sqrt{A}} \sum\limits_{j=0}^{A-1} \sum\limits_{y=0}^{N-1} \omega^{(x_0 + jr )y} \e{y}\\\\
+&= \frac{1}{\sqrt{NA}} \sum\limits_{y=1}^{N-1} \omega^{x_0 y} \left(\sum\limits_{j=0}^{A-1} \omega^{jyr}\right)\e{y}
+\end{align*}
+$$
+Where the big bracket with the sum inside is a geometric series $1 + \alpha + \cdots + \alpha^{A-1}$ such that 
+$$
+\alpha = \omega^{yr} = e^{\frac{2\pi i r y}{N}} = e^{(\frac{2 \pi i}{A})y} = 1 \\; \forall y
+$$
+if $y$ is a multiple of A, otherwise it will be the sum 
+$$
+\frac{1 - \alpha^A}{1-\alpha} = 0
+$$
+Therefore $\alpha = 1 \iff y$ is a multiple of $A = \frac{N}{r}$.
+
+Therefore
+$$
+QFT \e\per  = \sqrt{\frac{A}{N}} \sum\limits_{k=0}^{r-1} \omega^{x_0 k(\frac{N}{r})} \e{k \frac{N}{r}}
+$$
+Where $\sqrt{A/N} = 1/\sqrt{r}$.
+
+By magic we have encoded the random shift in the phase of the state, and so its amplitude is **independent** of $x_0$.
+
+
+【5】We measure the label now, and obtain the result C, which is a multiple of $k_0 \frac{N}{r} \pod{0 \leq k_0 \leq r-1}$ uniformly at random. Therefore 
+$$
+C = k_0 \frac{N}{r} \implies \frac{k_0}{r} =\frac{C}{N}
+$$
+Where $k_0$ is random, $r$ is unknown, C and N are known. 
+
+
+【6】(The number theory cop out part)
+
+</s-side>
+
+**If** $k_0$ is coprime to $r$, then trivially the way we get $r$ is simplify down $\frac{C}{N}$ and read off the denominator. If $k_0$ is not coprime to $r$, then we have no way of getting it. But, there is a non-negligible probability that $k_0$ is coprime, as:
+
+<b-blue>
+
+	
+***Theorem.*** The number of integers less than a $r$ that is coprime to it is at least $\Omega (\frac{1}{\log \log r})$. 
+
+</b-blue>
+
+Thus $P(k_0 \rm{ coprime to } r) \geq \Omega\left(\frac{1}{\log \log r}\right)\geq \Omega\left(\frac{1}{\log \log N}\right)$.
+
+<s-side>
+
+
+Therefore:
+- When we simplify $\frac{C}{N}$ down, we get a $\tilde r$, our tentative $r$. We can check if this is indeed the period by checking if $f(0) = f(\tilde r)$.
+- If so, we are done with 2 queries. Otherwise, **repeat the algorithm until we get lucky and our $k_0$ is indeed coprime with $r$**.
+
+</s-side>
+
+<b-blue>
+	
+***Lemma.*** If an event has probability $p$ of succeeding, and the number of trials $M \geq \frac{\log 1/\varepsilon}{p}$, then the probability that at least one success happens in M trials is $1 - \varepsilon$.
+
+</b-blue>
+
+<s-side>
+
+***Proof.*** The probability of all trials failing is $(1-p)^M$. Want to see $(1-p)^M \leq \varepsilon$, which happens if and only if 
+$$
+\begin{align*}
+M \log (1-p) &\leq \log\varepsilon \\\\
+M &\geq \frac{\log \frac{1}{\varepsilon}}{\log (\frac{1}{1-p})} \geq \frac{\log \frac{1}{\varepsilon}}{p} & \Box
+\end{align*}
+$$
+
+</s-side>
+
+***Note.*** To achieve 99% success, $O(p)$ repeats suffices. Thus repeating algorithm $O(\log \log N)$ times and checking $O(1)$ queries leads us to the $O(\log \log N)$ query complexity. 
+
+
+### Efficient Implementations
+
 
 </div>
 </div>
