@@ -1123,7 +1123,7 @@ A has another qbit in some arbitrary state $\e\alpha$, which is possibly unknown
 The initial state is $\e\alpha_1 \e{\phi^+}_{23}$, where $\e\alpha = a\0 + b\1$ for some amplitudes. We have that 
 \begin{align}
 \e\alpha \e{\phi^+} &= (a\0 + b\1) \tens \frac{1 }{\sqrt{2} } (\e{00} + \e{11}) \\\\
-&= \frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{001} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \pod{\dagger}
+&= \frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{011} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \pod{\dagger}
 \end{align}
 
 We perform the following steps.
@@ -1139,11 +1139,11 @@ We perform the following steps.
 We can look at the effects of these steps on $(\dagger)$:
 
 \begin{matrix}
-	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{001} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \\\\
+	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{011} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \\\\
 	\Big\downarrow CX_{12} \\\\
-	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{001} + \frac{b}{\sqrt{2}}\e{110} + \frac{b}{\sqrt{2}}\e{101} \\\\
+	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{011} + \frac{b}{\sqrt{2}}\e{110} + \frac{b}{\sqrt{2}}\e{101} \\\\
 	\Big\downarrow H_1 \\\\
-	\frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{00} + \frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{01} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{00} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{11} \\\\
+	\frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{00} + \frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{11} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{00} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{11} \\\\
 	= \\\\
 	\frac{1 }{2 } (\e{00}(a\0 + b\1) + \e{01}(a\1 + b\0) + \e{10}(a\0 - b\1) + \e{11}(a\1 - b\0)) \\\\
 	= \\\\
@@ -1547,6 +1547,214 @@ The main question is does $T(n)$ grow polynomially or exponentially (super-poly)
 
 Poly time calculations are called **tractable** or **feasible**.
 
+<s-side>
+	
+***Class P.*** the set of all problems with poly-time deterministic algorithms.
+
+</s-side>
+<p></p>
+<s-side>
+
+***Class BPP.*** (Bounded error probabilistic poly time): the set of all probabilistic poly-time algorithms s.t. for all inputs $x$, the **probability of correctness $\geq \frac32$**. 
+
+Note that this class still holds for any probability $p \gt \frac12$ (bounded away from half)
+
+</s-side>
+
+These are all considered "efficient"
+
+For BPP with any probability $\frac12 + \delta$ of success, we can repeat it $k$ times and take a majority vote. The **chernoff bound** says that in this case we would be correct with a $p \gt 1 - e^{-2\delta^2 k}$. 
+
+We can always scale K up, and since K is a constant and BPP requires poly time algorithms, this is still poly time.
+
+<s-side>
+
+***Example.*** Prime testing. 
+
+IN: Integer N in binary    
+SIZE: $n = \left\lceil{\log_2 N	}\right\rceil $ 
+
+Naive algorithm: test and divide by all numbers $2..\sqrt{N}$. This is not poly-time, as it takes at most $\sqrt{N} \approx 2^{\frac n 2}$ steps.
+
+However, prime testing is proven to be BPP, and finally P in 2004.
+
+</s-side>
+
+### Quantum Computation 
+
+We will focus on the circuit model. 
+
+For input $x = i_1 .. i_n \in B_n$, we start with qbits $\e{i_1}..\e{i_n}\0..\0$ similar to classical.
+
+Computational steps are 1 or 2 qbit gates designated on qbits. 
+- Single qbit gates include: $H, X, Z, P(\phi), \dots$ (last one is rotation)
+- Double qbit gates include: $CX, CZ, \dots$ 
+
+Output is a quantum measurement in $\\{\0, \1\\}$ basis only on specified qbits.
+
+***Universal Gates.*** A program can be thought of as some fat unitary U over all bits. This has continuous parameters. Therefore, there are **no finite set** of gates that can be exactly universal.
+
+We can think about *approximate universality*, 
+
+<b-blue>
+
+***Def.*** $G$ is **approximately universal** if 
+- $\forall \varepsilon \gt 0$, unitary $W$ on $n$ qbits:
+- There exists a circuit $\tilde W$ if gates in $G$ such that 
+$$
+\lVert W - \tilde W \rVert \lt \epsilon
+$$ 
+Where $\lVert A \rVert$ is the max over all normalised $\e\psi$ of $\lVert A\e\psi \rVert$ (the spectral norm).
+
+i.e. the maximum distance an approximate gate set program can take you from the actual result is an error $\varepsilon$.
+
+</b-blue>
+
+The size of $\tilde w$ is expressed generally in number of bits $n$. 
+
+<b-blue>
+
+***Thm.*** (Solway-Kitaer for dependence on accuracy).
+
+For each fixed $n$, there is a polynomial $p$ s.t. $\forall W$ on $n$ qbits, 
+
+the size of the circuit $\tilde W$ is bounded by $p(\log \frac{1}{\varepsilon})$. <span class="grey">Polynomial in number of digits of accuracy</span>
+
+</b-blue>
+<p></p>
+<s-side>
+
+***Fact.*** $G = \\{CX, \rm{all 1 bit gates}\\}$ is **exactly** universal, but there are infinite 1 bit gates.
+
+$G' = \\{H, CX, P(\frac \pi 4)\\}$ is an approximately universal set.
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Def. Class BQP* (Bounded error quantum poly-time)** All problems that can be solved with a poly-sized quantum circuit having probability of correctness $\gt \frac 2 3$ (or anything above 1/2).
+
+</b-blue>
+
+These problems are feasible quantumly.
+
+Note that 
+- BQP is independent of choice of approximately universal gate set 
+- $BPP \subseteq BQP$ but we do not know if $BPP \neq BQP$.
+
+***Reversible Boolean Functions.*** For any function $f : B_m \lra B_n$ which maps boolean values $x \mapsto y$. 
+
+In general, boolean functions are not usually reversible. AND is an example of this. Quantum unitaries however are always reversible.
+
+Consider then a $\tilde f : B_{m+n} \lra B_{m+n}$ which does 
+$$\tilde f : (x, y) \mapsto (x, y \oplus f(x)) $$
+Which can easily be constructed from $f$. $\oplus$ is still bitwise addition mod 2.
+
+<s-side>
+
+***Lemma.*** $\tilde f$ is always reversible.
+
+***Proof.*** Note $x \oplus x = 0 \forall x$. Therefore 
+
+$$ \tilde f(\tilde f(x, y)) = (x, y \oplus f(x) \oplus f(x)) = (x, y) $$
+
+Hence $\tilde f$ is always reversible and is its own inverse.
+
+</s-side>
+
+Now if $g: B_k \lra B_k$ is any invertible boolaen function, let the linear map on $k$ qbits defined on the $k$-basis be 
+$$
+A_g : \e{x} \lra \e{g(x)} 
+$$ 
+For a unitary $A_g$.
+
+For a function $f$ that can be made into a reversible function $\tilde f$, we write $A_{\tilde f} \equiv U_f$, so 
+$$ U_f \e{x}\e{y} = \e{x} \e{y \oplus f(x)} $$ 
+
+***Computation by quantum parallelism.*** Let
+$$
+\e{x} \e{0..0} \overset{U_f}{\lra} \e{x} \e{f(x)} 
+$$
+By linaerity of the operation, also get 
+$$
+\left(\frac{1}{\sqrt{2^m}}\sum\limits_{\forall x} \e{x}\right) \e{0..0} \overset{U_f}{\lra} \frac{1}{\sqrt{2^m}}\sum\limits_{\forall x} \e{x} \e{f(x)}
+$$
+Let this be written as $\e{f}$, and is basically $f$ calculated over a superposition of all possible input bit strings $x$. 
+
+Therefore **one** run of $U_f$ gives a state of all exponentially many values of $f(x)$. 
+
+Furthermore, although $\e\psi = \frac{1}{\sqrt{2^m}}\sum\limits_{forall x} \e{x}$ has exponentially many terms, it can be prepared easily by using only *linear* effort. 
+
+- By using $m$ hadamard gates 
+$$ \e{0..0} \overset{H \tens H \tens \cdots \tens H}{\lra} \frac{1}{\sqrt{2^m}}(\0 + \1) \cdots (\0 + \1) = \e\psi $$ 
+
+### Promise Problems 
+
+Instead of the input $x$ being a binary string (or quantum binary string), we have 
+- $x$ is a given black box / **oracle** $O_f$, that computes some boolean function $f : B_m \lra B_n$.
+- Each use of the oracle counts as 1 computational step 
+- And we can be given an *a-priori* **promise** about a property of $f$. 
+
+The problem is:
+- Given $x$, we want to determine some property of $f$ (given our promise)
+- We can only access $f$ via the oracle $O_f$ 
+- Computation starts on a string of zeros (or quantum $\0 .. \0$)
+
+**Query Complexity.** Number of times $O_f$ needs to be queried to solve the problem.
+
+**Total time complexity.** Total size of circuit (oracle = 1 gate)
+
+<s-side>
+
+***Example.*** Balanced versus Constant.
+
+INPUT: A oracle for $f: B_n \lra B_1 \pod{\equiv B}$    
+PROMISE: $f$ is either (a) **constant**, or (b) **balanced** 
+- Balanced: half the inputs result in 1, the other half 0 
+
+PROBLEM: Determine if $f$ is constant or balanced with *perfect certainty*.
+
+</s-side>
+
+<s-side>
+
+***Classically.*** $\frac{2^n}{2} + 1$ queries are necessary and sufficient to solve with certainty. 
+
+*Sufficiency.* we need to measure over half of inputs to determine for certain if it is balanced or not.
+
+*Necessity.* Suppose we have a deterministic classical algorithm. Assume for contradiction that it claims to solve the problem for any $f$ using $K \leq \frac{2^n}{2}$ queries. 
+
+An adversary can engineer a function that: when run with this algorithm, always returns 0. However, the function itself is not fully defined.  
+
+- Since *less than half* of inputs are run, if the algorithm says balanced we can then define all the unmeasured inputs to be 0, and if constant, we can define half of all inputs (we have more than half "undiscovered") as 1.
+
+</s-side>
+
+<s-side>
+
+***Quantumly.*** We claim that **one** query is sufficient.
+
+- Start with $U_f \e{x}\e{y} = \e{x} \e{y \oplus f(x)} $ 
+- We use a method of "phase kickback" to encode values of $f$ in the phase/amplitudes. 
+
+**Important:** Our working space $\e{y} := \e-$ needs first to be set to the minus state. 
+
+Then, note that 
+\begin{align}
+	\e{x} \e- &= \e{x} \frac{1}{\sqrt 2} (\0 - \1) \\\\
+	&\overset{U_f}{\lra} \e{x} \frac{1}{\sqrt 2} (\e{f(x)} - \e{1 \oplus f(x)}) \\\\
+	&= \begin{cases} 
+		e{x}\left(\frac{\0 - \1}{\sqrt{2}}\right) & \rm{if } f(x) = 0  \\\\
+    	\e{x}\left(\frac{\1 - \0}{\sqrt{2}}\right) & f(x) = 1
+	\end{cases} \\\\ 
+	&= (-1)^{f(x)} \e{x} \e- 
+\end{align}
+
+And so now we have the result of $f$ as either a + or - amplitude -- this is phase kickback and is a very important trick.
+
+Now, as a superposition of all $x$s, this becomes 
+
+</s-side>
 
 </div>
 </div>
