@@ -496,6 +496,181 @@ $$
 </s-side>
 </div>
 
+<button class="collapsible">Proof (Lemma)</button>
+<div class="ccontent md-conv">
+***Proof.*** 
+
+Take by integral form of Taylor's theorem and taking away gradient:
+
+$$
+f(\x + \p) - f(\x) - \nabla f(\x)\t\p = \int_0^1 (\nabla f(\x + \gamma \p) - \nabla f(\x))\t\p \dd\gamma
+$$
+
+By the *cauchy schwarz inequality*:
+$$
+\cdots \leq \int_0^1 \nm{\nabla f (\x + \gamma\p) - \nabla f(\x)} \nm{\p} \dd\gamma
+$$
+
+Then by the L-smoothness of $f$:
+\begin{align}
+	&= \int_0^1 L \nm{\x + \gamma \p - \x}\nm\p \dd \gamma \\\\
+	&= L \lVert \p^{2} \rVert \int_0^1 \gamma \dd \gamma = \frac{L}{2} \lVert \p^{2} \rVert &\Box
+\end{align}
+</div>
+
+
+<div class="md-conv">
+
+***For L-smooth functions, pick $GD(\frac 1 L)$.***
+
+The motivation for this goes as:
+- via the lemma, the improvement is 
+$$ F(\x + \alpha\d) - f(\x) \leq \alpha \nabla f(\x)\t\d + \alpha^2 \frac L 2 \nm{\d}^2$$
+- And for the descent direction $\d$ to be $\nabla f(\x)$, then the choice $\alpha = \frac 1 L$ minimises the RHS of the function
+
+<s-side>
+	
+***Fact.*** If $f$ is L-smooth, then $\x_0, \x_1, \dots$ iterates of GD with fixed step 1/L, the improvement over 1 step is 
+$$ f(\x_{k+1}) - f(\x_k) \leq -\frac{1}{2L} \nm{\nabla f(\x ^k)}^2 $$ 
+
+</s-side>
+
+The proof of this fact can be found by subbing $\alpha = \frac 1 L$ into the improvement equation.
+
+The one step improvement of GD is *at least as much* as this bound.
+
+<b-blue>
+
+***Theorem.*** (Convergence rate of $GD(\frac 1 L)$ for L-smooth functions)
+
+- Let $f$ be L-smooth 
+- Let the global minimiser $f^* \leq f(\x) \\;\forall \x \in \dom(f)$. 
+- Let $G = f(\x_0) - f^*$ be the initial optimality gap.
+
+Then, after $t$ steps of $GD(\frac 1 L)$, we can find some $\x_k \in \dom(f)$ such that 
+$$
+\nm{\nabla f(\x_k)} \leq \sqrt{\frac{2LG}{t}} $$
+
+Hence we can find a $\x_k : \nm{\nabla f(\x_k)} \leq \varepsilon$ for a small $\varepsilon$, which is an **approximate stationary point** after $\frac{2LG}{\varepsilon^2}$ steps.
+
+</b-blue>
+
+</div>
+
+<button class="collapsible">Proof (theorem)</button>
+<div class="ccontent md-conv">
+***Proof.*** We can sum up all one step improvements:
+
+\begin{align}
+	\sum_{k=1}^{t-1} f(\x_{k+1}) - f(\x_k) &= f(\x_t) - f(\x_0) \\\\
+	f(\x_t) - f(\x_0) &\leq - \frac{1}{2L} \sum_{k=0}^{t-1} \nm{\nabla f (\x_k)}^2 
+\end{align}
+
+Hence 
+$$
+\sum_{k=0}^{t-1} \nm{\nabla f(\x_k)}^2 \leq 2L(f(\x_0) - f(\x_t)) \leq 2LG 
+$$
+So as $t$ increases, we are always bound by a constant. Therefore the gradient converges to zero:
+$$
+\lim_{k \lra \infty} \nm{\nabla f(\x_k)} = 0
+$$
+
+So after $t$ steps, 
+$$
+\min_{k = 0..t-1} \nm{\nabla f(\x_k)}^2 \leq \frac{1}{t} \sum_{k= 1}^{t-1} \nm{\nabla f(\x_k)}^2 \leq \frac{2LG}{t} 
+$$
+And hence the square root form. Note The minimum of a set is never more than the average.
+
+The second point follows on from the first point. 
+
+</div>
+
+<div class="md-conv">
+
+So far, we only ensure that *some* point the gradient is smallest, what is guaranteed is that the function decreases monotonically. 
+
+We do not guarantee GD gets the exact minimum, only the approximate minimum. Moreover, technically GD only finds stationary points, convexity of functions guarantees it is a minimum. 
+
+
+### Convex Sets and functions
+
+<b-blue>
+
+***Def.*** A set $\Omega \subseteq \R^n$ is a **convex set** IF for any $x, y, \in \Omega$, and any $\alpha \in [0,1]$, we have that the convex combination (i.e. linear interpolation) always satisfies:
+$$
+(1-\alpha)x + \alpha y \in \Omega
+$$
+
+</b-blue>
+<b-blue>
+
+***Def.*** A function $f: \R^n \lra \R$ is **convex** IF $\forall \x,\y \in \dom(f),\; \alpha \in [0,1]$, that 
+
+$$
+f((1-\alpha)\x + \alpha\y) \leq (1-\alpha)f(\x) + \alpha f(\y)
+$$
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** Suppose $f : \Omega \lra \R$ is convex, and $\Omega$ is convex and closed. Then 
+1. Every **local minimiser** of $f$ is also the **global minimiser**.
+2. The set of all global minimisers is convex. 
+
+</b-blue>
+<b-blue>
+
+***Thm.*** (First order characterisation of convexity)
+
+If $f:\R^n \lra \R$ is smooth and convex, then $\forall \x, \y \in \R^n$
+$$
+f(\y) \geq f(\x) + \nabla f(\x)\t (\y - \x)
+$$
+This is the *first order linear approximation of $f(\x)$* via the taylor's theorem.
+
+</b-blue>
+<p></p>
+</div>
+
+<button class="collapsible">Proof</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Condition for convexity:
+\begin{align}
+	f((1-\alpha)\x + \alpha \y ) &\leq (1- \alpha) f(\x) + \alpha f(\y). \\\\
+	f((1-\alpha)\x + \alpha \y ) &= f(\x + \alpha \y - \alpha \x) \\\\
+	&= f(\x + \alpha(\y - \x)) \\\\
+	&= f(\x) + \alpha \nabla f(\x)\t (\y - \x) + o(\nm{\alpha (\y - \x)}) 
+\end{align}
+
+We fix $\x, \y$ and vary $\alpha$: 
+
+$$
+ f(\x) + \alpha \nabla f(\x)\t (\y - \x) + o(\nm{\alpha})
+$$
+
+So 
+
+\begin{align}
+	f(\x) + \alpha \nabla f(\x)\t (\y - \x)  + o(\alpha) &\leq (1-\alpha)f(\x) + \alpha f(\y) \\\\
+	&\leq f(\x) - \alpha f(\x) + \alpha f(\y) \\\\
+	\nabla f(\x)\t (\y - \x) + o(1) &\leq -f(\x) + f(\y) \\\\
+	f(\y) &\geq f(\x) + \nabla f(\x)\t (\y - \x) & \Box 
+\end{align}
+
+</div>
+<div class="md-conv">
+<p></p>
+<b-blue>
+
+***Thm.*** For convex functions, a 0 gradient is both **necessary** and **sufficient** for a local minimum.
+
+</b-blue>
+
+### Fixed Step GD for Convex Functions 
+
+</div>
 </div>
 
 	
