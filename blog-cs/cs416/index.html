@@ -670,7 +670,85 @@ So
 
 ### Fixed Step GD for Convex Functions 
 
+<b-blue>
+
+***Thm.**(Convergence rate of $GD(\frac 1 L)$ for L-smooth convex functions)* 
+
+Let $f$ be L-smooth and convex. Let $\x^\*$ be a minimiser, and let the minimum value $f^\* = f(\x^\*)$. 
+
+Let the *distance* $D = \nm{\x_0 - \x^*}$ be the "initial gap". $\x_0 .. \x_t$ are iterates of gradient descent.
+
+**Then** at step $t$ of gradient descent,
+$$
+f(\x_t) - f^* \leq \frac{L \cdot D^2}{2t}
+$$
+
+**Hence** $f(\x_t) - f^* \leq \varepsilon$ for a small $\varepsilon$ after $t \geq \frac{LD^2}{2\varepsilon}$ steps.
+
+</b-blue>
+
+Therefore iterations is proportional to $\frac 1 \varepsilon$. 
+
 </div>
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+
+***Proof.*** Recall for gradient descent:
+
+$$
+f(\x_{k+1}) \leq f(\x_k) - \frac{ 1 }{ 2L } \nm{\nabla f (\x_k)}^2 
+$$
+
+Recall for convexity for any points $\z,\x$:
+
+$$
+f(\z) \geq f(\x) + \nabla f(\x)\t(\z-\x) \geq f(\x)
+$$
+
+Therefore since $f$ is convex 
+$$
+f(\x^*) \geq f(\x_k) + \nabla f(\x_k) \t (\x^* - \x_k)
+$$
+Reverse and sub in for $f(\x_k)$ to get
+\begin{align}
+	f(\x_{k+1}) &\leq f(\x^\*) + \nabla f(\x\_k)\t (\x_k - \x^\*) - \frac{ 1 }{ 2L  }\nm{\nabla f(\x\_k)}^2   \\\\ 
+	&\leq f(\x^\*) + \frac{L}{2} \left( 2(\x_k - \x^\*) \cdot \frac 1 L \nabla f(\x\_k) - \frac{ 1 }{ L^2  }\nm{\nabla f(\x\_k)}^2 \right) \\\\
+	&\leq f(\x^\*) + \frac{L}{2} \left( 2(\x_k - \x^\*) \cdot \frac 1 L \nabla f(\x\_k) - \lVert \frac{ 1 }{ L } \nabla f(\x\_k) \rVert ^2 \right) \\\\ 
+	&\leq f(\x^\*) + \frac{L}{2} \left( \nm{\x_k - \x^\*}^2 - \lVert \x_k - \x^\* - \frac 1 L  \nabla f(\x_k) \rVert^2 \right)
+\end{align}
+
+Where the last step comes from an identity over vectors $\vec{a}, \vec{b}$ where 
+$$
+\nm{\vec{a}}^2 - \nm{\vec{a} - \vec{b}}^2 = 2\vec{a}\t\b - \nm{\b}^2
+$$
+
+Now shift $f(\x^*)$ over to the left hand side, and sum over all $k = 0..t-1$:
+
+
+$$
+\begin{align*}
+\sum\limits_{k=0}^{t-1} (f(\x_{k+1}) - f^\*) &\leq \frac{L}{2} \sum\limits_{k=0}^{t-1} ( \nm{\x_k - \x^\*}^2 - \nm{\x_{k+1} + \x^\*}^2)\\
+&\leq \frac{L}{2} (\nm{\x_0 - \x^\*}^2 - \nm{\x_t - \x^\*}^2)\\
+&\leq \frac{LD^2}{2}
+\end{align*}
+$$
+
+Hence because $f(\x_0) \leq f(\x\_1( \leq \cdots \leq f(\x\_t)))$
+$$
+t(f(\x_t) - f^\*) \leq \sum\limits_{k=0}^{t-1} (f(\x_{k+1}) - f^\*) \leq \frac{LD^2}{2}
+$$
+Therefore 
+$$
+f(\x_t) - f^* \leq \frac{LD^2}{2t} \\;\\;\\;\Box 
+$$
+
+</div>
+<div class="md-conv">
+
+However the bound $t \geq \frac{ LD^2  }{ 2\varepsilon }$ is still not good. We would like ideally something that would produce a new digit of precision every step, i.e. running in time $\log \frac{1}{\varepsilon}$.
+
+</div>
+
 </div>
 
 	
