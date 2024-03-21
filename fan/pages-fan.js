@@ -11,6 +11,14 @@
 
 var fanPages = [
     {
+        "date": new Date(Date.UTC(2024,3,21)),
+        "link": "fan/blog/zhengyinjia",
+        "title": "Dragonshome · Cheng Yin Kia",
+        "desc": "A record describing a mountain kingdom in western Aseron. <em>This entry is provided only in classical chinese.</em></p>",
+        "picture": "",
+        "tags": ["records"]
+    },
+    {
         "date": new Date(Date.UTC(2021, 7, 24)),
         "link": "fan/blog/3dragons/",
         "title": "Three Dragons Are An Army",
