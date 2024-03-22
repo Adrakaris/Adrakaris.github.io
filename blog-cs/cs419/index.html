@@ -2596,6 +2596,112 @@ So how do we get $r$ given a good $c_k$?
 
 We could try all fractions $\frac{k'}{r'} : k' \lt r' \lt N$ and find the closest to $\frac{c}{2^m}$. **But** this is $O(N^2)$ number of fractions, which is not efficient (not poly in log N). Better, we should be using *continued fractions.*
 
+### Continued Fractions
+Any rational number $\frac{s}{t} : s \lt t$ has a continued fraction (CF) expression:
+$$
+\frac{s}{t} = \frac{1}{a_1 + \frac{1}{a_2 + \frac{1}{a_3 + \cdots}}}
+$$
+Up to $a_l$, where each $a_i$ is a **positive** integer, and the list of them is **finite**.
+
+We can convert in this way:
+$$
+\frac{s}{t} = \frac{1}{\frac{t}{s}} =\frac{1}{a_1 + \frac{s_1}{t_1}} = \frac{1}{a_1 + \frac{t_1}{s_1}} =\cdots
+$$
+Note that each subsequent denominator $\frac{s_n}{t_n}$ is *strictly decreasing*, and so this must terminate.
+
+We write these fractions as just lists of denominators:
+$$
+[a_1, a_2, \cdots, a_l] = \frac{s}{t}
+$$
+We call the **truncated** CF the **convergent**. The $k$-th convergent of $\frac{s}{t}$ is $\frac{p_k}{q_k} = [a_1, a_2, \dots, a_k] \pod{k \in 1..l}$.
+
+So as $k$ increases, the convergent approximates the original fraction better and better.
+
+We can use this principle to quickly find appropriate fractions, by computing all convergents of the fraction $\frac{c}{2^m}$. 
+
+<b-blue>
+
+***Lemma.*** For $a_1 .. a_l$ be any positive reals, set $p_0 = 0, q_0=1, p_1 = 1, q_1 = a_1$. Then:
+
+1. The CF $[a_1 .. a_k] = \frac{p_k}{q_k}$ where $p_k = a_k p_{k-1} + p_{k-2}$ and $q_k = a_kq_{k-1} + q_{k-2}$, for $k \geq 2$.
+2. For $k \geq 1$ we get $q_k p_{k-1} - p_k q_{k-1} = (-1)^k$.
+3. $\hcf(p_k, q_k) = 1$.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** If $s \lt t$ and they are coprime $m$ bit integers, then $CF\left(\frac{s}{t}\right)= [a_1 .. a_l]$ has length $O(m)$ **and** all convergents $\frac{p_k}{q_k}$ can be computed in $O(m^3)$.
+
+</b-blue>
+
+</div>
+
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+***Proof.*** Let all $a_k \geq 1, p_k, q_k \geq 1$.
+
+We have a recurrence relation
+$$
+\begin{matrix}p_k = a_k p_{k-1} + p_{k-2} & q_k = a_k q_{k-1} + q_{k-2}\end{matrix}
+$$
+This implies that $p_k \gt p_{k-1} \gt p_{k-2}$, this is **increasing**. And so by the above, $p_k \geq 2p_{k-2}$. So $p_k$ grows **exponentially** in the number of steps (at least double).
+
+Thus it takes $O(m)$ for an $m$-bit S. The same argument holds for $q$. $\Box$
+</div>
+
+<div class="md-conv">
+
+Looking at the above, by the CF theorem, $\frac{k}{r}$ must be a **convergent** of $CF(\frac{c}{2^m})$. By condition $(**)$, out of all $O(N^2)$ numbers $\frac{k}{r}$ must have a denominator less than N, so we only need to consider the subset $l = \rm{len}\left(CF\left(\frac{c}{2^m}\right)\right)= O(m) = O(\log N)$ convergents. 
+
+We can compute all convergents in $O(m^3)$ time, this is $O(\log N^2)$ time. Then checking which unique one is within $\frac{1}{2N^2}$ of $\frac{c}{2^m}$ is quick, giving $\frac{k}{r_0}$ exactly.
+
+Thus overall, we can perform factoring in $O(\log^3 N)$ time.
+
+The slowest part, funnily enough, is the classical post-processing afterwards.
+
+<s-side>
+
+***Example.*** Factor $N=39$. 
+- Choose $a = 7$, and 7 is less than 39 and coprime.
+- Let $r$ be the period of $f(x) = 7^x \mod 39$.
+- Compute $f$ for $x \in 0..2^m \gt N^2$
+	- $N^2 = 1521$, so the next power of two is $2048 = 2^{11}$.
+	- So we use 11 qubits.
+- Suppose we perform the quantum computation, and measuring $QFT_{2^{11}} \e\per$ yields us $c = 853$.
+- By the theorem, there is a constant probability of about 0.4 that $c$ satisfies
+$$
+\left| \frac{853}{2048} - \frac{k}{r}\right| \lt \frac{1}{2^{11+1}} = \frac{1}{2^{12}}\lt \frac{1}{2N^2} 
+$$
+With a good probability $O(\frac{1}{\log \log 39})$ that $k$ is coprime to $r$.
+- In our particular case, 853 *is* coprime as above, and we were lucky. Now we look at $\left| \frac{853}{2048} - \frac{k}{r}\right| \lt \frac{1}{2^{12}}$ in particular. 
+	- Calculate $CF\left(\frac{853}{2048}\right) = [2,2,2,42,4]$
+	- The convergents are 
+	$$
+	\begin{matrix}[2] = \frac{1}{2} & [2,2,2,42] = \frac{212}{509} \\ [2,2] = \frac{2}{5} & [2,2,2,42,2]=\frac{853}{2048} \\ [2,2,2]=\frac{5}{12}\end{matrix}
+$$
+- Only $\frac{5}{12}$ is within $\frac{1}{2^{12}}$ of the original fraction (and also less than $N$).
+- Thus our possible choices are $\frac{5}{12}, \frac{10}{24}, \frac{15}{36}$ for possible $\frac{k}{r} : r \lt 37$.
+- But since $r,k$ must be coprime, this suggests that $r=12$.
+- Verify that $7^{12} \equiv 1 \mod 39$, and this implies that 39 divides $(7^6+1)(7^6-1)$ exactly.
+	- $7^6 + 1 \equiv 26 \mod 39$, and $\hcf(26,39) = 13$
+	- $7^6-1 \equiv 24 \mod 39$, and $\hcf(24,39) = 3$
+- $3 \times 13 = 39$ 而已矣
+
+</s-side>
+
+
+***Generalisation and Expansion.*** Shor's algorithm was generalised to solve the "discrete log problem". This is a case of the larger class of hidden subgroup problems.
+
+In general:
+- Given a group G of size $|G|$,
+- Given oracle for $f:G \lra Y$ for some set Y,
+- Given the promise: that there is a subgroup $H \lt G$ such that $f$ is constant and distinct on cosets of H in G.
+- The problem is to find H in $\poly(\log|G|)$ time.
+
+***Example.*** Let $f : \bb{Z}_n \lra \bb{Z}$ with a period $r$. Let $G = (\bb{Z}_N, +)$ (addition mod N) and $H = {0, r, 2r, \dots, (A-1)r}$.
+
+
 </div>
 </div>
 
