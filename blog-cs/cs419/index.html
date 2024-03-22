@@ -77,6 +77,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 4. [Computation and Complexity Theory](#complexity)
 6. [Quantum Fourier Transforms](#qft)
 6. [Quantum Search](#search)
+6. [Shor's Algorithm](#shors)
 </div>
 
 <div>
@@ -99,6 +100,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 	\DeclareMathOperator{\span}{span}
 	\DeclareMathOperator{\dim}{dim}
 	\DeclareMathOperator{\poly}{poly}
+	\DeclareMathOperator{\hcf}{hcf}
 	\DeclareMathOperator{\Tr}{Tr}
 	\DeclareMathOperator{\per}{per}
 	\DeclareMathOperator{\space}{\mathcal{P}}
@@ -2099,7 +2101,8 @@ Note that $QFT_{2^{k+1}}$ has $QFT_{2^k}$ as its subcircuit.
 	<h2 id="search">Quantum Search</h2>
 </div>
 
-<div class="cbox"><div class="md-conv">
+<div class="cbox">
+<div class="md-conv">
 
 
 ### Introduction
@@ -2407,8 +2410,193 @@ In general grover with $c = \frac \pi 4$ is optimal.
 
 </b-blue>
 
+
 </div>
 
+</div>
+
+<div class="colourband">
+	<h2 id="shors">Shor's Algorithm</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Introduction
+
+<s-side>
+
+***Problem.*** Given an integer N, with $n = \log N$ digits, find a factor $1 \lt k \lt N$ with probability $1-\varepsilon$ efficiently (which will be $O(n^3)$ time).
+
+</s-side>
+
+> Note that the best known classical runtime is not polynomial.
+
+### Factoring
+
+> The problem of factoring N can be reduced to the periodicity problem.
+
+First, choose a number $A :\in 1 .. N$ uniformly at random. Compute the highest common factor $\hcf(A, N)$ (via Euclid's algorithm, which is $\poly(n)$).
+- If this is not 1, then we have a factor.
+- Else...
+
+<b-blue>
+
+***Thm.*** (Euler's thm) If $A, N$ are coprime, then there is a **least** power $r : 1 \lt r \lt N : A^r \equiv 1 \mod N$.
+
+</b-blue>
+
+- Thus a function $f:\bb{Z} \lra \bb{Z}_N : f(k) = a^k\mod N$ has a period $r$
+- In each period, $f$ is 1-1
+- $f$ is efficiently computable in $\poly(\log k)$ (digits of k)
+- And our goal is just to find the period.
+
+Classically, it is **hard** to find $r$ even if $f$ is simple. However if we know $r$, we can find a factor of N.
+
+(Legendre) Suppose we can find $r$, and $r$ is even.
+- Then $a^r - 1 \equiv 0 \mod N$
+- $a^r - 1 = (a^{\frac{r}{2}}-1)(a^{\frac{r}{2}}+1)$ and so $N$ exactly divides this difference of two squares.
+- However, not all factors of N go into the $a^{\frac{r}{2}} \pm 1$ form, and if not, then $\hcf(N, a^{\frac{r}{2}}\pm1)$ will get non-trivial factors of N.
+
+So we would need (1) $r$ is even, and (2) $a^{\frac{r}{2}} \not\equiv -1 \mod N$
+
+<b-blue>
+
+***Thm.*** If N is odd and **not** a power of a prime, and we pick $a$ randomly, then $p((1) \land (2)) \geq \frac{1}{2}$ -- the probability both hold is greater than a half.
+
+</b-blue>
+
+> In reality this probability is $1- \frac{1}{2^{m-1}}$ for m prime factors of N
+
+So we repeat this $k$ times, to get the probability of failing to get a factor to be below $\frac{1}{2^k}$ i.e. exponentially small.
+
+> If $N = c^l : c, l \geq 2$, there is a poly-time classical alg for c, but in general this is not the case. 
+
+### Period Finding
+
+$f(k) = a^k \mod N$ is periodic on $\bb{Z}$ -- this is an infinite domain! 
+- We must bound to finite domain with finite qubits.
+- But we do not know $r$, which would mean that $f$ may not be **exactly** periodic in our range.
+
+(A) We will work on a domain $D = \{0..2^m-1\} = \bb{Z}_{2^m}$, where $2^m$ is the smallest power of 2 greater than $N^2$.
+
+Let $2^m = Br + b$, where we have $B \gt N$ full periods, and some possible extra $b:0\leq b \lt r$ which makes a partial period.
+
+Our aim is to analyse the effect of this partial period on the algorithm.
+
+Back to period finding:
+- Make $\e{f} = \frac{1}{\sqrt{2^n}} \sum\limits_{\forall x} \e{x} \e{f(x)}$.
+- Get $\e\per = \frac{1}{\sqrt{A}} \sum\limits_{k=0}^{A-1} \e{x_0 + kr}$.
+$A = B \rm{ or } B+1$ depending on if $x_0 \lt b$ or $x_0 \gt b$. Therefore we can write the following number line:
+
+![period number line](shors-1.png)
+
+As in period finding, we then do 
+$$
+QFT_{2^m} \e{\per} = \sum\limits_{c=0}^{2^m-1} \tilde f(c) \e{c}
+$$
+Where 
+$$
+\begin{align*}
+QFT_{2^m} \e{x_0 + kr} &= \frac{1}{2^m}\sum\limits_{\forall c \in \bb{Z}_m} \exp\left(2\pi i \frac{(x_0 + kr)c}{2^m}\right)\e{c}\\\\
+\therefore \tilde f (c) &= \frac{\omega^{cx_0}}{\sqrt{A}\sqrt{2}^m}(1 + \alpha + \alpha^2 + \cdots + \alpha^{A-1})\\\\
+&: \omega =\exp\left(\frac{2\pi i}{2^m}\right)\\\\
+&: \alpha =\exp\left(\frac{2\pi i c r}{2^m}\right)
+\end{align*}
+$$
+Now if we measure, which $c$ will we get?
+
+***The intuition.*** In **exact** periodicity: $A = \frac{2^m}{r}$ was an integer, and all $\tilde f (c) = 0$ except when $c$ is a multiple of $A$. So we get the terms
+
+![Powers of alpha](shors-2.png)
+
+For other values of $c$, the sum cancels exactly to zero. So $\alpha$ is any A<sup>th</sup> root of unity which is not 1, and 
+$$
+1 + \alpha + \alpha^2 + \cdots + \alpha^{A-1} = 0
+$$
+There is **perfect** cancellation.
+
+***Inexact Periodicity.*** In **inexact** periodicity, we expect constructive addition in quadratic series, for $c$s such that $\rm{phase}(\alpha)$ is small, i.e. for $\alpha$s nearest to the real axis.
+
+> No, I don't know what this means either
+
+As $c := 0..2^m - 1$:
+- $(*)$ We have that $\frac{cr}{2^r} := 0..r$, and we want these $c$s holding this form to be **close** to integers $k \in 0..r-1$.
+- And powers $1, \alpha, \alpha^2, \dots, \alpha^{A-1}$ not spread too far around the circle to avoid cancellation.
+
+As $c$ increases from $0 .. 2^m-1$, $\frac{cr}{2^m}$ is incremented by $\frac{r}{2^m}$, which is small. This is shown in the diagram below:
+
+![r over 2m intervals](shors-3.png)
+
+Amongst all $2^m$ cs, we have $(*)$ $r\; c_k$s s.t. $\frac{c_k r}{2^m}$ is nearest to integers $k = 0..r-1$. Formally
+$$
+\left\lvert \frac{c_k r}{2^m}-k \right\rvert \lt \frac{1}{2} \frac{r}{2^m} \implies \left\lvert c_k - \frac{k 2^m}{r} \right\rvert \lt \frac{1}{2} \pod{\ddagger}
+$$
+For these $c_k$s, we have $\frac{c_k r}{2^m} = k + \xi$ for an error term s.t. $|\xi| \lt \frac{1}{2} \frac{r}{2^m}$.
+$$
+\alpha^A = \exp\left(\frac{2\pi i c_k r}{2^m} A\right) = e^{2 \pi i (k + \xi) A} = e^{2 \pi i \xi A}
+$$
+Recall that A is the number of periods, i.e. $\frac{2^m}{r}$, and the above bound on the error term, this means that $e^A \propto e^{\pm i \pi}$. 
+- i.e. the series $1, \alpha, .., \alpha^{A-1}$ lies exclusively in the upper half plane (positive $i$) or in the lower half plane (negative $i$)
+
+So the sum $1 + \alpha + \cdots + \alpha^{A-1}$ cannot cancel in imaginary parts.
+
+> Some algebra later... (omitted during lectures)
+
+<b-blue>
+
+***Thm.*** Suppose $QFT \e\per$ is measured.
+
+</b-blue>
+
+Then for any $c_k$ as described above, satisfying $(\ddagger)$, $p(c_k) \gt \frac{\gamma}{r}$ such that $k = 0..r-1$ and $\gamma = \frac{4}{\pi^2} \approx 0.4$.
+
+So a measurement will give a $c_k$ with some **constant** prob greater than 0.4.
+
+Therefore in general for a function $f : \bb{Z} \lra \bb{Z}_N : f(k) = a^k \mod N$
+- $a, N$ coprime $\implies f$ is periodic.
+- We want to find periods $r$ which can be used to factor $N$.
+- We apply quantum periodicity to $f$ on finite domain $D = 0..2^m-1$ where $2^m \gt N^2$ is the lowest possible such number.
+	- However, $f$ is not exactly periodic on D, so we cannot expect a whole number of periods
+- The output of period finding is some $c \in 0..2^m-1$ with probability $|\hat f(c)|^2$
+
+Here is a graph comparing the amplitudes on exact and inexact periodicity:
+
+![Periodicity diagam for exact and inexact](periodicity-diagram.png)
+
+So now we can get $c_k$ with a significant probability. How do we get $r$? 
+
+We have that $(**) \\; \\;|\frac{c_k}{2^m} - \frac{k}{r}| \lt \frac{1}{2^{m+1}} \lt \frac{1}{2N^2}$. Note that we know $c_k, 2^m$, do not know $k$ and want $r$.
+
+<b-blue>
+
+***Claim.*** There is at most **one** fraction $\frac{k'}{r'}$ such that the denominator is less than N, and it satisfies $(\*\*)$. Therefore $(\*\*)$ **uniquely determines** $\frac{k}{r}$.
+
+</b-blue>
+
+</div>
+<button class="collapsible">Proof...</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Suppose we have two fractions ' and '':
+$$
+\left|\frac{k'}{r'} - \frac{k''}{r''}\right| = \frac{|k'r'' - r'k''|}{r'r''} \gt \frac{1}{r'r''} \gt \frac{1}{N^2}
+$$
+Hence these fractions cannot both be within $\frac{1}{2N^2}$ of any number. $\Box$
+
+This property is why we chose $D$ as we did.
+
+</div>
+
+<div class="md-conv">
+
+A "good" $c_k$ value is when $k$ is coprime to $r$, and the probability to get this is 
+$$p(\rm{good }c_k) = O\left(\frac{0.4}{\log \log r}\right)= O\left(\frac{1}{\log \log r}\right)$$
+So how do we get $r$ given a good $c_k$?
+
+We could try all fractions $\frac{k'}{r'} : k' \lt r' \lt N$ and find the closest to $\frac{c}{2^m}$. **But** this is $O(N^2)$ number of fractions, which is not efficient (not poly in log N). Better, we should be using *continued fractions.*
+
+</div>
 </div>
 
 	<footer>
