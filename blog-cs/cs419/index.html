@@ -2300,6 +2300,113 @@ Therefore, Q shifts the angle of some vector $\e\xi$ on the plane by $2\alpha$. 
 
 ***Remark.*** Grover's algorithm is **optimal**. Unconstrained search must require $O(\sqrt N)$ quantum queries.
 
+### Searching with Multiple Good Items
+
+Suppose that the search space has $r \geq 1$ good items. Our goal is to find **any** good item.
+
+Let $G = \\{x_1 .. x_r\\} \subseteq B_n$  be a set of good items, and a query function $f$ returns 1 for any good item.
+
+Using $U_f$ we can construct an operator
+$$
+I_G \e{x} = \begin{cases} -\e{x} & x \in G \\\\
+\e{x} & \rm{otherwise} \end{cases}
+$$
+Which can be gotten in the same way as the previous section: $U_f \e{x}\m = I_G \e{x}\m$.
+
+<b-blue>
+
+***Grover Iteration.*** The iter is given as 
+$$
+Q_G = -H_n I_{\e{0^n}} H_n I_G = -I_{\e{\psi_0}}I_G.
+$$
+
+</b-blue>
+
+- Let the good state $\e{\psi_G} = \frac{1}{\sqrt{r}}\sum\limits_{x \in G} \e{x}$.
+- Let the bad state $\e{\psi_B} = \frac{1}{\sqrt{N-r}} \sum\limits_{x \not\in G} \e{x}$. This is perpendicular to $\e{\psi_G}$.
+- Then $\e{\psi_0} = \frac{1}{\sqrt{N}}\sum\limits_{\forall x} \e{x} = \sqrt{\frac{r}{N}}\e{\psi_G} + \sqrt{\frac{N-r}{N}}\e{\psi_B}$.
+- We can use the plane made of these two items.
+
+***Algorithm.***
+- Start with $\e{\psi_0}$.
+- Apply $Q_G \; k$ times.
+- Measure all qubits.
+
+***Analysis.***
+
+Let $\space_G = \span_{\bb{R}}\\{ \e{\psi_0}, \e{\psi_G} \\} = \span\\{ \e{\psi_B}, \e{\psi_G} \\}$.
+
+<b-blue>
+
+***Thm.*** The grover iteration preserves $\space_G$. Within $\space_G,\; Q_G$ acts as a rotation through $2\alpha : \sin \alpha = \ip{\psi_0}{\psi_G} = \sqrt{\frac{r}{N}}$.
+
+</b-blue>
+
+</div>
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+
+***Proof.*** $Q_G = -I_\e{\psi_0} I_G$. For any $\e\xi \in \space_G$, let $\e\xi = a\e{\psi_G} + b\e{\psi_B}$.
+$$
+I_G \e\xi = -a\e{\psi_G} + b\e{\psi_B} = I_\e{\psi_G} \e\xi
+$$
+$I_G$ is a reflection through the orthogonal of $\e{\psi_G}$ line, i.e. a reflection through $\e{\psi_B}$.
+
+Let some $\e\eta \in \space_G = c\e{\psi_0} + d\e{\psi_0^\perp}$. 
+$$
+-I_\e{\psi_0} \e\eta = -\e\eta + 2 \e{\psi_0}\ip{\e\psi_0}{\eta} = c\e{\psi_0} - d\e{\psi_0^\perp}
+$$
+$-I_\e{\psi_0}$ is a reflection through $\e{\psi_0}$.
+
+<img src="./grover-reflect-multi.png" alt="Grover reflection" style="float:left; max-width: 300px;">
+
+Therefore we can represent this graphically identically:
+
+
+$$\cos \alpha = \ip{\psi_0}{\psi_B} = \sqrt{\frac{N-r}{N}}$$
+$$
+\implies \sin \alpha = \sqrt{\frac{r}{N}}
+$$
+The total angle of $Q_G \e\xi : 2\alpha + \beta$, and so it moves by an angle $2\alpha$. $\Box$
+
+</div>
+<div class="md-conv">
+
+
+- We start with $\e{\psi_0}$ with angle $\beta$ to $\e{\psi_G}$, and $\cos \beta = \sqrt{\frac{r}{N}}$.
+- Each application of $Q_G$ rotates $2\alpha$ towards $\e{\psi_G}$.
+- We require $k = \frac{\beta}{2\alpha} = \frac{\arccos(\sqrt{\frac{r}{N}})}{2\arcsin(\sqrt{\frac{r}{N}})}$ iterations to get very close.
+- If $r \ll N$, then $\arccos\left(\sqrt{\frac{r}{N}}\right)\approx \frac{\pi}{2}$, and $\arcsin\left(\sqrt{\frac{r}{N}}\right)\approx \sqrt{\frac{r}{N}}$. Therefore we require roughly $\frac{\pi}{4} \sqrt{\frac{N}{r}}$ iterations.
+
+A measurement then gives any good value $x_1..x_r$ with probability $1-o\left(\frac{r}{N}\right)\approx 1$.
+
+> *Note.* This grover alg requires knowledge of the **number** of good states. But it can be adapted to an unknown $r$, and still work in $O(\sqrt{N})$ queries, and $O(\sqrt{N}\log N)$ gates.
+
+
+<s-side>
+	
+***Example.*** Given a $\poly(n)$ size boolean formula $\phi:B_n \lra B_1$, find a satisfying assignment if it exists.
+
+*Classically.* Try all possibilities, which gives running time $2^n \poly(n)$.
+
+*Quantumly.* Can build a $\poly(n)$ quantum circuit for the query, as we are given the formula. We use it to compute the query $U_\phi \e{x} \e{y} = \e{x} \e{y \oplus \phi(x)}$.
+
+We use that in grover's algorithm to find a satisfying assignment in time $\sqrt{2^n} \poly(n)$.
+
+</s-side>
+
+### Optimality of Grover's Algorithm 
+
+<b-blue>
+
+***Thm.*** Let A be any quantum algorithm that solves the unique element search problem with probaility $1 - \varepsilon$ with $T$ queries. Then:
+$$ T \geq O(\sqrt N) $$
+Specifically, $T \gt c\sqrt{N} : c \lt \frac \pi 4$.
+
+In general grover with $c = \frac \pi 4$ is optimal.
+
+</b-blue>
+
 </div>
 
 </div>
