@@ -76,6 +76,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 4. [Quantum Money](#qm)
 4. [Computation and Complexity Theory](#complexity)
 6. [Quantum Fourier Transforms](#qft)
+6. [Quantum Search](#search)
 </div>
 
 <div>
@@ -100,6 +101,7 @@ Enjoy the MathJax loading. (I did try out katex but it just isn't wanting to wor
 	\DeclareMathOperator{\poly}{poly}
 	\DeclareMathOperator{\Tr}{Tr}
 	\DeclareMathOperator{\per}{per}
+	\DeclareMathOperator{\space}{\mathcal{P}}
 \)
 </div>
 
@@ -2004,8 +2006,302 @@ $$
 
 ### Efficient Implementations
 
+<b-blue>
+
+***Thm.*** QFT mod $2^n$ can be implemented by a small quantum circuit of size $O(n^2)$.
+
+</b-blue>
+
+Recall that $QFT_{2^n} \e{x} = \frac{1}{\sqrt{2^n}} \sum_{y=0}^{2^n-1} \exp\left(\frac{2\pi i y x}{2^n}\right) \e{y}$. (Note we are using exp rather than e-to-the-power due to formatting)
+
+***Key Fact.*** $QFT \e{x}$ is always a product state.
+
+We first write $y$ in binary, i.e. $y = y_{n-1}2^{n-1} + y_{n-2}2^{n-2} + \cdots + y_0$. Then:
+
+$$
+\begin{align*}
+\frac{xy}{2^n} &= y{n-1} \frac{x}{2} + y_{n-2} \frac{x}{2^2} + \cdots + y_n \frac{x}{2^n}\\\\
+\therefore QFT \e{x} &= \frac{1}{\sqrt{2^n} } \sum\limits_{y_0}^{y_{n-1}} \exp\left(\frac{2\pi i x y}{2^n}\right) \e{y_{n-1}y_{n-2} .. y_0}\\\\
+&= \frac{1}{\sqrt{2^n} } \sum\limits_{y_0..y_{n-1} = 0}^{1} \prod_{j=1}^n \exp\left(\frac{2\pi i y_{n-j}x}{2^j}\right)\e{y_{n-1}} \e{y_{n-2}}..\e{y_0}\\\\
+&= \sum\limits_{y_0=0}^1 \sum\limits_{y_1 = 0}^1 \cdots \sum\limits_{y_{n-1} =0}^1 (\cdots) &(1)\\\\
+&= \frac{1}{\sqrt{2^n}} \left(\sum\limits_{y_{n-1}=0}^1 \exp\left(\frac{2\pi i y_{n-1} x}{2}\right)\right) .. \left(\sum\limits_{y_0 =0}^1 \exp\left(\frac{2\pi i y_0 x}{2^n}\right)\right)\\\\
+&= \bigotimes_{j=1}^n \left(\frac{\0 + e^{\frac{2\pi i x}{2^j}}\1}{\sqrt{2}}\right) &(2)
+\end{align*}
+$$
+
+1. Each product depends only on one of the binary digits of $y$, i.e. only one sum. So we can separate the sums.
+2. So we can see this is a product of 1 qubit states, which makes it efficient to compute.
+
+Note that if x is binary, then we can write 
+$$
+\exp\left(\frac{2\pi i x}{2^j}\right)= \exp(2\pi i [x_{n-1} x_{n-2} .. x_j \cdot x_{j-1} .. x_0]) = \exp(2 \pi i [0\cdot x_{j=1}..x_0])
+$$
+Where that centre dot · represents a *binary decimal point*, and we can discard any whole number above that fixed point since $e^{2\pi i}$ has a period of 1.
+
+Thus $QFT \e{x_{n-1} x_{n-2} .. x_0}$
+$$
+= \frac{\0 + e^{2\pi i 0\cdot x_0}\1}{\sqrt{2}} \tens \frac{\0 + e^{2\pi i 0\cdot x_0 x_1}\1}{\sqrt{2}} \tens \cdots \tens \frac{\0 + e^{2\pi i 0\cdot x_{n-1}x_{n-2}..x_0}\1}{\sqrt{2}}
+$$
+This is the main key to a circuit for QFT.
+
+For $n=1$, we note that $e^{2\pi i 0\cdot1} = e^{\pi i} = -1$, and so the QFT over 1 bit would end up being
+$$
+\frac{1}{\sqrt{2}} (\0 + e^{2\pi i 0\cdot1}\1) = \frac{1}{\sqrt{2}}(\0 - \1) = \frac{1}{\sqrt{2}}(\0 + (-1)^{x_0}\1)= H(x_0)
+$$
+Therefore a 1 qubit QFT is just a Hadamar gate.
+
+For a higher number of $n$, we first introduce the one qubit **phase gates** $R_j$:
+$$
+R_j = \begin{bmatrix} 1 & 0 \\ 0 & e^{\frac{2\pi i}{2^j}} \end{bmatrix}
+= \begin{bmatrix} 1 & 0 \\ 0 & e^{2\pi i 0\cdot0..01} \end{bmatrix}
+$$
+The controlled phase gate $CR_j$ over 2 qubits is defined as:
+$$
+\begin{matrix}
+CR_j \0\e\psi = \0\e\psi  & CR_j\1\e\psi = \1 R_j \e\psi
+\end{matrix}
+$$
+This is diagrammatically represented the same as a CX gate.
+
+We can observe what happens for $n=2$:
+$$
+QFT\e{x_1 x_0} = \frac{\0 + e^{2\pi i 0\cdot x_0} \1}{\sqrt{2}} \frac{\0 + e^{2\pi i 0\cdot x_1x_0}\1}{\sqrt{2}}
+$$
+Note that the first fraction is just $H\e{x_0}$. As for the second fraction:
+$$
+e^{2\pi i 0\cdot x_1x_0} = e^{2\pi i 0\cdot x_1} e^{2\pi i 0\cdot0x_0}
+$$
+Which is a $H$ and a Phase gate at the same time. And so the diagram would look something like:
+
+<figure>
+	<img src="qft-2n.png " alt="QFT on 2 bits" style="max-width: 60%;">
+	<figcaption>QFT on 2 bits -- C-swap entails just swapping bits</figcaption>
+</figure>
+
+And so going off this pattern, for $n=3 : QFT_8$:
+
+<figure>
+	<img src="qft-8.png" alt="QFT on 8 bits" style="max-width: 80%;">
+	<figcaption>QFT on 3 bits</figcaption>
+</figure>
+
+
+Note that $QFT_{2^{k+1}}$ has $QFT_{2^k}$ as its subcircuit.
+
+***Complexity.*** Each qubit uses at most $n$ gates, and one swap gate at the end. This gives us roughly $\frac12 n(n+1) = O(n^2)$ complexity.
+
+
 
 </div>
+</div>
+
+<div class="colourband">
+	<h2 id="search">Quantum Search</h2>
+</div>
+
+<div class="cbox"><div class="md-conv">
+
+
+### Introduction
+
+***Search.*** Search problems are about looking in a *state space* for a "good" item, or one of many "good" items, out of all possible items. We assume it is easy (efficient) to check *if* an item is good, but the state space may be large.
+
+e.g. Boolean satisfiability / SAT is a classic search problem:
+- **Given** a $\poly(n)$ size boolean formula $\phi : B_n \lra B_1$
+- **Problem** Find or determine if there exists a satisfying assignment.
+
+***NP.*** (Non deterministic polynomial time)    
+NP problems are problems that can be solved with a hypothetical non-deterministic computer in polynomial time. 
+
+Whenever this computer reaches a choice, it *simultaneously* branches into both possible paths and runs them in parallel, accepting any valid path. Thus after $k$ steps we can have $2^k$ paths in parallel.
+
+Polynomial time here means that every path must accept or reject within polynomial number of steps.
+
+We can give an NP algorithm for SAT for example, based on the simple principle:
+- Given a boolean function $\phi(x_1..x_n)$
+- This is satisfiable $\iff$ either $\phi(x_1..x_{n-1}, 0)$ is satisfiable or $\phi(x_1..x_{n-1}, 1)$ is satisfiable.
+- Repeat recursively.
+
+***Important:*** On NP vs quantum parallelism:
+- In quantum, it is easy to access quantum "exponential branching", by using as input a superposition of all states (by repeated hadamards).
+- We can use a single query $U_\phi$ to get a superposition of all outputs.
+- **But** we cannot easily extract this information, and deduced whether or not $\phi$ is satisfiable.
+
+### Unstructured Search
+
+Structure in a search space makes searching easier. If we know a list is ordered, we can use binary search to get $n$ queries for $2^n$ items. 
+
+**Unstructured search** specifically means when we query a search space / database, we get **no information** about any other items.
+
+Let us start by assuming a *unique* good item.
+- **Given** unstructured database with $N = 2^n$ items, with a unique target item.
+- **Problem** Find the good item with a high probability $1-\varepsilon$.
+
+***Classically.*** We have to use linear search, giving a time complexity of $O(N) = O(2^n)$ being necessary and sufficient. If the good item is randomly placed, then $k$ queries give a probability of $\frac{k}{N}$ of success.
+
+***Quantumly.*** We say that $O(\sqrt{N})$ queries are sufficient, and $\Omega(\sqrt{N})$ queries are necessary, via **grover's algorithm**.
+
+> Note that here we only have a quadratic, and not exponential advantage.
+
+We label items by $n$ bit strings, and so can represent queries by an oracle $f: B_n \lra B_1 : f(x) = 1 \iff x$ is the target.
+
+- **Promise:** there is a *unique* $x_0 \in B_n : f(x_0) = 1$.
+- **Problem:** Find $x_0$.
+
+
+### Grover's Algorithm
+
+Consider the circuit shown:
+
+<figure>
+	<img src="grover.png" alt="Grover circuit">
+	<figcaption>The Grover algorithm circuit. One Q is a "Grover query"</figcaption>
+</figure>
+
+Initially, all possible states are in a superposition with amplitude $\frac{1}{\sqrt{N}}$, so there is only a $\frac{1}{\sqrt{N}}$ amplitude on $\e{x_0}$.
+
+Every grover iteration Q moves roughly $\frac{1}{\sqrt{N}}$ more amplitude on to $\e{x_0}$ and takes away from everyone else.
+
+<b-blue>
+
+***Def.*** (Reflections) Given any state $\e\alpha$, let 
+$$
+I_{\e\alpha} = I - 2\e{\alpha}\b{\alpha}
+$$
+be the reflection in a "mirror hyperplane" orthogonal to $\e\alpha$. That is 
+- $I_{\e\alpha} \e\alpha = \e\alpha - Z\e\alpha \ip\alpha\alpha = -\alpha$
+- $I_\e\alpha \e\beta$ where $\e\beta \perp \alpha = \beta - 2\alpha \ip\alpha\beta = \beta$
+
+</b-blue>
+
+We can implement the reflection $I_{\e{x_0}}$ giving that $f(x_0) = 1$ is unique, by using one quantum query to $f$. We do this via phase kickback:
+
+Using $U_f \e{x} \m = U_f \e{x} \left(\frac{\0 - \1}{\sqrt{2}}\right)$ gives us 
+$$
+\begin{align*}
+U_f \e x \m &=  \e x (-1)^{f(x)}\m\\\\
+\therefore U_f\e x \m &= \begin{cases} -\e{x}\m & x=x_0\\\\
+\e{x}\m & x \neq x_0 \end{cases}\\\\
+\implies U_f \e{x}\m &= I_{\e{x_0}} \e{x} \m
+\end{align*}
+$$
+
+> This bypasses having to know $I_{\e{x_0}}$ as we can use the oracle to have the same effect.
+
+<b-blue>
+
+***Def.*** (Grover iteration) $Q$.
+$$
+Q = -H_n I_\e{0^n} H_n I_\e{x_0}
+$$
+Where $H_n = \bigoplus_{i=1}^n H$ and $I_{\e{x_0}}$ is a query to the oracle.
+
+</b-blue>
+
+<s-side>
+
+***Algorithm.***
+- Start with a uniform superposition $\e{\phi_0} = \frac{1}{\sqrt{2^n}} \sum\limits_{x \in B_n} \e{x}$
+- Apply $Q \; k$ times where $k = \left\lfloor \frac{\pi \sqrt{N}}{4} \right \rfloor$ and measure all qubits.
+
+</s-side>
+
+Let $\space(x_0)$ be the real subspace generated by $\e{\phi_0}, \e{x_0}$ (the latter is unknown but useful for analysis).
+
+We will show **(a)** In $\space(x_0)$, Q is the rotation through angle $2 \alpha : \sin\alpha = \frac{1}{\sqrt{N}}$.
+
+Then **(a)** can show why Grover works:
+<img src="./grover-p.png" alt="Rotation diagram" style="float: left; max-width: 300px;">
+
+$$\cos \beta = \ip{x_0}{\psi_0} = \frac{1}{\sqrt{N}}$$
+The above is independent of $x_0$. We want to rotate $\e{\psi_0}$ until it sufficiently overlaps $\e{x_0}$.
+
+How much do we rotate? Given **(a)** the rotation angle is $2 \sin^{-1} \frac{1}{\sqrt{N}}$, we want the number $k$ of $2\alpha$ rotations: $2\alpha k = \beta$.
+$$
+\begin{align*}
+k\cdot 2\sin^{-1} \frac{1}{\sqrt{N}} &= \cos^{-1} \frac{1}{\sqrt{N}}\\\\
+k &= \frac{\cos^{-1} \frac{1}{\sqrt{N}}}{2\sin^{-1} \frac{1}{\sqrt{N}}}
+\end{align*}
+$$
+
+e.g. If $N=4$, then $k = \frac{\arccos \frac{1}{2}}{2\arcsin \frac{1}{2}} = \frac{2\pi}{3} / \frac{2\pi}{3} = 1$. I.e. one query is enough for $N=4$. 
+
+e.g. if N is large, then $\sin^{-1} \frac{1}{\sqrt{N}} \approx \frac{1}{\sqrt{N}}$, and $\cos^{-1}\frac{1}{\sqrt{N}} \approx \frac{\pi}{2}$ as the values are very close to zero. Therefore we would need 
+$$
+k \approx \frac{\left(\frac{\pi}{2}\right)}{2\left(\frac{1}{\sqrt{N}}\right)} = \frac{\pi \sqrt{N}}{4}
+$$
+
+*Note* that the final state $\e{\psi_k} = Q^k \e{\psi_0}$, which forms an angle $O\left(\frac{1}{\sqrt{N}}\right)$ with $\e{x_0}$, and so the probability that we will measure $P(:\e{\psi_k} = x_0)$ is given by the born rule as 
+$$
+|\ip{\psi_k}{x_0}|^2 = 1-O\left(\frac{1}{N}\right)
+$$
+Which is very close to one.
+
+Of course it remains to prove **(a)**, which we will do in a collapsed block :)
+
+</div>
+<button class="collapsible">Proof (a)...</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Recall that $Q = -H_n I_\e{0^n} H_n I_\e{x_0}$
+
+For a unitary $U$: 
+$$
+\begin{align*}
+U I_{\e{\psi}} U^\dagger &= UIU^\dagger - 2U \e\psi \b\psi U^\dagger\\\\
+&= I - 2(U\e\psi)(U\e\psi)^\dagger\\\\
+&= I_{U\e\psi}
+\end{align*}
+$$
+Since $H_n$ is a unitary, and $H_n^\dagger = H_n$, and $H_n \e{0^n} = \e{\psi_0}$, we get
+$$
+Q = -(H_n I_{\e{0^n}}H_n^\dagger) I_{\e{x_0}} = -I_{\e{\psi_0}} I_{\e{x_0}}
+$$
+If some $\e\xi \in \space(x_0)$, then
+$$
+I_{\e{x_0}} \e\xi = \e\xi - 2 \e{x_0}\ip{x_0}{\xi} 
+$$
+And similarly for $I_{\e{\psi_0}}$. Note that the inner product is just a real number, therefore this expression is in $\space(x_0)$, and thus 
+$$
+Q_\e\psi \in \space(x_0)
+$$
+> Q *preserves* $\space(x_0)$ -- any vector on the plane will remain on the plane after operation Q.
+
+We look at the action of Q on $\space(x_0)$.
+- $I_{\e{x_0}}$ is the reflection on the mirror hyperplane (in 2D it's just a **line**) orthogonal to $\e{\x_0}$.
+- $-I_{\e{\psi_0}}$ is a reflection through the mirror **parallel** to $\e{\psi_0}$
+
+***Mini Proof.*** Let any $\e\xi \in \space(x_0)$. This can be written as $\e\xi = a\e{\psi_0} + b\e{\psi_0^\perp}$ where $\e{\psi_0^\perp}$ will be any vector on the place that is perpendicular to $\e{\psi_0}$. 
+
+Then $-I_{\e{\psi_0}} \e\xi = (-I + 2\e{\psi_0} \b{\psi_0}) (a\e{\psi_0} + b\e{\psi_0^\perp})$
+$$
+= -a \e{\psi_0} - b\e{\psi_0^\perp} + 2a \e{\psi_0} \ip{\psi_0}{\psi_0} + 2b \e{\psi_0} \ip{\psi_0}{\psi_0^\perp}
+$$
+$$
+= a \e{\psi_0} - b \e{\psi_0^\perp}
+$$
+Which mirrors in line $\e{\psi_0} \; \Box$.
+
+
+<img src="./grover-reflect.png" alt="Action of grover iteration as reflection on 2D" style="float:left; max-width: 300px;">
+
+
+Pictorally, we can represent this as:
+- Angle of $\e{x_0^\perp}$ to $\e{\psi_0}$ is $\alpha$. 
+	- $\cos \alpha = \ip{\psi_0}{x_0^{\perp}}; \; \sin\alpha = \ip{\psi_0}{x_0} = \frac{1}{\sqrt{N}}$.
+- We want to look at the action of Q on some vector $\e\xi$.
+- The angle from $\e{x_0^\perp}$ to $\e\xi$ is $\beta$
+- The angle from $\e{x_0^\perp}$ to $Q\e\xi$ is then $2\alpha + \beta$, as shown on the diagram.
+
+Therefore, Q shifts the angle of some vector $\e\xi$ on the plane by $2\alpha$. $\Box$
+
+</div>
+<div class="md-conv">
+
+***Remark.*** Grover's algorithm is **optimal**. Unconstrained search must require $O(\sqrt N)$ quantum queries.
+
+</div>
+
 </div>
 
 	<footer>
