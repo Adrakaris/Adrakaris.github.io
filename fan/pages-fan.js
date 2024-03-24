@@ -55,7 +55,7 @@ var fanPages = [
         "tags": [RECORDS]
     },
     {
-        "date": "2020/01/01",
+        "date": "2021/06/08",
         "link": "fan/blog/geni/",
         "title": "Genesis",
         "desc": "\"Gení\", a creation epic in Ancient Draconic, originating from the Land of Sun and Twisted Flax, long, long ago. It has been told as the creation of the world and of the draconic race</p>",
@@ -63,7 +63,7 @@ var fanPages = [
         "tags": [LEGENDS]
     },
     {
-        "date": "2020/01/01",
+        "date": "2021/01/20",
         "link": "fan/blog/golden-boat/",
         "title": "A Golden Boat on the River",
         "desc": "\"Thasor kinae an thuraf\", a poem about the founding of Rivium and Ricarum, written in the latter age of Dragonkind</p>",
@@ -71,7 +71,7 @@ var fanPages = [
         "tags": [LEGENDS]
     },
     {
-        "date": "2020/01/01",
+        "date": "2020/09/15",
         "link": "fan/blog/lianglong/",
         "title": "The Tale of Two Brothers",
         "desc": "\"Yelvrekharon Aiser\", a poem that talks about the Rain Gods. \"They say there lives a dragon god, atop the holy peak. None have seen him though, yet we believe and pray, for the rains are kind.\"</p>",
@@ -79,7 +79,7 @@ var fanPages = [
         "tags": [LEGENDS]
     },
     {
-        "date": "2020/01/01",
+        "date": "2020/07/14",
         "link": "fan/blog/yirandastron/",
         "title": "Yirandastron Tor",
         "desc": "The history of Yirandastron Tor, also known as the Fire Mountain, the domain of House Astron ever since it was first conquered by Rivian.</p>",
@@ -93,5 +93,13 @@ var fanPages = [
         "desc": "Different currencies and their uses, across the Material Plane.</p>",
         "picture": "",
         "tags": ["misc"]
+    },
+    {
+        "date": "2020/06/27",
+        "link": "fan/blog/red-mountains",
+        "title": "Song of Red Mountains",
+        "desc": "A ballad from the first age of dragonkind, originating from the arid and bleak northwest.</p>",
+        "picture": "",
+        "tags": [LEGENDS]
     },
 ]

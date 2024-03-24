@@ -24,7 +24,7 @@ function createDiv(block) {
     
 
     var date = block["date"];
-    var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
+    var description = `<p><b><i>${date}</i></b>. ` + block["desc"];
     div.innerHTML += description;
     div.setAttribute("style", "overflow: hidden; margin-top: 5px; padding-bottom: 5px;")
 
