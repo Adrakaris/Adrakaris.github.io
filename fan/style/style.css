@@ -1,12 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@460;750&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Long+Cang&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..600;1,100..600&display=swap');
 
-@font-face {
+/* @font-face {
     font-family: Urbanist;
     src: url("./font/urbanist/webfont/Urbanist-Regular.woff") format("woff"),
          url("./font/urbanist/webfont/Urbanist-Regular.woff") format("woff2");
-}
+} */
 
 @font-face {
     font-family: JBMono;
@@ -493,13 +494,16 @@ h3 {
     font-family: Urbanist;
     font-size: 20pt;
     letter-spacing: 2px;
+    margin-bottom: -4pt;
     /*padding: 3px;*/
 }
 
 h4 {
+    /* font-family: Manrope; */
     font-family: Urbanist;
     font-size: 16pt;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    margin-bottom: -8pt;
 }
 
 h3.c {
@@ -507,6 +511,7 @@ h3.c {
     font-size: 20pt;
     letter-spacing: 2px;
     text-align: center;
+    margin-bottom: -4pt;
 }
 
 .sc {

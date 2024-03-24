@@ -38,7 +38,7 @@ function createDiv(block) {
     
 
     var date = block["date"];
-    var description = `<p><b><i>${date.getFullYear()}/${date.getMonth()}/${date.getDate()}</i></b>. ` + block["desc"];
+    var description = `<p><b><i>${date}</i></b>. ` + block["desc"];
     div.innerHTML += description;
     var tags = "#" + block["tags"].join(" #")
     var tagsp = document.createElement("p")
