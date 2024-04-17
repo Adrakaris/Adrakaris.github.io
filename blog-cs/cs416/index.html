@@ -61,8 +61,14 @@
 
 Similar situation to quantum.
 
+1. [Linear Regression](#linreg)
+2. [Smooth Optimisation](#gd)
+3. [More Descent Methods](#mored)
+4. [Newton's Methods](#newton)
+
 $$
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\bb}{\mathbb}
 \newcommand{\t}{^\top}
 \renewcommand{\vec}{\mathbf}
 \renewcommand{\rm}{\textrm}
@@ -94,7 +100,7 @@ $$
 
 
 <div class="colourband">
-	<h2>Linear Regression</h2>
+	<h2 id="linreg">Linear Regression</h2>
 </div>
 
 <div class="cbox">
@@ -307,7 +313,7 @@ Hence it is a minimum. $\Box$
 </div>
 
 <div class="colourband">
-	<h2>Smooth Optimisation</h2>
+	<h2 id="gd">Smooth Optimisation</h2>
 </div>
 
 <div class="cbox">
@@ -749,6 +755,465 @@ However the bound $t \geq \frac{ LD^2  }{ 2\varepsilon }$ is still not good. We 
 
 </div>
 
+</div>
+
+<div class="colourband">
+	<h2 id="mored">More Descent Methods</h2>
+</div>
+
+<div class="cbox">
+	
+	<div class="md-conv">
+
+### Delta Decrease
+
+<b-blue>
+
+***Def.*** The **Hessian** (second derivative) of a function $f: \R \lra \R$ where $f(\x) = f(x_1, x_2, \dots, x_n)$ is given as 
+
+$$
+\nabla^2 f(\w) = \begin{bmatrix}
+	& (\nabla_{x_j} \nabla_{x_i} f)(\w) &
+\end{bmatrix}_{i, j \in 1..n}
+$$
+
+e.g. 
+
+$$
+\nabla^2 f(x, y) = \begin{bmatrix}
+	\frac{\partial f }{\partial x } \frac{\partial f }{\partial x } &
+	\frac{\partial f }{\partial y } \frac{\partial f }{\partial x } \\\\
+	\frac{\partial f }{\partial x } \frac{\partial f }{\partial y } &
+	\frac{\partial f }{\partial y } \frac{\partial f }{\partial y }
+\end{bmatrix}
+$$
+
+$f$ is **twice continuously differentiable** if the hessian is well defined (all sub-derivatives exist) and continuous.
+
+</b-blue>
+
+For gradient descent $GD_{\alpha, \d}$, $\alpha \in \R$ is the step length and $\d \in \R^n$ is the direction. 
+
+We should choose them such that it guarantees **(1) delta decrease:** 
+
+$$
+f(\x_{k+1}) \leq f(\x_{k}) - \delta \nm{\nabla f(\x_k)}^2 \pod{\delta \in \R} 
+$$
+
+<b-blue>
+
+***Thm.*** Suppose $f$ is smooth and satisfies (1). Then 
+
+- **if** $f$ is bounded from below by an $\bar f \in \R$,
+	- **then** all accumulation points of sequence $\x_0, \x_1, \x_2, \dots$ are stationary points
+	- **and** $\min\limits_{o \leq k \leq T-1} \nm{\nabla f(\x_k)} \leq \sqrt{\frac{ G  }{ \delta t }} \rm{ where } {G = f(\x_0) - \bar f}$
+- **if** $f$ is convex, $\x^*$ is a minimiser and $f^* = f(\x^*)$, and the level set of $\x_0$ is bounded; let $R_0$ be the maximum of its level set (which is a finite real number),
+	- **then** $f(\x_t) - f^* \leq \frac{ R_0 }{ \delta t }$ 
+
+</b-blue>
+
+> *accumulation points*: points which subsequences of a sequence converge to.    
+> 
+> *level set*: $\\{ \nm{\x - \x\_0} : f(\x) \leq f(\x\_0) \\}$
+
+<text-red>Proof for these is left as an exercise.</text-red>
+
+### Choosing Directions
+
+We can define two more conditions:
+
+**(2) $\bar \varepsilon$ angle** -- the angle between $\d_k$ and $-\nabla f(\x)$ is acute, and 
+$$
+0 \lt \bar\varepsilon \leq \frac{ -(\d_k)\t \nabla f(\x_k) }{ \nm{\d_k} \nm{\nabla f(\x_k )} }	
+$$
+
+**(3) $\gamma_1, \gamma_2$ lengths**
+$$
+0 \lt \gamma_1 \leq \frac{ \nm{\d_k } }{ \nm{\nabla f(\x_k)} } \leq \gamma_2
+$$
+
+<s-side>
+
+***Fact.*** 
+- Suppose $f$ is L-smooth
+- If $GD_{\alpha, \d}$ satisfies (2) and (3), 
+- Then it can be made to satisfy (1) for $\alpha(\bar \varepsilon, \gamma_1, \gamma_2, L) =$ some mystery function
+- And for $\delta = \frac{ 1 }{ 2L } \phi(\bar\varepsilon, \gamma_1, \gamma_2)$
+
+</s-side>
+
+<text-red>Proof is left as an exercise.</text-red> Hint: assume the same things for step length 1/L as in old proof -> minimised RHS of a quadratic UB -> smallest decrease. We can now vary away from the smallest decrease. (whatever that means)
+
+<s-side>
+
+***Scaled gradient.***
+$$ \d_k = S_k \nabla f(\x_k) $$ 
+
+Where $S_k$ is a *matrix* that is symmetric, positive definite (to prevent it from flipping the direction), and with eigenvalues $\in [\gamma_1, \gamma_2]$ from (3).
+
+Thus (3) holds, so 
+$$
+\frac{ \nm{\d_k} }{ \nm{\nabla f(\x_k)} } = \frac{ \nm{S_k \nabla_f (\x_k)} }{ \nm{\nabla f(\x_k)} } \in [\gamma_1, \gamma_2]
+$$
+And (2) holds for $\bar\varepsilon = \frac{ \gamma_1 }{ \gamma_2 }$
+
+</s-side>
+
+***Newton's Method.*** Let 
+$$\d_k = -(\nabla^2 f(\x_k))^{-1} \nabla f(\x_k)$$ 
+(i.e. the matrix is the inverse hessian).
+
+If this is close to the optimal point, convergence is very fast -- for every step, we get *double* the digits of precision.
+
+This satisfies (3) if the eigenvalues of the hessian are $\lambda \in [ \frac{ 1 }{ \gamma_2 }, \frac{ 1 }{ \gamma_1 } ]$ 
+
+***Gauss Southwell version of Coordinate Descent.*** Let 
+$$
+\d_k = -[\nabla f(\x\_k)]\_{i\_k} e\_{i\_k}
+$$
+Where $e_k$ is a vector of zeros, except the $k$th element is one. Where $i_k$ is the coordinate index $1..k$ which maximises $\rm{abs}| [\nabla f(\x_k)]_{i_k}] |$
+
+I.e. we move along the steepest coordinate aligned line. 
+
+This reduces the calculation of the next gradient since the direction is simple. It can be calculated efficiently if new and old differentiate by only one coordinate -- so for some functions.
+
+***Randomised coordinate descent.*** Let 
+$$
+\d_k = -[\nabla f(\x_k)]_{i_k} e_{i_k}
+$$
+for a *randomly uniform* $i_k : i \in 1..n$.
+
+For (2) this has:
+$$
+\bb{E}\_{i\_k} (-(\d\_k)\t \nabla f(\x\_k)) \geq \frac{ 1 }{ n } \sum_{i =1}^n [\nabla f(\x\_k)]\_i^2 = \frac{ 1 }{ n }\nm{\nabla f(\x\_k)} 
+$$
+And (3) has 
+$$
+\bb{E}\_{i\_k} (\nm{\d\_k}^2) = \frac{ 1 }{ n }\nm{\nabla f(\x\_k)}^2 
+$$
+
+
+### Choosing Step Length 
+
+***Fixed step length.*** Just use $\frac{ 1 }{ L }$. Or, realistically, since that's not trivial to find, just guess it.
+
+***Exact line search.*** The general idea:
+$$
+\alpha_k = \argmin_{\alpha \gt 0} f(\x_k + \alpha \d_k)
+$$
+Pick the length to get the most down per step -- approximately. Exact values can be computationally expensive, but ELS is sufficient in some cases, like multivariate polynomials. 
+
+- Minimise a mult.var. polynomial by finding roots of gradient along search direction, test each root to find the minimum one.
+
+ELS is also easy on coordinate directions. $f(\x_k + \alpha e_{i_k})$ can be cheap for some functions. 
+
+The improvement is at least as good as fixed step. 
+
+***Approximate Line Search.*** Let $0 \lt c_1 \lt c_2 \lt 1$. We have the **weak wolfe conditions**:
+
+- **(4)** Sufficient $f$-decrease:
+$$ f(\x_k + \alpha_k \d_k) \leq f(\x_k) + c_1 \alpha_k (\nabla f(\x_k)\t \d_k) $$ 
+- **(5)** Sufficient increase of directional derivative $\nabla_{\d_k} f$ (how fast a function increases along that direction):
+$$ \nabla f(\x_k + \alpha_k \d_k)\t \d_k \geq c_2 \nabla f(\x_k)\t \d_k $$ 
+
+
+<b-blue>
+
+<img src="./wolfe-conditions.png" alt="" style="float: right; max-width: 400px;">
+
+***Thm.*** If $f$ is L-smooth, then $\exists \alpha_k$ such that both (4) and (5) hold.
+
+And since (4) and (5) implies (1),
+
+we would have a delta-decrease with 
+$$
+\delta = \varepsilon^{-2} \frac{ c_1 (1-c_2) }{ L }
+$$
+
+</b-blue>
+
+> However, the actual algorithm doesn't need to know L.
+
+***Algorithm.*** Extrapolation bisection line search (EBLS)
+
+</div>
+<div class="codediv">ALGORITHM EBLS(\( c_1, c_2, \x, \d \)):
+	\(b \longleftarrow 0; U \longleftarrow +\infty \)
+	\(\alpha \longleftarrow 1\)
+	repeat:
+		if \( f(\x + \alpha \d) \gt f(\x) + c_1 \alpha \nabla f(\x) \t \d \):
+			\( U \longleftarrow \alpha; \alpha \longleftarrow \frac{ B+U }{ 2 } \)
+		else if \( \nabla f(\x + \alpha\d)\t\d \lt c_2 \nabla f(\x)\t \d \):
+			\( B \longleftarrow \alpha \)
+			if \( U = +\infty\): \(\alpha \longleftarrow 2B \)
+			else: \(\alpha \longleftarrow \frac{ B+U }{ 2 } \)
+		else:
+			return \(\alpha\)
+</div>
+
+<div class="md-conv">
+
+The algorithm has a loop, but there is a ***theorem*** that EBLS is guaranteed to terminate. <span class="grey">Proof is in Wright-Recht</span>
+
+***Backtracking Line Search.*** 
+
+Useful for when evaluating $f$ is cheap, but $\nabla f$ is not.
+
+Easy to implement without knowledge of L, and reasonably fast. 
+
+The simplest variant goes as 
+1. Pick an initial value for $\bar\alpha$ (such that we will only step a maximum of $\bar\alpha$ or smaller)
+2. Choose a step $0 \lt \beta \lt 1$
+3. Let $\alpha_k$ be the first number in the sequence $\bar\alpha, \bar\alpha\beta, \bar\alpha\beta^2, \dots$ such that (4) there is a sufficient decrease. (5) is automatically fulfilled.
+
+<b-blue>
+
+***Thm.*** If $f$ is L-smooth, then $GD_{\alpha_k, \d}$ satisfies (1) **if** (2), (4), (5) hold, and 
+$$
+\delta = \frac{ 2 }{ L } \beta c_1 (1-c_2) \bar\varepsilon^2 
+$$
+
+</b-blue>
+
+### 2nd Order Methods
+
+By using the hessian, we can also formulate the **second order taylor theorem**:
+
+<b-blue>
+
+***Thm.*** (2nd order taylors) **IMPORTANT** 
+
+- **Mean value form:**
+$$ f(\x + \p) = f(\x) + \nabla f(\x)\t\p + \frac{ 1 }{ 2 } \p\t \nabla^2 f(\x + \gamma \p) \p \pod{\gamma \in (0,1)} $$
+- **Quadratic approximation:** 
+$$ f(\x + \p) = f(\x) + \nabla f(\x)\t \p + \frac{ 1 }{ 2 } \p\t \nabla^2 f(\x) \p + o(\nm{\p}^2) $$ 
+- **Integral form:** 
+$$ \nabla f(\x + \p) = \nabla f(\x) + \int_0^1 \nabla^2 f(\x + \gamma \p) \p \dd \gamma $$
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** (2nd order necessary condition for any local minimum)
+
+Suppose $f$ is twice continuously differentiable.
+
+If $\x^\*$ is a local minimiser of $f$, then $\nabla f(\x^\*)$ = 0, and $\nabla^2 f(\x^\*)$ is **positive definite**.
+
+</b-blue>
+<p></p>
+<s-side>
+
+***Proof.*** Suppose $\nabla^2 f(\x^*)$ has a negative eigenvalue (thus is not PD). 
+
+Thus for some eigenvector $\vec{v} \in \R^n$: $$\vec v\t \nabla^2 f(\x^*) \vec v \leq - \lambda \pod{\rm{for } \lambda \gt 0}$$
+
+We argue that such a $\vec v$ is a descent direction, by evaluating $f(\x^* + \alpha \vec v)$ for some small step alpha. By the MVF 2nd order taylor theorem:
+
+\begin{align}
+	f(\x^* + \alpha \vec v) &= f(\x^\*) + \alpha \nabla f(\x^\*)\t\vec v + \alpha^2 \frac12 \vec{v}\t \nabla^2 f(\x^* + \gamma \alpha \vec{v}) \vec{v} \\\\
+	&= f(\x^\*) + \frac12 \alpha^2 \vec{v}\t \nabla^2 f(\x^\* + \alpha \gamma \vec{v}) \vec{v} \\\\
+	f(\x^\*) &\gt f(\x^\*) - \frac12 \alpha^2 \frac\lambda 2
+\end{align}
+
+- First step: note that $\nabla f(\x^) = \vec{0}$ and so that cancels. 
+- Second step: $\vec{v}\t \nabla^2 f(\x^\* + \alpha \gamma \vec{v}) \vec{v}$ for a sufficiently small $\alpha$, by the continuity of the hessian is $\leq - \frac\lambda 2$.
+- Third step: the negative term is positive for all sufficiently small $\alpha$ 
+
+Therefore $\vec v$ is a descent direction, and $\x^*$ would thus not be a local minimiser of the function, which contradicts what we stated.
+
+</s-side>
+
+<b-blue>
+
+***Thm.*** (2nd order sufficient condition) Suppose $f$ is twice cont. diff'able. 
+
+If $\nabla f(\x^\*) = 0$ AND $\nabla^2 f(\x^\*)$ is positive definite, then $\x^\*$ is a local minimiser.  
+
+</b-blue>
+
+The proof of this also uses MVF Taylor's thm.
+
+<b-blue>
+
+***Thm.*** (2nd order characterisation of L smoothness) Suppose $f$ is twice-cont-diff'able. 
+
+- **(A)** IF $f$ is L-smooth, THEN $\nabla^2 f(\x) \preceq L \vec I$ -- the biggest eigenvalue of the hessian is no bigger than L.
+
+- **(B)** IF $-L \vec{I} \preceq \nabla^2 f(\x) \preceq L \vec{I} $ THEN $f$ is L-smooth.
+
+</b-blue>
+
+> Note: $A \preceq B$ for matrices A, B is defined $A \preceq B \iff B - A$ is positive semidefinite.
+
+This is saying: if the transformation done by the hessian doesn't stretch too much in any one direction, the gradient does not change too rapidly.
+
+</div>
+<button class="collapsible">Proof (B)...</button>
+<div class="ccontent md-conv">
+***Proof (B).*** We want $ \nm{\nabla f(\y) - \nabla f(\x)} \leq L \nm{\y - \x}$. 
+
+\begin{align}
+	\nm{\nabla f(\y) - \nabla f(\x)} &= \lVert \int_0^1 \nabla^2 f(\x + \gamma(\y - \x)) (\y - \x) \dd \gamma \rVert  \\\\ 
+	&\leq \int_0^1 \nm{\nabla^2 f(\x + \gamma (\y - \x))} \nm{\y - \x} \dd \gamma \\\\ 
+	&\leq \int_0^1 L \nm{\y - \x} \dd \gamma \\\\ 
+	&\leq L \nm{\y - \x} \int_0^1 \dd \gamma = L\nm{\y - \x} \\; \Box
+\end{align}
+</div>
+
+<div class="md-conv">
+<p></p>
+<b-blue>
+
+***Def.*** $f : \R^n \lra \R^n$ is **$m$-strongly convex** (where $m \gt 0$) if $f(\x) - \frac m 2 \nm{\x}^2$
+
+</b-blue>
+
+i.e. it is m-strongly convex if you can subtract a quadratic from it and still have it remain convex. 
+
+
+1. $\nm{x}_2^2$ is strong convex. 
+2. IF $f$ is L-smooth (but not necessarily convex), then $f(\x) + \mu \nm{\x}_2^2$ is also SC for a large enough $\mu$. 
+3. Given a symmetrical matrix $Q \in \R^{n \times n}$ then $\x Q \x$ is strongly convex **if** Q is positive definite.
+
+
+<b-blue>
+
+***Thm.*** (characterisation of strong convexity)
+
+1. $f$ is $m$-strongly convex **if and only if** $f((1 -\alpha) \x + \alpha \y) \leq (1-\alpha)f(\x) + \alpha f(\y) - \frac m 2 (1 - \alpha) \alpha \nm{\x - \y}^2$ for all real vectors $\x, \y$ and constant $\alpha$.
+3. If $f$ is strongly convex, then $f$ is **strictly** convex. 
+2. If $f$ is strongly convex, and $\nabla f(\x^\*) = 0$, then $\x^\*$ is the **unique** global minimiser.
+4. [1st-ord characterisation of strong convexity] <text-red>IMPORTANT</text-red> Suppose $f$ is smooth, then for all $\x, \p$: 
+$$ f(\x + \p) \geq f(\x) + \nabla f(\x)\t \p + \frac m 2 \nm{\p}^2 $$ 
+5. [2nd-ord characterisation of strong convexity] <text-red>IMPORTANT</text-red> Suppose $f$ is twice continuously differentiable. $f$ is m-strongly convex **if and only if** 
+$$ \forall \x \in \R^n; \\; \nabla^2 f(\x) \preceq m \vec{I} $$ 
+i.e. $\lambda_1 (\nabla^2 f(\x)) \geq m$ (the first/smallest eigenvalue)
+
+</b-blue>
+<p></p>
+
+<b-blue>
+
+***Theorem.*** (Linear Converge of $GD(\frac 1 L)$ for L-smooth and m-strong convex functions)
+
+- Suppose $f$ is L-smooth, m-strongly convex. I.e. $\nabla^2 f$ exists for all x and $m \vec I \preceq \nabla^2 f(\x) \preceq L \vec I$ 
+- Let $\x^\*$ be the **unique** minimiser of $f$, and $f^\* := f(\x^\*)$
+- Let $\x_0, \x_1, \dots$ be iterates of $GD(\frac 1 L)$ 
+- Let $G = f(\x_0) - f(\x^*)$ be the initial optimal gap.
+
+Then:
+$$ f(\x_t) - f^* \leq G \left( 1 - \frac m L \right)^t $$ 
+
+> Note $ \frac m L \lt 1$. This is an exponential gap -- closer m is to L, the better the performance.
+
+$$ \forall \varepsilon \gt 0.\\; f(\x_t) - f^* \leq \varepsilon$$ 
+If $t \geq \frac L m \log\left(\frac G \varepsilon\right)$
+
+</b-blue>
+
+This gives us **linear convergence**. Since $\log (f(\x_t) - f^*) \leq t \log C + D$ for constants C and D, and is linear in $t$.
+
+<s-side>
+
+***Lemma 1.*** If $f$ is m-strong-convex, then $\forall x \in \R^n$:
+$$f(\x) - f^* \leq \frac{1}{2m} \nm{\nabla f(\x)}^2 $$ 
+
+</s-side>
+
+</div>
+
+<button class="collapsible">Proof of lemma 1...</button>
+<div class="ccontent md-conv">
+***Proof.*** Recall 1st order charac. of m-strong convexity.
+
+- Fix $\x$, vary $\p$. 
+- Let $\x^\* = \x - \p$, i.e. $\p = \x^\* - \x$. Then 
+
+\begin{align}
+	f(\x^*) &\geq f(\x) + \nabla f(\x)\t \p + \frac m 2 \nm{p^2} \\\\
+	&\geq \min_{\z} \left\\{ f(\x) + \nabla f(\x)\t\z + \frac m 2 \nm{\z}^2  \right\\}
+\end{align}
+
+Let the inside of the $\min$ function be $g(\z)$. Note that it is a quadratic in $\z$. Then,
+\begin{align}
+	\nabla g(\z) = \nabla f(\z) + m \z &:= 0 \\\\
+	\z &= - \frac 1 m \nabla f(\z)
+\end{align}
+
+Substituting this in we get 
+\begin{align}
+	f^* &\geq f(\x) + \nabla f(\x)\t\left(-\frac 1 m \nabla f(\x)\right) + \frac m 2 \lVert -\frac 1 m \nabla f(\x) \rVert^2 \\\\
+	&\geq f(\x) = \frac 1 m \nm{\nabla f(\x)}^2 + \frac m 2 \frac 1 {m^2} \nm{\nabla f(\x)}^2 \\\\
+	&\geq f(\x) - \frac{1}{2m} \nm{\nabla f(\x)}^2 \\\\
+	f(\x) - f^* &\leq \frac{1}{2m} \nm{\nabla f(\x)}^2
+\end{align}
+
+
+</div>
+
+<button class="collapsible">Proof of theorem...</button>
+<div class="ccontent md-conv">
+***Proof.*** By definition 
+$$
+f(\x_{k+1}) - f(\x_k - \frac 1 L \nabla f (\x_k))
+$$
+Since $f$ is L-smooth, 
+$$ f(\x_{k+1}) \leq f(\x_k) - \frac{1}{2L} \nm{\nabla f (\x_k)}^2 $$
+By lemma 1,
+$$ f(\x_{k+1}) \leq f(\x_k) - \frac{1}{2L} 2m(f(\x_k) - f^\*) $$ 
+Hence 
+\begin{align}
+	f(\x_{k+1}) - f^\* &\leq (f(\x_k) - f^\*) - \frac m L (f(\x_k) - f^\*)\\\\
+	&\leq (1 - \frac m L)(f(\x_k) - f^\*)
+\end{align}
+
+After $t$ steps, we get 
+\begin{align}
+f(\x_t) - f^* &\leq \left(1-\frac m L\right)^2 (f(\x_t) - f^*) \\\\	
+&\leq  \left(1-\frac m L\right)^2 G.
+\end{align}
+</div>
+
+<div class="md-conv">
+<s-side>
+
+***Lemma 2.*** If $f$ is m-strongly convex, then 
+$$
+\nm{\x - \x^*} \leq \frac 2 m \nm{\nabla f(\x)} 
+$$
+
+</s-side>
+</div>
+
+<button class="collapsible">Proof of lemma 2...</button>
+<div class="ccontent md-conv">
+***Proof.*** Use (4):
+$$
+f(\x^\*) \geq f(\x) + \nabla f(\x)\t (\x - \x^\*) + \frac m 2 \nm{\x^\* - \x}^2 
+$$
+Via cauchy schwartz inequality:
+$$
+f(\x^\*) \geq f(\x) + \nm{\nabla f(\x)} \{(\x - \x^\*)} + \frac m 2 \nm{\x^\* - \x}^2 
+$$
+Hence:
+$$
+\frac m 2 \nm{\x - \x^\*} \leq f(\x^\*) - f(\x) + \nm{\nabla f(\x)} \nm{(\x - \x^\*)}
+$$
+Note $f(\x^\*) - f(\x) \lt 0$, and so can be removed from the RHS. We can also flip around a minus sign in a norm without effect.
+
+$$
+\frac m 2 \nm{\x - \x^\*}^2 \leq \nm{\nabla f(\x)} \nm{(\x^\* - \x)}
+$$
+So 
+$$
+\nm{(\x^\* - \x)} \leq \frac 2 m \nm{\nabla f(\x)} \\; \Box 
+$$
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="newton">Newton's Methods</h2>
 </div>
 
 	

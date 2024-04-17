@@ -745,7 +745,7 @@ ol.side, ul.side {
 /* #endregion */
 
 
-/* #region overrides */
+/* #region override formattings */
 
 .green {
     background-color: var(--green);
@@ -801,6 +801,10 @@ s-side {
     border-spacing: 10px 0px;
     padding-left: 10px;
     margin-left: -10px;
+}
+
+text-red {
+    color:red;
 }
 
 /* #endregion */
