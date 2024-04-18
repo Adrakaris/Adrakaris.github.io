@@ -1210,10 +1210,218 @@ $$
 \nm{(\x^\* - \x)} \leq \frac 2 m \nm{\nabla f(\x)} \\; \Box 
 $$
 </div>
+
 </div>
 
 <div class="colourband">
 	<h2 id="newton">Newton's Methods</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Scaled GD
+
+***Condition number.*** On an L-smooth m-strongly convex function $f : m \preceq \nabla^2 f(\x) \preceq L$, the runtime of GD can be measured in terms of the error achieved: 
+$$
+O\left( \frac L m \log \frac G \varepsilon \right)
+$$ 
+Where the $\log \frac G \varepsilon$ is good, and $\frac L m$ is bad. The latter of these is called the **condition number**.
+
+If $\frac L m$ is large, then we say that $\argmin_\x f(\x)$ is **ill-conditioned**.
+
+The smallest possible condition number is $\frac L m = 1$, this is the best aim.
+
+***Scaled GD.*** For the minimisation problem, we can change / rescale the variable:
+$$
+\x = C \y + \vec t
+$$
+Where $C \in \R^{n \times n}$ is invertible and $\vec t \in \R^n$. This is an *affine* change. This rephrases the problem into 
+$$
+\argmin_\y h(\y) \pod{h(y) = f(C\y + \vec t)}
+$$
+And equivalently
+$$
+\nabla h = C\t \nabla f(C\y + \vec t) = C\t \nabla f(\x)
+$$
+
+Let us look at $GD(1)$ on $h$:
+$$
+\y_{k+1} = \y_k - C\t \nabla f(C\y_k + \vec t)
+$$
+Left-multiply by $C$ and add $\vec t$:
+$$
+\implies C\y_{k+1} + \vec t = (C \y_k + \vec t) - CC\t \nabla f(C\y_k + \vec t)
+$$
+Note that $C\y_{k+1} + \vec t = \x_{k+1}$, and $C \y_k + \vec t = \x_t$, and $CC\t$ is symmetric and positive definite. Thus this is nothing but the scaling matrix $S$. This reduces to 
+$$
+\x_{k+1} = \x_k - S\nabla f(\x_k)
+$$
+"S-scaled $GD(1)$".
+
+Since $\frac L m$ is a ratio of gap of $\nabla^2f$ eigenvalues, the *least* ill conditioned $\nabla^2$ will have the smallest gap -- $\vec{I}$. 
+
+<b-blue>
+
+***Def.*** (square root of symmetric positive definite (SPD) matrix)
+
+For an SPD $S \in \R^{n \times n}$, let $S = U\t DU$, where 
+- U is orthogonal, i.e. $U\t U = UU\t = \vec{I}$
+- D is diagonal with positive diagonal values $d_1 ..d_n$ 
+
+Define $\sqrt{S} := U\t E U$ where $E = \sqrt{D} = \rm{diag}(\sqrt d_1 .. \sqrt d_n)$
+
+</b-blue>
+
+<s-side>
+
+***Fact.*** $\sqrt S \sqrt S = S$
+
+</s-side>
+
+Our intention is to "fix" ill conditioned functions through affine scaling. Since hessians can vary though, we should choose a new S each step. 
+$$
+\x_{k+1} = \x_k + S_k \nabla f(\x_k)
+$$
+
+Where $\x = \sqrt{S} \y$ (and we ignore $+\vec t$ since it's ignored by the gradient and hessian), so $\y_{k+1} = \y_k - \nabla h (\y_k)$ 
+
+The scaled gradient is given 
+$$
+\nabla h (\y_k) = \sqrt S \nabla f(\sqrt S \y_k)
+$$
+The scaled hessian is given 
+$$
+\nabla^2 h(\y_k) = \sqrt S \nabla^2 f(\sqrt S \y_k) \sqrt S = \sqrt S \nabla^2 f(\x_k) \sqrt S
+$$
+And we want to set $S$ such that the hessian becomes I.
+
+If $\nabla^2 f(\x_k)$ is PD, it is invertible, and so we set $S_k := (\nabla^2 f(\x_k))^{-1}$. 
+
+### Newton's Method
+
+Finding a zero point, starting from an $\x_0$, newton's method is defined as 
+$$
+\x_{k+1} == \x_k - (\nabla^2 f(\x_k))^{-1}\nabla f(\x_k)
+$$
+Where the last bit is called the **newton step** at $\x_k$.
+
+*A derivation.* Minimising local quadratic approximation. We want to look for a $\vec d : f(\x_k + \vec d)$ gives a good procession.
+$$
+f(\x_k + \vec d) = f(\x_k) + \nabla f(\x_k) \d + \frac 1 2 \d\t \nabla^2 f(\x_k) \d + o(\nm{\d}^2)
+$$
+Where everything on the RHS apart from the little o is the local quadratic approximation.
+
+If $\nabla^2 f(\x)$ is PD, this quadratic of $\d$ is strictly and strongly convex. Hence there exists a unique minimiser : this LQA equals 0.
+
+\begin{align}
+	\nabla f(\x_k) + \nabla^2 f(\x_k)\d &= 0 \\\\
+	\d &= (\nabla^2 f(\x_k))^{-1} (-\nabla f(\x_k)) \\\\
+	&= -(\nabla^2 f(\x_k))^{-1} \nabla f(\x_k)
+\end{align}
+Which is the newton step.
+
+<s-side>
+
+***Fact.*** Newton's method may diverge -- and often does.
+
+</s-side>
+
+***Damped Newton's Method.*** When the hessian is PSD, then we can get he descent direction $-(\nabla^2 f(\x_k))^{-1} \nabla f(\x_k)$ and do an approximate line search.
+
+***Hybrid Gradient-Newton Method.*** But the hessian is not always PSD, and so may not give the descent direction. So we can use a **hybrid newton-GD** system: 
+- When the hessian is PD, use newtons, else, use GD.
+
+So when the gradient is large we can use negative gradient, but when gradient is smaller and hessian is PD, then use newton's.
+
+However if gradient is near zero and hessian is not PD, and there is a **very negative eigenvalue**, then **this** is a descent direction.
+
+-----
+
+Newton steps are typically expensive to compute 
+- $\Omega(n^2)$ partial derivatives.
+- Require working matrix inverse -- solving lots of linear requations 
+- Checking positive definiteness is expensive 
+
+<b-blue>
+
+***Thm.*** (Local quadratic convergence of newtons)
+
+Suppose $f : \R^n \lra \R$ is 
+- twice cont- differentiable, 
+- m-strongly convex, 
+- L-Lipschitz hessian: $\nm{\nabla^2 f(\x) - \nabla^2 f(\y)} \leq L\nm{\x - \y}$ (where the matrix norm is the spectral norm).
+
+Let $\x_0, \x_1, \dots$ be iterations of newtons method, and $\x^*$ si the unique minimiser of $f$.
+
+***Then*** for all iterations $k = 0, 1..$
+- **(A)** $\nm{\x_{k+1} - \x^\* } \leq \frac{ L }{ 2m }\nm{\x_k - \x}^2$ (doubly exponential -- quadratic)
+- **(B)** If $\nm{\x_0 - \x^\*} \leq \frac{ m }{ L }$ then after $k$ steps: $\nm{\x_k - \x^\*} \leq \frac{2m}{L} (\frac12)^{2^k}$  (super exponential convergence)
+- **(C)** We get $\log_2 \frac{ 1 }{ \nm{\x_k - \x^\* } }$ bits of precision. I.e. $ \log_2 \frac{ 1 }{ \nm{\x_k - \x^\* } } \geq 2^k + $ a constant.
+
+</b-blue>
+<p></p>
+</div>
+
+<button class="collapsible">Proof (A) -> (B)</button>
+<div class="ccontent md-conv">
+***Proof.*** Induction on $k$ 
+
+Base case: $\nm{\x_0 - \x^\*} \leq \frac m L$. Then $\frac m L = \frac{ 2m }{ L } (\frac{ 1 }{ 2 })^{2^0} = \frac{ m }{ L }$. 
+
+Induction step: $\nm{\x_{k+1} - \x^\*}$
+- By (A): $$\nm{\x_{k+1} - \x^\*} \leq \frac{ L }{ 2m } \nm{\x_k - \x^\*}$$ 
+- By inductive hypothesis,
+\begin{align}
+	&\leq \frac{ 1 }{ 2m } \left( \frac{ 2m }{ L } \left(\frac12 \right)^{2^k}\right)^2 \\\\
+	&\leq \frac{ L }{ 2m } \frac{ 4m^2 }{ L^2 } \left(\frac12 \right)^{2^{k+1}} \\\\
+	&\leq \frac{ 2m }{ L } \left(\frac12 \right)^{2^{k+1}} & \Box
+\end{align}
+</div>
+
+<button class="collapsible">Proof (A)</button>
+<div class="ccontent md-conv">
+***Proof.*** Consider $\x_{k+1} - \x^*$ 
+$$
+\x_{k+1} - \x^\* = \x_k - (\nabla^2 f(\x_k))^{-1} \nabla f(\x_k) - \x^\*
+$$
+Note that $\nabla f(\x^*) = 0$, and so we can do some trickery:
+$$
+\x_{k+1} - \x^\* = \x_{k+1} - \x^\* + (\nabla^2 f(\x_k))^{-1} (\nabla f(\x^\*)- \nabla f(\x_k))
+$$
+By using the integral form of 2nd order taylor theorem:
+
+\begin{align}
+	&= \x_{k+1} - \x^\* + (\nabla^2 f(\x_k))^{-1} \int_0^1 \nabla^2 f(\x_k + \gamma(\x^\* - \x_k))(\x^\* - \x_k) \dd \gamma \\\\
+	&= (\nabla^2 f(\x_k))^{-1} \int_0^1 (\nabla^2 f(\x_k + \gamma(\x^\* - \x_k)) - \nabla^2 f(\x_k))(\x^* - \x_k) \dd \gamma
+\end{align}
+
+Note the spectral norm $\nm{(\nabla^2 f(\x_k))^{-1}} \leq \frac 1 m$ since we assume the lower bound on eigenvalues is $m$. So 
+
+\begin{align}
+	\nm{\x_{k+1} - \x^\*} &\leq \nm{(\nabla^2 f(\x_k))^{-1}}\lVert\int_0^1 (\cdots)\rVert \\\\
+	&\leq  \nm{(\nabla^2 f(\x_k))^{-1}} \int_0^1 \lVert \nabla^2 f(\x_k + \gamma(\x^\* - \x_k)) - \nabla^2 f(\x_k) \rVert \nm{\x^* - \x_k} \dd \gamma \\\\
+	&\leq \frac 1 m \int_0^1 L \nm{\gamma (\x^\* - \x_k)} \nm{\x^\* -\x_k} \dd \gamma \\\\
+	&= \frac L m \nm{\x^\* -\x_k}^2 \int_0^1 \gamma \dd \gamma \\\\
+	&= \frac L m \nm{\x^\* -\x_k}^2 \frac 1 2 = \frac L{2m} \nm{\x^\* -\x_k}^2 &\Box
+\end{align}
+
+</div>
+
+<div class="md-conv">
+
+Issues:
+- L and m are typically not known 
+- Newton steps are *affine-invariant* 
+	- Doesn't change if we change the system of coords 
+	- However m and L are **not** affine invariant 
+- So the algorithm doesn't depend on the coordinate system, yet the analysis does.
+	- Thus there are different bounds for different coordinates for that superconvergence.
+
+A way to get around this is to use **"self-concordant functions"**.
+
+</div>
+
 </div>
 
 	
