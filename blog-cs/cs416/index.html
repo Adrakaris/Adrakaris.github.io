@@ -65,6 +65,8 @@ Similar situation to quantum.
 2. [Smooth Optimisation](#gd)
 3. [More Descent Methods](#mored)
 4. [Newton's Methods](#newton)
+5. [Constrained Optimisation](#constrained)
+6. [Non-Smooth Convex Optimisation](#nonsmooth)
 
 $$
 \newcommand{\R}{\mathbb{R}}
@@ -73,6 +75,8 @@ $$
 \renewcommand{\vec}{\mathbf}
 \renewcommand{\rm}{\textrm}
 \newcommand{\x}{\vec{x}} 
+\newcommand{\xx}{\vec{x}^\*} 
+\newcommand{\zz}{\vec{z}^\*} 
 \newcommand{\y}{\vec{y}} 
 \newcommand{\p}{\vec{p}} 
 \newcommand{\d}{\vec{d}} 
@@ -92,6 +96,8 @@ $$
 \DeclareMathOperator{\dim}{dim}
 \DeclareMathOperator{\range}{range}
 \DeclareMathOperator{\null}{null}
+\DeclareMathOperator{\prox}{prox}
+\DeclareMathOperator{\proxG}{proxG}
 $$
 
 </div>
@@ -140,15 +146,15 @@ Generally, if a solution $\x^* \in S_{A, b}$, then $\forall \x \in \R^n$:
 
 \begin{align}
 	\x \in S\_{A, b} &\iff A(\x - \x^*) = 0 \\\\ 
-	&\iff A\x = A\x^\* \\\\
-	&\iff \x - \x^\* \in \null(A)
+	&\iff A\x = A\xx \\\\
+	&\iff \x - \xx \in \null(A)
 \end{align}
 
 > Note that the null space of A is the set $\\{ \forall \y : A\y = 0 \\}$.
 > 
 > Hence $S_{A, b}$ is the "affine set"
 > $$ S_{A, \vec{b}} = \\{ \x^* + \z : \z \in \null(A) \\} $$ 
-> for all solutions $\x^\*$. You can write this as $\x^\* + \null(A)$.
+> for all solutions $\xx$. You can write this as $\xx + \null(A)$.
 
 So $A\x + \vec{b}$ has a unique solution **if and only if** $\null(A) = \\{\0\\}$ -- the trivial null space (no non zero vectors make zero).
 
@@ -441,7 +447,7 @@ Since $\gamma t \lt t$ as gamma is between 0 and 1, $f(\x + t\d) \lt f(\x)$. Thu
 <p></p>
 <s-side>
 
-***Corrolary.*** If $\x^\*$ is a **local minimiser** for a smooth $f$, then 
+***Corrolary.*** If $\xx$ is a **local minimiser** for a smooth $f$, then 
 $$
 \nabla f(\x^*) = \0
 $$
@@ -680,7 +686,7 @@ So
 
 ***Thm.**(Convergence rate of $GD(\frac 1 L)$ for L-smooth convex functions)* 
 
-Let $f$ be L-smooth and convex. Let $\x^\*$ be a minimiser, and let the minimum value $f^\* = f(\x^\*)$. 
+Let $f$ be L-smooth and convex. Let $\xx$ be a minimiser, and let the minimum value $f^\* = f(\xx)$. 
 
 Let the *distance* $D = \nm{\x_0 - \x^*}$ be the "initial gap". $\x_0 .. \x_t$ are iterates of gradient descent.
 
@@ -717,10 +723,10 @@ f(\x^*) \geq f(\x_k) + \nabla f(\x_k) \t (\x^* - \x_k)
 $$
 Reverse and sub in for $f(\x_k)$ to get
 \begin{align}
-	f(\x_{k+1}) &\leq f(\x^\*) + \nabla f(\x\_k)\t (\x_k - \x^\*) - \frac{ 1 }{ 2L  }\nm{\nabla f(\x\_k)}^2   \\\\ 
-	&\leq f(\x^\*) + \frac{L}{2} \left( 2(\x_k - \x^\*) \cdot \frac 1 L \nabla f(\x\_k) - \frac{ 1 }{ L^2  }\nm{\nabla f(\x\_k)}^2 \right) \\\\
-	&\leq f(\x^\*) + \frac{L}{2} \left( 2(\x_k - \x^\*) \cdot \frac 1 L \nabla f(\x\_k) - \lVert \frac{ 1 }{ L } \nabla f(\x\_k) \rVert ^2 \right) \\\\ 
-	&\leq f(\x^\*) + \frac{L}{2} \left( \nm{\x_k - \x^\*}^2 - \lVert \x_k - \x^\* - \frac 1 L  \nabla f(\x_k) \rVert^2 \right)
+	f(\x_{k+1}) &\leq f(\xx) + \nabla f(\x\_k)\t (\x_k - \xx) - \frac{ 1 }{ 2L  }\nm{\nabla f(\x\_k)}^2   \\\\ 
+	&\leq f(\xx) + \frac{L}{2} \left( 2(\x_k - \xx) \cdot \frac 1 L \nabla f(\x\_k) - \frac{ 1 }{ L^2  }\nm{\nabla f(\x\_k)}^2 \right) \\\\
+	&\leq f(\xx) + \frac{L}{2} \left( 2(\x_k - \xx) \cdot \frac 1 L \nabla f(\x\_k) - \lVert \frac{ 1 }{ L } \nabla f(\x\_k) \rVert ^2 \right) \\\\ 
+	&\leq f(\xx) + \frac{L}{2} \left( \nm{\x_k - \xx}^2 - \lVert \x_k - \xx - \frac 1 L  \nabla f(\x_k) \rVert^2 \right)
 \end{align}
 
 Where the last step comes from an identity over vectors $\vec{a}, \vec{b}$ where 
@@ -733,8 +739,8 @@ Now shift $f(\x^*)$ over to the left hand side, and sum over all $k = 0..t-1$:
 
 $$
 \begin{align*}
-\sum\limits_{k=0}^{t-1} (f(\x_{k+1}) - f^\*) &\leq \frac{L}{2} \sum\limits_{k=0}^{t-1} ( \nm{\x_k - \x^\*}^2 - \nm{\x_{k+1} + \x^\*}^2)\\
-&\leq \frac{L}{2} (\nm{\x_0 - \x^\*}^2 - \nm{\x_t - \x^\*}^2)\\
+\sum\limits_{k=0}^{t-1} (f(\x_{k+1}) - f^\*) &\leq \frac{L}{2} \sum\limits_{k=0}^{t-1} ( \nm{\x_k - \xx}^2 - \nm{\x_{k+1} + \xx}^2)\\
+&\leq \frac{L}{2} (\nm{\x_0 - \xx}^2 - \nm{\x_t - \xx}^2)\\
 &\leq \frac{LD^2}{2}
 \end{align*}
 $$
@@ -998,7 +1004,7 @@ $$ \nabla f(\x + \p) = \nabla f(\x) + \int_0^1 \nabla^2 f(\x + \gamma \p) \p \dd
 
 Suppose $f$ is twice continuously differentiable.
 
-If $\x^\*$ is a local minimiser of $f$, then $\nabla f(\x^\*)$ = 0, and $\nabla^2 f(\x^\*)$ is **positive definite**.
+If $\xx$ is a local minimiser of $f$, then $\nabla f(\xx)$ = 0, and $\nabla^2 f(\xx)$ is **positive definite**.
 
 </b-blue>
 <p></p>
@@ -1011,13 +1017,13 @@ Thus for some eigenvector $\vec{v} \in \R^n$: $$\vec v\t \nabla^2 f(\x^*) \vec v
 We argue that such a $\vec v$ is a descent direction, by evaluating $f(\x^* + \alpha \vec v)$ for some small step alpha. By the MVF 2nd order taylor theorem:
 
 \begin{align}
-	f(\x^* + \alpha \vec v) &= f(\x^\*) + \alpha \nabla f(\x^\*)\t\vec v + \alpha^2 \frac12 \vec{v}\t \nabla^2 f(\x^* + \gamma \alpha \vec{v}) \vec{v} \\\\
-	&= f(\x^\*) + \frac12 \alpha^2 \vec{v}\t \nabla^2 f(\x^\* + \alpha \gamma \vec{v}) \vec{v} \\\\
-	f(\x^\*) &\gt f(\x^\*) - \frac12 \alpha^2 \frac\lambda 2
+	f(\x^* + \alpha \vec v) &= f(\xx) + \alpha \nabla f(\xx)\t\vec v + \alpha^2 \frac12 \vec{v}\t \nabla^2 f(\x^* + \gamma \alpha \vec{v}) \vec{v} \\\\
+	&= f(\xx) + \frac12 \alpha^2 \vec{v}\t \nabla^2 f(\xx + \alpha \gamma \vec{v}) \vec{v} \\\\
+	f(\xx) &\gt f(\xx) - \frac12 \alpha^2 \frac\lambda 2
 \end{align}
 
 - First step: note that $\nabla f(\x^) = \vec{0}$ and so that cancels. 
-- Second step: $\vec{v}\t \nabla^2 f(\x^\* + \alpha \gamma \vec{v}) \vec{v}$ for a sufficiently small $\alpha$, by the continuity of the hessian is $\leq - \frac\lambda 2$.
+- Second step: $\vec{v}\t \nabla^2 f(\xx + \alpha \gamma \vec{v}) \vec{v}$ for a sufficiently small $\alpha$, by the continuity of the hessian is $\leq - \frac\lambda 2$.
 - Third step: the negative term is positive for all sufficiently small $\alpha$ 
 
 Therefore $\vec v$ is a descent direction, and $\x^*$ would thus not be a local minimiser of the function, which contradicts what we stated.
@@ -1028,7 +1034,7 @@ Therefore $\vec v$ is a descent direction, and $\x^*$ would thus not be a local 
 
 ***Thm.*** (2nd order sufficient condition) Suppose $f$ is twice cont. diff'able. 
 
-If $\nabla f(\x^\*) = 0$ AND $\nabla^2 f(\x^\*)$ is positive definite, then $\x^\*$ is a local minimiser.  
+If $\nabla f(\xx) = 0$ AND $\nabla^2 f(\xx)$ is positive definite, then $\xx$ is a local minimiser.  
 
 </b-blue>
 
@@ -1083,7 +1089,7 @@ i.e. it is m-strongly convex if you can subtract a quadratic from it and still h
 
 1. $f$ is $m$-strongly convex **if and only if** $f((1 -\alpha) \x + \alpha \y) \leq (1-\alpha)f(\x) + \alpha f(\y) - \frac m 2 (1 - \alpha) \alpha \nm{\x - \y}^2$ for all real vectors $\x, \y$ and constant $\alpha$.
 3. If $f$ is strongly convex, then $f$ is **strictly** convex. 
-2. If $f$ is strongly convex, and $\nabla f(\x^\*) = 0$, then $\x^\*$ is the **unique** global minimiser.
+2. If $f$ is strongly convex, and $\nabla f(\xx) = 0$, then $\xx$ is the **unique** global minimiser.
 4. [1st-ord characterisation of strong convexity] <text-red>IMPORTANT</text-red> Suppose $f$ is smooth, then for all $\x, \p$: 
 $$ f(\x + \p) \geq f(\x) + \nabla f(\x)\t \p + \frac m 2 \nm{\p}^2 $$ 
 5. [2nd-ord characterisation of strong convexity] <text-red>IMPORTANT</text-red> Suppose $f$ is twice continuously differentiable. $f$ is m-strongly convex **if and only if** 
@@ -1098,7 +1104,7 @@ i.e. $\lambda_1 (\nabla^2 f(\x)) \geq m$ (the first/smallest eigenvalue)
 ***Theorem.*** (Linear Converge of $GD(\frac 1 L)$ for L-smooth and m-strong convex functions)
 
 - Suppose $f$ is L-smooth, m-strongly convex. I.e. $\nabla^2 f$ exists for all x and $m \vec I \preceq \nabla^2 f(\x) \preceq L \vec I$ 
-- Let $\x^\*$ be the **unique** minimiser of $f$, and $f^\* := f(\x^\*)$
+- Let $\xx$ be the **unique** minimiser of $f$, and $f^\* := f(\xx)$
 - Let $\x_0, \x_1, \dots$ be iterates of $GD(\frac 1 L)$ 
 - Let $G = f(\x_0) - f(\x^*)$ be the initial optimal gap.
 
@@ -1128,7 +1134,7 @@ $$f(\x) - f^* \leq \frac{1}{2m} \nm{\nabla f(\x)}^2 $$
 ***Proof.*** Recall 1st order charac. of m-strong convexity.
 
 - Fix $\x$, vary $\p$. 
-- Let $\x^\* = \x - \p$, i.e. $\p = \x^\* - \x$. Then 
+- Let $\xx = \x - \p$, i.e. $\p = \xx - \x$. Then 
 
 \begin{align}
 	f(\x^*) &\geq f(\x) + \nabla f(\x)\t \p + \frac m 2 \nm{p^2} \\\\
@@ -1190,24 +1196,24 @@ $$
 <div class="ccontent md-conv">
 ***Proof.*** Use (4):
 $$
-f(\x^\*) \geq f(\x) + \nabla f(\x)\t (\x - \x^\*) + \frac m 2 \nm{\x^\* - \x}^2 
+f(\xx) \geq f(\x) + \nabla f(\x)\t (\x - \xx) + \frac m 2 \nm{\xx - \x}^2 
 $$
 Via cauchy schwartz inequality:
 $$
-f(\x^\*) \geq f(\x) + \nm{\nabla f(\x)} \{(\x - \x^\*)} + \frac m 2 \nm{\x^\* - \x}^2 
+f(\xx) \geq f(\x) + \nm{\nabla f(\x)} \{(\x - \xx)} + \frac m 2 \nm{\xx - \x}^2 
 $$
 Hence:
 $$
-\frac m 2 \nm{\x - \x^\*} \leq f(\x^\*) - f(\x) + \nm{\nabla f(\x)} \nm{(\x - \x^\*)}
+\frac m 2 \nm{\x - \xx} \leq f(\xx) - f(\x) + \nm{\nabla f(\x)} \nm{(\x - \xx)}
 $$
-Note $f(\x^\*) - f(\x) \lt 0$, and so can be removed from the RHS. We can also flip around a minus sign in a norm without effect.
+Note $f(\xx) - f(\x) \lt 0$, and so can be removed from the RHS. We can also flip around a minus sign in a norm without effect.
 
 $$
-\frac m 2 \nm{\x - \x^\*}^2 \leq \nm{\nabla f(\x)} \nm{(\x^\* - \x)}
+\frac m 2 \nm{\x - \xx}^2 \leq \nm{\nabla f(\x)} \nm{(\xx - \x)}
 $$
 So 
 $$
-\nm{(\x^\* - \x)} \leq \frac 2 m \nm{\nabla f(\x)} \\; \Box 
+\nm{(\xx - \x)} \leq \frac 2 m \nm{\nabla f(\x)} \\; \Box 
 $$
 </div>
 
@@ -1355,9 +1361,9 @@ Suppose $f : \R^n \lra \R$ is
 Let $\x_0, \x_1, \dots$ be iterations of newtons method, and $\x^*$ si the unique minimiser of $f$.
 
 ***Then*** for all iterations $k = 0, 1..$
-- **(A)** $\nm{\x_{k+1} - \x^\* } \leq \frac{ L }{ 2m }\nm{\x_k - \x}^2$ (doubly exponential -- quadratic)
-- **(B)** If $\nm{\x_0 - \x^\*} \leq \frac{ m }{ L }$ then after $k$ steps: $\nm{\x_k - \x^\*} \leq \frac{2m}{L} (\frac12)^{2^k}$  (super exponential convergence)
-- **(C)** We get $\log_2 \frac{ 1 }{ \nm{\x_k - \x^\* } }$ bits of precision. I.e. $ \log_2 \frac{ 1 }{ \nm{\x_k - \x^\* } } \geq 2^k + $ a constant.
+- **(A)** $\nm{\x_{k+1} - \xx } \leq \frac{ L }{ 2m }\nm{\x_k - \x}^2$ (doubly exponential -- quadratic)
+- **(B)** If $\nm{\x_0 - \xx} \leq \frac{ m }{ L }$ then after $k$ steps: $\nm{\x_k - \xx} \leq \frac{2m}{L} (\frac12)^{2^k}$  (super exponential convergence)
+- **(C)** We get $\log_2 \frac{ 1 }{ \nm{\x_k - \xx } }$ bits of precision. I.e. $ \log_2 \frac{ 1 }{ \nm{\x_k - \xx } } \geq 2^k + $ a constant.
 
 </b-blue>
 <p></p>
@@ -1367,10 +1373,10 @@ Let $\x_0, \x_1, \dots$ be iterations of newtons method, and $\x^*$ si the uniqu
 <div class="ccontent md-conv">
 ***Proof.*** Induction on $k$ 
 
-Base case: $\nm{\x_0 - \x^\*} \leq \frac m L$. Then $\frac m L = \frac{ 2m }{ L } (\frac{ 1 }{ 2 })^{2^0} = \frac{ m }{ L }$. 
+Base case: $\nm{\x_0 - \xx} \leq \frac m L$. Then $\frac m L = \frac{ 2m }{ L } (\frac{ 1 }{ 2 })^{2^0} = \frac{ m }{ L }$. 
 
-Induction step: $\nm{\x_{k+1} - \x^\*}$
-- By (A): $$\nm{\x_{k+1} - \x^\*} \leq \frac{ L }{ 2m } \nm{\x_k - \x^\*}$$ 
+Induction step: $\nm{\x_{k+1} - \xx}$
+- By (A): $$\nm{\x_{k+1} - \xx} \leq \frac{ L }{ 2m } \nm{\x_k - \xx}$$ 
 - By inductive hypothesis,
 \begin{align}
 	&\leq \frac{ 1 }{ 2m } \left( \frac{ 2m }{ L } \left(\frac12 \right)^{2^k}\right)^2 \\\\
@@ -1383,27 +1389,27 @@ Induction step: $\nm{\x_{k+1} - \x^\*}$
 <div class="ccontent md-conv">
 ***Proof.*** Consider $\x_{k+1} - \x^*$ 
 $$
-\x_{k+1} - \x^\* = \x_k - (\nabla^2 f(\x_k))^{-1} \nabla f(\x_k) - \x^\*
+\x_{k+1} - \xx = \x_k - (\nabla^2 f(\x_k))^{-1} \nabla f(\x_k) - \xx
 $$
 Note that $\nabla f(\x^*) = 0$, and so we can do some trickery:
 $$
-\x_{k+1} - \x^\* = \x_{k+1} - \x^\* + (\nabla^2 f(\x_k))^{-1} (\nabla f(\x^\*)- \nabla f(\x_k))
+\x_{k+1} - \xx = \x_{k+1} - \xx + (\nabla^2 f(\x_k))^{-1} (\nabla f(\xx)- \nabla f(\x_k))
 $$
 By using the integral form of 2nd order taylor theorem:
 
 \begin{align}
-	&= \x_{k+1} - \x^\* + (\nabla^2 f(\x_k))^{-1} \int_0^1 \nabla^2 f(\x_k + \gamma(\x^\* - \x_k))(\x^\* - \x_k) \dd \gamma \\\\
-	&= (\nabla^2 f(\x_k))^{-1} \int_0^1 (\nabla^2 f(\x_k + \gamma(\x^\* - \x_k)) - \nabla^2 f(\x_k))(\x^* - \x_k) \dd \gamma
+	&= \x_{k+1} - \xx + (\nabla^2 f(\x_k))^{-1} \int_0^1 \nabla^2 f(\x_k + \gamma(\xx - \x_k))(\xx - \x_k) \dd \gamma \\\\
+	&= (\nabla^2 f(\x_k))^{-1} \int_0^1 (\nabla^2 f(\x_k + \gamma(\xx - \x_k)) - \nabla^2 f(\x_k))(\x^* - \x_k) \dd \gamma
 \end{align}
 
 Note the spectral norm $\nm{(\nabla^2 f(\x_k))^{-1}} \leq \frac 1 m$ since we assume the lower bound on eigenvalues is $m$. So 
 
 \begin{align}
-	\nm{\x_{k+1} - \x^\*} &\leq \nm{(\nabla^2 f(\x_k))^{-1}}\lVert\int_0^1 (\cdots)\rVert \\\\
-	&\leq  \nm{(\nabla^2 f(\x_k))^{-1}} \int_0^1 \lVert \nabla^2 f(\x_k + \gamma(\x^\* - \x_k)) - \nabla^2 f(\x_k) \rVert \nm{\x^* - \x_k} \dd \gamma \\\\
-	&\leq \frac 1 m \int_0^1 L \nm{\gamma (\x^\* - \x_k)} \nm{\x^\* -\x_k} \dd \gamma \\\\
-	&= \frac L m \nm{\x^\* -\x_k}^2 \int_0^1 \gamma \dd \gamma \\\\
-	&= \frac L m \nm{\x^\* -\x_k}^2 \frac 1 2 = \frac L{2m} \nm{\x^\* -\x_k}^2 &\Box
+	\nm{\x_{k+1} - \xx} &\leq \nm{(\nabla^2 f(\x_k))^{-1}}\lVert\int_0^1 (\cdots)\rVert \\\\
+	&\leq  \nm{(\nabla^2 f(\x_k))^{-1}} \int_0^1 \lVert \nabla^2 f(\x_k + \gamma(\xx - \x_k)) - \nabla^2 f(\x_k) \rVert \nm{\x^* - \x_k} \dd \gamma \\\\
+	&\leq \frac 1 m \int_0^1 L \nm{\gamma (\xx - \x_k)} \nm{\xx -\x_k} \dd \gamma \\\\
+	&= \frac L m \nm{\xx -\x_k}^2 \int_0^1 \gamma \dd \gamma \\\\
+	&= \frac L m \nm{\xx -\x_k}^2 \frac 1 2 = \frac L{2m} \nm{\xx -\x_k}^2 &\Box
 \end{align}
 
 </div>
@@ -1424,6 +1430,489 @@ A way to get around this is to use **"self-concordant functions"**.
 
 </div>
 
+<div class="colourband">
+	<h2 id="constrained">Constrained Optimisation</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+**Constrained optimisation problems** are of the form 
+$$
+\min_{\x \in \Omega} f(\x) : \Omega \subseteq \R^n 
+$$
+Where $\Omega$ is the **constraint set**, it is **convex** and **compact** (**closed** and **bounded**).
+
+<b-blue>
+
+***Def.*** (Local and global solutions) 
+
+**Global**: A solution $\xx : f(\xx) \leq f(\x) \forall \x, \xx \in \Omega$. 
+
+**Local**: There exists a region length $d$ such that for a solution $\xx : f(\xx) \leq f(\x_L) : \\{ \x_L : \nm{\xx-\x_L} \leq d \\}$
+
+</b-blue>
+<p></p>
+<s-side>
+
+***Ex.*** Take the problem $\min_{x \in [1, 2]} f(x) = x^2$. 
+
+Here the minimum is $x = 1$, but the gradient at this point is not 0.
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Def.*** (The normal cone)
+
+A **normal cone** of $\Omega$ at $\x$ is
+$$
+N_\Omega (\x) = \\{ \d \in \R^n : \forall \z \in \Omega,\; \d\t (\z-\x) \leq 0 \\}
+$$
+
+That is, all directions extending outside the set from $\x$ which is a right or obtuse angle from the edge of the set (does not make an acute angle with any direction $XZ = \z - \x$). Best explained with the picture below:
+
+<figure>
+	<img src="./normal-cones.png" alt="Normal cone diagram" style="max-width: 350px;">
+	<figcaption>
+		Normal cones from different $\x$s. When a point is entirely inside a set, then its normal cone is the zero vector. When a point is on a smooth edge of a set, the normal cone is the perpendicular to that edge (and zero). When a point is on a corner, the normal cone is any line that is 90&deg; or more from any tangent edge.
+	</figcaption>
+</figure>
+
+</b-blue>
+
+Note that if a vector is in a normal cone, any multiple is also in the normal cone.
+
+<b-blue>
+
+***Thm.*** (1st order conditions) Suppose $\Omega \subseteq \R^n$ is convex and closed. $f : \Omega \lra \R$ is a smooth function. Then 
+
+- **(A)** (necessity) If $\xx \in \Omega$ is a local solution then $$-\nabla f(\xx) \in N_\Omega(\xx)$$
+- **(B)** (sufficiency for convex functions) If $f$ is convex and $-\nabla f(\xx) \in N_\Omega(\xx)$ then $\x^*$ is a **global** solution.
+- **(C)** (unique existence for strongly convex) If $f$ is strongly convex, then there exists a **unique** solution that is the only $\x^* : -\nabla f(\xx) \in N_\Omega(\xx)$
+
+</b-blue>
+
+</div>
+
+<button class="collapsible">Proof (A)</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Let $\z \in \Omega$. We want: $-\nabla f(\xx) \t  (\z - \xx) \geq 0$.
+
+By convexity of $\Omega$, 
+$$ \forall \alpha \in [0,1]: \xx + \alpha(\z - \xx) \in \Omega $$
+
+Since $f$ is smooth, we fix $\z - \xx$ and vary $\alpha$:  
+\begin{align}
+	f(\x + \alpha(\z - \xx)) &= f(\xx) + \nabla f(\xx)\t (\alpha(\z - \xx)) + o(\nm{\alpha(\z - \xx)})\\\\
+	&= f(\xx) + \alpha \nabla f(\xx)\t (\z - \xx) +o(\alpha)\\\\
+	\implies -\nabla f(\xx)\t (\z-  \xx) &= \frac 1 \alpha ( f(\xx) - f(\xx + \alpha(\z - \xx)) + o(\alpha) )
+\end{align}
+For a small enough $\alpha$, $f(\xx + \alpha(\z - \xx)) \approx f(\xx)$ and so the whole thing is 
+$ \leq \frac{ o(\alpha) }{ \alpha } $.
+Taking the limit, 
+$$ \lim_{\alpha \lra 0} (...) \lra -\nabla f(\xx)\t(\z - \xx) \leq 0.$$
+
+Which is the definition for the normal cone. $\Box$
+
+</div>
+<button class="collapsible">Proof (B)</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Since $f$ is convex, the linear approximation around any point is always smaller. Let $\z \in \Omega$, and we want to show that $f(\z) \geq f(\xx)$ for all such points.
+
+By convexity:
+$$
+f(\z) \geq f(\xx) + \nabla f(\xx)\t (\z - \xx)
+$$
+And given (A) 
+$$
+-\nabla f(\xx) \in N_\Omega(\xx) \implies -\nabla f(\xx)\t (\z - \xx) \leq 0
+$$
+$$
+\implies \nabla f(\xx)\t (\z - \xx) \geq 0
+$$
+Hence $f(\z) \geq f(\xx)$. $\Box$
+
+</div>
+<button class="collapsible">Proof (C)</button>
+<div class="ccontent md-conv">
+Let $\z \in \Omega$, and we will argue (1) that there exists such $\xx$ and (2) $f(\xx) \leq f(\z)$.
+
+Since $f$ is strongly convex, we can use the quadratic lower bound 
+$$
+f(\x) \geq f(\z) + \nabla f(\z)\t(\x - \z) + \frac m 2 \nm{\x - \z}^2 
+$$
+
+Take $\Omega \cup \\{ \x : f(\x) \leq f(\z) \\}$. These are the only candidates for a minimiser. This is also a compact set, it is convex and bounded, since we have added a quadratic strongly convex term. Thus $f$ has a minimiser $\xx$ on that set.
+
+To show that this is the unique minimiser, it is sufficient to show $f(\z) \gt f(\xx) : \xx \neq \z$. Take 
+$$
+f(\z) \geq f(\xx) + \nabla f(\xx)\t (\z - \xx) + \frac m 2 \nm{\z - \xx}^2
+$$
+Note that the quadratic term $\frac m 2 \nm{\z - \xx}^2$ is positive, and the linear term $\nabla f(\xx)\t (\z - \xx) \geq 0$ since its negative is in the normal cone. Hence 
+$$ f(\z) \gt f(\xx).$$ $\Box$
+
+</div>
+
+<div class="md-conv">
+
+### Euclidean Projection
+
+<b-blue>
+
+<img src="./euclidean-projection.png" alt="Euclidean projection diagram" style="float:right; max-width: 300px;">
+
+***Def.*** Given $\Omega$ is closed and convex, we define a projection 
+$$
+P_\Omega : \R^n \lra \Omega
+$$
+To be the unique solution $\zz$ to the minimisation problem 
+
+$$
+\min_{\z \in \Omega} \nm{\z - \x}_2$$
+
+as the **euclidean projection** of $\x$ onto $\zz$. Equivalently, this minimisation problem is better rephrased as 
+$$
+\min_{\z \in \Omega} \frac12 \nm{\z - \x}_2^2 
+$$
+
+</b-blue>
+
+$P_\Omega(\x)$ is well defined and unique, since we can solve it as the solution to a quadratic (strongly convex). 
+
+<b-blue>
+
+***Thm.*** <text-red>IMPORTANT</text-red> (The Minimum Principle)
+
+- **(A)** $P_\Omega (\x)$ is the unique point such that 
+$$
+\x - P_\Omega(\x) \in N_\Omega (P_\Omega(\x))
+$$
+
+- **(B)** $\iff \bar\x + N_\Omega (\bar \x)$ is the set of points $\x : P_\Omega(\x) = \bar\x$
+
+</b-blue>
+
+Intuitively, the original point is in the normal cone of the projected point <span class="grey">(technically the line you draw from the projection onto the original is in the normal cone but go stare at the drawing for a while)</span>
+
+<s-side>
+
+***Ex.*** Let $\Omega$ be non negative values. 
+
+***Fact.*** If $\Omega = \\{\z \in \R^n : z_{1..n} \geq 0\\}$ then $P\_\Omega(\z) = [\max(0, x\_i)]\_{i=1..n}$.
+
+***Proof.*** By minimum principle, suffices to show that if $\z \in \Omega$, then the normal cone definition 
+$$ [\x - P_\Omega(\x)]\t (\z - P_\Omega (\z)) \leq 0 $$ 
+We expand out the LHS into element-by-element:
+$$
+\sum_{i=1}^n (x_i - P_\Omega(\x)_i)(z_i - P\_\Omega(\x)_i) = \sum\_{i:x_i \neq 0} x_i z_i + \sum\_{i:x_i \geq 0} (x\_i - x\_i)(\cdots)
+$$
+
+Since all $z_i$s are positive, and any positive $x_i$ terms cancel out, we get that this whole term is less than or equal to zero. $\Box$
+
+***Ex.*** Claim that if $\Omega = \\{\x \in \R : \nm{\x} \leq 1\\}$, then 
+$$
+P_\Omega(\x) = \begin{cases} \x & \nm{\x} \leq 1 \\\\
+\frac{ \x }{ \nm{\x} } & \nm{x} \gt 1 \end{cases}
+$$
+
+The proof for this is left.
+
+</s-side>
+
+After projections, we get:
+
+***Projective Gradient Descent.*** 
+1. Take an $\x_0 \in \Omega$ 
+2. $\x_{k+1} = P_\Omega (\x_k - \alpha_k \nabla f(\x_k))$
+
+> Practical if computing the projection is easy.
+
+<b-blue>
+
+***Thm.*** (first order optimality condition) Suppose $f$ is smooth and $\Omega$ is closed and convex. Then 
+$$ -\nabla f(\xx) \in N_\Omega (\xx) \iff P_\Omega (\xx - \alpha \nabla f(\xx)) = \xx $$
+i.e. no feasible direction from $\xx$ improves the value **if and only if** the projected GD step from $\xx$ maps onto itself.
+
+</b-blue>
+
+We say $\xx$ is a "stationary point" of projected GD.
+
+</div>
+
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+
+***Proof.*** 
+\begin{align}
+	-\nabla f(\xx) &\in N_\Omega (\xx) \\\\
+	\iff -\alpha \nabla f(\xx) &\in N_\Omega (\xx) \\\\
+	\iff \xx - \alpha \nabla f(\xx) - \xx &\in N_\Omega (\xx) \\\\
+	\iff \xx &= P_\Omega (\xx - \alpha \nabla f(\xx)) & \Box
+\end{align}
+The last line is since if we let $\x = \xx - \alpha \nabla f(\xx)$, then $P_\Omega(\x) = \xx$, then by the minimum principle.
+
+</div>
+
+<div class="md-conv">
+
+***Convergence of PD.*** PD converges similarly to GD but with harder proofs. In practice, we can use line searches too. 
+
+***Non-gradient directions.*** Waking in non gradient directions is **not** possible for constrained opt. This is due to the projection -- if we go in a possibly improved non gradient direction, projection may make it worse overall.
+
+</div>
+
+</div>
+
+<div class="colourband">
+	<h2 id="nonsmooth">Non-Smooth Convex Optimisation</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Nonsmoothness and Subdifferentials 
+
+e.g. ReLU or Hinge loss. ReLU ($\max(x, 0)$) has a kink in it, hinge loss straight up has a discontinuity at 0. On these parts, they are not differentiable. 
+
+This is where we have subgradients. 
+
+We can generalise the above to any $\max(0, \rm{affine})$ type functions.
+
+> Note $f:\R^n \lra \R$ is affine if $f(\x) = A\x + \vec b$.
+
+<b-blue>
+
+***Def.*** $\vec g \in \R^n$ is a **subgradient** of $f$ at $\x \in \dom(f)$ if $$f(\z) \geq f(x) + \vec g \t (\z - \x) \\;\\; \forall \z \in \dom(f)$$.
+
+</b-blue>
+
+That is to say, the linear function with gradient $\vec g$ is **below** $f$ at every single point ever. This requires $f$ to be convex. Compare to a regular gradient, which is tangent to a point, and also below a convex function everywhere.
+
+For ReLU at 0 then, the subgradient can be any value between 0 and 1 inclusive.
+
+<b-blue>
+
+***Def.*** The **Sub-differential** of $f$ 
+$$
+\partial f(\x) = \\{ \vec g : \vec g \rm{ is a subgradient} \\}
+$$
+
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** (Optimality condition) Suppose $f$ is convex. 
+
+$\xx$ is a minimiser of $f \iff \vec0 \in \partial f (\xx)$
+	
+</b-blue>
+
+<s-side>
+
+***Fact.*** Suppose $f$ is convex.
+- If $f$ is differentiable, then $\partial f (\x) = \\{\nabla f(\x)\\}$
+- If $\x$ is in the interior of the domain (not on the extremes of one of the bounds) $\x \in \rm{int}(\dom(f))$ then $\partial f (\x) = \varnothing$.
+
+</s-side>
+
+<b-blue>
+
+***Thm.*** (Calculus of Subdifferentials)
+- **(1)** If $f$ is convex, for an $\alpha \gt 0$ $$\partial (\alpha f)(\x) = \alpha \partial f(\x)$$ 
+- **(2)** If $f_1, f_2$ convex, then $$\partial (f_1 + f_2)(\x) \supseteq \partial f_1(\x) + \partial f_2(\x)$$ Where the + is defined as a cartesian product element-wise sum: $X + Y = \\{x + y : x \in X, y \in Y \\}$
+- **(3)** Given a function of form $h(\x) = f(A\x + \vec b)$ (convex compose affine), then
+$$ \partial h(\x) = A\t \partial(A\x + \b)$$ **only if** $A\x + \b \in \dom(f)$
+- **(4)** If $f_i$ convex $\forall i \in I$ (an index set, so some collection of convex functions), and 
+	- Let $f(\x) := \max_{i \in I} f_i (\x)$
+	- Let $I_{\max}(\x) = \\{i \in I : f(\x) = f_i (\x)\\}$ 
+	- $f_i$ are all differentiable at $\x$
+	- then the subdifferential is the convex combination $$\partial f(\x) = \rm{conv}\\{\nabla f(\x) : i \in I_{\max} (\x)\\}$$
+
+</b-blue>
+
+***Convex Constraint Optimisation.***
+
+<b-blue>
+
+***Def.*** The **indicator function** of a convex set $\Omega$ is 
+$$ I_\Omega (\x) = \begin{cases} 0 & \x \in \Omega \\\\ +\infty & x \not\in \Omega \end{cases}
+$$ 
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** If $\Omega \in \R^n$ is closed and convex, then 
+$$ \forall \x \in \Omega,\\; N_\Omega (\x) = \partial I_\Omega (\x)$$ 
+
+</b-blue>
+
+</div>
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+
+***Proof.*** Suppose $\x \in \Omega$. Then let 
+\begin{align}
+	\d &:\in \partial I_\Omega(\x) \\\\
+	\iff \forall \z \in \Omega: I_\Omega(\z) &\geq I_\Omega(\x) + \d\t (\z - \x) \\\\
+	\iff \d\t (\z - \x) &\leq 0 \\\\
+	\iff \d &\in N_\Omega (\x) &\Box
+\end{align}
+
+</div>
+<div class="md-conv">
+
+### Proximal methods for regularised optimisation 
+
+First recall the definition of euclidean projection. Then, get ready for more blue boxes <span class="grey">I swear at least half this page is blue boxes</span>
+
+<b-blue>
+
+***Def.*** The **Proximal operator:** for a convex function $f$ define 
+$$
+\prox_f(\x) = \argmin_{\z \in \dom(f)} \left( f(\z) + \frac 12 \nm{\z - \x}^2 \right)
+$$
+
+</b-blue>
+
+> If we define $\x \not \in \dom(f) \implies f(\x) = \infty$, then we can basically ignore the constraints and say $\z \in \R^n$
+
+$\prox_f$ is well defined. The argmin could be a set, but if $f$ is convex, then adding a quadratic on makes it strongly convex, and so we would get a global minimiser. 
+
+So $\prox_f : \R^n \lra \dom(f)$.
+
+Also note that $P_\Omega (\x) \equiv \prox_{I_\Omega}(\x)$. So we can generalise the minimum principle:
+
+<b-blue>
+
+***Thm.*** (The Prox Principle) $\prox_f(\x)$ is the unique point such that 
+$$ \x - \prox_f (\x) \in \partial f(\prox_f(\x)) $$ 
+
+</b-blue>
+
+</div>
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+
+***Proof.*** It suffices to prove for $\zz = \prox_f(\x) \iff \x - \zz \in \partial f(\zz)$.
+- $\zz = \prox_f(\x)$ is a solution of the optimisation problem
+- $\iff \zz$ is the minimiser of $g(\z) = f(\z) + \frac12 \nm{\z - \x}^2$ (condition for non smooth strong-convex funcs)
+- $\iff 0 \in \partial g(\zz)$ 
+- Note $\partial g(\z) = \partial f(\z) + \z - \x$ and so 
+- $\iff 0 \in \partial f(\zz) + (\zz - \x)$
+- $\iff \x - \zz \in \nabla f(\zz) \\; \Box$
+
+</div>
+
+<div class="md-conv">
+
+<s-side>
+
+***Corrolary.*** $\xx$ is a minimiser of $f$ if and only of $\prox_f(\xx) = \xx$. We say "$\xx$ is a fixed point of $\prox_f$"
+
+</s-side>
+
+<b-blue>
+
+***Thm.*** (Non-expansivity) 
+$$
+\lVert \prox_f (\x) - \prox_f (\y) \rVert \leq \nm{\x - \y} 
+$$
+
+</b-blue>
+
+> in general not sufficient. This is good only if the RHS is scaled by some $1 - \delta$ 
+
+Interpretation: repetitive iterations of prox is the same as GD for the "moral envelope" $M_f^\lambda$ of $f$, which is a "smoothing" of $f$ -- smooth function but with the same minimum as $f$. 
+
+> Prox is only easier to optimise for some functions.
+
+***Proximal gradient algorithm.***
+
+The problem: find $\min_\x \phi(\x)$ where 
+$$ \phi(\x) = f(\x) + \psi(\x)$$
+Where $\psi$ is convex regularisation, that is not necessarily smooth.
+
+***Algorithm*** $\proxG$: Iterate 
+$$
+\x_{k+1} = \prox_{\alpha_k \psi} (\x_k - \alpha_k \nabla f(\x_k))
+$$
+
+Special cases:
+
+$f$ | $\psi$ | update | name 
+-|-|-|- 
+- | 0 | $\x_{k+1} = \x_k + \alpha_k \nabla f(\x_k)$ | GD 
+- | $I_\Omega$ | $\x_{k+1} = P_\Omega (\x_k - \alpha_k \nabla f(\x))$ | PGD 
+0 | - | $\x_{k+1} = \prox_{\alpha_k \psi} (\x_k)$ | Iterative prox
+
+In general:
+- it has similar convergence to GD 
+- but slower in practice 
+- can be powerful
+- ProxG is flexible, and generally performs well on large scales 
+- But only if prox computations are easy.
+
+### Computing Normal Cones 
+
+Often constraints are arithmetic. The constraint set is the **intersection** of all single sets. 
+
+If constraint set $C = \bigcap_{i=1}^n C_i$, where all $C_i$s are convex (making the whole thing convex), then 
+$$ N_C (\x) \supseteq N_{C_1}(\x) + \cdots + N_{C_n} (\x)$$ 
+
+Where addition over sets is as before. Note that this is a **superset**, the equality holds only under specific conditions. Some examples are shown:
+
+![Normal cone intersections](nc-intersection.png)
+
+### Duality 
+
+<img src="./line-circle.png" alt="" style="float: right; max-width: 300px;">
+
+Let **problem P** ("primal") be 
+$$\min_\x f(\x)$$ 
+Such that $\x \in C$ and $A\x = \vec b$
+
+Assuming $f: \R^n \lra \R$ is smooth, and $A \in \R^{m \times n}$ is full row rank ($m \leq n$).
+
+Let **Problem S** ("saddle") be 
+$$ \min_{x \in C} \max_{\lambda \in \R^m} f(\x) - \lambda\t (A\x - \vec b) $$ 
+
+> Call $f(\x) - \lambda\t (A\x - \vec b) = \cal{L}(\x, \lambda)$ the "lagrangian"
+
+This is a simpler optimisation problem, with a penalty for being away from the line rather than enforcing the line directly. 
+
+<s-side>
+
+***Fact.*** $P \equiv S$ 
+
+</s-side>
+
+</div>
+<button class="collapsible">Proof... </button>
+<div class="ccontent md-conv">
+
+***Proof.*** 
+
+If $A\x \neq \vec{b}$, then $\cal{L}(\x, \lambda)$ can be made arbitrarily large by making $\lambda$ arbitrarily large (since the term modified is nonzero) -- bring it to $+\infty$. 
+
+If $A\x = \vec b$ then $\cal{L}(\x, \lambda)$ will have $A\x - \vec{b}$ as a zero term and so this will be equivalent to just $f(\x).
+
+Which does the same thing as the original problem.
+
+</div>
+<div class="md-conv">
+
+Let **Problem D** ("dual") be $$\max_{\lambda \in R^m} \min_{\x \in C} \cal{L} (\x, \lambda)$$ 
+
+> Call $\min_{\x \in C} \cal{L} (\x, \lambda) = d(\lambda)$ and fix $\x$.
+
+</div>
+
+</div>
 	
 
 	<footer>

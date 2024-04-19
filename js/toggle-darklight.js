@@ -10,8 +10,8 @@ var light = {
     "--blue": "#1f7282",
     "--green": "#3a6342",
     "--overlay": "#00000030",
-    "--tai-home": "url(\"images/taichuan_smaller_size.jpg\")",
-    "--tai-smol": "url(\"images/taichuan_smaller_size_squish.jpg\")",
+    "--tai-home": "url(\"images/taichuan_smaller_size.webp\")",
+    "--tai-smol": "url(\"images/taichuan_smaller_size_squish.webp\")",
     "--filter": "brightness(1) contrast(1)",
     "--img-bg": "#0000"
 }
@@ -26,8 +26,8 @@ var dark = {
     "--blue": "#52b5c4",
     "--green": "#3a6342",
     "--overlay": "#00000030",
-    "--tai-home": "url(\"images/taichuan_dark.jpg\")",
-    "--tai-smol": "url(\"images/taichuan_dark_squish.jpg\")",
+    "--tai-home": "url(\"images/taichuan_dark.webp\")",
+    "--tai-smol": "url(\"images/taichuan_dark_squish.webp\")",
     "--filter": "brightness(.8) contrast(1.2)",
     "--img-bg": "#fff"
 }
