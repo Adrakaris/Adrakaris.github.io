@@ -113,6 +113,10 @@ div.cornell > div:nth-child(odd) *{
     background-size: cover;
     align-content: center;
     z-index: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .home {
