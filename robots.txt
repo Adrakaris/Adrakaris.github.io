@@ -1,1 +1,3 @@
-Disallow: /fan/*
+User-agent:*
+Disallow: /fan/
+Disallow: /dnd/
