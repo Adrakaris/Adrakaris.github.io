@@ -94,6 +94,7 @@ $$
 \renewcommand{\vec}{\mathbf}
 \newcommand{\lra}{\longrightarrow}
 \newcommand{\sopt}{\sigma^\*}
+\newcommand{\xopt}{x^\*}
 \newcommand{\mixstrat}[1]{ \Delta^{|S_{ #1}|} }
 \newcommand{\mixzero}[1]{ \Delta^{m_#1} }
 \newcommand{\t}{^\top}
@@ -608,7 +609,304 @@ For the last half I didn't really understand the notes and what I had written di
 </div>
 
 </div>
-	
+
+
+<div class="colourband">
+	<h2>Finding Nash Equilibria</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Approximate Equilibria
+
+The proof for Nash's theorem is not constructive, finding it is another matter. 
+
+For general games though, this is not trivial, as there are games where all equilibria have irrational probabilities. We can however **approximate:**
+
+<b-blue>
+
+***Def.*** A strategy profile $\sopt$ is an **$\varepsilon$-Nash Equilibrium** if 
+$$
+\forall i \in [n];\\; \forall \sigma_i \in \mixstrat{i};\\; p_i(\sopt_{-i}, \sopt_i) \geq p_i(\sopt_{-i}, \sigma_i) - \varepsilon
+$$
+i.e. we can only gain a marginal improvement by switching strategies.
+
+</b-blue>
+<b-blue>
+
+***Def.*** A point $\xopt$ is a **$\varepsilon$-approximate fixed point** of a function $f: S \lra S$ if 
+$$ |f(\xopt) - \xopt | \leq \varepsilon $$
+
+</b-blue>
+<p></p>
+<s-side>
+
+***Fact.*** Every $\alpha$-approximate fixed point of the nash theorem function corresponds to an $\varepsilon$-NE where 
+$$ \alpha = \frac{\varepsilon}{d^2 p_{\max}^2} $$ 
+Where $d = \sum_{j} |S_j|$ is the size/dimension of the game, and $p_\max$ is the ratio of largest to smallest payoff.
+
+</s-side>
+
+The proof is not stated. 
+
+<s-side>
+
+***Fact.*** The function constructed in nash's theorem is $c \cdot n \cdot d^2 \cdot p_\max$-Lipschitz, where $c$ is some large enough constant. Formally 
+$$
+\forall \x, \y: \lVert f(\x) - f(\y) \rVert_\infty \leq (cnd^2 p_\max) \lVert \x - \y \rVert_\infty
+$$
+
+</s-side>
+
+More formally:
+
+<b-blue>
+
+***Thm.*** (Scarf's theorem)
+- Let $S$ be a $d$-dimensional simplex which is subdivided into smaller simplices of diameter at most $\delta$. 
+- Let $f:S \lra S$ be a continuous function. 
+- Colour all the vertices such that if point $\vec{v}$ receives colour $i$, $f(\vec{v})_i \leq v_i$.
+
+If we choose $\delta$ such that 
+- $\delta \leq \frac{\alpha}{2d}$ and 
+- $\forall x, y \in S : \lVert x - y \rVert_\infty \leq \delta$ (this implies $\lVert f(x) - f(y) \rVert_\infty \leq \frac{\alpha}{2d}$)
+Then any point in a fully coloured (all-chromatic) subsimplex is an **$\alpha$-approx fixed point$**.
+
+</b-blue>
+<p></p>
+</div>
+
+<button class="collapsible">Proof...</button>
+<div class="ccontent md-conv">
+
+***Proof.*** Consider any point $\x = (x_1 .. x_{d+1})$ in a fully coloured $d$-dim simplex. To prove that $\x$ is an approximate FP, must show 
+$$ \forall j \in [d+1] : -\alpha \leq f(\x)_j - x_j \leq \frac\alpha d \pod{\leq \alpha} $$ 
+
+For $f(\x)_j - x_j \leq \frac \alpha d$: 
+- Let $\y$ be a corner of the sub-simplex which $\x$ is in, which is coloured as $j$. $f(\y)_j \leq y_j$.
+- The following hold:
+	- $\lVert \x - \y \rVert_\infty \leq \delta$ due to the size of the subsimplex.
+	- Which means $y_j - x_j \leq \delta$ 
+	- Also means $\lVert f(\x) - f(\y) \rVert_\infty \leq \frac{\alpha}{2d}$ 
+
+By doing some magic:
+$$ f(\x)_j - x_j = f(\x)_j + f(\y)_j - f(\y)_j -x_j $$ 
+- And $f(\x)_j - f(\y)_j \leq \frac{ \alpha }{ 2d }$ 
+- And $f(\y)_j \leq y_j$ so $f(\y)_j - x_j \leq \delta$ 
+$$
+\implies f(\x)_j - x_j \leq \frac{ \alpha }{ 2d } + \delta \leq \frac{ \alpha }{ 2d } + \frac{ \alpha }{ 2d } \leq \frac\alpha d.
+$$
+
+For $- \alpha \leq f(\x)_j -x_j$:
+- Again 
+\begin{align}
+	f(\x)\_j - x\_j &= \left( 1 - \sum\_{i \neq j} f(\x)\_i \right) - \left( 1 - \sum\_{i \neq j} x\_i \right) \\\\
+	&= \sum\_{i \neq j} x\_i - \sum\_{i \neq j} f(\x)\_i
+\end{align}
+- We know that $x\_i - f(\x)\_i \geq -\frac{\alpha}d$ from before, hence 
+\begin{align}
+	f(\x)\_j - x\_j &\geq \sum\_{i \neq j}(..) - \frac{ \alpha }{ d } \\\\
+	&\geq d(-\frac{ \alpha }{ d }) = -\alpha \\\\
+	\therefore -\alpha &\leq f(\x)\_j - x\_j.
+\end{align}
+
+
+
+</div>
+
+<div class="md-conv">
+
+<s-side>
+
+***Corollary.*** There exists a constant $c' \lt 1 : $ if the diameter $\delta \leq \frac{ c' \cdot \alpha }{ n \cdot d^3 \cdot p_\max  }$ then every point in fully chromatic subsimplex is a $\varepsilon$-NE.
+
+</s-side>
+
+### Complexity of a NE Finding Algorithm 
+
+Nash is not NP-hard, but is **PPAD-Complete**.
+
+PPAD problems reduce down to the problem <span class="sc">EndOfTheLine</span>
+
+<s-side>
+
+***Algorithm.*** <span class="sc">EndOfTheLine</span>:
+
+<span class="sc">In</span>: A digraph $G$ where each vertex has indegree and outdegree $\leq 1$, and a node $v$.
+
+<span class="sc">Out</span>: `true` if $v$ has indegree equal to outdegree, else `false`.
+
+</s-side>
+
+On its own, it's quite trivial. But the problem is encoded implicitly. 
+
+<s-side>
+
+<span class="sc">In</span>: 
+- Two logic circuits $P, S$ with $k$ input and output bits. Size of $P, S$ is polynomial in $k$. 
+- The graph $G$ has $2^k$ nodes, each labelled by a $k$-long bitstring. 
+- Circuit $P$ returns **predecessors** of input node, and $S$ returs **successors**. I.e. an edge $(a,b) \in G \iff S(a) = b \land P(b) = a$.
+
+</s-side>
+
+This is a search problem where the graph is exponential in input size. 
+
+<b-blue>
+
+***Search Problem.*** A problem is a search problem if each instance each instance $x$ has search space $S_x$ of poly-length bit strings, with valid solutions $Q_x \subseteq S_x \land Q_x \neq \varnothing$. 
+
+It is efficient to check *if* a given $y \in Q_x$.
+
+</b-blue>
+<b-blue>
+
+***Reduction.*** A reduction from problem $\Pi_1$ to $\Pi_2$ is a pair of poly-time functions $f, g$ where 
+\begin{align}
+	\forall x &\in \Pi_1 & f(x) &\in \Pi_2 \\\\ 
+	\forall y &\in \Pi_2 & g(y) &\in \Pi_1
+\end{align}
+Denote $\Pi_1 \leq_p \Pi_2$ (see CS260)
+</b-blue>
+<b-blue>
+
+***PPAD-Complexity.*** Any search problem which reduces to <span class="sc">EndOfTheLine</span> is PPAD. Any problems which <span class="sc">EndOfTheLine</span> also reduces to is **PPAD-Complete**. 
+
+</b-blue>
+<p></p>
+
+
+<b-blue>
+
+***Thm.*** 
+
+**(1)** The problem <span class="sc">Nash</span> of finding a $\varepsilon$-NE is a search problem.
+
+**(2)** <span class="sc">Nash</span> $\leq_p$ <span class="sc">Brouwer</span> which is finding a $\alpha$-approx fixed point 
+- Where the domain of the continuous function in <span class="sc">Brouwer</span> is *discretised*, and encoded as a logical circuit. Points in-between are linearly interpolated.
+
+**(3)** <span class="sc">Brouwer</span> $\leq_p$ <span class="sc">Sperner</span> which is finding a fully coloured subsimplex 
+- Where the input is a circuit that takes a vertex and returns its colour.
+
+**(4)** <span class="sc">Sperner</span> $\leq_p$ <span class="sc">EndOfTheLine</span>
+
+**(5)** <text-red><span class="sc">EndOfTheLine</span> $\leq_p$ <span class="sc">Nash</span></text-red>
+
+</b-blue>
+
+EOTL problems are not inherently hard, but their representation is compact and hard to reason with. 
+
+There are going to be better algorithms for specific cases.
+
+### NE Finding for 2 Player Games
+
+Use the game 
+
+A\\B | 4 | 5
+-|-|- 
+**1** | 3 \\ 1 | 3 \\ 0 
+**2** | 2 \\ 0 | 5 \\ 2 
+**3** | 0 \\ 4 | 6 \\ 3
+
+Inspect the mixed strategies of B by plotting A's best response. The dash shows $\max_{i} (A\y)_i$. We can do the same thing for B vs A.
+
+<figure style="text-align: center;">
+<img src="mixed-strat-diagram.png" alt="" style="max-width: 640px;">
+</figure>
+
+First plot B's simplex, with $y_4$ at the right and $y_5 = 1 - y_4$ at the left. $y_4$ is the probability that B will play strategy 4 over strategy 5.
+
+Plot all strategies of A and their payoff linearly interpolated over B's actions. The max of all these functions is the best response for A. The intersections mean either strategy works.
+
+Do a similar thing for A's simplex. The simplex is now 2D, the graphs 3D, but it works about the same. 
+
+We care mostly only about the **regions** of best response:
+
+<figure style="text-align: center;">
+<img src="best-response-region.png" alt="" style="max-width: 640px;">
+</figure>
+
+We can label (with circles) the sides where a specific strategy will **not** be played. 
+
+A strategy profile is a **pair** of points on intersections. We know each strategy must be played with probability 0, or be a best response, so we look for a **pair of points that are adjacent to all possible strategies**.
+
+<figure style="text-align: center;">
+<img src="best-response-pair.png" alt="" style="max-width: 640px;">
+</figure>
+
+That is our nash equilibrium. 
+
+### Lemke-Howsen Algorithm 
+
+LH works on **best response polytopes**. These are gotten from the *best response polyhedra*, which are all points above the line. 
+
+<figure style="text-align: center;">
+<img src="br-polytope.png" alt="" style="max-width: 640px;">
+</figure>
+
+Algebraically A's best responses to B could be defined as 
+
+\begin{align}
+H_2 = \\{ (y_4, y_5, v) :\\; & 3y_4 + 3y_5 \leq v \\\\
+& 2y_4 + 5y_5 \leq v  \\\\
+& 0y_4 + 6y_5 \leq v  \\\\ 
+& y_4, y_5 \geq 0  \\\\
+& y_4 + y_5 = 1 \\}	
+\end{align}
+
+The best response polytope is this projected onto a plane where $v = 1$, i.e. divide, remove $v$, and remove the sum restriction:
+
+\begin{align}
+Q = \\{ (y_4, y_5) :\\; & 3y_4 + 3y_5 \leq 1 \\\\
+& 2y_4 + 5y_5 \leq 1  \\\\
+& 0y_4 + 6y_5 \leq 1  \\\\ 
+& y_4, y_5 \geq 0 \\}	
+\end{align}
+
+This has a similar structure, with the only difference being a point where (4) and (5) touch -- this is the projected *"infinity point"*, a phantom point where all strategies are played with probability zero. Do this with A's polytope and you get a funky looking shape that is usually flattened:
+
+<figure style="text-align: center;">
+	<img src="br-polytope-3d.png" alt="" style="max-width: 640px;">
+</figure>
+
+The red shows the phantom dot. Mathematically, these two can be succinctly put as: 
+
+\begin{align}
+	A \rm{ for } B &= \\{\y : A\y \leq \vec1 \land \y \geq \vec0 \\} \\\\
+	B \rm{ for } A &= \\{\x : \x\t B \leq \vec1 \land \x \geq \vec0 \\}
+\end{align}
+
+<b-blue>
+
+***Algorithm.*** (Lemke-Howsen) We want to find a pair of points that cover all labels.
+
+1. Start with a fully labelled pair of points. This is the artificial "phantom" point created by not playing the game.
+2. Pick any label to drop. 
+3. Move any one of the two pairs to a new intersection without the dropped label. This usually creates duplicate labels.
+4. Move to any intersection without the duplicate label to try find a fully labelled set again. Do not backtrack to the start. 
+5. Repeat until a fully labelled pair of points is found.
+
+</b-blue>
+
+LH works on a finite number of vertices, but is exponential in strategies. 
+
+For a fixed label, the starting edge is unique, and there is a unique non-backtracking continuation. 
+
+LH can be done without constructing the polytope explicitly via simplex. This requires adding slack variables to each equation, to make them equalities:
+
+\begin{align}
+y_1 + 3y_4 + 3y_5 &= 1 \\\\
+y_2 + 2y_4 + 5y_5 &= 1  \\\\
+y_3 + 6y_5 &= 1  \\\\ 
+y_1, y_2, y_3, y_4, y_5 &\geq 0
+\end{align}
+
+We start with a solution where $y_4, y_5 = 0$. *Dictionary form* rearrangement means having all zero variables on the RHS with the value.
+
+Dropping a label refers to increasing the value of that corresponding variable. We do this and find the first nonzero variable that would become zero -- that becomes the *pivot* and we rearrange based on that into a new dictionary form. Repeat until we have a different fully labelled set of points on the LHS. (This should be done for both polytopes simultaneously.)
+
+</div>
+</div>
 
 	<footer>
 		<div class="cbox">

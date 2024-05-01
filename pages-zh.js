@@ -160,7 +160,7 @@ var pages = [
         "date": new _date(2021, 7, 10),
         "link": "blog-misc/guqin/index-zh.html",
         "title": "古琴减字谱",
-        "desc": "古琴有一种非常特殊的琴谱——减字谱。正常是手写的，但是我为之做了个字体！</p>",
+        "desc": "古琴有一种非常特殊的琴谱——减字谱。电脑上难以输入，故我作一字体现之。</p>",
         "picture": "",
         "tags": ["misc"]
     },
@@ -184,7 +184,7 @@ var pages = [
         "date": new _date(2021, 5, 28),
         "link": "blog-misc/podcast/index-zh.html",
         "title": "我录了一个Podcast!",
-        "desc": "我上了我朋友Leo的podcast, YASP. 你可以在这里听：<a href=\"https://yasp.show/episodes\" class=\"text\">here</a>, 或（火墙禁止）<a href=\"https://podcasts.google.com/feed/aHR0cHM6Ly95YXNwLnNob3cvYXRvbS54bWw\" class=\"text\">Google Podcasts</a>、<a href=\"https://open.spotify.com/show/3ZkM1l13q6VPFngcOk5M8A?si=gfiDqUvfQ6GEVA3cJTk86Q&nd=1\" class=\"text\">Spotify</a>.</p>",
+        "desc": "我曾参加我朋友Leo的播客，叫YASP，可以在这里听：<a href=\"https://yasp.show/episodes\" class=\"text\">here</a>, 或<a href=\"https://podcasts.google.com/feed/aHR0cHM6Ly95YXNwLnNob3cvYXRvbS54bWw\" class=\"text\">Google Podcasts</a>、<a href=\"https://open.spotify.com/show/3ZkM1l13q6VPFngcOk5M8A?si=gfiDqUvfQ6GEVA3cJTk86Q&nd=1\" class=\"text\">Spotify</a>.</p>",
         "picture": "blog-misc/podcast/yasp.svg",
         "tags": ["misc"]
     },
@@ -216,7 +216,7 @@ var pages = [
         "date": new _date(2021, 4, 7),
         "link": "blog-misc/wyvern/index-zh.html",
         "title": "螭龙 - 指导和图纸。",
-        "desc": "我设计的螭（chí）龙的指导（视频），2021年3月。视频在YouTube上，火墙禁止。</p>",
+        "desc": "我设计的螭（chí）龙的指导（视频），2021年3月。</p>",
         "picture": "blog-misc/wyvern/wyvern.jpg",
         "tags": ["origami"]
     },
