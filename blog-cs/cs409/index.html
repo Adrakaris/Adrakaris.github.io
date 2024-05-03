@@ -72,6 +72,11 @@ Some of this is covered in A level further maths.
 
 1. [Games](#game)
 2. [Nash's Theorem](#nash)
+2. [Correlated Equilbria](#corr)
+3. [Auctions](#mech)
+4. [Combinatorial Auctions](#comb)
+4. [Selfish Load Balancing](#load)
+4. [Selfish Routing](#routing)
 
 ### The Tragedy of the Commons
 
@@ -89,6 +94,7 @@ In general the only stable state in where the channel is not broken is $x_i = \f
 
 $$
 \newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
 \newcommand{\bb}{\mathbb}
 \newcommand{\rm}{\textrm}
 \renewcommand{\vec}{\mathbf}
@@ -100,8 +106,15 @@ $$
 \newcommand{\t}{^\top}
 \newcommand{\x}{\vec{x}}
 \newcommand{\y}{\vec{y}}
+\newcommand{\v}{\vec{v}}
+\newcommand{\sr}{^\*}
 \DeclareMathOperator{\argmin}{argmin}
 \DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\cost}{cost}
+\DeclareMathOperator{\nash}{Nash}
+\DeclareMathOperator{\opt}{opt}
+\DeclareMathOperator{\load}{load}
+\DeclareMathOperator{\poa}{PoA}
 $$
 
 </div>
@@ -401,7 +414,7 @@ Nash equilibria always exist for general games. This section is important.
 
 ### Sperner's Lemma
 
-<img src="./sperner-triangle.png" alt="" style="float: right; max-width: 380px;">
+<img src="./sperner-triangle.png" alt="" style="float: right; max-width: 380px; overflow: hidden;">
 
 Consider a triangular graph subdivided into smaller triangles. Vertices are coloured and a **valid colouring** follows these rules:
 
@@ -409,13 +422,18 @@ Consider a triangular graph subdivided into smaller triangles. Vertices are colo
 2. No points on the opposite edge to a corner can have that colour.
 3. Internal points can be any colour.
 
-<b-blue>
+
+
+</div>
+<div class="md-conv">
+
+<s-side>
 
 ***Lemma.*** Each valid colouring of the graph will have at least one small triangle with three corners coloured differently (tri-chromatic).
 
 There are an odd number of these.
 
-</b-blue>
+</s-side>
 
 -----
 
@@ -907,6 +925,766 @@ Dropping a label refers to increasing the value of that corresponding variable. 
 
 </div>
 </div>
+
+<div class="colourband">
+	<h2 id="corr">Correlated Equilibria</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Introduction
+
+A correlated equilibria makes use of a **mediator**, who advises each player (secretly) on what to do based on a publicly **known probability distribution**.
+
+It is an equilibria where each player has **no benefit in disobeying the mediator** -- that is, the mediator's recommendations will maximise their expected payoff.
+
+<b-blue>
+
+***Correlated Equilibrium.*** A joint mixed strategy profile $\sigma \in \Delta^{|S_1 \times \cdot \times S_n|}$ is a correlated equilibrium if the pure strategy $s_i$ for each $i$ is a conditional best response:
+
+$$
+\forall i \in [n]\cdot  \forall s_i, s_i' \in S_i \cdot \sum_{x \in S_{-i}} p_i(x, s_i) \sigma(x, s_i) \geq \sum_{x \in S_{-i}} p_i(x, s_i')\sigma(x, s_i )
+$$
+
+$\sigma(x, s_i)$ is the probability that the mediator picks an outcome where player $i$ is advised $x_i$ and the others $x$. 
+
+</b-blue>
+
+With that symbol salad out of the way, it's basically (**assuming all other players play according to mediated advice**):
+
+> For each strategy, the expectation if you follow the mediator probability $\geq$ the expectation if you disobey the mediator strategy. 
+
+Take the chicken game:
+
+A\\B | S | E
+-|-|-
+**S** | 0 \\ 0 | -1 \\ 1
+**E** | 1 \\ -1 | -10 \\ -10
+
+Suppose the mediator picks with the following probability:
+
+A\\B | S | E
+-|-|-
+**S** | $z_{11}$ | $z_{12}$
+**E** | $z_{21}$ | $z_{22}$
+
+Then the following must be true: 
+
+\begin{align}
+	\rm{Player A:} && 0z_{11} - 1z_{12} &\geq 1z_{11} - 10z_{12} \\\\
+	&& 1z_{21} -10z_{22} &\geq 0z_{21} - 1z_{22}\\\\
+	\rm{Player B:} && 0z_{11} - 1z_{21} &\geq 1z_{11} - 10z_{21} \\\\ 
+	&& 1z_{12} - 10z_{22} &\geq 0z_{21} - 1 z_{22} \\\\
+	\rm{Also:} && z_{11} + z_{12} +z_{21} + z_{22} &= 1\\\\
+	&& z_{11} , z_{12} ,z_{21} , z_{22} &\geq 0
+\end{align}
+
+This can be used to verify a given distribution, or find a distribution in poly time, since it's a system of linear inequalities.
+
+<s-side>
+
+***Corrolary.*** A correlated equilibrium must exist. This is obvious since a nash equilibrium *is* a correlated equilibrium.
+
+</s-side>
+
+There can be multiple correlated equilibria and we can find ones with specific properties, such as **maximising "social welfare"** -- the sum of all player's expected payoffs.
+
+> Note: Utilitarianism is questionable.
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="mech">Auctions</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Mechanism Design
+
+> Wishy washy economics 
+
+The design of games, or "economic mechanisms" to maximise some sort of "social choice" -- an aggregation of preferences of rational players. For example:
+
+- *Elections*, where each voter has a preference, and the outcome is a social choice 
+- *Markets*, interactions between entities through protocols. Each has a purchasing preference and the social choice is the overall allocation of goods.
+- *Auctions*, an extreme sense of markets, and is the main focus.
+
+### Single Item Auction 
+
+- A *single item* is auctioned among $n$ players. 
+- Each player $i$ has a **secret** value $v_i$ that they are willing to pay. Each player bids **once** only.
+- If $i$ wins at price $p$, their payoff is $v_i - p$ (and 0 otherwise)
+- **Aim:** allocate the item to player who values it the most: $i = \argmax_{j \in [n]} (v_j)$
+
+***Auction with no payment.*** Give the item to the player who values it the highest.
+
+But this causes players to exaggerate their value up to infinity. 
+
+***First price auction.*** Each player pays price $p$. Give it to the person who bids the highest.
+
+Also susceptible to manipulation -- people will adjust their valuation into the perceived valuation of others, and may bid a lower $v_i' \lt v_i$.
+
+***2<sup>nd</sup> price / Vickrey auction.*** Bidders pay the *second highest* bid. 
+
+This is a mechanism that encourages telling the true $v_i$. 
+
+<b-blue>
+
+***Thm.*** In a vickrey auction $\forall v_1' .. v_n'$, if $p_i$ is $i$'s payoff if they bid their true valuation $v_i$, and $p_i'$ the payoff for $v_i'$, $p_i \geq p_i'$. 
+
+</b-blue>
+
+<s-side>
+
+***Proof.*** this is done by case analysis.
+
+**(1)** Player $i$ wins by announcing true valuation $v_i$. Let the second highest bid be $p\sr$. The payoff $p_i = v_i - p\sr$. 
+
+**(2)** Suppose $i$ announces a different $v_i'$ which wins ($v_i' \gt p\sr$) The payoff $p_i = v_i - p\sr$ anyway -- *no higher*. 
+
+**(3)** Suppose $i$ announces a $v_i' \lt p\sr$ and hence loses. His payoff is $0$ -- *worse*.
+
+**(4)** Player $i$ loses with true valuation $v_i$. His payoff is $0$. If $i$ gives a valuation $v_i'$ that wins: $v_i' \gt p\sr$, then his payoff is $p_i = v_i - p\sr \lt 0$ -- *worse* 
+
+Hence this is incentive compatible.
+
+</s-side>
+
+***Incentive Compatible Mechanisms.*** An incentive compatible mechanism is one that incentivises true valuations over false ones -- bidding true valuation is **weakly dominant** over false ones. 
+
+</div>
+
+<button class="collapsible">Formal mumbo jumbo...</button>
+<div class="ccontent md-conv">
+
+Let $v = (v_1 .. v_n)$ be an nd vector, and $v_{-i}$ be that but with $v_i$ removed.
+
+A mechanism needs to chose some outcome from set $A$, and a payment scheme.
+
+Player $i$'s preference is modelled by a valuation $v_i \in V_i : A \lra \R$. $V_i$ is a commonly known set of possible valuation functions.
+
+A mechanism is a social choice function $f:V_1 \times \cdots V_n \lra A$ and a vector of payment functions $(\pi_1, \dots, \pi_n)$ where $\pi_i : V_1 \times \cdots \times V_n \lra \R$. 
+
+A mechanism $(f, \pi_1 .. \pi_n)$ is **incentive compatible** if $\forall i$ every $v_1 \in V_1 \dots v_n \in V_n$ and every $v_i' \in V_i'$, if we denote $\alpha = f(v_{-i}, v_i)$ and $\alpha' = f(v_{-i}, v_i')$ then 
+$$
+v_i(\alpha) - p_i (v_{-i}, v_i) \geq v_i(\alpha') - p_i (v_{-i}, v_i')
+$$
+
+</div>
+
+<div class="md-conv">
+
+### Bayesian Auctions 
+
+Consider a first price auction with 2 players $i,j$. We now assume they pick their valuation $v_i \in [0,1]$ **uniformly randomly.**
+
+All bidders have the same strategy $b(\cdot)$. Each bidder bids with $b(v_i)$ which we assume increases with $v_i$ and $b(0) = 0$. What is $p(b(v_j) \lt b(v_i))$ -- the probability that j loses to i?
+
+The payoff for $i$:
+\begin{align}
+	p(v_i) &= v_i (v_i - b(v_i)) + (1-v_i) \cdot 0 \\\\ 
+	 &= v_i (v_i - b(v_i))
+\end{align}
+Since the probability of $i$ being higher is exactly $v_i$.
+
+For $b$ to be equilibrium, there should be no incentive to deviate. To analyse this, rather than changing $b$ $i$ can implement changes by changing their value supplied.
+
+- If $j$ is also using $b$, then $i$ should never bid higher than $b(1)$ since $b(1)$ will always win and be better. Thus any deviation will be between 0 and 1. 
+- Instead he can pretend his true value is a $v_i'$ and use that. This is a case of the **revelation principle**.
+- "deviations in bidding strategy are viewed as deviations in true value"
+
+Therefore $i$ does not want to deviate is written as 
+$$
+v_i(v_i - b(v_i)) \geq v(v_i - b(v))
+$$
+For alternate values $v$. 
+
+In fact, the strategy $b(v) = \frac v 2$ works for this. And can be verified. 
+
+The strategic equilibrium above is known as a **bayes-nash equilibrium**.
+
+With $n$ bidders, $v_i(1- \frac1n)$ is a BNE. Hence the expected max value is $\frac{n}{n+1}$ and the $k$th largest expected value is $\frac{ k }{ n+1 }$. The *expected revenue* (the price the winner pays) is 
+
+$$
+\left(1- \frac1n \right) \frac{ n  }{ n+1 }= \frac{ n-1 }{ n+1 }
+$$
+
+For a second price auction, this expected revenue is the same -- the $n-1$th smallest bid is $\frac{ n-1  }{ n+1 }$
+
+<s-side>
+
+***Lemma.*** Suppose $n$ numbers are drawn independently from a uniform $[0,1]$ dist and sorted. The expected value of the $k$th number is $\frac{ k }{ n+1 }$ 
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Thm.*** (Revenue Equivalence) Suppose $n$ bidders have valuation $v_1..v_n$ IID from a cumulative distribution function. 
+
+All auction methods that (i) award the object to the bidder with highest value in equilibrium, and (ii) give a bidder with valuation $s$ zero profits, generates the same expected revenue.
+
+</b-blue>
+
+</div>
+
+</div>
+
+<div class="colourband">
+	<h2 id="comb">Combinatorial Auctions</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Introduction 
+
+There are $n$ bidders and a set of $S$ items for auction.
+
+- Each bidder $j$ has a valuation func $v_j(S')$ for every $S' \subseteq S$ 
+- Each bidder $j$ declares a valuation function $v_j'$
+
+The mechanism receives bids and allocates items.
+- Suppose $j$ gets items $A_j \subseteq S$
+- $\forall i \neq j \cdot A_i \cup A_j = \varnothing$
+- Maximise social value of $\sum_{\forall i} v_i(A_i)$
+
+### VCG Mechanism
+
+Vickrey-Clarke-Groves is a generalised version of second price auction for multiple items. 
+- Allocate items to maximise $\sum_{\forall i} v_i'(A_i)$
+- Charge each $j$ the amount $\sum_{\forall i \neq j} v_i'(A_i') - \sum_{\forall i \neq j} v_i'(A_i)$. The valuation if the winner were not included minus the current valuation excluding the winner's won items.
+
+<s-side>
+
+***Example.*** Let $S = \\{A, B\\}$. 4 bidders, who bid:
+
+Bidder | $v_i'(A)$ | $v_i'(B)$ | $v_i'(A,B)$ 
+-|-|-|- 
+**1**|\-|\-|5
+**2**|2|\-|\-
+**3**|\-|1|\-
+**4**|\-|1|1
+
+(- means 0) Maximise valuation in allocation -- we allocate all items to bidder 1.
+
+Then bidder 1 pays:
+- $\sum_{\neq 1} v_i' (A_i) = 0$ is the valuation of what everyone else got (nothing)
+- $\sum_{\neq 1} v_i' (A_i') = 3$ is the valuation *if 1 had not bid*. 
+- So 1 pays $3-0=3$.
+
+</s-side>
+
+### Single-Minded Bidders
+
+Combinatorial auctions are inherently complex because a bid must be placed for every subset ($|2^S|$). We can simplify the situation to **Single-minded bidders** -- bidders who bid on one subset only (all others are zero).
+
+<s-side>
+
+***Example.*** Suppose $S = \\{a,b,c,d,e\\}$, and the bids are 
+
+Bidder | Bid Items | Bid Amount
+-|-|-
+**1** | $a,c,d$ | 7
+**2** | $b,e$ | 7
+**3** | $c$ | 3
+**4** | $a,b,c,e$ | 9
+**5** | $d$ | 4
+**6** | $a,b,c$ | 5
+**7** | $b,d$ | 5
+
+</s-side>
+
+The issue still is not that VCG is difficult (computationally), but finding an optimal social allocation is **NP-hard**.
+
+The <span class="sc">WeightedSetPacking</span> problem is finding an allocation of weighted subsets that (1) spans the superset, and (2) maximises their total weights.
+
+<b-blue>
+
+***Thm.*** <span class="sc">WeightedSetPacking</span> is NP-Hard. <span class="grey">Note that unweighted <span class="sc">SetPacking</span> is already NP-hard.</span>
+
+</b-blue>
+
+</div>
+<button class="collapsible">Proof...</button>
+<div class="ccontent md-conv">
+
+***Proof.*** It is easy to verify, with a verifier being the allocation. Hence WSP is in NP.
+
+Reduce from <span class="sc">IndependentSet</span>. 
+- Construct graph $G = (V,E)$ for IS problem. 
+- Each bidder is a vertex $v \in V$ 
+- Each edge is an item in $S$ 
+- Each edge incident to a vertex means the bidder has bid for an item.\* The set of edges incident to $v$ is their whole bid.
+- WLOG we set the weight of this set to 1, and the weight of all others to 0.
+- An allocation is just an independent set. $\Box$
+
+<span class="grey">*Ok, so this does mean an edge can connect to more than 2 nodes, but we'll say that it's possible as it doesn't break graphs, or independent set in this case.</span>
+
+</div>
+
+<div class="md-conv">
+
+So can try to approximate:
+
+<b-blue>
+
+***Approximate allocations.*** Allocations $A_1\sr .. A_n\sr$ is an $\alpha$-approximate allocation if for all possible allocations $A_1 .. A_n$:
+$$
+\sum_{i=1}^n v_i'(A_i) \leq \alpha \sum_{i=1}^n v_i'(A_i\sr)
+$$
+I.e. this approximate allocation is at most a factor of $\alpha$ worse than the optimal.
+
+</b-blue>
+
+But:
+
+<b-blue>
+
+***Thm.*** For all constants $\varepsilon \gt 0$, approximating <span class="sc">IndependentSet</span> within a factor $\alpha = |E|^{\frac{ 1 }{ 2 }- \varepsilon}$ is impossible as long as $NP \not\subseteq BPP \not\subseteq P$. 
+
+</b-blue>
+
+i.e. our best approximation has to be no better than $|S|^{\frac12 - \varepsilon}$. This is not very good, and for the general case problem actually makes the algorithm no longer incentive compatible.
+
+So make a new algorithm, based on:
+
+<s-side>
+
+***Lemma.*** An auction mechanism for single minded bidders where losers pay 0 is incentive compatible if and only if 
+- It is **monotone**
+	- For all bidders if bidder $i$ bids $(S_i, v_i)$ and wins, he also wins with $A, w \\; \forall A \subseteq S_i, w \geq v_i$.
+- And uses **critical pricing**
+	- If winner wins with $(S_i, v_i)$, he pays the minimum amount for winning -- paying $w$ that is the smallest number (infimum) where $(S_i, w)$ would still have won.
+
+</s-side>
+
+The mechanism goes as thus (greedy mechanism):
+- Sort all bids $(S_1, v_1) .. (S_n, v_n)$ in decreasing order of $\frac{ v_i }{ \sqrt{|S_i|} }$, and assume for now that $i \lt j$ means $i$ has bid higher than $j$.
+- Initialise set of winning bidders to $W \lra \varnothing$ 
+- For $i = 1..n$ if $S_i \cap (\bigcup_{j \in W} S_j) = \varnothing$, then $W := W \cup \\{i\\}$
+
+This is monotone. 
+
+This is also critical price, and the critical paid price is 
+$$
+\frac{ v_j }{ \sqrt{|S_j| / |S_i|}}
+$$
+- Where $j$ is the first index $\gt i$ that $S_i \cap S_j \neq \varnothing$ 
+- $\forall k \lt j$, $k = i \lor S_i \cap S_k = \varnothing$ 
+- Which will be 0 if no $j$ exists
+
+Because the order is sorted, if $i$ and $j$ are the first pair that have conflicting bids then $i$ essentially pays the minimum to win over $j$. 
+
+<b-blue>
+
+***Thm.*** The greedy auction mechanism is incentive compatible and approximates optimal social welfare to factor $\sqrt{|S|}$.
+
+</b-blue>
+
+<span class="grey">I won't do the proof because I barely understand it myself</span>
+
+</div>
+
+</div>
+
+<div class="colourband">
+	<h2 id="load">Selfish Load Balancing</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Load Balancing 
+
+Assigning a set of jobs to a set of machines s.t. none are overloaded, and jobs are done as quick as possible. 
+
+Selfish load balancing is where each player (someone who submits a job) picks their own allocation, 即: 
+
+- Given $n$ jobs $[n] = 1..n$, Given $m$ machines $[m] = 1..m$
+- Each job $i$ has **weight** $w_i$, each machine $j$ has **speed** $s_j$ 
+- Executing $i$ on $j$ takes $\frac{ w_i }{ s_j }$ time 
+- The **load** of a machine $j$ for some assignment $A : [n] \lra [m]$ is $$ \lambda_j = \sum_{i \in [n]:A(i) = j} \frac{ w_i }{ s_j }$$ 
+
+<b-blue>
+
+***Makespan.*** The maximum load $\max_{j \in [m]} \lambda_j$ is the makespan.
+
+</b-blue>
+
+- The **cost** to player $i$ is the load on its assigned machine $\lambda_{A(i)}$.
+- The makespan is the **social cost** of teh whole system (negative of social welfare). 
+
+It is easy to work out for all pure strategies. However, we can have all mixed strategies:
+- Let $p_i^j = p(A(i) = j)$ be the probability $i$ gets assigned to $j$. 
+- The mixed strat is all probabilities $P = \\{p_i^j\\}_{\forall i \in [n], j \in [m]}$ 
+- The makespan is hence the **expected makespan** $$ \cost(P) = \E[\max_{j \in [m]} \lambda_j] $$ 
+
+Let $x_i^j$ be a random variable that $x_i^j = 1 \impliedby A(i) = j$ and 0 otherwise. Hence 
+$$
+\E[\lambda_j] = \E\left[\sum_{i \in [n]} x_i^j \frac{ w_i }{ s_j }\right] = \sum_{i \in [n]} \E[x_i^j] \frac{ w_i }{ s_j } = \sum_{i \in [n]} p_i^j \cdot \frac{ w_i }{ s_j }
+$$
+
+That is the expected load of one machine. **However, the maximum expected load is not necessarily the maximum makespan: $\E[\max_{j \in [m]} \lambda_j] \neq \max_{j \in [m]} \E{[\lambda_j]}$. Rather, one needs to consider combinatorially all assignments and their makespans, and find the average of those (You must recall binomial numbers).
+
+Consider a load on machine $j$ without job $i = \sum_{k \neq i} p_k^j \frac{ w_k }{ s_j } $.
+The **cost** of assignment 
+\begin{align}
+	c_j^i &= \frac{ w_i }{ s_j } + \sum_{k \neq i} p_k^j \frac{ w_k }{ s_j } \\\\ 
+	&= (1-p_i^j) \frac{ w_i }{ s_j } + \sum_{\forall k} p_k^j \frac{ w_k }{ s_j } \\\\
+	&= (1-p_i^j) \frac{ w_i }{ s_j } + \E[\lambda_j]
+\end{align}
+
+
+<b-blue>
+
+***PNE.*** An assignment is a PNE iff the cost of assignment is minimised / it is no better to switch
+$$
+\forall i \in [n], k \in [m] \cdot c_i^{A(i)} \leq c_i^k
+$$
+
+</b-blue>
+<b-blue>
+
+***MNE.*** An assignment profile $P$ is a (M)NE if and only if 
+$$
+\forall i \in [n], j \in [m] \cdot p_i^j \geq 0 \implies \forall k \in [m] \cdot c_i^j \leq c_i^k
+$$
+
+</b-blue>
+<b-blue>
+
+***Thm.*** All selfish load balancing games have a NE.
+
+</b-blue>
+<p></p>
+
+</div>
+<button class="collapsible">Example...</button>
+<div class="ccontent md-conv">
+
+
+***Example.**** Suppose two identical machines of speed 1. 4 players, 2 with job weights 1 `[]` and two with weights 2 `[--]`.
+
+One nash equilibrium (and the optimal min makespan) is the below with makespan 3:
+```
+1 | [--][]
+2 | [--][]
+```
+
+Another nash equilibrium (which is higher than the makespan) is the below with makespan 4:
+```
+1 | [--][--]
+2 | [][]
+```
+
+A MNE has $\forall i \in [4], j \in [2] \cdot p_i^j = \frac12$.  
+$$
+\E[\lambda_j] = \sum_{i=1}^4 w_i p_i^j = 2(2\cdot \frac12) + 2(1 \cdot \frac12) = 3 
+$$
+The expected cost $c_i^j = \E[\lambda_j] + (1-p_i^j)w_i$ is 
+- $3 + \frac12 \cdot 1$ for $w_i = 1$ 
+- $3 + \frac12 \cdot 2$ for $w_i = 2$ 
+- identical on both machines 
+Hence also a NE. 
+
+Combinatorially, the expected makespan is:
+- Of all possible allocations, there is a $2^{-4}$ chance of each unique allocation. Therefore we find the sum of all possible makespans and times by this to get the average. 
+- For 2 machines we can look at what 1 machine receives in allocation and do some binomial theorem
+- Machine 1 gets 0 jobs $\implies$ makespan 6 over $\binom40 = 1$  allocation 
+- Machine 1 gets 1 job $\implies$ makespan is dictated by the other machine, and is $6 - w$ for each weight of job
+	- This is $\sum_{w \in \\{1,1,2,2\\}} 6-w$ or $6 \binom41 - \sum_{\forall w} w = 18$ *in total* over 4 allocations
+- Machine 1 gets 2 jobs $\implies$ the allocations are 
+	- 1 has 11 and 2 has 22 (= 4 &times; 3 allocations = 12); 1 has 12 and 2 has 12 ( = 3 &times; 3 allocations = 9)
+- Machine 1 gets 3 jobs has the same result as 1 job (= 18 over 4)
+- Machine 1 gets 4 jobs has the same result as 0 jobs (= 6)
+
+M1 gets | Individual makespans | Count | Total 
+-|-|-|-
+0 | 6 | 1 | 6
+1 | 5,5,4,4 | 4 | 18
+2 | 4,4,4,3,3,3 | 6 | 21
+3 | 5,5,4,4 | 4 | 18
+4 | 6 | 1 | 6
+
+$$
+\E[\max_j \lambda_j] = 2^{-4} \times (6 + 18 + 12 + 9 + 18 + 6) = 4.25.
+$$
+
+</div>
+<div class="md-conv">
+
+### Price of Anarchy 
+
+<b-blue>
+
+***Price of Anarchy.*** The PoA is a ratio between the cost of the worst-case NE and the optimal allocation. 
+
+The maximum possible PoA for $m$ machines is 
+$$
+\poa(m) = \max_{G \in G(m)} \max_{P in \nash(G)} \frac{ \cost(P) }{ \opt(G) }
+$$
+Where $G(m)$ is the set of all games with $m$ machines, $\nash(G)$ the makespans of all NEs in $G$, and $\opt(G)$ the optimal makespan of $G$.
+
+</b-blue>
+
+PoA can be calculated over all nash, or just pure nash.
+
+We can also restrict the games to only machines with identical speed (=1):
+
+<b-blue>
+
+***Thm.*** Consider games $G(m)$ with $n$ jobs $w_1..w_n$ on $m$ identical speed machines. Let $A : [n] \lra [m]$ be a **P**NE assignment.
+
+$$
+\cost(A) \leq \left(2 - \frac{ 2 }{ m+1 }\right) \opt(G)
+$$
+
+</b-blue>
+
+</div>
+<button class="collapsible">Proof...</button>
+<div class="ccontent md-conv">
+***Proof.*** There must be a machine $j\sr$ with load $\cost(A)$, all others have load $\leq \cost(A)$.
+
+Let $i\sr$ be the smallest job on $j\sr$. 
+- if $j\sr$ has only one job, then $w_{i\sr} = \cost(A)$ Since $i\sr$ must be assigned somewhere, naturally $\opt(G) \geq \cost(A)$.
+- Else there are 2+ jobs assigned to $j\sr$. 
+	- Take $i\sr$ as the smallest job, $\implies w_{i\sr} \leq \frac{ \cost(A)}{ 2}$ 
+	- Since A is a PNE, moving $i\sr$ anywhere else does not reduce cost, hence 
+	$$ \lambda_i \geq \lambda_{j\sr} - w_{i\sr} \geq \cost(A) - \frac{ \cost(A) }{ 2} = \frac{ \cost(A) }{ 2}. $$
+- $\opt(G)$ cannot be smaller than the *average* load, so $\opt(G) \geq \sum_{i \in [n]} \frac{ w_i }{ m }$ 
+	- Hence $\opt(G) \geq \frac{ 1 }{ m } \sum_{i \in [n]} w_i = \frac{ 1 }{ m } \sum_{j \in [m]} \lambda_j $
+\begin{align}
+	\frac{ 1 }{ m } \sum_{j \in [m]} &\geq \frac{1}{m}\left(\cost(A) + \frac12 \cost(A)(m-1)\right) \\\\
+	& = \frac{ (m+1)\cost(A) }{ 2m }\\\\
+	\therefore \opt(G) &\geq \frac{ m+1 }{ 2m }\cost(A) \\\\
+	\therefore \cost(A) &\leq \frac{ 2m }{ m+1 }\opt(G) = \left(2 - \frac{ 2 }{ m+1 }\right)\opt(G) & \Box  \\\\
+\end{align}
+
+</div>
+<div class="md-conv">
+
+The PoA for PNE on identical machines is less than (above) fraction of the optimal. 
+
+These PNE also definitely exist, even for machines of non-identical weights -- <span class="sc">LongestProcessFirst</span>
+
+<b-blue>
+
+***Thm.*** The LPT algorithm computes a PNE for LB games.
+
+The algorithm goes as follows 
+- Sort jobs into $1..n$ in **decreasing** order of weights 
+- Assign job $i$ to machine $j$ : the cost is minimised *at the time of insertion* (greedy)
+
+</b-blue>
+
+Proof is done by induction over $t := 1..n$. 
+
+LPT also approximates optimal makespan by factor $\frac53$. However, there are PNE that are much worse than LPT's solns. 
+
+<b-blue>
+
+***Thm.*** $\forall m \cdot \exists$ instance of $G \in G(m)$ with $n \leq m$ jobs
+- That has a PNE $A: [n] \lra [m] : \cost(A) = \Omega(\frac{ \ln m}{ \ln \ln m })\opt(G)$
+- That is also $O(\frac{ \ln m }{ \ln \ln m })\opt(G)$
+
+</b-blue>
+
+</div>
+</div>
+
+
+<div class="colourband">
+	<h2 id="routing">Selfish Routing</h2>
+</div>
+
+
+<div class="cbox">
+<div class="md-conv">
+
+### Routing 
+
+Traffic routing in directed graphs $G = (V,E)$ 
+- Each pair of nodes $(s_1, t_1) ..(s_k, t_k)$ has a traffic **demand** $r_i$ 
+- Each edge has **latency** (as function of traffic)
+- Allocate routing to satisfy demand and minimise latency. 
+
+Formally:
+
+- Let $P_i$ be the set of all directed paths in $G$ from $s_i \lra\sr t_i$. $P = \bigcup_{i \in [k]} P_i$
+- A flow $f : P \lra \R_{\geq 0}$ specifies amount of traffic sent. It is **feasible** if it satisfies all traffic demand $\forall i \in [k] \cdot \sum_{p \in P_i} f(p) = r_i $
+- A flow induces **load** over an edge $\rm{load}(e) = \sum_{p \in P : e \in p} f(p)$ 
+- Each edge $e \in E$ has **latency** function $\ell_e : \R_{\geq 0} \lra \R_{\geq 0}$ which are **non-decreasing**.
+- Latency of path $\ell_p(f) = \sum_{e \in p} \ell_e(f_e)$ 
+- The **cost** $\cost(f)$ of flow is total latency by load:
+$$ \cost(f) = \sum_{p \in P} \ell_p(f) f(p) = \sum_{e \in E} \ell_e (f_e) $$ 
+
+### Selfish Routing
+
+Traffic is controlled by independent players who try to minimise latency.
+
+We model it as *non-atomic* flow, where there are many $\approx \infty$ players, each of which contributes neglgible $\approx 0$ traffic individually. 
+
+***Braes' Paradox.*** Consider this graph where traffic demand is 1 from $s_1 \lra t_1$:
+
+<figure style="text-align: center;">
+	<img src="route-paradox-1.png" alt="" style="max-width: 400px;">
+</figure>
+
+- Only 2 paths: $\langle s_1, a, t_1 \rangle$ and $\langle s_1, b, t_1 \rangle$. Feasible flows are measured as fraction of top traffic vs bottom.
+- Supp. top has $\alpha$ units flow, bottom has $1-\alpha$. 
+	- latency of top is $\alpha + 1$, bottom is $1 + (1-\alpha) = 2 - \alpha$ 
+	- cost is $\alpha \cdot (\alpha + 1) + (1-\alpha) (2 - \alpha) = 2(\alpha^2 - \alpha +1)$
+	- Minimum is at $\alpha = \frac12$ with $\cost(f) = \frac32$ 
+
+<figure style="text-align: center;"><img src="route-paradox-2.png" alt="" style="max-width: 400px;"></figure>
+
+This is an equilibrium, as there is no incentive to switch paths. **But** this isn't the case; if we add a line:
+
+<figure style="text-align: center;"><img src="route-paradox-3.png" alt="" style="max-width: 400px;"></figure>
+
+- New path $\langle s,a,b,t \rangle$ 
+- This is worse, so the optimal flow doesn't use it.
+- But consider flow where $\alpha$ goes through $s_1,a,t_1$ ("top"), $\beta$ through $s_1,a,b,t_1$ ("through"), and $\gamma$ through $s_1,b,t_1$ ("bottom").
+	- $\beta = 1 - \alpha - \gamma$ 
+	- Latency of top is $\alpha + \beta + 1 = \alpha + 1 - \alpha - \gamma + 1 = 2 - \gamma$
+	- Latency of bottom is $\beta + \gamma + 1 = 2 - \alpha$ 
+	- Latency of through is $\alpha + 2\beta + \gamma = 2 - \alpha - \gamma$ 
+- Whenever $\alpha \gt 0$ or $\gamma = 0$, the latency of through will always be less than top or bottom, therefore players have incentive to switch to through. 
+	- Hence equilibrium is $\alpha = \gamma = 0$ and $\beta = 1$
+	- The latency is now 2 and the cost is also 2, which is larger than 1.5 optimal.
+
+
+<b-blue>
+
+***Wardrop Equilibrium.*** A flow $f$ is a WE if $\forall i \in [k] \cdot \forall$ two paths $p, p' \in P_i$ with positive flow ($f(p) \gt 0$):
+- If path $p$ has a flow, then all alternative non-empty paths have at least the same latency 
+- It is never better to swtich flow to a different path to reduce latency
+
+</b-blue>
+
+Same concept as NE, but does not need to differentiate pure vs mixed, as we look at overall flow only.
+
+PoA also applies for routing 
+
+<b-blue>
+
+***Price of Anarchy.*** Let N be a set of selfish routing games with similar properties (e.g. all only linear latency functions)
+
+The PoA of N is the maximum ratio of **worst possible WE** to **optimal flow** over all games.
+
+</b-blue>
+<p></p>
+<s-side>
+
+***Example.*** (Pigou)
+
+<figure style="text-align: center;"><img src="pigou.png" alt="" style="max-width: 400px;"></figure>
+
+Suppose 1 unit of traffic over this graph. 
+- Let bottom have $e$ flow and top $1-e$ flow. 
+- If $e \gt 0$, then $\ell(\rm{top}) = 1 - e$ and $\ell(\rm{bot}) = 1$ 
+- All players want to switch to the top, as it's always less load. Therefore the only WE is $e = 0$.
+	- The cost of this is $1$
+- But the optimal is $\frac12$ flow along each edge
+	- the loads are $\frac12$ and $1$, with costs $\frac12 \cdot \frac12 + \frac12 \cdot 1 = \frac34$.
+- Hence the PoA of this game is $1 \div \frac34 = \frac43$. 
+
+Suppose we change the graph to $x^d$ along the top for some integer. Assume the traffic demand is still 1.
+- Everyone will shove to the top in selfish routing too, leaving the cost as 1
+- But the optimal cost is now $e = 1-(d+1)^{-\frac1d}$
+- Hence the optimal cost is $1 - \frac{ d }{ (d+1) \sqrt[d]{d+1}} $ which as $d \lra \infty$ the cost approaches zero (but WE is still 1)
+- Hence as $d \lra \infty, \poa \lra \infty$
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Thm.*** The cost of a WE can be arbitrarily larger than the optimum (PoA has no upper bound)
+
+</b-blue>
+
+### Bounding PoA Anyway 
+
+<b-blue>
+
+***Pigou Bound.*** Supppose $C$ is a set of latency funcs. The pigou bound is a value $\alpha(C):$
+$$
+\alpha(C) = \sup_{\ell \in C} \sup_{r \geq y \geq 0} \frac{ r \cdot \ell(r) }{ y \cdot \ell(y) + (r-y) \ell(r)}
+$$
+Where $\sup$ is the supremum / maximum-kinda.
+
+</b-blue>
+
+- So $\alpha(C)$ is the worst case PoA wise for networks with two parallel edges, where one edge is constant and the other has $\ell(x) \in C$.
+- Where we take the worst possible $\ell :\in C$ and demand $r$ 
+- Where the bottom edge is defined as a constant $\ell(r)$
+
+Since $\forall x \lt r \cdot \ell(r) \geq \ell(x)$, and $\ell$ is increasing, the top edge is never less attractive than the bottom edge. WE routes all $r$ demand over top channel.
+
+Optimal flow has $y \leq r$ flow going at the top and $r-y$ going through the bottom.
+
+<b-blue>
+
+***Thm.*** Let C be a set of latency functions which are all constant. Then the PoA in games with these gets arbitrarily close to $\alpha(C)$ 
+
+</b-blue>
+
+This is true because of the definition of the pigou bound. Somehow, this has become a lower bound, and it's also "tight", meaning that no balance game using only functions from C can have a PoA *exceeding* $\alpha(C)$ <span class="grey">(what the hell is a lower bound then?)</span>
+
+<b-blue>
+
+***Thm.*** Let C be a set of latency functions, The PoA of any selfish routing game with funcs only from C is $\alpha(C)$.
+
+</b-blue>
+
+The above does not require a specific structure. But two parallel edges is immediately the worst. 
+
+Proof of this above theorem requires recharacterising wardrop equilibria:
+
+<b-blue>
+
+***Thm.*** (Variational inequality characterisation) A feasible flow $f$ is a wardrop equilibrium iff 
+$$
+\sum_{e \in E} f_e \cdot \ell_e(f_e) \leq \sum_{c \in E} f_e\sr \cdot \ell_e (f_e)
+$$
+For every feasible flow $f_e\sr$. 
+
+</b-blue>
+
+(Proof has been omitted)
+
+<s-side>
+
+***Example.*** Suppose we consider only linear functions -- $\ell(x) = ax + b \pod{a, b \geq 0}$. The pigou bound tells us the PoA. We sub in the fucntion into the fat equation:
+
+$$
+\frac{ r (ar + b) }{ y(ay + b) + (r-y)(ar + b) }
+$$
+
+Simplify down to:
+
+$$
+1 + \frac{ ay(r-y) }{ ar^2 + br - ay(r-y) } \leq 1 + \frac{ ay(r-y) }{ ar^2 - ay(r-y) } = 1 + \frac{ y(r-y) }{ r^2 - y(r-y) } = \frac{ r^2 }{ r^2 - y(r-y) }
+$$
+
+<span class="grey">You can do a 1leq1 there just casually?</span> The last expression is maximised for $y = \frac r 2$ and the value is $\frac 4 3$ 
+
+So the worst possible price of anarchy is $4/3$.
+
+</s-side>
+
+<span class="grey">I wouldn't rely on the notes for this section</span>
+
+
+</div>
+</div>
+
+
+
 
 	<footer>
 		<div class="cbox">
