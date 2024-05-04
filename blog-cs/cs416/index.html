@@ -72,6 +72,7 @@ $$
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\bb}{\mathbb}
 \newcommand{\t}{^\top}
+\newcommand{\sr}{^\*}
 \renewcommand{\vec}{\mathbf}
 \renewcommand{\rm}{\textrm}
 \newcommand{\x}{\vec{x}} 
@@ -1846,8 +1847,8 @@ Special cases:
 
 $f$ | $\psi$ | update | name 
 -|-|-|- 
-- | 0 | $\x_{k+1} = \x_k + \alpha_k \nabla f(\x_k)$ | GD 
-- | $I_\Omega$ | $\x_{k+1} = P_\Omega (\x_k - \alpha_k \nabla f(\x))$ | PGD 
+\- | 0 | $\x_{k+1} = \x_k + \alpha_k \nabla f(\x_k)$ | GD 
+\- | $I_\Omega$ | $\x_{k+1} = P_\Omega (\x_k - \alpha_k \nabla f(\x))$ | PGD 
 0 | - | $\x_{k+1} = \prox_{\alpha_k \psi} (\x_k)$ | Iterative prox
 
 In general:
@@ -1908,9 +1909,66 @@ Which does the same thing as the original problem.
 
 Let **Problem D** ("dual") be $$\max_{\lambda \in R^m} \min_{\x \in C} \cal{L} (\x, \lambda)$$ 
 
-> Call $\min_{\x \in C} \cal{L} (\x, \lambda) = d(\lambda)$ and fix $\x$.
+Call $\min_{\x \in C} \cal{L} (\x, \lambda) = d(\lambda)$ and fix $\x$.
+
+<s-side>
+
+***Fact.*** $d(\lambda)$ is concave ($-d(\lambda)$ is convex). Therefore the dual is a convex optimisation problem.
+
+***Fact.*** (Weak duality) If $\xx$ is a solution of primal (P), and $\lambda^\*$ is a solution of dual (D), then $d(\lambda\sr) \leq f(\xx)$.
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Def.*** The **duality gap** is $f(\xx) - d(\lambda\sr) \geq 0$.
+
+</b-blue>
+
+**Strong** duality holds if the gap is 0.
+
+> In general this is true when $f$ is convex, which makes it also true in linear programming.
+
+### 1st order optimality conditions.
+
+The primal is $-\nabla f(\xx) \in N_\Omega (\xx)$ where $\Omega = C \cap A$. 
+
+<b-blue>
+
+***Thm.*** Given constraint set $C \in \R^n$ which is closed and convex, and 
+\begin{align}
+	A &= \\{\x \in \R^n : A\x + \b \\} \pod{A \in \R^{m \times n} \land \b \in \R^n} \\\\
+	\Omega &= C \cap A
+\end{align}
+**(1)** 
+$$
+N_\Omega(\x) \supseteq N_C(\x) + \\{A\t \lambda : \lambda \in \R^m\\}
+$$
+Which becomes **equal** if the "relative interior" $\rm{rel-int}(A) \cap A \neq \varnothing$; <span class="grey">$A\t\lambda$ means all vectors orthogonal to subspace $\null(A)$ / orthogonal to the line; relative interior being the interior of a set. In 2d Space this is obvious, but in higher dimensional space it's basically the interior of the linear subspace (i.e. the plane) that contains the set.</span>
+
+**(2)** $\xx$ is a solution of the primal if $f$ is convex, and **if and only if** 
+$$
+-\nabla f(\xx) + A\t \lambda \in N_C (\xx) 
+$$
+For some $\lambda \in \R^m$.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Thm.*** (Strong duality) 
+
+*If* $C \subseteq \R^n$ is closed and convex, and $\rm{rel-int}(C) \cap A \neq 0$, 
+
+*Then if* (P) has solution $\xx$ *then* (D) has solution $\lambda\sr$ and $f(\xx) = d(\lambda\sr)$
+
+</b-blue>
+
 
 </div>
+<p style="text-align: center;">
+	-- Fin. --
+</p>
 
 </div>
 	
