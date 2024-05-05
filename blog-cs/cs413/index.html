@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS413</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	
+	
+	<script async id="MathJax-script" type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script defer type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script defer type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
+	<script defer type="text/javascript" src="../../js/prism.js"></script>
+</head>
+<body>
+
+<div class="hidden">
+	<header>
+		<div class="parallax parsmaller">
+			<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 7fr 1fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+				<div class="column tinycolumn">
+					<a href="../../" class="nav">Home</a>
+				</div>
+				<div class="column tinycolumn">
+					<a href="../../blog.html" class="nav">Blog</a>
+				</div>
+				<div class="column tinycolumn">
+					
+					<a href="../../about.html" class="nav">About</a>
+				</div>
+				<div></div>
+				<div class="column tinycolumn">
+					<a href="https://ko-fi.com/yijunhu" class="nav">Tip me</a>
+				</div>
+				<div class="column">
+					<button class="nav dark-light">Dark Mode</button>
+				</div>
+			</div>
+			<div class="cbox"> 		
+				<h1>CS413</h1>
+				<p class="subheading">Image and Video Analysis</p>
+			</div>
+		</div>
+	</header>
+
+<header>
+	<div class="cbox">
+		<h1>Contents</h1>
+	</div>
+</header>
+<!-- REMEMBER TO DO! -->
+
+<div class="cbox">
+<div class="md-conv">
+
+1. [Perception](#perce)
+2. [Sampling and Quantisation](#sampling)
+1. [Computation Over Images](#comp)
+1. [Transforms](#transform)
+
+$$
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\N}{\mathbb{N}}
+\renewcommand{\vec}{\mathbf}
+\renewcommand{\lra}{\longrightarrow}
+\newcommand{\x}{\vec{x}}
+\newcommand{\y}{\vec{y}}
+\newcommand{\p}{\vec{p}}
+\newcommand{\q}{\vec{q}}
+\newcommand{\dd}{\rm{d}}
+\newcommand{\t}{^\top}
+\newcommand{\rm}{\textrm}
+\newcommand{\partd}[2]{\frac{\partial #1 }{\partial #2 }}
+\DeclareMathOperator{\var}{var}
+$$
+
+</div>
+</div>
+
+
+<div class="colourband">
+	<h2 id="perce">Perception</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Introduction 
+
+Perception processes are constant and unconscious. Perception informs action, and action gives stimulus to perception.
+
+- Receptors *transduce stimuli* to electric signals 
+- Nerves carry signals to the brain 
+- Signals are processed and action given 
+
+This module again goes over neural structure. 
+
+- **Afferent** nerves carry signal from sensory neurons to the CNS (central nervous system)
+- **Efferent** nerves .. from CNS to motor neurons.
+
+Neurons can be exhibitory and inhibitory, strength given by *firing rate*, which is limited by refractory period.
+
+The grey matter in the brain does all the processing.
+- **occipital** -&gt; vision 
+- **parietal** -&gt; touch
+- **temporal** -&gt; hearing, taste, smell 
+
+### Optics 
+
+Light goes through the pupil, refracted onto the **fovea** of the retina. 
+ 
+Photo receptors are at the *back* of the retina, so light goes through like this:
+
+> Cones and rods &lt;- &lt;- bipolar cells &lt;- &lt;- ganglian cells &lt;- &lt;- *light* 
+
+The **ganglian cells** transfer data through optical nerve.
+
+### Light 
+
+Comes in photons. Visible light is around 300 - 800 nm.
+
+Light can be transmitted, absorbed, or reflected.
+
+**Ambient optical array** is the pattern of light reaching the eyes. Viewpoint changes define optical flow (motion) which is used to determine distance, etc.
+
+Objects are *projected* onto a 2D surface to form an image. Its projected size is proportional to distance. Depth information is *lost* with one sensor (can only use contextual clues) -- hence we have 2 eyes. 
+
+A stereogram camera works the same way.
+
+### Visual Pathway
+
+Data is transmitted from the optic nerves through the **lateral geniculate nucleus (LGN)** in the thalamus, and then gets sent to the **primary visual cortex (PVC)** on the **opposite** half of the brain (and upside down)
+
+- LGN performs initial mapping -- retains a *retinoscopic map* (the position data)
+- PVC has *hypercolumns* -- each column deals with some part of the map.
+
+In the eye, the *fixed* cornea does 80% of the focusing, whilst the *flexible* lens does 20%. The iris changes size to allow different amounts of light in.
+
+The *fovea* being on the optical axis has the best colour and spatial *acuity* (&asymp; resolution).
+
+The *periphery* is less dense, and mostly rods (light) rather than cones (colour). This makes it monochrome. There are *no* cones in the fovea itself, and simply nothing in the blind spot. Your brain inpaints this.
+
+<figure style="text-align: center;">
+	<img src="https://upload.wikimedia.org/wikipedia/commons/1/1f/Distribution_of_Cones_and_Rods_on_Human_Retina.png" alt="File:Distribution of Cones and Rods on Human Retina.png - Wikipedia" style="max-width: 400px;">
+	<figcaption>Density of cones and rods (Wikipedia)</figcaption>
+</figure>
+<figure style="text-align: center;">
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/1416_Color_Sensitivity.svg/300px-1416_Color_Sensitivity.svg.png" alt="Photoreceptor cell - Wikipedia">
+	<figcaption>Cone/Rod wavelength sensitivity (Wikipedia)</figcaption>
+</figure>
+
+Cones have less sensitivity to light but reach max sensitivity faster than rods. 
+
+<img src="https://www.cns.nyu.edu/~david/courses/perception/lecturenotes/ganglion/rgc-slides/Slide4.jpg" alt="Perception Lecture Notes: Retinal Ganglion Cells" style="float: right; max-width: 300px;">
+
+The **receptive field** is the area which influences the firing of a ganglian cell. 
+
+It comes in a centre-surround shape, being either on centre off surround, or the opposite (right)
+
+Different ganglians have overlapping receptive fields -- this effectively is an **edge detection** convolution, but **rotation invariant**.
+
+They fire more strongly to lines than to intersections -- hence the black in the corners of a grid of squares illusion. 
+
+Ganglian -> Optic Nerve -> LGN -- visual fields put together again. LGN has a *bilateral layer structure*, which overlaps images from two eyes for stereoscopic projection. If you think about it very hard, it's literally like a CNN. Granted, CNNs didn't get invented out of thin air.
+
+### Visual Cortex 
+
+Cells in the VC respond **selectively** to features 
+- **simple** cells respond to features at different orientations 
+- **complex cells** non-linearly respond to orientation and motion 
+- **end-stopped** cells respond to moving lines and corners
+
+This is a functional separation -- splitting into form, colour, and motion.
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="sampling">Sampling and Quantisation</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Introduction 
+
+Sensors acquire data from either visible or non-visible "modalities", usually something spatially from the world. 
+
+Image data can be different dimensions: 2D, 3D, or 2D + t (time), 2D + d (depth), etc.
+
+***Pixels.*** represent real world dimensions. We require calibration to use imaging devices to measure the real world. This is often done with a known reference, like a checkerboard. 
+
+***Data Rates.*** are proportional to data size. Measured in bits per second (bps). Compression is done to data that is too big.
+
+***Sampling Challenges.*** 
+- Analogue data is acquired via sensor and **quantised** to binary. 
+- Data can be very big and need compression; very noisy and need denoising.
+- Must be calibrated to be used in image processing.
+
+### Images
+
+Images are matrices of pixels or voxels. Mathematically images can be thought of as functions:
+- The idealised, **continuous** image $f : \R^2 \lra \R$ where $f(x,y)$ gets the value
+- The actual discrete image $f: \N^2 \lra \N$ where $f[i,j]$ 
+- Multi channel images, e.g. $f: \N^2 \lra \N^3$ etc.
+
+The domain is sampled (gets resolution), the range is quantised (gets colour depth)
+
+***Spatial frequency.*** in Hz, is "cycles per pixel", since image data has changes in amplitude. It's like, noise.
+
+Subsampling is reducing the resolution -- sampling at below 2&times; the max frequency loses information (Nyquist's theorem) -- *subsampling artefacts* 
+
+**Anti-aliasing** is applying a low pass filter to remove noise (high frequencies).
+
+**Uniform quantisation** is truncating the least significant bits. This can produce "false contours" in low frequency areas.
+
+***Colour Spaces.***
+- Perception uses RGB -- so RGB colour spaces. 
+- Can also linear transform colour spaces, e.g. into **YUV** or **YCbCr** spaces.
+- We are more sensitive to value/luminance than colour, so downsampling CbCr leads to less perceptual loss.
+
+
+### Interpolation
+
+**Interpolation** is the opposite of subsampling. It makes data from nowhere. 
+
+**Nearest neigbhour** interpolation is basically: if we upscale by factor $n$ repeat each pixel $n$ times. Leads to pixelisation which may or may not be desirable.
+
+**Linear interpolation** models distance between pixel values as lines. Suppose pixel $x_1$ has value $a$ and $x_2$ has value $b$, for an unknown point $x_1 \lt x' \lt x_2$ fraction $d$ between the points, we get 
+$$
+f(x') = a + d(b-a) = db + (1-d)a
+$$
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Bilinear_interpolation_visualisation.svg/1200px-Bilinear_interpolation_visualisation.svg.png" alt="File:Bilinear interpolation visualisation.svg - Wikipedia" style="float: right; max-width: 240px;">
+
+**Bilinear interpolation** 
+
+For some continuous $x, y$ between four points, interpolate horizontally then interpolate vertically. Expressed in matrix form this is
+$$
+f(x,y) = \begin{bmatrix}
+	1 - \Delta x & \Delta x 
+\end{bmatrix} \begin{bmatrix}
+	f[i, j] & f[i, j+1] \\\\ f[i+1, j]& f[i+1, j+1] 
+\end{bmatrix} \begin{bmatrix}
+	1 - \Delta y \\\\ \Delta y
+\end{bmatrix}
+$$
+Where 
+\begin{align}
+	\Delta x &= x - i \\\\ 
+	\Delta y &= y - j
+\end{align}
+
+Everything is weighted combinations. There's also (bi)quadratic, bicubic, etc. 
+
+
+**Sinc interpolation** takes a weighted sum of infinite set of neighbours based on the $\frac{ \sin x }{ x }$ function. This is the "idealised" interpolation.
+
+Naturally infinity is kinda difficult for computers, so *Lanczos* since modulates it so it goes to 0 after $n$ things. $n$ is basically the radius, so samples taken is $O(n^2)$
+
+**AI Inpainting** is *technically* just a form of interpolation, except you smash a whole heap of carefully adjusted matrices at it so that it comes up with something convincing.
+
+### Domain Measurements 
+
+Many different distance metrics, like euclidean $d_e (\p, \q) = \lVert \p - \q \rVert$, manhattan $d_4(\p, \q) = |p_x - q_x| + |p_y - q_y|$, chess board/L0 $d_8 = \max|\p - \q|$. 
+
+***Connected Components.***
+-  4 neighbours are the orthogonal pixels, 8 includes the diagonals. 
+- Adjacent pixels with the same colour are the same connected component 
+- Partition pixels by binarisation -- label colours into classes. 
+- Find connected components by visiting pixels -- after one pixel is visited, recursively add its like-neighbours to the same component, and mark all of them as visited. Repeat until no unvisited pixels.
+
+The **centroid** of a CC is a vector of element-wise **average** of all cell coords. The centroid position is:
+$$
+\vec m = \frac1N \sum_{k=1}^N \p_k
+$$
+Covariance is:
+\begin{align}
+	\vec I  &= \sum_{k=1}^N (\p_k - \vec m) (\p_k - \vec m)\t \\\\
+	&= \begin{bmatrix}
+		a & b \\\\ b & c
+	\end{bmatrix} : \theta = \tan^{-1} \left( \frac{ b }{ a-c } \right)
+\end{align}
+
+***Distance transforms.*** Take any undivided component, we can calculate the distance of every pixel to its nearest boundary. 
+
+We can use this to value the pixels and **skeletonise** components. 
+
+***Chain codes.*** Compact encoding of edge direction. Walk around the boundary, and record the direction to the next pixel (0 to 7). This can be stored very compactly, and it is easy to do rotations (add 1 mod 8).
+
+***Run Length Encoding.*** For only 2 states, RLE only needs to say the starting state.
+
+> These are both used in H.264 compression 
+
+### Range Measurements 
+
+Model the image as a random variable sampled from an unknown distribution $\Phi$. 
+$$
+F = \\{f_0, f_1, .. f_{N-1}\\} : f_i \sim \Phi_f 
+$$
+The mean is the expected value 
+$$
+\E[f] = \frac1N \sum_i f_i = \mu
+$$
+The variance is the average square difference 
+$$
+\var[f] = \frac1N \sum_i (f_i - \mu)^2 = \sigma^2
+$$
+
+
+***Calculating the distribution.*** Can get a histogram of pixel values $\sim$ estimate of distribution. The posterior probability $h[k]$ (number of pixels of colour $k$) where 
+$$
+p(k|f) = \frac{ h[k] }{ N } \approx \Phi_f
+$$
+This is location invariant -- sometimes helpful, sometimes not.
+
+
+***Optimal Thresholding via MAP decision value.*** Noise changes histogram, can inspect histogram in thresholding to minimise mis-classification. Let's suppose noise is gaussian.
+
+$$
+\rm{label} = \begin{cases} 1 & p(1 | f_i) \gt p(0 | f_i) \\\\ 0 & \rm{otherwise} \end{cases} 
+$$
+
+The posterior probability ($c$ classes) is likelihood &times; prior
+$$
+p(c | f) = \frac{ p(f|c) p(c) }{ p(f) } \propto p(f | c) p(c)
+$$
+
+We can set $p(1)$ to be the proportion of foreground and $p(0)$ to the proportion of background. Since we have gaussian noise, $p(f|1) = N(192, \sigma)$ (192 foreground) and $p(f| 0) = N(64, \sigma)$ (64 background). Then simply solve for 
+$$
+p(f|1)p(1) = p(f|0)p(0)
+$$
+to get the threshold.
+
+
+
+</div>
+<button class="collapsible">Example... </button>
+<div class="ccontent md-conv">
+
+***Example.*** A 512 by 512 im has 256 colours. The foreground is at 150, the background is at 80. The foreground takes up $\frac14$, the background takes up $\frac34$. Find the threshold.
+
+Let background be B and foreground F, a pixel $x$.
+
+$$
+\begin{matrix}
+p(B|x) \propto p(x|B) p(B) & p(F|x) \propto p(x|F)p(F)
+\end{matrix}
+$$
+
+The original gaussian is $e^{-x^2}$. Adding variance: $e^{-\frac{ x^2 }{ 2\sigma^2 }}$ and taking away the mean: $e^{-\frac{ (x-\mu)^2 }{ 2\sigma^2 }}$, then normalising to 1:
+$$
+\frac{ 1 }{ \sigma \sqrt{2\pi} } e^{-\frac{ (x - \mu)^2 }{ 2 \sigma^2 }}
+$$
+We get given prior probs, assume noise is normally distributed with scaling factor $k$ and $\sigma = 20$:
+$$
+p(B) = \frac 1K e^{-\frac{ (x - 80)^2 }{ 2 \times 20^2}}
+$$
+Solve for the thing (ratio $\frac34$ to $\frac14$):
+\begin{align}
+	3 \exp \left( -\frac{ (x-80)^2 }{ 2 \times 400 } \right) &= \exp \left(-\frac{ (x - 150)^2 }{ 2 \times 400} \right ) \\\\
+	-\frac{ (x - 80)^2 }{ 800 } + \ln 3 &= -\frac{ (x - 150)^2 }{ 800 } \\\\
+	x &\approx 121.278
+\end{align}
+
+
+</div>
+
+<div class="md-conv">
+
+We still get some mis-classification since pixels are treated independently. Post-process to clean up. 
+
+This model however supposes 2 peak additive gaussian noise -- not usually the case. 
+
+***Entropy.*** Information (shannon) entropy -- the information content of some image:
+$$
+H = -\sum_k p(k) \log_2 p(k)
+$$
+For the probability of each colour $k$. This is estimable from the histogram, and is measured in **bits**.
+
+**Redundancy** is the quantisation bits (bits left over) -- so 8 bit image with 6.2 bits of entropy makes 1.8 bits redundancy. The entropy is the lower bound for the number of bits required to store an image.
+
+***Distortion.*** Can use SSD of original image vs new image to get distortion differences. (Also called RSS)
+$$
+SSD(F, G) = \frac 1 N \sum_i (f_i - g_i)^2
+$$
+
+The signal to noise ratio **SNR** is
+$$
+SNR = \frac{ \var(F) }{ SSD(F, G) }
+$$
+And is often measured in *decibels* in $\log_{10}$ form: $SNR\\; \rm{dB} = 10\log_{10}(SNR)$ 
+
+</div>
+
+</div>
+
+<div class="colourband">
+	<h2 id="comp">Computation Over Images</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Point/Pixel Level
+
+A curve/transformation between input and output, via some mapping func, like 
+- $T(x) = \log(1+x)$ 
+- $T(x) = x^\gamma$ -- **gamma correction**
+- $T(x) =$ histogram equalisation.
+
+Histeq is done with the cumulative histogram $H_C(k) = \sum_{j=1}^k H(j)$. Let $H_C(I)$ be the ideal (diagonal) histogram.
+
+If 255 is the max colour, the transform function $T_{HE}(x) = \frac{ 255 }{ N } H_C(x)$ where $N$ the number of pixels is the scaling factor. This can be generalised to any function.
+
+### Local Level 
+
+**Convolution** over a small area. We denote it as $\circledast$ here. 
+$$ g(x) = \sum_{p = -M}^M h(p) f(x-p)$$
+
+Padding on the boundary (or not).
+
+The **gaussian smoothing function** is 
+$$
+g(x, y; \sigma) = \exp(-\frac{ x^2 + y^2 }{ 2\sigma^2}) \pod{\equiv g(x;\sigma) g(y;\sigma)}
+$$
+- Kernels are normalised after, and higher $\sigma$ makes more smoothing.
+
+The **gradient operator** approximates derivates on certain directions 
+$$
+f'(x) = \lim_{\Delta \lra 0} \frac{ f(x + \Delta) - f(x) }{ \Delta} \approx f(x+1) - f(x) =: \Delta f(x)
+$$
+Alternatively, the **central difference** gradient (which is centred)
+$$
+\Delta_c f(x) = \frac{ f(x+1) - f(x-1) }{ 2}
+$$
+
+Convolution has a nice property:
+$$
+\frac{ \dd (f(x) \circledast h(x))}{ \dd x } = f(x) \circledast \frac{ \dd h(x) }{ \dd x}
+$$
+
+So we can estimate gradient of a convolved function by using the derivative of its kernel:
+\begin{align}
+	g(x; \sigma) &= \exp(- \frac{ x^2 }{ 2\sigma^2 })\\\\
+	g'(x; \sigma) &= - \frac{ x }{ \sigma^2 }\exp(- \frac{ x^2 }{ 2\sigma^2 }) = \frac{ -x }{ \sigma^2 }g(x; \sigma) \\\\
+	g''(x; \sigma) &= (\frac{ x^2 }{ \sigma^4 } - \frac{ 1 }{ \sigma^2 })g(x; \sigma).
+\end{align}
+
+The **laplacian** of a gaussian is the sum of its second derivatives:
+$$
+\nabla^2 g(x,y ; \sigma) = \partd{g(x,y; \sigma)}{x^2} + \partd{g(x,y; \sigma)}{y^2}
+$$
+But really we just approximate this using a **discrete kernel**. 
+
+Both first and second derivative essentially do a form of edge detection. The laplacian is usually approximated using a difference of gaussians.
+
+
+### Multiresolution and Block-Based Representation 
+
+***Pyramids*** 
+
+To an image, we can repeatedly apply blur -> subsample to form a "pyramid" of smaller and smaller images, ending with one pixel. A pixel at one level represents a block on a level below.
+- Gaussian smooth 
+- Subsample $n$ -> remove every $n$th pixel 
+
+To get a $P(F, l)$ for image $F$ and level $l$ 
+
+**<span class="sc">Reduce</span>:**
+$$
+P(f, l) \lra (\circledast g(x, y; \sigma)) \lra (\downarrow 2) \lra P(f, l+1)
+$$
+
+**<span class="sc">Expand</span>:** Use NN upsampling and **same smoothing function**
+$$
+\hat P(f, l) \longleftarrow (\circledast g(x, y; \sigma)) \longleftarrow (\uparrow 2) \longleftarrow P(f, l+1)
+$$
+
+Laplacian is approximated by differencing $P(f, l) - \hat P(f, l) =: DoG(l+1, l)$ (i.e. upsample the smaller layer)
+
+Can do this to the entire pyramid to get a pyramid of differences. 
+
+***Laplace pyramid based compression.*** laplacian image code:
+- Build laplace pyramid 
+- Keep top level gaussian 
+- *threshold* laplacian 
+- *quantise* laplacians -- more bits for lower frequencies (higher on pyramid) and less for higher frequencies.
+- Use RLE
+
+Can customise the compression ratio for compressions -- studying the distortion (using MSE) vs compression ratio is good for comparisons.
+
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="transform">Transforms</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Introduction 
+
+Using DCT and DFT bases.
+
+**Basis projection** is a way to analyse a signal/vector. Multiply input by **basis vector** (discrete projection) := 
+$$
+\langle f, g \rangle = f \cdot g = \sum_{i = 0}^{N-1} f(i)g(i)
+$$
+
+### Cosine Transform
+
+On cosine funcs at different frequencies $u = 0,1,2..$
+$$
+g_1(x, u) = \alpha(u) \cos\left(\frac{ (2x+1)u\pi }{ 2N }\right)
+$$
+Where $\alpha(u)$ is a normalising factor. 
+
+1D bases can be used to make 2D basis simply:
+\begin{align}
+	g(x, y ; u,v) &= g_1(x; u) g_1(y; v) \\\\
+	F(u, v) &= \sum_{x=0}^{N-1} \sum_{y=0}^{N-1} f(x,y) g(x,y ; u,v)
+\end{align}
+And converted back by:
+$$
+f(x,y) = \sum_{u=0}^{N-1} \sum_{v=0}^{N-1} F(u,v) g(x,y; u,v)
+$$
+
+### Fourier Transform
+
+Complex! (literally, like $\mathbb{C}$ complex). Fourier is done with complex numbers:
+
+$$
+f(t) = \frac{ 1 }{ 2\pi } \int_{-\infty}^{\infty} F(\omega) e^{i\omega t } \dd \omega 
+\pod{re^{i\theta} = r\cos\theta + ri\sin\theta}
+$$
+
+Uses a frequency $\theta$ (Hz), which is angular frequency. 
+
+The **Discrete Fourier Transform** is given in 1D (note the $-i$):
+$$
+F(u) = \frac 1N \sum_{x=0}^{N-1} f(x) e^{-i \frac{ 2\pi u x }{ N }}
+$$
+- For data samples $f(x) : 0 \leq x \leq N$ 
+- Frequency $0 \leq u \leq N$ 
+- exponent in radians $0 \leq \frac{ 2 \pi u x}{ N } \lt 2\pi$ 
+
+The inverse FT
+$$
+f(x) = \frac 1N \sum_{u=0}^{N-1} F(u) e^{i \frac{ 2\pi u x }{ N }}
+$$
+
+- DCT is **not** shift invariant -- phase shift leads to leakiness (JPEG artefacts). 
+- Since DFT also does the sine decomposition it gets the phase. 
+	- FFT can misplace very small frequencies, so often one ignores them.
+
+**2D DFT** is done separately per dimension. The complex domain is 
+$$
+F(u, v) = R(u, v) + iI(u, v) = |F(u,v)| e^{i \phi(u,v)} \pod{\phi(u,v) = \arctan\left(\frac{ I(u,v) }{ R(u,v) }\right)}
+$$
+And the power/magnitude spectrum is 
+$$ P(u, v) = |F(u, v)|^2 $$ 
+
+
+Generally filtering is done over magnitude.
+
+<b-blue>
+
+***Thm.*** Spatial convolution in the pixel domain &equiv; element-wise multiplication in fourier domain.
+
+$$
+h(x,y) \circledast f(x,y) = H(u,v).F(u,v)
+$$
+
+</b-blue>
+
+Therefore operating over fourier space is quicker -- and we can even skip FFTing $h$ into $H$ and immediately make a filter for fourier space.
+
+Certain operations -- like ideal low pass, can lead to artefacts. Thus for low-pass gaussian is used instead. 
+
+FFT is efficient at $O(n \log n)$. 
+
+
+
+</div>
+
+</div>
+
+	<footer>
+		<div class="cbox">
+			<div class="columncontainer ctwo" id="fc2">
+			</div>
+			<script type="text/javascript" src="../../js/footerGen.js"></script>
+		</div>
+	</footer>
+
+</div>
+
+</body>
+</html>

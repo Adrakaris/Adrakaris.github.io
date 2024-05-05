@@ -29,6 +29,14 @@ class _date {
 
 var pages = [
     {
+        "date": new _date(2024,5,5),
+        "link": "blog-cs/cs413",
+        "title": "413 | 图影学注",
+        "desc": "图片视频分析</p>",
+        "picture": "",
+        "tags": ["cs"]
+    },
+    {
         "date": new _date(2024,4,30),
         "link": "blog-cs/cs409",
         "title": "409 | 博弈概要",
@@ -39,7 +47,7 @@ var pages = [
     {
         "date": new _date(2024,1,31),
         "link": "blog-cs/cs416",
-        "title": "416 | 优化分析",
+        "title": "416 | 优化法注",
         "desc": "优化方法</p>",
         "picture": "",
         "tags": ["cs"]
