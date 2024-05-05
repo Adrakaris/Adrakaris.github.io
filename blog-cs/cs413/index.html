@@ -61,6 +61,9 @@
 2. [Sampling and Quantisation](#sampling)
 1. [Computation Over Images](#comp)
 1. [Transforms](#transform)
+1. [Feature Detection and Matching](#fd)
+1. [View Geometry](#view)
+1. [Machine Learning for Computer Vision](#ml)
 
 $$
 \newcommand{\R}{\mathbb{R}}
@@ -77,6 +80,8 @@ $$
 \newcommand{\rm}{\textrm}
 \newcommand{\partd}[2]{\frac{\partial #1 }{\partial #2 }}
 \DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\argmax}{argmax}
 $$
 
 </div>
@@ -590,6 +595,494 @@ FFT is efficient at $O(n \log n)$.
 
 </div>
 
+</div>
+
+<div class="colourband">
+	<h2 id="video">Video</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Background Subtraction 
+
+A video can be modelled as <strike>literally is</strike> a series of images: $F(t)$ is frame $t$.
+
+One of the first steps in video analysis is to separate the foreground from the background.
+
+This has several challenges due to illumination changes, shadows, camera shake, etc.
+
+Methods include:
+- Frame differencing 
+- Running averages (learning the "steady state" of the background)
+- Statistic model of colour distribution 
+	- Gaussian model by multi-modal gaussian 
+	- Likelihood test for temporal changes 
+
+***Frame differencing.*** Threshold the difference of adjacent frames.
+$$
+D(t) = F(t) - F(t-1)
+$$
+$$
+FG(x, y, t) = \begin{cases} 1 & \rm{if } |D(x,y,t)| \gt T \\\\ 0 & \rm{otherwise} \end{cases} 
+$$
+
+This is functionally a gradient over time -- gives **edges** of moving objects only.
+
+***Running average.*** Via frame window or learning rule. This finds the background:
+- Sum of all frames up to frame $k$
+$$
+B = \frac 1 K \sum_{t=1}^k F(k) 
+$$
+- Sum of all frames over a window $w$ 
+$$
+B_w = \frac 1 w \sum_{t=k-w}^k F(t) 
+$$
+- Using a learning rate $\alpha$:
+$$
+B_\alpha (t_1) = \alpha F(t) + (1-\alpha) B_\alpha(t)
+$$
+
+The RA needs time to stabilise, so that moving objects are erased. 
+
+### Gaussian Modelling
+
+***Gaussian model of background.*** Model:
+$$
+B(x,y) \sim N(\mu_{x,y}, \sigma_{x,y}) = \frac{ 1 }{ \sigma \sqrt{2\pi}} \exp\left(- \frac{ (B - \mu)^2 }{ 2 \sigma^2 }\right)
+$$
+
+With a mean and variance for each pixel $(x,y)$. 
+
+To model each pixel over time : drawn from normal distribution, parametric with mean and variance. Learn by learning rule:
+\begin{align}
+	\mu(t+1) &= \alpha F(t) + (1-\alpha) \mu(t) \\\\
+	\sigma^2 (t+1) &= \alpha(F(t) - \mu(t))^2 + (1-\alpha) \sigma^2(t) 
+\end{align}
+If variance is greater than some factor $|F(x,y,t) - \mu(x,y,t)| \gt K\sigma(x,y,t)$ then this region is significant. 
+
+***Multiple Gaussians.*** If the image background has repetitive actions, it has multiple modes. We can use a mixure of gaussians (weighted sum) to model this:
+
+$$
+GMM(f, M) = \sum_{k=1}^M w_k N(\mu_k \sigma_k)
+$$
+
+For $M$ gaussians, which tends to be small, and $\sum_{\forall k} w_k = 1$.
+
+Optimise this using *expectation maximisation*. We:
+- Start off with some model parameters 
+- Update parameters for the background
+- Test if data is likely to be drawn from the PDF 
+
+By, for $k$ modes:
+- Decide which of $k$ modes a pixel belongs to via $(f(t) - \mu_k)^2 \lt 2.5\sigma_k^2$ (finding standard deviations away)
+- Update if it is significant 
+- Reduce the parameters of non-member parameters
+- Normalise WeightedSetPacking
+
+Its a bit wishy washy written like this but basically it's iterative adjustment of the multi-gaussian model, based on learning rules. We usually start with evenly spaced gaussians with large variances, then update like the following:
+\begin{align}
+	\mu(t+1) &= \alpha f(t) + (1-\alpha) \mu(t) \\\\
+	\sigma^2(t+1) &= \alpha (f(t) - \mu(t))^2 + (1-\alpha(t)) \sigma^2(t) \\\\ 
+	w(t+1) &= \alpha + (1-\alpha) w(t) \rm{ only if ---}
+\end{align}
+only if the component is in this mode, else $w(t+1) = (1-\alpha)w(t)$ only.
+
+Classify a pixel into foreground and background by thresholding over all modes:
+$$
+B = \argmin_b (\sum_{k=1}^b w'_k \gt T)
+$$
+Where $B$ is the smallest subset with weighted weights $w'$ weighted by variance. The likelihood of foreground is 
+$$
+FG(x,y,t) = \begin{cases} 1 & GMM(f(x,y,t); B) \gt P \\\\
+0 & \rm{otherwise} \end{cases} 
+$$
+
+$w'_k$ is taken in decreasing order, $w_k' := \frac{ w_k}{ \sigma }$.
+
+
+### Optical Flow 
+
+Estimating **local** motion in image sequence by looking for motion of features of interest.
+
+We want to estimate motion featuers -- images themselves are not exact. Motion vectors enable object tracking.
+
+The output to this is a vector field with $(u,v)$ vectors describing motion in each axis.
+
+***LK Taylor Approximation Method.*** Assumes flow (motion) is *local* and *constant* over that region.
+
+Uses consistency of colour
+- Brightness consistency:
+$$
+\partd{I(x,y,t)}{t} = \partd{I}{x} \partd{x}{t} + \partd{I}{y} \partd{y}{t} + \partd{I}{t}
+$$
+Where $\partd{x}{t}, \partd{y}{t}$ are $u,v$ motion respectively.
+- This is done with 1st order taylor approx:
+$$
+I(x + \Delta x, y + \Delta y, t + \Delta t) = I(x,y,t) + \partd{I}{x} \Delta x + \partd{I}{y} \Delta y + \partd{I}{t} \Delta t + \cdots 
+$$
+- Colours are constant, and time is 1, so we can say $I(x + \Delta x, y + \Delta y, t + \Delta t) = I(x,y,t)$
+- To get the partials, we simply use convolution. For $\partd{I}{t}$ we can actually filter on the time dimension to get the ... temporal gradient?
+
+Note that for $\Delta t = 1$ and 
+$$
+\partd{I}{x} \Delta x + \partd{I}{y} \Delta y + \partd{I}{t} \Delta t = 0
+$$
+We get 
+$$
+\partd{I}{x} \Delta x + \partd{I}{y} \Delta y = - \partd{I}{t} = \begin{bmatrix}
+	\partd{I}{x} & \partd{I}{y}
+\end{bmatrix} \begin{bmatrix}
+	\partd{x}{t} \\\\ \partd{y}{t}
+\end{bmatrix}
+$$
+We can estimate this using least squares estimation, since this resolves to a system of linear equations 
+\begin{align}
+	I_{x_1} u + I_{y_1} v &= -I_t \\\\
+	&\vdots \\\\
+	I_{x_n} u + I_{y_n} v &= -I_t 
+\end{align}
+$$
+\implies A \begin{bmatrix}
+	u \\\\ v 
+\end{bmatrix} = \y \lra \begin{bmatrix}
+	u \\\\ v 
+\end{bmatrix} \approx (A\t A)^{-1}A\t y
+$$
+
+Where $(A\t A)^{-1}A\t$ is the **pseudo-inverse** of a non-square $A$.
+
+This works since $A\t A$ is the hessian (below). The eigenvalues tell us of its properties.
+
+If the region patch is too small, we may miss motion, but itf it's too large, can only get a general global motion.
+
+The hessian gives us an indication of validity of motion -- same as with harris, we like to work with corners. 
+
+Note that LK fails if 
+- the preconditions don't hold, e.g. the colours change 
+- motion is bigger than region size 
+- object is deforming non-linearly 
+- estimation window size is insufficient -> do a pyramid calculation.
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="fd">Feature Detection and Matching</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Features 
+
+A way to recognise/distinguish objects. Traditional CV techniques involve engineering features.
+
+***Low level features.*** Include simple characteristics like 
+- edges and corners 
+- high curvature ~ second derivative values 
+- local features which are invariant (to rotation, scaling, etc...)
+
+Good visual features are 
+- distinctive
+- pose invariant -- invariant as above  
+- local 
+- repeatable -- resistant to lighting, skew, etc.
+
+Features have two parts: **location** or key point: $k = (x,y)$, and a **descriptor** of feature coefficients $f(x,y) = [f_1 .. f_m]$ 
+
+### Harris Stephens Corner Detection 
+
+- Key points at points of high curvature 
+- Is local and pose invariant, robust to illumination
+- Distinctive descriptors.
+
+For image patch size $w$:
+$$
+E(u,v) = \sum_{(x,y) \in W} w(x,y) (I(x+u, y+v) - I(x,y))^2 
+$$
+The window function $w(\cdot, \cdot)$ times the SSD of the image patch shifted $(u,v)$ against itself.
+
+Generates first and second derivatives. It has those properties since 
+- on a constant region, there are no appreciable changes when patch is shifted 
+- On an edge, we detect changes when patches are shifted orthogonal to the edge, but not along the edge 
+- on a corner, any shift causes expression, so it picks these out. This also does not change if the image is rotated. 
+
+Expanding image using taylor series:
+$$
+f(x+u, y+v) = f(x, y) + u \partd{f}{x} + v \partd{f}{y} + \cdots = f(x+y) + uF_x + vF_y
+$$
+We know how to work out these partial derivatives. Hence 
+\begin{align}
+	I(x+u, y+v) &= I(x,y) + uI_x + vI_y \\\\
+	E(u,v) &\approx \sum_{(x,y) \in W} (I(x,y) + uI_x + vI_y - I(x,y))^2 \\\\
+	&\cdots \rm{ omitted } \cdots \\\\
+	&= \begin{bmatrix}
+		u & v 
+	\end{bmatrix}\left( \sum_{(x,y) \in w} \begin{bmatrix}
+		I^2_x & I_x I_y \\\\ I_y I_x & I_y^2 
+	\end{bmatrix} \right) \begin{bmatrix}
+		u \\\\ v
+	\end{bmatrix}
+\end{align}
+Which is the *hessian*. 
+
+The **eigenvalues $\alpha, \beta$ of the hessian** captures the local region variation. 
+- If they are small on both axes, then the patch is flat 
+- If they are spread out on one axis, then the patch is an edge 
+- If they are spread out on both axes, then the patch is a corner 
+Hence the corner determiner is:
+$$
+R = \alpha \beta - k(\alpha + \beta)^2
+$$
+For some threshold $k$, changing the number of KPs detected.
+
+### SIFT
+
+Remember robotics? [I will just leave this here](../cs313/#v3). Gaussian filtered images with scale $k_i$ are denoted as $I_G(k_i \sigma)$.
+
+
+### Feature Matching
+
+Suppose two ims I has feature $i$ and J has feature $j$
+
+***Nearest Neighbour.*** Finding the closest $i, j$s (euclidean distance):
+$$d(i,j) = \lVert f_i - f_j \rVert^2$$
+For high dims euclidean distance gets less useful -> use smth like cosine distance. Then get 
+$$
+\argmin_j d(i,j)
+$$
+
+We can require a maximum accept distance to remove outliers. 
+
+Over a large number of images, the complexity can tend to $O(\rm{horrible})$.
+
+***Scoring / Correspondence.***
+
+- Learn matching using supervised learning. 
+- We learn feature sets from a set of objects
+- For an unknown image, we want to find the best set of inliers. 
+- We score each set of inliers/matches by:
+	- highest number of inliers 
+	- sum of distances of first N inliers 
+- An optimisation is to apply a set of geometric constraints 
+	- e.g. between features sets, examining them relative to each other to deduce pose change 
+	- trying to calculate pose from a subset of inliers. 
+	- score this against all other inliers and minimise.
+
+***Bag of words.*** 
+
+- For all features, cluster and identify a subset of most likely features. These will be your feature prototypes -- the *words* 
+- Images are described with these feature words.
+- Going from high dimensional features to low dimensional bins. 
+
+### SURF 
+
+Improvement in SIFT, with SURF features matching rotated and transformed objects.
+
+**Rectification** is finding a **projective transformation** between an image pair. 
+
+This is done via **RANSAC** (random sample and correctness). Suppose there exists a transform $T : X \lra Y : T(\x) = \y$.
+- Take a subset of points, and solve for $T$ based on them. We get an estimate $\hat T(\x) = \hat \y$. 
+- Calculate a score $S_{\hat T} (\hat \y , \y)$
+- Repeat with other subsets
+- Plt $S$ against estimated $\hat T_n$ for every $n$, and look for a maximised score. That would be our best transformation.
+
+We can use this to measure depth through disparity, or mosaicing images.
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="view">View Geometry</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Cameras 
+
+Camera geometry can be modelled as ain image plane. From a 3D world coordinate $P$ to a 2D projected coordinate $p$ -- **projection**.
+
+A point $P(X, Y, Z) \lra p(x,y,f)$ for a focal length $f$:
+$$
+\begin{matrix}
+	\frac{ x }{ f } = \frac{ X }{ Z } & \frac{ y }{ f } = \frac{ Y }{ Z }
+\end{matrix}
+$$
+Usually we get homogenous coordinates (homogenise s.t. $f=1$):
+$$
+\begin{bmatrix}
+	x \\\\ y \\\\ 1 
+\end{bmatrix} = \frac{ f }{ Z } \begin{bmatrix}
+	X \\\\ Y \\\\ \frac{ Z }{ f}
+\end{bmatrix} \approx \begin{bmatrix}
+	X \\\\ Y \\\\ \frac{ Z }{ f }
+\end{bmatrix}
+$$
+Essentially a rotation-movement as a 3D space over $(x,y,1)$. We don't need the $\frac{ f }{ Z }$ multiplier since in homo-coords scaled versions work the same. There is no origin $(0,0,0)$ in this system.
+
+Indeed we can represent this in matrix form with the perspective transform as 
+$$
+\begin{bmatrix}
+	x \\\\ y \\\\ 1
+\end{bmatrix} = \begin{bmatrix}
+	f & 0 & 0 & 0 \\\\
+	0 & f & 0 & 0 \\\\
+	0 & 0 & 1 & 0
+\end{bmatrix} \begin{bmatrix}
+	X \\\\ Y \\\\ Z \\\\ 1
+\end{bmatrix} \longleftrightarrow \begin{bmatrix}
+	\x \\\\ 1
+\end{bmatrix} = C \begin{bmatrix}
+	\vec X \\\\ 1
+\end{bmatrix}
+$$
+with an implied homogenisation step afterwards.
+
+But this assumes camera at origin. We also then need to apply rotation $R$ and translation $T$ matrices.
+$$
+\begin{bmatrix}
+	x_c \\\\ y_c \\\\ z_c
+\end{bmatrix} = \underset{(3 \times 3)}{R} \begin{bmatrix}
+	x \\\\ y \\\\ z
+\end{bmatrix} + \underset{(3 \times 1)}{T}
+$$
+In homogenous coordinates:
+$$
+\begin{bmatrix}
+	X_c & Y_c & Z_c & 1
+\end{bmatrix}\t = \begin{bmatrix}
+	\vec R & \vec T \\\\ \vec 0 \t & 1
+\end{bmatrix} \begin{bmatrix}
+	\vec X \\\\ 1
+\end{bmatrix}
+$$
+
+***Intrinsic parameters*** to a camera are things like focal length, aspect ratio, skew, shift. This can all be represented in a projection matrix 
+$$
+K = \begin{bmatrix}
+	f \cdot a & s & x_0 & 0 \\\\ 0 & f & y_0 & 0 \\\\ 0 & 0 & 1 & 0
+\end{bmatrix}
+$$
+Where $a$ is the aspect ratio, $x_0, y_0$ is the center of the camera (if it's not centred on the axis), $s$ is the skew. 
+
+A full camera has both extrinsic (rotation and movement) and intrinsic parameters, hence putting everything together 
+$$
+\begin{bmatrix}
+	\x \\\\ 1 
+\end{bmatrix} = \vec K \begin{bmatrix}
+	\vec R & \vec T \\\\ \vec 0 \t & 1
+\end{bmatrix} \begin{bmatrix}
+	\vec X \\\\ 1
+\end{bmatrix}
+$$
+
+This is all well and good for video games and whatever, but if you have a real camera you need to know these unknowns beforehand to be able to model it. Some can come from the manufacturer, others must be worked out through calibration.
+
+***Lens distortion.*** Is a non-linear distortion of the scene. We can do 2D post-correction using a radial model:
+\begin{align}
+	x &= x_d(1 + k_1 r^2 + k_2 r^4) \\\\
+	y &= y_d (1 + k_1 r^2 + k_2 r^4)
+\end{align}
+Where $x,y$ are real positions, $x_d, y_d$ are distorted positions, and we estimate $k_1, k_2$. 
+
+### Calibration
+
+If we calibrate, we can measure.
+
+Such as by using standard calibration patterns, like a checkerboard. We *must* ensure such a pattern is flat for accuracy.
+
+In a full $3 \times 4$ projection matrix, there are 11 total unknowns that must be found (and a 1). We can treat this via linear least squares estimation:
+\begin{align}
+	\begin{bmatrix}
+		x \\\\ y \\\\ 1
+	\end{bmatrix} &\sim \begin{bmatrix}
+		m_{11} & m_{12} & m_{13} & m_{14} \\\\
+		m_{21} & m_{22} & m_{23} & m_{24} \\\\
+		m_{31} & m_{32} & m_{33} & 1
+	\end{bmatrix} \begin{bmatrix}
+		X \\\\ Y \\\\ Z \\\\ 1
+	\end{bmatrix} \\\\
+	\therefore x &= \frac{ m_{11} X + m_{12} Y + m_{13} Z + m_{14} }{ m_{31} X + m_{32} Y + m_{33}Z + 1 } \\\\ 
+	y &= \cdots 
+\end{align}
+
+Which can be made into a linear equation $A \x = \vec 0$, which we want to solve for a non-trivial $\x$.
+
+Thus for all $x,y$ we can make a massive huge matrix $A\vec m = \vec0$ which I am not going to write, where $\vec m$ are our 11 coefficients, and $A$ are our world and screen coordinates set up in a way to make every line one linear equation.
+
+The solution is given an eigenvector associated with the **smallest** eigenvalue of $\underset{(12 \times 12)}{A\t A}$.
+
+This gives a combined product $M = K [R|T]$ of extrinsic and intrinsic features.
+
+Once we know $M$, and assuming the camera doesn't move, then we can augment the view by projecting a constructed 3D object onto our 2D plane:
+$$
+\begin{bmatrix}
+	x_i \\\\ y_i \\\\ 1 
+\end{bmatrix} = K[R_k | T_k] \begin{bmatrix}
+	X_i \\\\ Y_i \\\\ Z_i \\\\ 1
+\end{bmatrix}
+$$
+
+If camera moves, we must update the calibration.
+
+
+### Planar Homography
+
+Are a class of projective transformations that take a point from 1 3D plane to another $\Pi(\x) \lra \pi(\x')$. 
+
+This can be used to track camera motion from some reference points -- update position without recalibrating. It's another matrix:
+
+$$
+\begin{bmatrix}
+	x_1' \\\\ x_2' \\\\ x_3' 
+\end{bmatrix} \sim \begin{bmatrix}
+	h_{11} & h_{12} & h_{13} \\\\
+	h_{21} & h_{22} & h_{23} \\\\
+	h_{31} & h_{32} & h_{33}
+\end{bmatrix} \begin{bmatrix}
+	x_1 \\\\ x_2 \\\\ x_3
+\end{bmatrix}
+$$
+
+We then homogenise via $x_3'$.
+
+We solve this by finding similar points within two images. 
+
+It is *sufficient to pick 4 points*. Since there are 9 unknowns, 2 solved per point, so 4 points solves 8 which is enough to pick up the last one.
+
+We also use projection like this to stitch together images, after having found SIFT/SURF points.
+
+Planar homography assumes that points picked are **co-planar**, $z=0$. 
+
+So in video augmentation, we calibrate $K$ once and then use this method to continue along the rest of the video.
+
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="ml">Machine Learning for Computer Vision</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+So I've done two years of ML and DL based projects specifically to do with image processing and computer vision. So I don't really have notes for this, I'll put down some of the keypoints:
+
+- Supervised / Unsupervised learning 
+- ImageNet 
+- Simple ML models can be solved directly 
+- Perceptron and deep learning 
+- Fully connected layers aren't great for image processing -> convolution layers 
+- Convolution kernels can be learned, and usually have multiple per layer 
+- Max pooling (or average pooling, stride) to downsample
+- CNNs learn both the features (to make embeddings) and the actual classification all at once.
+- Must mind overfitting, can use data augmentation techniques 
+- Can transfer learn / fine-tune to save time
+
+</div>
 </div>
 
 	<footer>
