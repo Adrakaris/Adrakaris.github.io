@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>B文</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	
+	
+	<script async id="MathJax-script" type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script defer type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script defer type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
+	<script defer type="text/javascript" src="../../js/prism.js"></script>
+</head>
+<body>
+
+<div class="hidden">
+	<header>
+		<div class="parallax parsmaller">
+			<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 7fr 1fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+				<div class="column tinycolumn">
+					<a href="../../" class="nav">Home</a>
+				</div>
+				<div class="column tinycolumn">
+					<a href="../../blog-zh.html" class="nav">Blog</a>
+				</div>
+				<div class="column tinycolumn">
+					
+					<a href="../../about.html" class="nav">About</a>
+				</div>
+				<div></div>
+				<div class="column tinycolumn">
+					<a href="https://ko-fi.com/yijunhu" class="nav">Tip me</a>
+				</div>
+				<div class="column">
+					<button class="nav dark-light">Dark Mode</button>
+				</div>
+			</div>
+			<div class="cbox"> 		
+				<h1>正形研发・Ｂ文简序</h1>
+			</div>
+		</div>
+	</header>
+
+<header>
+	<div class="cbox">
+		<h1>Ｂ序</h1>
+	</div>
+</header>
+
+<div class="buttonwrapper beside" >
+	<a href="./index.html">English</a>
+</div>
+<!-- REMEMBER TO DO! -->
+
+<div class="cbox">
+<div class="md-conv">
+
+Ｂ者，正言之文也，以精序一机之启、运。盖鄙文言其简构，止于序之而非真全也。
+
+</div>
+</div>
+
+
+<div class="colourband">
+	<h2>机</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### 本机
+
+机者有部，每部必以题分之，皆有独用。是如下：
+
+	机
+		言：机名，其参值
+		SomeMachine(param1)
+	束
+		言：参值之束
+		param1 : NAT
+	集
+		言：集类也，有缓集、数集二类。缓集者，仅于命名，後而再定；数集者，亦必名其所有分。
+		ONES; TWOS; ISOK = {shan, e} 
+	恒
+		言：恒量也，述机而定，启而不变。是仅名之。
+		const
+	性
+		言：恒者之性，是类、束之。
+		const : NAT1
+	变
+		言：变量也，运而用之。是仅名。
+		vara, varb 
+	常
+		言：一机之运，必有所常，有常而能论之，无常自无可言。是以定机之法，而以证其正形。
+		vara : NAT1 & varb : NAT & vara > varb
+	启
+		言：欲运必先启，启必知变之启数，是予之量。且考其先量不背常矣。
+		vara := 35 || varb := 0
+	运
+		言：机无运者，焉其有用？其常而定之，运而用之，而能正一体。
+		add(xx) = 前 
+			xx &lt; MAXINT & varb + xx &lt; vara
+		则
+			varb := varb + xx 
+		终 
+	终
+
+### 更机
+
+本机者，可序一体，可定一系，然其惟定法耳，不可以算。更者，将一机自本至用器，一机多更，步步之器也。
+
+先不一一言之，姑见下例：
+
+	机 EntrySys 
+	集 PID 
+	恒 maxin
+	性 maxin : NAT1 
+	变 inside
+	常 inside &lt;: PID & card(inside) &lt;= maxin 
+	启 inside = {} 
+	运 
+		enter(p) = ...  // 入人也
+		o &lt;-- whosin = ... // 谁已入也
+		leave(p) = ...  // 出人也
+		arbitrary_eject = ...  // 乱逐人也
+
+是机可更之为：
+
+```
+更机 EntrySys_r 
+更 EntrySys  // 必言其之所更者
+性 maxin = 500  // 今定恒量
+变 ilist  // 虚中用集，实中弗可，故以列代集
+常 ilist : iseq(PID) & ran(ilist) = inside  // 後者将更机与本机之常相联也
+启 ilist = []
+运
+	enter(p) = ilist := ilist &lt;- p;  // 本机有「前」，更机不必
+	o &lt;-- whosin = o := ran(ilist);
+	leave(p) = 变 i 在
+		i := ilist'(p);  // 反列
+		ilist := (ilist /|\ (i-1)) ^ (ilist \|/ i)
+	终;
+	p &lt;-- arbitrary_eject = 
+		p := ilist(1);
+		ilist := tail(ilist);
+```
+
+### 器
+
+器者，机之所能用形也，更而更之，终必得器。器定最严，不容虚渺数学之论，仅许真算之理。若成之，则谓是言Ｂ零，而器可成矣。
+
+其途能以更缓成之，亦一跃而成，自本机至真器。
+
+姑见下列：
+
+```
+机 Smallform 
+集 CLASS, RESP = {yes, no}
+恒 cmax 
+性 cmax : NAT & card(CLASS) = cmax 
+变 returns 
+常 returns &lt;: CLASS 
+启 returns := {}
+运
+	retform(c) = 前
+		c : CLASS - returns 
+	则
+		returns := returns \/ {c} 
+	终;
+
+	o &lt;-- formquery(c) = 前
+		c : CLASS 
+	则 
+		若 c : returns 则 o := yes 否 o := no 终
+	终;
+
+	n &lt;-- howmanyret = n := card(returns);
+终
+```
+
+是机计一课学生之还表。可见新「若则否终」之文，以为选。
+
+Ｂ零而弗能用缓集、亦弗能数缓集；必以列代之，亦用环法数之。
+
+	器 Smallform_i 
+	更 Smallform 
+	量 cmax = 30; CLASS = 0..29
+	实变 rarr  // 是器唯有，实变必Ｂ零，虚亦，或言变，不必从之，故有分。
+	常
+		rarr : 0..29 -> RESP & 
+		returns = dom(rarr |> {yes})
+	启 rarr := CLASS * {no} 
+	运
+		retform(c) = rarr(c) := yes; 
+		o &lt;-- formquery(c) = o := rarr(c);
+		// 下难也
+		n &lt;-- howmanyret = 
+			变 i, x, r 在
+				x := 0; i := 0;
+				当 i &lt; 30 环
+					r := rarr(i);
+					若 r = yes 则 x := x+1 终;
+					i := i + 1
+				常
+					x : NAT & i : NAT & i >= 0 & i &lt;= 30 & 
+					x = card(0..i-1 &lt;| rarr |&gt; {yes})
+				易
+					30 - i 
+				终;
+				n := x 
+			终;
+	终
+
+环者有四部，曰当环常易。当者，言若是环必环、环者环之运、常者环中之不变、易者环中之变，以略其数，必常下。此四者成一环，必有而能论之。
+
+#### 以库成之
+
+又有库器，是器者先人已书而证之，故能安用。时Ｂ零难，可进库以解之。若下列：
+
+	机 Arrex
+	变 myarr 
+	常 myarr : 1..3 -> NAT 
+	启 myarr :: 1..3 -> NAT 
+	运 o &lt;-- find1 = o := myarr(1)
+
+能器之为：
+
+	器 Arrex_i 
+	更 Arrex 
+	进 BASIC_ARRAY_VAR(1..3, NAT)
+	常 arr_vrb = myarr  // 是进器内之变也，必联以常之。
+	运 o &lt;-- find1 = o &lt;-- VAL_ARRAY(1)
+	终
+
+此致简序。
+
+
+</div>
+</div>
+	
+
+	<footer>
+		<div class="cbox">
+			<div class="columncontainer ctwo" id="fc2">
+			</div>
+			<script type="text/javascript" src="../../js/footerGen.js"></script>
+		</div>
+	</footer>
+
+</div>
+
+</body>
+</html>
