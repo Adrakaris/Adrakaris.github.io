@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS419</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	
+	
+	<script async id="MathJax-script" type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script defer type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script defer type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
+	<script defer type="text/javascript" src="../../js/prism.js"></script>
+</head>
+<body>
+
+<div class="hidden">
+	<header>
+		<div class="parallax parsmaller">
+			<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 7fr 1fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+				<div class="column tinycolumn">
+					<a href="../../" class="nav">Home</a>
+				</div>
+				<div class="column tinycolumn">
+					<a href="./" class="nav">Back</a>
+				</div>
+				<div class="column tinycolumn">
+					
+					<a href="../../about.html" class="nav">About</a>
+				</div>
+				<div></div>
+				<div class="column tinycolumn">
+					<a href="https://ko-fi.com/yijunhu" class="nav">Donate</a>
+				</div>
+				<div class="column">
+					<button class="nav dark-light">Dark Mode</button>
+				</div>
+			</div>
+			<div class="cbox"> 		
+				<h1>CS419</h1>
+				<p class="subheading">Quantum Computing</p>
+			</div>
+		</div>
+	</header>
+
+<header>
+	<div class="cbox">
+		<h1>Information Transfer</h1>
+	</div>
+</header>
+
+
+
+<div class="cbox">
+<div class="buttonwrapper"><a href="./">Back</a></div>
+<div class="md-conv">
+## Contents 
+3. [Quantum Information](#qinfo)
+4. [Quantum Information Transfer](#qit)
+</div>
+
+</div>
+<div>
+\(
+	\newcommand{\k}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\e}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\b}[1]{\left\langle #1 \right\rvert}
+	\newcommand{\ip}[2]{\left\langle #1 \vert #2 \right\rangle}
+	\newcommand{\bb}{\mathbb}
+	\newcommand{\rm}{\textrm}
+	\newcommand{\0}{\e{0}}
+	\newcommand{\1}{\e{1}}
+	\newcommand{\p}{\e{+}}
+	\newcommand{\m}{\e{-}}
+	\newcommand{\t}{^\top}
+	\newcommand{\abs}[1]{\left\lvert #1 \right \rvert}
+	\DeclareMathOperator{\tens}{\otimes}
+	\DeclareMathOperator{\lra}{\longrightarrow}
+	\DeclareMathOperator{\lla}{\longleftarrow}
+	\DeclareMathOperator{\span}{span}
+	\DeclareMathOperator{\dim}{dim}
+	\DeclareMathOperator{\poly}{poly}
+	\DeclareMathOperator{\hcf}{hcf}
+	\DeclareMathOperator{\Tr}{Tr}
+	\DeclareMathOperator{\per}{per}
+	\DeclareMathOperator{\space}{\mathcal{P}}
+\)
+</div>
+
+
+<div class="colourband">
+	<h2 id="qinfo">Quantum Information</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Quantum States as Information Carriers
+
+A qbit is the simplest system that can reliably encode a classical bit.
+
+Information is proportional to the number of distinguishable states of a physical system.
+- Classically, any two different states are distinguishable (trivially)
+- Quantumly, states are **distinguishable** $\iff$ they are **orthogonal**
+	- So if you take $\0$ and $\e+$, and a black box that outputs any one of the two, it is **impossible** to certainly identify which one it is.
+
+Given some quantum information $\e\psi$, we can do 3 basic things:
+
+1. **Ancilla.** Take a fixed known quant-state $\e A$ and adjoin it to our state to get a bigger one: $\e{\tilde{\psi}} = \e\psi \e A$.
+2. **Unitary.** Apply a unitary operator $U$ 
+3. **Measure.** Take a measurement on all or part of $\e\psi$, thus 
+	- Can record result 
+	- And based on outcomes choose further steps 
+	- Output is generally probabilistic. 
+
+And **any combination of the 3**.
+
+
+### The No Cloning Theorem
+
+> Quantum information cannot be copied or cloned.
+
+Copying classical information is trivial. To relate it to operators, we can just use a CNOT operator. 
+
+More generally, any copying process has the form
+- $(b) (0) (M)$ an information register (with $b$), a blank register (with 0), and an internal machine state $M$ which is in the **Ready** state 
+- And goes to $(b) (b) (M_2)$ with the blank register having the copy, and the machine state being $M_b$ post copy (since it can change during copy.)
+
+$$ (b) (0) (M) \lra_{CNOT} (b)(b)(M)$$ 
+
+Quantumly:
+- Given some information $\e\psi_A$,
+- Copying is a *quantum evolution* process of subsystems $A, B, M$. We want 
+$$ \e\psi_A \0_B \e{M\_0}\_M \lra\_? \e\psi\_A \e\psi\_B \e{M\_\psi}_M $$
+- Where B is the blank register space, and M is any extra space needed, which is initially in ready state $M_0$ independent of $\e\psi_A$. 
+
+<b-blue>
+
+***Theorem.*** **No cloning theorem** (Unitary version)
+
+Let $S$ be any known set of quantum states of system $A$, that contains at least one pair $\e\xi, \e\eta : \e\xi \neq \e\eta$ and they are orthogonal. 
+
+Then there exist **no unitary process** that achieves cloning of all states in $S$. 
+
+</b-blue>
+
+Remarks:
+- If $\e\xi = \e\eta$, then there is only one state and it clones fine 
+- If $\e\xi \perp \e\eta$, then they can also clone fine (can rotate to $\0, \1$ and apply CX)
+	- So $CX \e k \0 = \e k \e k : k = 0,1$, 
+	- but $CX(a\0 + b\1)\0 = a\e{00} + \e{11} \neq (a\0 + b\1)(a\0 + b\1)$. 
+- No unitary process means no combination of operations above. 
+
+<s-side>
+
+***Proof.*** Let $\e\xi, \e\eta$ be two different non-orth states. Then we require the cloning process to 
+$$ \e\xi\_A \0_B \e{M\_0}\_M \lra\_U \e\xi_A \e\xi_B \e{M\_\xi}_M $$ 
+$$ \e\eta\_A \0_B \e{M\_0}\_M \lra\_U \e\eta_A \e\eta_B \e{M\_\eta}_M $$ 
+
+***Note.** Unitary processes preserve inner products.*
+
+Therefore
+\begin{align}
+	\ip\xi\eta \ip00 \ip{M_0}{M_0} &= \ip\xi\eta \ip\xi\eta \ip{M_\xi}{M_\eta}\\\\
+	\implies \ip\xi\eta &= \ip\xi\eta \ip\xi\eta \ip{M_\xi}{M_\eta}
+\end{align}
+Since anything inner prod itself = 1 (in normalised vectors).
+
+Since $\e\xi \neq \e\eta$, we know $0 &lt; \ip\xi\eta &lt; 1$, and $0 \leq \ip{M_\xi}{M_\eta} \leq 1$ (we don't really care what the machine state is)
+
+Thus 
+$$ 1 = \ip\xi\eta \ip{M_\xi} {M_\eta}  $$
+Which is a contradiction since neither of the two terms on the right can ever multiply to 1. $\Box$
+
+</s-side>
+
+> However we *can* copy information with a good probability.
+
+### Indistinguishability of Non-Orthogonal States
+
+- *Given.* an unknown state $\e\psi$ of any dimension,
+- *Promise.* $\e\psi$ is either $\e{\alpha_0}$ or $\e{\alpha_1}$, which are distinct known states 
+- *Problem.* must determine which state $\e\psi$ is 
+
+We know we cannot do this with certainty if $\ip{\alpha_0}{\alpha_1} \neq 0$.
+
+***State Estimation Process.*** 
+Given a state $\e\psi$, we can (1) adjoin an ancilla $\e A$, (2) do a unitary, or (3) perform a measurement.
+
+By adjoining $\e A$ we can change the problem to discriminating against $\e{\alpha_0}\e A$ against $\e{\alpha_1}\e A$, **but** the inner product remains the same.
+
+*The process.* Let us have a state estimation process $M_1$. We do a unitary U, followed by measurements $\Pi_0, \Pi_1$, i.e. a "rotated measurement", where the new projectors are:
+$$
+\tilde\Pi_i = U^\dagger \Pi_i U \pod{i=0,1}
+$$
+For any $\e\xi: P_{M_1}(i) = (\b{\xi}U^\dagger) \Pi_i (U\e\xi)) = \langle \xi | U^\dagger \Pi_i  U | \xi \rangle$, which becomes $\ip{\xi}{\tilde\Pi_i | \xi}$, so our rotated mnt is just a single mnt in reality.
+
+Some measurements are better than others at giving a correct measurement -- introduce a *figure of merit*, a **success probability** $P_s$.
+
+We assume no prior information about the state -- prior probabilities are $\frac{1}{2}$, so
+$$
+P_s = \frac{1}{2}P(0|\alpha_0) + \frac{1}{2}P(1|\alpha_1)
+$$
+Which by the born rule becomes
+$$
+P_s = \frac{1}{2} (\ip{\alpha_0}{\Pi_0|\alpha_0}+\ip{\alpha_1}{\Pi_1|\alpha_1})
+$$
+which since $\Pi_1 = I - \Pi_0$ we can write in terms of successful and mistaken inference of alpha-0:
+$$
+\begin{align*}
+P_s &=  \frac{1}{2} + \frac{1}{2}(\ip{\alpha_0}{\Pi_0|\alpha_0} - \ip{\alpha_1}{\Pi_0|\alpha_1})\\\\
+&= \frac{1}{2} + \frac{1}{2}\Tr(\Pi_0)(\e{\alpha_0}\b{\alpha_0} - \e{\alpha_1}\b{\alpha_1}) \pod{\dagger}
+\end{align*}
+$$
+> Tr is the trace, the sum of diagonal elements.
+
+And we want to find an optimal Pi-zero projector. Let $D = \e{\alpha_0}\b{\alpha_0} - \e{\alpha_1}\b{\alpha_1}$, we know D is hermitian, thus its eigenvalues are real. Therefore it has a complete eigenbasis of orthonormal states. 
+
+Let $\e\beta : \e\beta \perp \e{\alpha_0}, \e{\alpha_1}$, and so
+$$
+D\e\beta = \e{\alpha_0}\ip{\alpha_0}\beta - \e{\alpha_1}\ip{\alpha_1}\beta = 0
+$$
+so D only has 2 nonzero eigenvalues. 
+
+The trace of D is zero (the reason is left as an excersise), and so the sum of the eigenvalues is also zero. Let the eigenvalues be $\delta, -\delta$, with eigenstates $\e p, \e m$, and so $D = \delta\e p - \delta\e m$. 
+
+We want to determine delta in terms of the alphas, so we work in subspaces of the two alphas. We need a new basis for each, so 
+- Choose $\e{\alpha_0^\perp}$ to be orthnorm to $\e{\alpha_0}$, so $\e{\alpha_0^\perp}, \e{\alpha_0}$ forms a basis.
+- *Let* $\e{\alpha_0} = \begin{bmatrix} 1 \\\\ 0 \end{bmatrix}; \e{\alpha_1} = \begin{bmatrix} c_0 \\\\ c_1 \end{bmatrix} = c_0\e{\alpha_0} + c_1 \e{\alpha_0^\perp}$.
+Find the new coefficients by taking inner products of each base with the original vector:
+- $c_0 = \ip{\alpha_0}{\alpha_1}$, $|c_1| = \sin\theta$, and $|\ip{\alpha_0}{\alpha_1}| = \cos \theta$ for the angle between the two vectors (presumably)
+And so 
+$$
+D = \begin{bmatrix} 1 \\\\ 0 \end{bmatrix}\begin{bmatrix} 1 & 0 \end{bmatrix} -
+\begin{bmatrix} c_0 \\\\ c_1 \end{bmatrix}\begin{bmatrix} c_0^* & c_1^* \end{bmatrix} = \begin{bmatrix} 
+|c_1|^2 & -c_0c_1^* \\\\ -c_1c_0^* & -|c_1|^2
+ \end{bmatrix}
+$$
+We want the eigenvectors, i.e. to solve the characteristic equation $\det(D = \lambda I) = 0$
+- From this we get $\lambda = |c_1| = \pm \sin\theta$, and so $\delta = \sin  \theta$.
+- Substituting into ($\dagger$)
+$$
+\begin{align*}
+P_s &= \frac{1}{2} + \frac{\delta}{2}\Tr(\Pi_0)(\e p \b p - \e m \b m)\\\\
+&= \frac{1}{2} + \frac{\delta}{2}(\b p \Pi_0 \e p - \b m \Pi_0 \e m)
+\end{align*}
+$$
+
+For any projector $\Pi$ and arbitrary state $\e\xi$, we have that 
+$$0 \leq \b\xi \Pi \e\xi \leq 1$$
+And so $P_s$ achieves a maximum value when the LH term in the bracket goes to 1, and RH goes to 0, i.e.
+$$
+P_s = \frac{1}{2} + \frac{\delta}{2} = \frac{1}{2}(1+\sin\theta)
+$$
+When states are orthogonal, $\sin\theta = 1$, and the success chance is 1. If states are aligned, then success is zero, and somewhere in between etc.
+
+> So how do we find $\Pi_0$?
+
+If this is chosen to be any projection in a subspace that
+- contains $\e p \implies \Pi_0 \e p = \e p$
+- orthogonal to $\e m \implies \Pi_0 \e m = \e m$
+Such a chance is **always possible**, since they are orthogonal, and so the achievable bound 
+$$
+P_s \leq \frac{1}{2}(1 + \sin\theta).
+$$
+
+> This is the *Helstrom Holevo* bound
+
+***Note.*** 
+- The ancilla is **never needed**, since only the inner product is relevant.
+- If the two alphas are qubit states, we can just work in 2D space
+- Optimal discrimination mnt is a **complete** mnt of a quantum observable D. 
+
+<b-blue>
+
+***Theorem.* Helstrom-Holevo Bound**
+
+Given one of two equally likely states $\e{\alpha_0}, \e{\alpha_1}$ with $|\ip{\alpha_0}{\alpha_1}| = \cos \theta$, then the probability of correct identification is bounded **tightly** by
+$$P_s \leq \frac{1}{2}(1 + \sin\theta)$$
+
+</b-blue>
+
+Remark: Other disambiguation processes are possible. We could have an **unambiguous discrimination** with three outcome states: 0, 1, fail, where fail occurs when it is neither certainly 0 nor 1.
+
+### No Signalling Principle
+
+***The standard setup.*** 
+- We have two people, Alice and Bob, who are distantly separated in space. <span class="grey">This is an arbitary distance, and can be quite close or very far</span>
+- Each hold a local quantum system A, B respectively.
+- Initially, A, B is in the same (possibly entangled) quantum state. 
+- Each can apply local actions on their own systems.
+
+***The issue.*** Suppose Alice performs a local measurement on A. 
+
+The born rule says that for each measurement outcome $k$ on A, the state at B will "instantaneously change" to reflect measurement collapse to a post-mnt state $\e{\beta_k}$.
+
+Can B notice this change by only local actions? i.e. can we have faster-than-light information panel?
+
+(No.)
+
+Consider local operations on composite system $\e\psi_{AB}$. Let $H_A, H_B$ be the state space of A and B, i.e. $H_{AB} = H_A \tens H_B$. 
+
+【Local ancilla】 Alice and bob can adjoin local ancilla spaces $A', B'$ to enlarge the dimension of their local systems.
+
+【Local unitary】 Alice can perform a local unitary on her own half respective to B's system:
+$$
+\begin{matrix}U_A \tens I_B \pod{\rm{Alice}} & I_A \tens U_B \pod{\rm{Bob}}\end{matrix}
+$$
+**Note** that unitary operators on disjoint subsystems always commute: i.e. they can be done in any order $\lra U_A \tens U_B$. 
+
+【Local measurement】 Say Alice performs mnt on A with some orth subspaces $E_a$, and projectors $\Pi_a$. She will have outcomes $a$. Note that the space is made as 
+$$
+H_A  = \oplus_a E_a
+$$
+like before. 
+
+A full span measurement effect is represented by the subspace $E_a \tens H_B$, and is gotten by projector $\Pi_a \tens I_B$ over $H_{AB}$.
+
+Similarly Bob can do the same for B, to get subspaces $F_b$ and outcomes $b$ by projectors $\Pi_b$.
+
+By the born rule we can obtain a joint prob dist $P(a,b)$ by performing the corresponding measurements independently and getting subspace $E_a \tens F_b$, and these projectors commute.
+
+<b-blue>
+
+***Theorem.* No signalling principle**
+
+Suppose Alice and Bob have access to local states A, B and a joint quantum system $\e\psi_{AB}$. Alice **cannot** convey any information to Bob by performing local operations.
+
+i.e. no local action by Alice can change the output probability of any local quantum process of Bob
+
+</b-blue>
+
+<s-side>
+
+***Proof.*** Consider a case when bob performs a complete mnt on B, w.r.t bases $\{\e b_B\}$ and outcomes $b$. 
+
+Firstly, alice does nothing, and the state can be represented using this basis as
+$$
+\e\psi_{AB}  = \sum\limits_{\forall b} \e{\xi_b}_A \e b \pod{\dagger}
+$$
+For some xi vector where $\e{\xi\_b}\_A = \ip{b}{\psi}\_{AB}$ -- just converting bases. These are the *conditioned states of A given b*. By the born rule $P(b) = \ip{\xi\_b}{\xi\_b}$.
+
+Now suppose alice does complete measurement w.r.t bases $\{\e a \}$ and outcomes $a$, projectors $\Pi_a = \e{a}\b{a}$. In $(\dagger)$ this becomes
+$$
+P(a) = \left\lVert \sum\limits\_{\forall b} (\Pi_a \e{\xi\_b}\_A) \e b\_B \right\rVert
+$$
+And the post measurement state is
+$$
+\e{\psi\_a}\_{AB} = \frac{1}{\sqrt{P(a)}}\sum\limits\_{\forall b} (\Pi\_a \e{\xi\_b}\_A) \e b\_B \pod{\ddagger}
+$$
+
+Suppose alice obtains $a$, and now bob does a measurement. $P(b|a)$ is the l2 squared of the projection of $(\ddagger)$ onto $\e b$:
+$$P(b|a) = \lVert \Pi_a \e{\xi_b} \rVert^2 = \b{\xi_b} \Pi_a \e{\xi_b}$$
+Therefore
+$$
+P(b) = \sum\limits_{\forall a}\b{\xi_b} \Pi_a \e{\xi_b} = \b{\xi_b} \sum\limits_{\forall a} \Pi_a \e{\xi_b} = \b{\xi_b} I\e{\xi_b}
+$$
+Which is just $\ip{\xi_b}{\xi_b} = P(b)$, so no matter what alice does, bob's measurement probabilities doesn't change. $\Box$
+
+</s-side>
+
+Remarks:
+- This generalises to incomplete measurements -- if you sum over the projectors it gives the identity
+- Unitary preserve inner products and so local unitaries won't work either
+- Therefore there is no FTL transfer.
+
+
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="qit">Quantum Information Transfer</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Quantum Dense Coding 
+
+We know that a single qbit can only reliably encode one bit of information. i.e. you can only send one bit per qbit... right?
+
+Well with some quantum f\_ckery we can send more information, if the qbit being sent is already entangled with a qbit at the receiver. This lets us send **2 bits** of information per qibt.
+
+<b-blue>
+
+***Def.*** **Bell states**, or bell basis, is defined by the following: 
+
+\begin{align*}
+\e{\phi^+} &=  \frac{1}{\sqrt{2}}(\e{00} + \e{11})\\\\
+\e{\phi^-} &=  \frac{1}{\sqrt{2}}(\e{00} - \e{11})\\\\
+\e{\psi^+} &= \frac{1}{\sqrt{2}}(\e{01}+\e{10})\\\\
+\e{\psi^-} &= \frac{1}{\sqrt{2}}(\e{01}-\e{10})
+\end{align*}
+
+These states are orthogonal, and the bell basis for 2 qbits are give by these four:
+$$
+\\{ \e{\phi^+}, \e{\phi^-}, \e{\psi^+}, \e{\psi^-} \\}
+$$
+
+</b-blue>
+
+Notably, whereas the 2 qbit computational basis (00 01 10 11) are all product states, these are all **entangled**. Also,
+
+\begin{align}
+\e{\phi^+} &= I \tens I \e{\phi^+} \\\\	
+\e{\phi^-} &= Z \tens I \e{\phi^+} \\\\	
+\e{\psi^+} &= X \tens I \e{\phi^+} \\\\	
+\e{\psi^+} &= Y \tens I \e{\phi^+} \\\\	
+\end{align}
+
+And for any one qbit unitary U:
+
+$$ U \tens I \e{\phi^+} = I \tens U\t \e{\phi^+} $$
+
+We can also make these states by applying operations to the computational basis:
+
+$$
+\0\0 \overset{H \tens I}{\lra} \e+\0 = \frac{1}{\sqrt{2}}(\0 + \1)\0 \overset{CX_{12}}{\lra} \e{\phi^+}
+$$
+
+This works over the other three states and produces the other three bases.
+
+<s-side>
+
+***The quantum dense coding protocol.*** Let Alice and Bob (A and B) be distantly separated in space, and each has one qbit of the entangled $\e{\psi^+}$ state. A wants to send 2 bits of B, so she does:
+
+1. A applies $I,X,Z,Y$ respectively to her (first) qbit, to make the state $\e{\phi^+}, \e{\phi^-}, \e{\psi^+}, \e{\psi^-}$, which encode messages 00, 01, 10, 11.
+2. A sends this qbit to B
+3. B does a **bell measurement** on both qbits together.
+
+</s-side>
+<p></p>
+<b-blue>
+
+***Def.*** A bell measurement is one of four projectors in the bell basis:
+
+\begin{matrix}
+	\Pi_0 = \e{\phi^+}\b{\phi^+} & \Pi_2 = \e{\psi^+}\b{\psi^+}  \\\\
+	\Pi_4 = \e{\phi^-}\b{\phi^-} & \Pi_3 = \e{\psi^-}\b{\psi^-}
+\end{matrix}
+
+</b-blue>
+
+### Quantum Teleportation 
+
+A protocol to send quantum information, in the **LOCC** (local operation and classical communication) paradigm. I.e. A and B can do local quantum operations but can only communicate through classical channels.
+
+Classical channels can mean anything, such as a phone line.
+
+A and B are separated in space, but each have an entangled state $\e{\phi^+}$. 
+
+A has another qbit in some arbitrary state $\e\alpha$, which is possibly unknown, and wants to send this to B without directly sending it over. A cannot identify $\e\alpha$ without destroying it, and the space between A and B is hostile to quantum transfer.
+
+<s-side>
+
+***The protocol.*** A can transfer $\e\alpha$ to B using the entanglement of $\e{\phi^+}$, without anything being passed through space. Let the qbit labels:
+
+- 1: The input qbit $\e\alpha$ (owned by A)
+- 2: The first qbit of entangled $\e{\phi^+}$ (owned by A)
+- 3: The second qbit of entangled $\e{\phi^+}$ (owned by B)
+
+The initial state is $\e\alpha_1 \e{\phi^+}_{23}$, where $\e\alpha = a\0 + b\1$ for some amplitudes. We have that 
+\begin{align}
+\e\alpha \e{\phi^+} &= (a\0 + b\1) \tens \frac{1 }{\sqrt{2} } (\e{00} + \e{11}) \\\\
+&= \frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{011} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \pod{\dagger}
+\end{align}
+
+We perform the following steps.
+
+1. A applies $CX_{12}$ to 1 and 2.
+2. A applies $H$ to 1 
+3. A measures both qbits in computational basis, and obtains one of 00, 01, 10, 11
+
+(Note that this is equivalent to a bell measurement on 12)
+
+</s-side>
+
+We can look at the effects of these steps on $(\dagger)$:
+
+\begin{matrix}
+	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{011} + \frac{b}{\sqrt{2}}\e{100} + \frac{b}{\sqrt{2}}\e{111} \\\\
+	\Big\downarrow CX_{12} \\\\
+	\frac{a}{\sqrt{2}}\e{000} + \frac{a}{\sqrt{2}}\e{011} + \frac{b}{\sqrt{2}}\e{110} + \frac{b}{\sqrt{2}}\e{101} \\\\
+	\Big\downarrow H_1 \\\\
+	\frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{00} + \frac{a}{\sqrt{2}}(\frac{\0 + \1}{\sqrt{2}})\e{11} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{00} + \frac{b}{\sqrt{2}}(\frac{\0 - \1}{\sqrt{2}})\e{11} \\\\
+	= \\\\
+	\frac{1 }{2 } (\e{00}(a\0 + b\1) + \e{01}(a\1 + b\0) + \e{10}(a\0 - b\1) + \e{11}(a\1 - b\0)) \\\\
+	= \\\\
+	\frac{1}{2} (\e{00}I\e\alpha + \e{01}X\e\alpha+ \e{01}Z\e\alpha+ \e{01}Y\e\alpha)
+\end{matrix}
+
+Therefore via the born rule we get 
+
+Outcome | Post measurement state | Probability
+-|-|- 
+00 | $ \e{00}_{12}\e\alpha_3$  | 0.25
+01 | $ \e{01}_{12}X\e\alpha_3$  | 0.25
+10 | $ \e{10}_{12}Z\e\alpha_3$  | 0.25
+11 | $ \e{11}_{12}Y\e\alpha_3$  | 0.25
+
+I.e. for outcome $\e{ij}$ the post measurement state has transformation $X^jZ^i$ applied. 
+
+<s-side>
+
+A then sends the 2 bit outcome to B, so B knows which state alpha is in.
+
+B applies the back-transform $Z^iX^j$ to his 3 state, and the state becomes just $\e\alpha$. 
+
+</s-side>
+
+Teleportation!
+
+***Quantum Circuit diagram.***
+
+Quantum processes like this can be represented as a circuit diagram with time moving along the x axis:
+
+![teleportation circuit diagram](./qcircuit.png)
+
+Double lines represent classical information transfer.
+
+Remarks:
+- After teleportation, A is left, uniformly randomly, with one of the four 2 q-bit states 00, 01, 10, 11. I.e., *no information* is left at A (and consistent with no cloning and no signalling)
+- Before A's measurement, B's qbit is half of the $\e{\psi^+}$ state, and we can show that any complete measurement on that would give a random outcome.
+- After A's measurement, B's qbit is one of the four results all with 0.25 probability. Any complete measurement would thus result in 0 or 1 with prob 1/2.
+- The *physical system* of $\e\alpha$ is not transferred, only the identity/information being reconstructed exactly in a *different* system.
+
+</div>
+</div>	
+
+
+
+
+<footer>
+    <div class="cbox">
+        <div class="columncontainer ctwo" id="fc2">
+        </div>
+        <script type="text/javascript" src="../../js/footerGen.js"></script>
+    </div>
+</footer>   
+
+</div>
+</body>
+</html>

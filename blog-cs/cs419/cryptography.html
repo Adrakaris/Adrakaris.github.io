@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS419</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	
+	
+	<script async id="MathJax-script" type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script defer type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script defer type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
+	<script defer type="text/javascript" src="../../js/prism.js"></script>
+</head>
+<body>
+
+<div class="hidden">
+	<header>
+		<div class="parallax parsmaller">
+			<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 7fr 1fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+				<div class="column tinycolumn">
+					<a href="../../" class="nav">Home</a>
+				</div>
+				<div class="column tinycolumn">
+					<a href="./" class="nav">Back</a>
+				</div>
+				<div class="column tinycolumn">
+					
+					<a href="../../about.html" class="nav">About</a>
+				</div>
+				<div></div>
+				<div class="column tinycolumn">
+					<a href="https://ko-fi.com/yijunhu" class="nav">Donate</a>
+				</div>
+				<div class="column">
+					<button class="nav dark-light">Dark Mode</button>
+				</div>
+			</div>
+			<div class="cbox"> 		
+				<h1>CS419</h1>
+				<p class="subheading">Quantum Computing</p>
+			</div>
+		</div>
+	</header>
+
+<header>
+	<div class="cbox">
+		<h1>Cryptography and Money</h1>
+	</div>
+</header>
+<div class="cbox">
+<div class="buttonwrapper"><a href="./">Back</a></div>
+<div class="md-conv">
+## Contents 
+
+4. [Quantum Cryptography](#qcyp)
+4. [Quantum Money](#qm)
+</div>
+</div>
+<div>
+\(
+	\newcommand{\k}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\e}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\b}[1]{\left\langle #1 \right\rvert}
+	\newcommand{\ip}[2]{\left\langle #1 \vert #2 \right\rangle}
+	\newcommand{\bb}{\mathbb}
+	\newcommand{\rm}{\textrm}
+	\newcommand{\0}{\e{0}}
+	\newcommand{\1}{\e{1}}
+	\newcommand{\p}{\e{+}}
+	\newcommand{\m}{\e{-}}
+	\newcommand{\t}{^\top}
+	\newcommand{\abs}[1]{\left\lvert #1 \right \rvert}
+	\DeclareMathOperator{\tens}{\otimes}
+	\DeclareMathOperator{\lra}{\longrightarrow}
+	\DeclareMathOperator{\lla}{\longleftarrow}
+	\DeclareMathOperator{\span}{span}
+	\DeclareMathOperator{\dim}{dim}
+	\DeclareMathOperator{\poly}{poly}
+	\DeclareMathOperator{\hcf}{hcf}
+	\DeclareMathOperator{\Tr}{Tr}
+	\DeclareMathOperator{\per}{per}
+	\DeclareMathOperator{\space}{\mathcal{P}}
+\)
+</div>
+
+
+<div class="colourband">
+	<h2 id="qcyp">Quantum Cryptography</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Background 
+
+Quantum cryptography takes advantage of non-orthogonal states to encode information. The receiver can thus not read message reliably, and furthermore any reading will destroy the message. 
+
+This may be inconvenient for the sender and receiver, but much more for an eavesdropper, Eve (E).
+
+First, we talk about classical systems.
+
+***Secret Sharing*.** The most primitive ciphers are like the caesar cipher. For it to work, the sender and receiver must pre-share an agreed secret, the permutation to un-transform the ciphertext. This is *symmetric* encryption.
+
+The problem with a lot of these systems is that they can be cracked, whether easily (e.g. caesar) or not. Only the **one time pad** is provably secure. Furthermore, a secret key must always be shared, which could be intercepted.
+
+***Public Key Cryptography.*** Using *asymmetric* public private key pairs to encrypt and decrypt data.
+
+There are many different schemes, such as RSA, but they all rely on unproved assumptions about computational hardness (i.e. $P \neq NP$), which could (but probably won't) be disproved, or skirted by using quantum computing f\_ckery.
+
+#### The One-time Pad.
+
+Let the message be a bitstring M of length $n$. 
+
+Encryption/decryption requires A and B to share a private key K, also of length $n$, known **only** to them.
+
+- A encrypts by adding K to M bitwise mod 2 (i.e. XOR). The ciphertext $C = K \oplus M$ 
+- Be decrypts by doing the exact same thing. 
+
+If K is *uniformly random*, then C is also random, and an eavesdropper seeing C would get no useful information. 
+
+However, K must only ever be used **once**, else it could be broken. If we have two $C_1 = M_1 \oplus K$ and $C_2 \oplus K$, then an eavesdropper can do $C_1 \oplus C_2 = M_1 \oplus M_2$ and get information.
+
+Further to this, we have to send the key in the first place.
+
+### Quantum Key Distribution
+
+Methods to send a key in a quantumly secure manner.
+
+Suppose A, B are distantly separated in space, and can communicate quantumly and classically. There is an eavesdropper E who can read and access both these channels.
+
+For quantum transmissions, we have:
+$$
+\begin{matrix}
+	\e{\psi_{00}} = \0 & \e{\psi_{01}} = \e+ \\\\
+	\e{\psi_{10}} = \1 & \e{\psi_{11}} = \e- 
+\end{matrix}
+$$
+Given over two orth-norm basis $B_0 = \0, \1$ the Z eigenbasis, and $B_1 = \e+, \e-$ the X eigenbasis, which are called **mutually unbiased bases**.
+
+Let bit value 0 be encoded in one of $\0, \e+$, and a 1 be encoded in one of $\1, \e-$. This means $\e{\psi_{ij}}$ has a bit value $i$ in basis $B_j$.
+
+***Mutually Unbiased Bases.*** (MUB) A set of MUB on $\bb{C}^d$ is a set of orthnorm bases s.t. any vector of a basis is an **equally weighted superposition** of vectors in any other basis:
+$$
+|\ip{e_i}{f_j}|^2 = \frac{1}{d} \pod{\forall i, j \in \{\e{e_i}, \e{f_j}\}}
+$$ 
+
+I.e. $\0, \1$ are both equal weighted probabilities of the plus-minus basis, and vice versa.
+
+There are a couple things about $N$ the max number of MUBs in dimension $d$:
+- $d=2 \implies N = 3$ being the Z, X, Y eigenbases.
+- For any $d$ that is **prime**, $N = d+1$ 
+- For any $d$ that is **not** prime, we only know a bound for N, that is if $d = p_1^{n_1} p_2^{n_2} .. p_k^{n_k} \pod{p_1 \lt p_2 \lt \cdots \lt p_k}$ breaks down into these prime factors with these powers, $p_1^{n_1} +1 \leq N \leq d_1$.
+
+#### BB84 Protocol
+
+A quantum key distribution QKD protocol.
+
+<s-side>
+
+
+【1】A generates 2 random uniform strings uniformly of length n:
+$$
+\begin{matrix}
+	X = x_1 x_2 .. x_n & Y = y_1 y_2 .. y_n
+\end{matrix}
+$$
+Then prepares n qbit states
+$$ \e{\psi_{x_1y_1}} .. \e{\psi_{x_ny_n}} $$ 
+
+And sends these to B in order. *(Conjugate coding)*
+
+</s-side>
+<p></p>
+<s-side>
+
+【2】When B receives n qbits, they may not be in the states $\e{\psi_{x_iy_i}}$, perhaps due to channel noise, or due to eavesdropping and tampering. 
+
+*Firstly.* Assume transmission is perfect, B receives everything as-is. 
+
+B generates a random uniform string $ Y' = y_1' y_2' .. y_n'$ and measures each qbit $i$ in basis $B_{y'_i}$ to get $X' = x_1'..x_n'$ 
+
+> $Y'$ is B's guess at A's encoding basis Y. 
+
+*Note:* If B is correct $y_i' = y_i \implies x_i' = x_i$. If B is incorrect $y_i' \neq y_i$ then $x_i'$ has **no correlation** to $x_i$.
+
+$y_i' = y_i$ happens with probability 0.5.
+
+</s-side>
+<p></p>
+<s-side>
+
+【3】A and B *publicly reveal* and compare their basis strings Y and Y' (but keep secret Xs).
+
+They both discard all bits $x_i, x_i'$ where the basis bits do not match, leaving shorter strings of *expected* length $\frac n2 : \tilde X , \tilde X'$
+
+Under the assumption of perfect transfer, then these bits provide the desired secret key. 
+
+**However** there is always noise and there may be eavesdropping, and so there are 2 more steps to correct for this.
+
+</s-side>
+<p></p>
+<s-side>
+
+【4】(**Information reconciliation**) A and B want to estimate the bit error rate BER = $\rm{count}(\tilde X' \neq \tilde X)$.
+
+They publicly compare a **subset** of Xs, at pre-agreed random positions. This can be as much as half. Then, all revealed bits are **discarded**.
+
+They assume the remaining bits have the same *proportional error* <span class="grey">but at unknown positions</span>. 
+
+They want to correct these errors without sacrificing too many key bits, and can be done if BER not too large.
+
+</s-side>
+<p></p>
+
+<s-side>
+
+【5】(**Privacy amplification**) are classical methods (not explained) for improving the quality of the key. A and B can do this, also using an estimation of the amount of information E has, via the BER.
+
+</s-side>
+
+There are many possible eavesdropping strategies for E. Such as 
+
+- **Intercept and resend attack** Intercept each qbit separately, measures it in a pre-determined basis, and sends the post measurement state, or try to reconstruct the qbit from her measurement.
+- **General Coherent Attack** With a "large quantum probe" unitarily interact (and entangle with) each passing bit, so E has a set of entangled bits (the "probe") which she could measure to obtain possibly joint info -- can even do this after sending and agreement.
+
+-----
+
+***Intercept and Resend.*** Assume quantum channel has no noise, but E intercepts each qbit and measures it in the **breidbart basis** ($\frac\pi8$ basis):
+
+\begin{align}
+	\e{\alpha_0} &= \cos \frac\pi8 \0 + \sin \frac\pi 8 \1\\\\
+	\e{\alpha_1} &= \cos \frac\pi 8 \0 - \sin \frac\pi 8 \1
+\end{align}
+
+This is a basis angled just between computational and conjugate, at 22.5 degrees offset, which is the best for getting information.
+
+We can work out that in every single case, E's probability of measuring A's bit correctly is 
+$$ \cos^2 \frac\pi 8 = \frac{1 + \frac 1 {\sqrt 2}}{2} \approx 0.85 $$ 
+
+Now the bit error rate, we have to analyse the probability of getting a *wrong* outcome case by case. This is usually done in a probability tree but I don't want to draw it so more $\TeX$:
+
+$$
+\0 \overset{|\ip{\alpha_0}{0}|^2}{\underset{\cos^2}\lra} \e{\alpha_0} \overset{|\ip{\alpha_0}{1}|^2}{\underset{\sin^2}\lra} \1 
+$$
+$$
+\0 \overset{|\ip{\alpha_1}{0}|^2}{\underset{\cos^2}\lra} \e{\alpha_1} \overset{|\ip{\alpha_1}{1}|^2}{\underset{\sin^2}\lra} \1 
+$$
+
+Where the left is what A sends, the middle is what E resends, and the right is what B measures (wrong result only). Calculating this we have 
+$$P(\rm{wrong}) = \cos^2\sin^2 + \sin^2\cos^2 = 2\sin^2\cos^2 = \frac12 (4\cos^2\sin^2) = \frac12 (2\sin\cos)^2$$
+$$= \frac12 \sin^2(\frac\pi4) = \frac14$$
+For the case of a missent $\0$. 
+
+Repeating this for all the other three cases, we get $\frac14$ each time, leading to an average BER of $\frac14$.
+
+-----
+
+***Information Reconciliation.*** Suppose there is already some secret key established, but due to noise (or spying) there is some BER (which we have estimated).
+
+So:
+- Apply a "random public permutation" to both strings
+	- to randomise positions of errors -- both sides must agree on this permutation 
+- A and B breaks their strings into blocks of suitable lengths (based on BER) : unlikely each block has 2 errors 
+- Compute *bit parity* for each block and announce 
+	- Blocks with agreeing parity are tentatively accepted correct.
+- Blocks with disagreeing parities must have odd number of errors (likely 1)
+	- Break each block in half, and repeat above until offending block is 1 bit long 
+	- B corrects that bit 
+- Repeat the above as many times as needed to gradually reduce BER 
+
+> Since parity is public, more info is leaked to E. However for blocks of length $k$, only $\log_2 k$ halvings, so exponentially less information is leaked.
+
+
+------
+
+***Privacy Amplification.***
+
+Ex. A and B share 3 bit string $x_1 x_2 x_3$, and suppose E knows only 1 bit of this bitstring.
+
+<s-side>
+
+***Fact.*** If E knows bit $x$, not $y$, then $x \oplus y$ is uniformly random for E. 
+
+More generally, if E knows some bit, but not all, then there is no knowledge of parity. 
+
+</s-side>
+
+Consider 2 bit strings $y_1 y_2:$ 
+
+$$ \begin{matrix}
+	y_1 = x_1 \oplus x_3  & y_2 = x_2 \oplus x_3
+\end{matrix} $$ 
+
+Then the outcomes can be:
+
+x | 000 | 001 | 010 | 011 | 100 | 101 | 110 | 111 
+-|-|-|-|-|-|-|-|-
+y | 00 | 11 | 01 | 10 | 10 | 01 | 11 | 00
+
+For any fixed value of any $x_1$, the corresponding $y$ outcomes are always uniform.
+
+**These can't be arbitrarily picked, as they must be uniform depending on E's knowledge.** 
+
+We can represent the above operation in a matrix: 
+
+\begin{align}
+	\begin{bmatrix}
+		y_1 \\\\ y_2
+	\end{bmatrix} &= \begin{bmatrix}
+		1 & 0 & 1 \\\\ 0 & 1 & 1
+	\end{bmatrix} \begin{bmatrix}
+		x_1 \\\\ x_2 \\\\ x_3 
+	\end{bmatrix} \\\\ 
+	y &= Gx
+\end{align}
+
+> Rows of $G$ denote subsets of bits for parity sums. Generally, 
+
+<b-blue>
+
+***Thm.*** If E knows only $k/n$ bits, then the $m \times n \pod{m \lt n}$ matrix G will produce secret $y$s **if and only if** the minimum "hamming weight" of the code generated by G is bigger than k.
+
+There is always a G that can generate a secret.
+
+</b-blue>
+
+- *Code:* representation of linear subspace of $(\bb{Z}_2)^n$, i.e. the span of k basis codewords in (that) is given by rows of G 
+- *Minimum weight of code:* The least hamming weight of any code word $c \in C$ 
+- *Hamming distance:* of two codewords $c_1, c_2 \in C$, is essentially `np.sum(c_1 != c_2)`.
+
+**Universal hashing:** given an $n$ bit string, choose an $m \lt n$ and random boolean matrix $G$, then with high probability, E will have no information about the string $y = Gx$.
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="qm">Quantum Money</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Quantum Banknotes
+
+A quantum banknote is a banknote with a printed serial number, which is an N bit string (publicly visible), as well as N qbits embedded within (which are stable). 
+
+For each banknote, the bank will have an N bit secret "basis" string.
+
+When the note is manufactured, the serial number is encoded into **BB84 bases** according to the basis string.
+
+When the note is returned / checked later, the bank can test the authenticity of the note by looking up the secret, and measuring the serial number in the basis given. The note is accepted *only if* the serial number matches exactly. 
+
+- A genuine banknote passes the test and **remains** genuine (since the qbit doesnt change if you measure it in the right basis.)
+
+A counterfeiter C wants to make notes that pass the test.
+
+Consider the $k$th bit. We want to ask: what is the maximum probability that the counterfeiter can determine the $k$th basis by measuring that bit?
+
+C can see the $k$th serial number, and knows that it is in $\0, \e+p$ for a 0 bit, and $\1, \e-$ for a 1 bit. 
+
+To determine the basis, C must determine between two **equally probable** states (their inner product is $\frac{1}{\sqrt 2}$).
+
+With the **Helstrom Holevo bound** we know that the maximum probability of successs is UB by 
+$$
+\frac{1 + \sin \frac{\pi}{2}}{2} = \frac{1 + \frac{1}{\sqrt 2}}{2} \approx 0.8535
+$$
+So C gets a wrong result with $p \approx 0.1465$.
+
+Now C use uses this result to set a basis string for a new fake banknote with the same serial number. If the note is subsequently inspected by the bank, the probability that bit $k$ 
+- has the correct basis and passes is 0.8535 
+- has the wrong basis and passes is 0.5 &times; 0.1465
+- has the wrong basis and fails is 0.5 &times; 0.1465
+
+And so one bit would pass with $p \approx 0.926$, and so we just need to increase the number of bits to make this probability arbitrarily small.
+- For 100 bits, the probability of full success is $0.926^{100} \approx 4.6 \times 10^{-4}$
+
+</div>
+</div>
+
+
+
+<footer>
+    <div class="cbox">
+        <div class="columncontainer ctwo" id="fc2">
+        </div>
+        <script type="text/javascript" src="../../js/footerGen.js"></script>
+    </div>
+</footer>   
+
+</div>
+</body>
+</html>

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CS419</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../../style/style.css" media="all">  <!--TODO: CHANGE HREF-->
+	<link rel="stylesheet" type="text/css" href="../../style/prism.css" media="all">
+	<meta name="viewport" content="width=device-width" initial-scale=1.0>  <!--TODO: CHANGE LINKS ON BOTTOM OF SHEET FOR COLLAPSIBLE-->
+	<link rel="icon" type="image/png" href="../../style/images/DragonIcon.png">
+	
+	
+	<script async id="MathJax-script" type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+	<script defer type="text/javascript" src="../../js/toggle-darklight.js"></script>
+	<script defer type="text/javascript" src="../../js/collapsible.js"></script>  <!--This stays at the end-->
+	<script defer type="text/javascript" src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+	<script defer type="text/javascript" src="../../js/arrange.js"></script>
+	<script defer type="text/javascript" src="../../js/prism.js"></script>
+</head>
+<body>
+
+<div class="hidden">
+	<header>
+		<div class="parallax parsmaller">
+			<div  style="display: grid; grid-template-columns: 1fr 1fr 1fr 7fr 1fr 1fr; grid-column-gap: 10px; padding: 5px; ">
+				<div class="column tinycolumn">
+					<a href="../../" class="nav">Home</a>
+				</div>
+				<div class="column tinycolumn">
+					<a href="./" class="nav">Back</a>
+				</div>
+				<div class="column tinycolumn">
+					
+					<a href="../../about.html" class="nav">About</a>
+				</div>
+				<div></div>
+				<div class="column tinycolumn">
+					<a href="https://ko-fi.com/yijunhu" class="nav">Donate</a>
+				</div>
+				<div class="column">
+					<button class="nav dark-light">Dark Mode</button>
+				</div>
+			</div>
+			<div class="cbox"> 		
+				<h1>CS419</h1>
+				<p class="subheading">Quantum Computing</p>
+			</div>
+		</div>
+	</header>
+
+<header>
+	<div class="cbox">
+		<h1>Fundamentals</h1>
+	</div>
+</header>
+
+
+<div class="cbox">
+<div class="buttonwrapper"><a href="./">Back</a></div>
+
+<div class="md-conv">
+## Contents 
+
+1. [Quantum Computing Fundamentals](#qc-fundy)
+2. [Quantum Mechanical Principles](#qmps)
+</div>
+</div>
+
+
+<div>
+\(
+	\newcommand{\k}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\e}[1]{\left\lvert #1 \right\rangle}
+	\newcommand{\b}[1]{\left\langle #1 \right\rvert}
+	\newcommand{\ip}[2]{\left\langle #1 \vert #2 \right\rangle}
+	\newcommand{\bb}{\mathbb}
+	\newcommand{\rm}{\textrm}
+	\newcommand{\0}{\e{0}}
+	\newcommand{\1}{\e{1}}
+	\newcommand{\p}{\e{+}}
+	\newcommand{\m}{\e{-}}
+	\newcommand{\t}{^\top}
+	\newcommand{\abs}[1]{\left\lvert #1 \right \rvert}
+	\DeclareMathOperator{\tens}{\otimes}
+	\DeclareMathOperator{\lra}{\longrightarrow}
+	\DeclareMathOperator{\lla}{\longleftarrow}
+	\DeclareMathOperator{\span}{span}
+	\DeclareMathOperator{\dim}{dim}
+	\DeclareMathOperator{\poly}{poly}
+	\DeclareMathOperator{\hcf}{hcf}
+	\DeclareMathOperator{\Tr}{Tr}
+	\DeclareMathOperator{\per}{per}
+	\DeclareMathOperator{\space}{\mathcal{P}}
+\)
+</div>
+
+<div class="colourband">
+	<h2 id="qc-fundy">Quantum Computing Fundamentals</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv" id="fund-dirac">
+### Fundamentals and Dirac Notation 
+
+Let $V$ be a finite dimensional vector space, where the vector coefficients are **complex**.
+
+
+<b-blue>
+
+***Def.*** We write a vector in $V$ as $\k{v} \in V$. This is called a **ket** vector and is a *column* vector.
+
+</b-blue>
+
+
+Generally we work in 2D vector spaces: $V_2$, with some chosen ortho-normal basis $\\{\k{0}, \k{1}\\}$
+
+***Example.*** Some vector $\k{v}$ can be written as a decomposition of bases:
+$$ \k{v} = a \k{0} + b \k{1} = \begin{bmatrix}
+	a \\\\ b
+\end{bmatrix} \pod{a, b \in \bb{C}} $$ 
+
+<b-blue>
+
+***Def.*** The **conjugate transpose** of vector $\k{v}$ is $\k{v}^\dagger$, and is made by transposing the vector and replacing its coefficients with their complex conjugates. This is a **bra** vector and is a row vector, and we reverse the direction of the brackets.
+
+\begin{align}
+	\b{v} = \k{v}^\dagger &= a^* \b{0} + b^* \b{1} \\\\
+	&= \begin{bmatrix}
+		a^*  & b^*
+	\end{bmatrix}
+\end{align}
+
+</b-blue>
+
+Let vector $\k{w} = c\k{0} + d \k{1}$.
+
+<b-blue>
+
+
+The **inner product** of $\k{v}$ and $\k{w}$ is written 
+$$ \ip{v}{w} = \k{v}^\dagger \k{w} = \begin{bmatrix}
+	a^* & b^*
+\end{bmatrix} \begin{bmatrix}
+	c \\\\ d
+\end{bmatrix}
+$$
+
+</b-blue>
+
+We can say that 
+- $\ip{0}{1} = 0$ since the bases are ortho-normal,
+- $\ip{i}{j} = \delta_{ij}$ for some $\k{i}, \k{j}$
+
+
+> This is Dirac's "bra-ket" notation, which is just "bracket" without the c.
+
+<b-blue>
+
+***Def.*** The **Tensor product** of vectors (in a fixed basis) is defined as follows:
+
+- Let vector spaces $V$ of dimension $m$, with basis $\k{e_1} \dots \k{e_m}$
+- $W$ of dimension $n$ with basis $\k{f_1} \dots \k{f_n}$ 
+
+The **tensor product space** $V \tens W$ has basis
+$$ \\{ \k{e_i} \tens \k{e_j} : i = 1\cdots m , j = 1 \cdots n \\}  $$ 
+
+i.e. there are $m \times n$ bases.
+
+
+A general vector $\k{\xi} \in V \tens W$ is defined 
+$$ \k{\xi} = \sum_{i, j} c_{ij} \k{e_i} \tens \k{e_j} $$ 
+
+For coefficients $c_{ij}$ 
+
+
+Let $\k{\alpha} \in V = \sum_{i=1}^m a_i \k{e_i}$, and $\k{\beta} \in W = \sum_{j=1}^n b_j \k{f_j} $.  Then the **tensor product** of two vectors is defined as:
+
+\begin{align}
+	 \k{\alpha} \tens \k{\beta} &= \sum_{i=1}^m a_i \k{e_i} \tens \sum_{j=1}^n b_j \k{f_j} \\\\
+	 &= \sum_{\forall i, j} a_i b_j \k{e_i} \tens \k{e_j}
+\end{align}
+
+</b-blue>
+
+> Whilst this is a rather... recursive definition, when we reach the fundamental bases (i.e. just have numbers) we can just perform the below operation.
+
+***Example.*** Let:
+
+$$\begin{matrix}
+	\k{a} = \begin{bmatrix}
+		0.1 \\\\ -0.7
+	\end{bmatrix} & \k{b} = \begin{bmatrix}
+		0.3 \\\\ 0.5
+	\end{bmatrix}
+\end{matrix}$$
+
+Then 
+
+$$ 
+\k{a} \tens \k{b} = \begin{bmatrix}
+	0.1 \\\\ -0.7 
+\end{bmatrix} \tens \begin{bmatrix}
+	0.3 \\\\ 0.5
+\end{bmatrix} = \begin{bmatrix}
+	0.1 \times 0.3 \\\\
+	0.1 \times 0.5 \\\\
+	-0.7 \times 0.3 \\\\
+	-0.7 \times 0.5
+\end{bmatrix}
+$$
+
+I.e. everything times everything.
+
+Thus for fundamental bases $V_2 \sim \left\\{ \k{0} = \begin{bmatrix}
+	1\\\\0
+\end{bmatrix}, \k{1} = \begin{bmatrix}
+	0\\\\1
+\end{bmatrix} \right\\}$, we can get 
+
+$$ 
+\k{0} \tens \k{0} = \begin{bmatrix}
+	1\\\\0
+\end{bmatrix} \tens \begin{bmatrix}
+	1\\\\0
+\end{bmatrix} = \begin{bmatrix}
+	1\\\\0\\\\0\\\\0
+\end{bmatrix}
+$$ 
+
+And we can get all our other new bases the same way.
+
+### Product and Entangled States
+
+<b-blue>
+
+***Def.*** Any vector $\k{\xi} \in V \tens W$ of the form $\k{\xi} = \k{a}\_{\in V} \tens \k{b}\_{\in W}$ is called a **product vector**.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+Any vector which is *not* a product vector is an **entangled vector**.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Def.*** The **k-fold tensor product***, denoted $\tens^k V\_2$ or $V^{\tens k}$ is the vector space 
+
+$$ V_2 \tens V_2 \tens \cdots \tens V_2 \pod{k \textrm{ times}}$$
+
+With $2^k$ bases, with each basis being denoted as a k-length bit string. 
+
+Each basis is $\k{i_1} \tens \cdots \tens \k{i_k}$, but because $\tens$ is a bit of a pain it is often written as $\k{i_1}\k{i_2} \cdots \k{i_k}$ or just $\k{i_1i_2 \dots i_k}$.
+
+</b-blue>
+
+***Example.*** Let $\k{v} = 1\k{00} + 1\k{11}$. We claim that this is entangled.
+
+To verify if it is entangled or not, we must demonstrate that it is or is not a product state. I.e. suppose 
+$$ \k{v} = (a\k{0} + b\k{1}) \tens (c\k{0} + d\k{1}) $$ 
+This resolves to 
+$$ ac\k{00} + ad \k{01} + bc \k{10} + bd \k{11} $$ 
+We get that $ac = bd = 0$ and $ad = bc = 1$, which is not possible to solve. Thus $\k{v}$ is entangled.
+
+
+Generally for an arbitrary $\e{v} \in V_2 \tens V_2 = a_{00} \e{00} + a_{01} \e{01} + a_{10} \e{10} + a_{11} \e{11}$, 
+
+$$ \e{v} \rm{ entangled } \iff \det(A) \neq 0 $$ 
+
+Where 
+
+$$ A = \begin{bmatrix}
+	a_{00} & a_{01} \\\\ a_{10} & a_{11}
+\end{bmatrix} $$
+
+But this is *not true* in higher dimensions.
+
+For general dimensions 
+
+$$ \sum_{i=1}^m \sum_{i=1}^n A_{ij} \e{i} \e{j} \rm{ product vector } \iff \rm{ mat } A \rm{ is rank 1} $$
+
+> Rank is a linear algebra term -- it is the number of columns (or rows, whichever is **smaller** that are linearly independent)
+
+----- 
+
+The inner product on general spaces $V \tens W$ is "induced by inner products on V and W applied slotwise". 
+
+This is to say for product states $\e{a_1}\e{b_1}$ and $\e{a_2}\e{b_2}$, the inner product is 
+$$ (\b{b_1}\b{a_1})(\k{a_2}\k{b_2}) \equiv \ip{a_1}{a_2} \ip{b_1}{b_2}.$$
+
+----- 
+
+When vectors come from the same subspaces tensored together, it is important to label which vector belongs to which space.
+
+Tensor product is a commutative operation, so for subspaces $A, B$, we could have $\e{\alpha}_A \e{\beta}_B$ having the bra form $\b{\alpha}_A \b{\beta}_B = \b{\beta}_B \b{\alpha}_A$
+
+</div>
+</div>
+
+<div class="colourband">
+	<h2 id="qmps">Quantum Mechanical Principles</h2>
+</div>
+
+<div class="cbox">
+<div class="md-conv">
+
+### Principle 1 - On Physical States 
+
+<b-blue>
+
+The states of any isolated physical system $S$ are represented by unit vectors in complete vector space $V$, with an inner product $\ip{v}{v} = 1$
+
+$\lra$ Any state is describable by unit vectors.
+
+</b-blue>
+
+***Ex.*** Take the simplest non trivial case of 1 qbit in 2-dimensional $V$.
+
+Take bases $\e{0}, \e{1}$. The general state $\e{\psi} = a\e{0} + b\e{1}$.
+
+$\lra \e\psi$ is a superposition of states $\e{0}, \e{1}$ with **amplitudes** $a, b \in \bb{C}$.
+<!-- 我操竟能这样子 -->
+<b-blue>
+
+***Def.*** A **Qubit** is a quantum system with a 2D state space *and* a chosen ortho-normal basis labelled $\0, \1$. 
+
+These are also called the $z-$, computational, or standard basis.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Def.*** The **conjugate basis** for a qbit in the orth-norm basis $\0, \1$ is defined as 
+
+\begin{align}
+	\e+ &= \frac{1}{\sqrt{2}} (\0 + \1) \\\\
+	\e- &= \frac{1}{\sqrt{2}} (\0 - \1)
+\end{align}
+
+This is rotated 45&deg; from the standard basis.
+
+</b-blue>
+
+</div>
+
+<div class="md-conv">
+
+### Princple 2 - Composite Systems
+
+<b-blue>
+
+Let system $S_1$ have state space $V_A$, $S_2$ have state space $V_B$;
+
+Then the **joint system** $S_1 S_2$ has state space $V_A \tens V_B$.
+
+</b-blue>
+
+***Ex.*** Take $n$ qbits. Their state space is $\tens^n V_2$, with dimension $2^n$.
+
+The standard basis is $2^n$ vectors of $n$ length bit strings $\e{i_1 \cdots i_n}$.
+
+The $n$-bit state is a product state *if* 
+- it is a tensor product of $n$ 1-qbit states $$ \e\psi = \e v_1 \e v_2 \cdots \e v_n $$ 
+- Otherwise, $\e\psi$ is entangled.
+
+
+In quantum computing as the number of qbits grow, the state description grows **exponentially**. 
+
+However, for *product* states, the description only grows **linearly**. This describes a classical computing system.
+
+#### Dirac and Linear Maps
+
+Consider linear maps on $V_2$ 
+
+> A linear map, or linear mapping on a 2D space is just a 2D transformation matrix.
+
+Let $\e v = a\0 + b\1$ and $\e w = c\0 + d\1$, the *ket-bra product* gives 
+$$ M = \e v \b w = \begin{bmatrix}
+	a \\\\ b 
+\end{bmatrix} \begin{bmatrix}
+	c* & d* 
+\end{bmatrix}$$ 
+$$ = \begin{bmatrix}
+	ac* & ad* \\\\ bc* & bd* 
+\end{bmatrix} $$ 
+
+This is a **linear map** on $V_2$ that projects a state down. That is to say,
+
+For any vector $\e x = \begin{bmatrix}
+	x_0 \\\\ x_1
+\end{bmatrix} $,
+$$ M \e x = (\e v \b w) \e x = \e v \ip w x $$
+
+It turns into a scaled $\e v$. These are called **rank 1 mappings**.
+
+Given 
+\begin{matrix}
+	\e 0 \b 0 = \begin{bmatrix}
+		1&0 \\\\ 0&0
+	\end{bmatrix} &
+	\e 0 \b 1 = \begin{bmatrix}
+		0&1 \\\\ 0&0
+	\end{bmatrix} \\\\ 
+	\e 1 \b 0 =\begin{bmatrix}
+		0&0 \\\\ 1&0
+	\end{bmatrix} &
+	\e 1 \b 1 =\begin{bmatrix}
+		0&0 \\\\ 0&1
+	\end{bmatrix}
+\end{matrix}
+
+We can make any mapping $A$ as a weighted sum of these four. 
+
+> Hopefully that's trivial.
+
+<b-blue>
+
+A **projection operator** is a special case of $M$ (above), with $\e v =\e w$ in any dimensions. And since vectors are normalised, $\ip v v = 1$.
+
+$\Pi_v = \e v \b v$ is an operator projecting onto a 1D subspace spanned by $\e v$. It has these properties:
+
+- $\Pi_v \Pi_v = \e v \b v \e v \b v = \Pi_v$ only.
+- $\Pi_v \e v = \e v \b v \e v = \e v$. 
+- $\Pi_v \e w = 0$ when $\e w$ is orthogonal to $\e v \pod{\e w \perp \e v} $
+
+</b-blue>
+
+
+Generally for any d-dimensional subspace E of an n-D space V, where E has basis $\\{ \e e_1 \cdots \e e_d \\}$, 
+
+$$ \Pi_E = \e {e_1} \b {e_1} + \cdots + \e {e_d} \b {e_d} $$ 
+
+is an operator projecting from $V \lra E$.
+
+
+If $A = \begin{bmatrix}
+	a & b \\\\ c & d
+\end{bmatrix}, B = \begin{bmatrix}
+	p & q \\\\ r & s
+\end{bmatrix}$ are linear operators on $V_2$, 
+
+Then $A \tens B : V_2 \tens V_2 \lra V_2 \tens V_2$ is defined by the action on the separate bases:
+$$ \e i \e j \mapsto (A\e i)(B\e j)$$ 
+
+This is also true for any general joint vectors.
+
+To actually work out this matrix though, we would get a 4x4 matrix where each of the four quadrants is defined
+$$ A \tens B = \begin{bmatrix}
+	aB & bB \\\\ cB & dB
+\end{bmatrix}. $$ 
+
+
+
+</div>
+
+<div class="md-conv">
+
+### Principle 3 - Physical Evolution of Systems
+
+
+<b-blue>
+
+Any physical finite time evolution of a quantum system is represented by **unitary** linear operators on a vector space of states.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Def.*** **Unitary matrices**: $U$ is unitary 
+
+- **iff** $U^{-1} = U^\dagger$ (conjugate transpose);
+- **iff** $U$ maps any orth-norm basis to any other orth-norm set of vectors.
+- **iff** its columns or rows form an orth-norm set of vectors.
+
+</b-blue>
+<p></p>
+<b-blue>
+
+***Def.*** **Partial inner product:** On vectors in $V \tens W$:
+- Take any ket $\e v \in V$, this defines a linear map $V \tens W \lra W$, which is the **partial inner product with $\e v$**.
+- Which is defined on basis vectors $\e {e_i} \e {f_j} \in V \tens W$, and maps $$ \e {e_i} \e {f_j} \mapsto \ip v {e_i} \e f_j $$
+
+If $V = W$, then we must specify *which* space is being used.
+
+</b-blue>
+
+***Example.*** Consider a state of 2 qbits 
+
+$$ \e\psi = a\e{00} + b\e{01} + c\e{10} + d\e{11} \in V_A \tens V_B $$ 
+
+Where $V = V_A = V_B$ and the first bit belongs to A, the second to B. 
+
+We can form a partial inner product with $\0$ on either space:
+
+\begin{align}
+	_A\ip 0 \psi &= a \ip 0 0 _A \0_B + b\ip 0 0 _A \1_B + c \ip 0 1 _A \0_B + d \ip 0 1 _A \1_B \\\\
+	&= a \0_B + b \1_B
+\end{align}
+
+Note that there is also the identity operator $I : A \tens I = I \tens A = A$ which is just the identity matrix.
+
+</div>
+
+<div class="md-conv">
+
+### Principle 4 - Quantum Measurements and the Born Rule
+
+> Getting information out of quantum states.
+>
+> Quantum measurements are invasive -- mmt changes state. 
+> So even if a state has exponential info, we can only retrieve a small part of it **probabilistically**.
+>
+> And by doing so, change the system also.
+
+
+Given a single instance $\e\psi$ of a quantum state in n-dimensional state space $V$.
+
+<b-blue>
+
+***Def.* The basic born rule:** (or a complete projective mmt / von neumann mmt)
+
+- Let $B = \\{\e e_1 \cdots \e e_n\\}$ be a orth-norm basis of V. A state $\e\psi$ can be described a weighted sum of amplitude-bases:
+$$ \e\psi = \sum_{i=1}^n a_i \e e_i $$ 
+
+- Taking a measurement of this, we can get n possible outcomes $j = 1..n$, where the probability 
+$$P(j) = \abs{\ip {e_j}{\psi}} ^2 = \abs{a_j}^2$$ 
+
+- If outcome $j$ is seen, after mmt **the state is no longer $\e\psi$** but is **collapsed** to $\e{\psi_j} = \e {e_j}$.
+
+</b-blue>
+
+> A complete measurement is just a projection.
+
+Thus repeated measurements on $\e{\psi_j}$ will only give outcomes $j$ forever with certainty.
+
+The straight lines represent mod, and a probability is just the mod squared length of the **projection** of $\e\psi$ onto the given basis $\e {e_j}$. 
+
+After projection, the state is **re-normalised** to have the squared mod sum of amplitudes equal 1 again.
+
+<b-blue>
+
+***Def.* Incomplete projective measurements:** 
+- Let $\\{E_1 \cdots E_d \\}$ be a *decomposition* of $V$ into $d$ **mutually orthogonal** subspaces. 
+- That is to say, $V = E_1 \oplus \cdots \oplus E_d$ where $\oplus$ is the "direct sum operator"
+- Let $\Pi_i$ be a projection operator onto $E_i$.
+- An incomplete mmt of $\e\psi$ w.r.t. the decomposition  $\\{E_1 \cdots E_d \\}$ has 
+	- d possible outcomes $j = 1..d$
+	- Where the probability ("Tr" is trace)
+	$$P(j) = \ip{\psi}{\Pi_j^\dagger \Pi_j \vert \psi} = \ip{\psi}{\Pi_j \vert \psi} = \rm{Tr}(\Pi_j \e\psi \b\psi)$$ 
+	- Where the post-mmt state is a collapsed normalised vector 
+	$$ \e{\psi_j} = \frac{\Pi_j \e\psi}{\sqrt{P(j)}}$$ 
+
+</b-blue>
+
+> No, I don't know what a "direct sum" is either, nor a "Trace"
+
+***Example.*** Parity measurements on two qbit states. 
+
+The **parity** of a bit string $b_1b_2$ is just the mod-2 sum $b_1 \oplus b_2$. Alternatively, it's 1 if there are an odd number of 1s.
+
+Make an orth-norm decomposition of the state $V$ as 
+- $E_0 = \span(\e{00}, \e{11})$ :- parity zero
+- $E_1 = \span(\e{01}, \e{10})$ :- parity one 
+
+Let $\e\psi = a\e{00} + b\e{01} + c\e{10} + d\e{11}$ 
+- The prob of measuring zero $P(0) = \abs{a}^2 + \abs{d}^2$
+- The post-measure state $\e{\psi_0} = \frac{a\e{00} + d\e{11}}{\sqrt{\abs{a}^2 + \abs{d}^2}}$
+
+----- 
+
+*Addendum.* define measurement of quantum observables. 
+
+<s-side>
+
+***Def.*** A **quantum observable** $\Omega$ is
+- a *hermitian* operator (matrix) on $V$ (meaning $\Omega$ has real eigenvalues $\lambda_{1..d}$) 
+- which breaks into orthogonal $\Lambda_j : \dim(\Lambda_j) =$ the multiplicity of $\lambda_j$ (how many times that eig-val appears)
+</s-side>
+<s-side>
+
+***Def.*** The measurement of such quantum observables is an incomplete mmnt which is relative to this orthogonal decomposition, and labelled by $\lambda_j$. 
+
+</s-side>
+
+The $\lambda_j$ values are the physical properties, and the average value of $\Omega = \sum_{j} \lambda_j P(j)$.
+
+------
+
+<b-blue>
+
+***Def.* the Extended Born Rule**: 
+- A special case of incomplete mmnts,
+- measuring a component part of a complete system, to only partially destroy it.
+
+Suppose $\e\psi$ is a state of system $S_1 S_2$, which is in a space $V \tens W$. 
+
+Let bases
+- $B_V = \\{\e{e_1} \cdots \e{e_n} \\}$ on V;
+- $B_W = \\{\e{f_1} \cdots \e{f_m} \\}$ on W.
+
+Then $\e\psi$ can be uniquely expanded as 
+$$ \sum_{\forall i,j} c_{ij} \e{e_i} \e{f_j} $$ 
+
+We now label the subspaces (so psi becomes $\e\psi_{VW}$), and we can expand this state as 
+$$ \sum_{i=1}^n \e{e_i}_V \e{\xi_i}_W $$ 
+Where $\e{\xi_i}$ is some arbitrary vector in the space W, which is generally **not** normalised nor orthogonal. (in reality $\e{\xi\_i}_W =\\, _V\ip{e\_i}{\psi}\_{VW}$)
+
+Since $\e\psi_{VW}$ is normalised, we know that $\sum_{i=1}^n \ip{\xi_i}{\xi_i} = 1 = \ip\psi\psi$, and so we can perform a mmnt on $\e\psi$ relative to basis $B_V$ 
+- A *complete measurement on $V$ but not $V \tens W$*
+
+We have:
+- outcomes $i = 1..n$, 
+- corresponding orthogonal subspaces of $V \tens W$:
+$$E_i = \span\\{ \e{e_i} \tens \e\xi : \xi \in W \\}$$ 
+or by abusing notation $\e{e_i} \tens W$;
+- which have projectors $\Pi_i = \e{e_i}\b{e_i} \tens I_W$ (identity), which we get with probability $P(i) = \ip {\xi_i}{\xi_i}$ 
+- And post measurement state 
+$$ \e{\psi_i} = \frac{\e{e\_i}_V \e{\xi\_i}_W}{ \sqrt{\ip{\xi\_i}{\xi\_i}} }. $$
+
+</b-blue>
+
+Some remarks:
+- Orthogonal states are perfectly distinguishable, but non-orthogonal states are **not** completely distinguishable even if physically different.
+- If $\e\psi$ has dimension $n$, any measurement on it has at most $n$ outcomes
+- **But** if we adjoin it with a known quantum state, an **ancilla** $\e A$ of dimension m, that is independent of $\e\psi$, then we can measure them jointly ($\e\psi \e A$) to get $m\cdot n$ outcomes.
+
+</div>
+
+<div class="md-conv">
+### Basic Unitary Operators for Qubits
+
+#### Single Qubits 
+
+We have unitary operators for single qbits.
+
+***Hadamard Gate.***
+$$ H = \frac{1 }{\sqrt{2} } \begin{bmatrix}
+	1 & 1 \\\\ 1 & -1
+\end{bmatrix} $$ 
+
+This is a gate with the following properties:
+- $HH = I$. 
+- $H \0 = \frac{1 }{\sqrt{2} }(\0 + \1) = \e+$
+- $H \1 = \frac{1 }{\sqrt{2} }(\0 - \1) = \e-$
+
+> This is just a rotation of 45&deg; to the +/- bases.
+
+***Pauli Gates.***
+\begin{matrix}
+	I = \begin{bmatrix}
+		1 & 0 \\\\ 0 & 1
+	\end{bmatrix} &
+	\sigma_x = \begin{bmatrix}
+		0 & 1 \\\\ 1 & 0
+	\end{bmatrix} & 
+	\sigma_y = \begin{bmatrix}
+		0 & -i \\\\ i & 0
+	\end{bmatrix} & 
+	\sigma_z = \begin{bmatrix}
+		1 & 0 \\\\ 0 & -1 
+	\end{bmatrix}
+\end{matrix}
+
+These are all unitary hermitian operators, with the following properties:
+- Multiplicative properties: $\sigma_x^2 + \sigma_y^2 + \sigma_z^2 = I$ 
+	- This also implies the eigenvalues are $\pm 1$.
+- Anti-commute properties: $\sigma_x\sigma_y = -\sigma_y\sigma_x = i\sigma_z$ 
+	- These can be swapped with any combination of $x,y,z$ as long as they are in that order.
+
+Pauli gates also have real versions:
+\begin{matrix}
+	X = \sigma_x & 
+	Y = i\sigma_y = \begin{bmatrix}
+		0 & 1 \\\\ -1 & 0
+	\end{bmatrix} & 
+	Z = \sigma_z
+\end{matrix}
+
+Such that 
+- $X\0 = \1$, and $X\1 = \0$ -- *quantum NOT gate* 
+	- i.e. $X\e k = \e{k \oplus 1} \pod{k=0,1}$ 
+	- X's eigenbases are $\e+, \e-$ 
+- $Z\0 = \0$, and $Z\1 = -\1$
+	- i.e. $Z\e{k} = (-1)^k \e{k}$ 
+	- Z's eigenbases are $\0, \1$
+
+***Phase Gate.*** 
+$$ P(\theta) = \begin{bmatrix}
+	1 & 0 \\\\ 0 & e^{i\theta}	
+\end{bmatrix}$$ 
+
+Where $\theta$ is the angle of rotation. 
+
+#### Double Qubits 
+
+***Controlled X-gate.*** Also called CNOT, CX, controlled-NOT, etc. 
+
+Where 
+$$ CX \e j \e k = \e j \e{j \oplus k} = \e j X^j \e k$$ 
+- That is, if $\e j$ is zero, do not apply the gate, and if $\e j$ is one, then apply $X\e k$. 
+- $CX \0 \e\alpha = \0\e\alpha$ whilst $CX \1 \e\alpha = \1 X\e\alpha$. 
+
+CX operates over two bits, thus the CX matrix is a 4x4 that:
+$$ 
+CX = \left[ \begin{array}{c:c} 
+I & \mathbf{0} \\\\ \hdashline
+\mathbf{0} & X 
+\end{array} \right] = \begin{bmatrix}
+	1&0&0&0\\\\0&1&0&0 \\\\ 0&0&0&1 \\\\ 0&0&1&0
+\end{bmatrix}
+$$
+
+Note that the **order is important** to CX, and so often it is labelled with `12` or `21` with `1` being the control bit, and `2` being the applied bit. So
+- $CX_{12} \0_1 \1_2 = \0_1 \1_2$ 
+- $CX_{21} \0_1 \1_2 = X\0_1 \1_2 = \1_1 \1_2$
+
+***Controlled Z-Gate.*** 
+$$
+CZ_{12} \e j \e k = \e{j} Z^j \e k = (-1)^{jk} \e j \e k
+$$ 
+CZ is **symmetric**: so the order actually doesn't matter, and 
+$$ 
+CZ = \left[ \begin{array}{c:c} 
+I & \mathbf{0} \\\\ \hdashline
+\mathbf{0} & Z 
+\end{array} \right]
+$$
+
+***General Controlled Gate $CU$.*** Has the form 
+$$ 
+CU = \left[ \begin{array}{c:c} 
+I & \mathbf{0} \\\\ \hdashline
+\mathbf{0} & U 
+\end{array} \right]
+$$ 
+
+</div>
+
+
+
+</div>
+
+
+
+<footer>
+    <div class="cbox">
+        <div class="columncontainer ctwo" id="fc2">
+        </div>
+        <script type="text/javascript" src="../../js/footerGen.js"></script>
+    </div>
+</footer>   
+
+</div>
+</body>
+</html>
