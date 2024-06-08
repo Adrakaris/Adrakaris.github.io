@@ -472,6 +472,10 @@ button.search {
 	cursor: pointer;
 }
 
+button.search:hover{
+    background-color: #365c3e;
+}
+
 /* #endregion */
 
 /* #region text headers */

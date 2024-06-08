@@ -4,7 +4,6 @@ const KHAR = "#4C1130";
 const ANCIENT = "#274E13";
 const CLASS = "#7F6000";
 
-
 function sortDictionary(dict) {
     dict = dict.split("\r\n");
     dict = dict.map(ln => ln.split("\t"));
@@ -49,8 +48,10 @@ function fillTable(table, dict) {
     let row = document.createElement("tr");
     titles.forEach(t => {
         let th = document.createElement("th");
-        let h4 = document.createElement("h4");
+        let h4 = document.createElement("h3");
         h4.innerText = t;
+        h4.style.paddingBottom = "0.6em";
+        h4.style.paddingTop = "0em";
         th.appendChild(h4);
         row.appendChild(th);
     })
@@ -64,7 +65,13 @@ function fillTable(table, dict) {
 
     table.appendChild(row)
 
+    console.log(data)
     data.forEach(row => {
+        if (row.length < 5) return;
+        if (row.length == 5) {
+            row.push("")
+        }
+        // console.log(row)
         addRow(table, row, "td")
     })
 
