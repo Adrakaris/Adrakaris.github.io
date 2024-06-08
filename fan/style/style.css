@@ -2,12 +2,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Long+Cang&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..600;1,100..600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&display=swap');
 
-/* @font-face {
-    font-family: Urbanist;
-    src: url("./font/urbanist/webfont/Urbanist-Regular.woff") format("woff"),
-         url("./font/urbanist/webfont/Urbanist-Regular.woff") format("woff2");
-} */
 
 @font-face {
     font-family: JBMono;
@@ -34,12 +31,16 @@
     --fan-home: url("images/ouyangzhan.webp");
     --filter: unset;
     --img-bg: #0000;
+    --body_font: "Lora", "Noto Serif SC", serif;
+    /* --body_font: "Manrope", "Noto Serif SC", sans-serif; */
+    --title_font: "Urbanist", "LXGW WenKai TC", sans-serif;
 }
 
 html, body {
     background-color: var(--bg-col);
     color: var(--txt-col);
-    font-family: "Manrope", "Noto Serif SC", sans-serif;
+    font-family: var(--body_font);
+    font-size: 13pt;
     font-variant-ligatures: contextual; 
     height: 100%;   
     margin: 0;
@@ -238,7 +239,7 @@ div.cornell > div:nth-child(odd) *{
     padding: 5px;
     background-color: var(--band-col);
     color: var(--band-txt);
-    font-family: "Manrope";
+    font-family: var(--body_font);
     text-align: center;
     margin: 5px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
@@ -325,7 +326,7 @@ footer {
 /* #region as and buttons */
 
 a.nav {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     text-align: center;
     letter-spacing: 1px;
     margin-top: -30px;
@@ -363,7 +364,7 @@ a.black {
 }
 
 button.nav {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     text-align: center;
     margin-top: -30px;
     color: var(--band-txt);
@@ -389,7 +390,7 @@ button.nav:hover {
     content: '+';
     font-style: normal;
     font-size: 16px;
-    font-family: Manrope, sans-serif;
+    font-family: var(--body_font);
     float: right;
     margin-left: 5px;
 }
@@ -400,7 +401,7 @@ button.nav:hover {
 }
 
 button.collapsible {
-    font-family: Manrope, sans-serif;
+    font-family: var(--body_font);
     color: var(--green);
     background: none;
     border: none;
@@ -450,7 +451,7 @@ button.nul {
 
 input[type=text].search {
 	background-color: var(--band-txt);
-	font-family: Manrope, sans-serif;
+	font-family: var(--body_font);
 	padding: 6px;
  	border: none;
  	margin-top: 8px;
@@ -466,7 +467,7 @@ button.search {
 	margin-right: 16px;
 	font-size: 17px;
 	color: var(--band-txt);
-	font-family: Manrope, sans-serif;
+	font-family: var(--body_font);
 	border: none;
 	cursor: pointer;
 }
@@ -476,7 +477,7 @@ button.search {
 /* #region text headers */
 
 h1 {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     font-size: 36pt;
     text-align: center;
     letter-spacing: 2px;
@@ -484,14 +485,14 @@ h1 {
 }
 
 h2 {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     font-size: 24pt;
     letter-spacing: 2px;
     /*padding: 5px;*/
 }
 
 h3 {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     font-size: 20pt;
     letter-spacing: 2px;
     margin-bottom: -4pt;
@@ -500,14 +501,14 @@ h3 {
 
 h4 {
     /* font-family: Manrope; */
-    font-family: Urbanist;
+    font-family: var(--title_font);
     font-size: 16pt;
     letter-spacing: 1px;
     margin-bottom: -8pt;
 }
 
 h3.c {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     font-size: 20pt;
     letter-spacing: 2px;
     text-align: center;
@@ -529,7 +530,7 @@ p {
 }
 
 p.subheading, p.subtitle {
-    font-family: Urbanist;
+    font-family: var(--title_font);
     text-align: center;
     letter-spacing: 2px;
     margin-top: -30px;
@@ -596,6 +597,7 @@ p.cls.h {
 
 p.cls.fancy {
     font-family: "Long Cang", serif;
+    /* font-family: var(--title_font); */
 }
 
 p.cls.border {
@@ -632,15 +634,15 @@ code {
 }
 
 blockquote {
-    font-style: italic;
+    /* font-style: italic; */
     border-left: 2px solid var(--green);
     padding-left: 40px;
     margin-left: 0px;
 }
 
-blockquote > * > em {
+/* blockquote > * > em {
     font-style: normal;
-}
+} */
 
 /* #endregion */
 
