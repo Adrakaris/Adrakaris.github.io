@@ -29,6 +29,14 @@ class _date {
 
 var pages = [
     {
+        "date": new _date(2024, 9, 29),
+        "link": "blog-misc/graduating",
+        "title": "我毕业了（英文）",
+        "desc": "</p>",
+        "picture": "",
+        "tags": ["misc"]
+    },
+    {
         "date": new _date(2024,5,5),
         "link": "blog-cs/cs413",
         "title": "413 | 图影学注",

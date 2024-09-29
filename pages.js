@@ -32,6 +32,14 @@ class _date {
 
 var pages = [
     {
+        "date": new _date(2024, 9, 29),
+        "link": "blog-misc/graduating",
+        "title": "I've graduated",
+        "desc": "</p>",
+        "picture": "",
+        "tags": ["misc"]
+    },
+    {
         "date": new _date(2024,5,5),
         "link": "blog-cs/cs413",
         "title": "Notes on CS413",
